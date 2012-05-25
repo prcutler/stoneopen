@@ -1,0 +1,9 @@
+/* Design by THAT Agency of West Palm Beach*/
+
+#content, #sidebar { overflow: hidden; }
+
+.sidebar{ width: 170px; }
+
+.left_sidebar{ width: 180px; }
+
+*html #footer{filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/footer_back.png', sizingMethod='scale');}
