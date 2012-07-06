@@ -1385,6 +1385,41 @@ class Securimage {
        return $colors;
 
     }
+    
+ // needed for emptying temp directories for captcha session files
+function clean_temp_dir($dir, $minutes = 30) {
+    // deletes all files over xx minutes old in a temp directory
+  	if ( ! is_dir( $dir ) || ! is_readable( $dir ) || ! is_writable( $dir ) )
+		return false;
+
+	$count = 0;
+    $list = array();
+	if ( $handle = @opendir( $dir ) ) {
+		while ( false !== ( $file = readdir( $handle ) ) ) {
+			if ( $file == '.' || $file == '..' || $file == '.htaccess' || $file == 'index.php')
+				continue;
+
+			$stat = @stat( $dir . $file );
+			if ( ( $stat['mtime'] + $minutes * 60 ) < time() ) {
+			    @unlink( $dir . $file );
+				$count += 1;
+			} else {
+               $list[$stat['mtime']] = $file;
+            }
+		}
+		closedir( $handle );
+        // purge xx amount of files based on age to limit a DOS flood attempt. Oldest ones first, limit 500
+        if( isset($list) && count($list) > 499) {
+          ksort($list);
+          $ct = 1;
+          foreach ($list as $k => $v) {
+            if ($ct > 499) @unlink( $dir . $v );
+            $ct += 1;
+          }
+       }
+	}
+	return $count;
+}
 
 } /* class Securimage */
 

@@ -116,13 +116,15 @@ Epoch.prototype.getTop = function (element) //PRIVATE: returns the absolute Top 
 {
     var oNode = element;
     var iTop = 0;
-    
-    //while(oNode.tagName != 'BODY') { // mchallis added for iE8 "object required" fix
-    while(oNode && oNode.tagName != 'BODY' && oNode.tagName != 'HTML') {
-        iTop += oNode.offsetTop;
-        oNode = oNode.offsetParent;
-    }
-
+	while(oNode && oNode.tagName != 'HTML') {  // mchallis modified to fix oNode error
+		iTop += oNode.offsetTop || 0;
+		if(oNode.offsetParent) { //i.e. the parent element is not hidden
+			oNode = oNode.offsetParent;
+		}
+		else {
+			break;
+		}
+	}
     return iTop;
 };
 //-----------------------------------------------------------------------------
@@ -130,13 +132,15 @@ Epoch.prototype.getLeft = function (element) //PRIVATE: returns the absolute Lef
 {
     var oNode = element;
     var iLeft = 0;
-
-    //while(oNode.tagName != 'BODY') {  // mchallis added for iE8 "object required" fix
-    while(oNode.tagName != 'BODY' && oNode.tagName != 'HTML') {
-        iLeft += oNode.offsetLeft;
-        oNode = oNode.offsetParent;        
-    }
-    
+	while(oNode && oNode.tagName != 'HTML') {  // mchallis modified to fix oNode error
+		iLeft += oNode.offsetLeft || 0;
+		if(oNode.offsetParent) { //i.e. the parent element is not hidden
+			oNode = oNode.offsetParent;
+		}
+		else {
+			break;
+		}
+	}
     return iLeft;
 };
 //-----------------------------------------------------------------------------
@@ -374,7 +378,7 @@ Epoch.prototype.createCalCells = function ()  //PRIVATE: creates the table conta
 	this.calCells = document.createElement('table');
 	this.calCells.setAttribute('id',this.name+'_calcells');
 	this.setClass(this.calCells,'calcells');
-	var tbody,tr,td;
+	var tbody,tr,td,week,dayval;
 	tbody = document.createElement('tbody');
 	for(var i=0;i<totalCells;i++)
 	{
@@ -383,17 +387,18 @@ Epoch.prototype.createCalCells = function ()  //PRIVATE: creates the table conta
 			if(i % 8 == 0)
 			{
 				row++;
+                week = sdt.getWeek(this.startDay);
 				tr = document.createElement('tr');
 				td = document.createElement('td');
 				if(this.selectMultiple) { //if selectMultiple is enabled, create the associated weekObj objects
-					td.weekObj = new WeekHeading(this,td,sdt.getWeek(),row)
+					td.weekObj = new WeekHeading(this,td,week,row)
 				}
 				else //otherwise just set the class of the td for consistent look
 				{
 					td.setAttribute('class','wkhead');
 					td.setAttribute('className','wkhead'); //<iehack>
 				}
-				td.appendChild(document.createTextNode(sdt.getWeek()));			
+				td.appendChild(document.createTextNode(week));
 				tr.appendChild(td);
 				i++;
 			}
@@ -401,15 +406,17 @@ Epoch.prototype.createCalCells = function ()  //PRIVATE: creates the table conta
 		else if(i % 7 == 0) //otherwise, new row every 7 cells
 		{
 			row++;
+            week = sdt.getWeek(this.startDay);
 			tr = document.createElement('tr');
 		}
 		//create the day cells
+        dayval = sdt.getDate();
 		td = document.createElement('td');
-		td.appendChild(document.createTextNode(sdt.getDate()));// +' ' +sdt.getUeDay()));
+		td.appendChild(document.createTextNode(dayval));// +' ' +sdt.getUeDay()));
 		var cell = new CalCell(this,td,sdt,row);
 		this.cells.push(cell);
 		td.cellObj = cell;
-		sdt.setDate(sdt.getDate() + 1); //increment the date
+		sdt.setDate(dayval + 1); //increment the date
 		tr.appendChild(td);
 		tbody.appendChild(tr);
 	}
@@ -765,34 +772,34 @@ Date.prototype.getDayOfYear = function () //returns the day of the year for this
 	return parseInt((this.getTime() - new Date(this.getFullYear(),0,1).getTime())/86400000 + 1);
 };
 //-----------------------------------------------------------------------------
-Date.prototype.getWeek = function () //returns the day of the year for this date
-{
-	return parseInt((this.getTime() - new Date(this.getFullYear(),0,1).getTime())/604800000 + 1);
-};
-/*function getISOWeek()
-{
+/**
+ * Returns the week number for this date.  dowOffset is the day of week the week
+ * "starts" on for your locale - it can be from 0 to 6. If dowOffset is 1 (Monday),
+ * the week returned is the ISO 8601 week number.
+ * @param int dowOffset
+ * @return int
+ */
+Date.prototype.getWeek = function (dowOffset) {
+	dowOffset = typeof(dowOffset) == 'int' ? dowOffset : 0; //default dowOffset to zero
 	var newYear = new Date(this.getFullYear(),0,1);
-	var modDay = newYear.getDay();
-	if (modDay == 0) modDay=6; else modDay--;
-	
-	var daynum = ((Date.UTC(this.getFullYear(),this.getMonth(),this.getDate(),0,0,0) - Date.UTC(this.getFullYear()),0,1,0,0,0)) /1000/60/60/24) + 1;
-	
-	if (modDay < 4 ) {
-	    var weeknum = Math.floor((daynum+modDay-1)/7)+1;
+	var day = newYear.getDay() - dowOffset; //the day of week the year begins on
+	day = (day >= 0 ? day : day + 7);
+	var weeknum, daynum = Math.floor((this.getTime() - newYear.getTime() - (this.getTimezoneOffset()-newYear.getTimezoneOffset())*60000)/86400000) + 1;
+	//if the year starts before the middle of a week
+	if(day < 4) {
+		weeknum = Math.floor((daynum+day-1)/7) + 1;
+		if(weeknum > 52) {
+			nYear = new Date(this.getFullYear() + 1,0,1);
+			nday = nYear.getDay() - dowOffset;
+			nday = nday >= 0 ? nday : nday + 7;
+			weeknum = nday < 4 ? 1 : 53; //if the next year starts before the middle of the week, it is week #1 of that year
+		}
 	}
 	else {
-	    var weeknum = Math.floor((daynum+modDay-1)/7);
-	    if (weeknum == 0) {
-	        year--;
-	        var prevNewYear = new Date(this.getFullYear(),0,1);
-	        var prevmodDay = prevNewYear.getDay();
-	        if (prevmodDay == 0) prevmodDay = 6; else prevmodDay--;
-	        if (prevmodDay < 4) weeknum = 53; else weeknum = 52;
-	    }
+		weeknum = Math.floor((daynum+day-1)/7);
 	}
-	
-	return + weeknum;
-}*/
+	return weeknum;
+};
 //-----------------------------------------------------------------------------
 Date.prototype.getUeDay = function () //returns the number of DAYS since the UNIX Epoch - good for comparing the date portion
 {

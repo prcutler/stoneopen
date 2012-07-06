@@ -4,14 +4,14 @@ Author URI: http://www.642weather.com/weather/scripts.php
 Donate link: http://www.FastSecureContactForm.com/donate
 Tags: Akismet, captcha, contact, contact form, form, mail, email, spam, multilingual, wpmu, buddypress
 Requires at least: 2.8
-Tested up to: 3.2
+Tested up to: 3.3.2
 Stable tag: trunk
 
 A super customizable contact form that lets your visitors send you email. Blocks all automated spammers. No templates to mess with.
 
 == Description ==
 
-This plugin allows a webmaster to easily create and add contact forms to WordPress. The contact form will let the user send emails to a site's admin. An administration panel is present, where the webmaster can create and preview unlimited forms. 
+This plugin allows a webmaster to easily create and add contact forms to WordPress. The contact form will let the user send emails to a site's admin, and also send a meeting request to talk over phone or video. An administration panel is present, where the webmaster can create and preview unlimited forms. 
 
 Features a super easy admin panel, multi-form feature, autoresponder, no templates to mess with, and an option to redirect visitors to any URL after the message is sent. Includes CAPTCHA and Akismet support to block all common spammer tactics. Spam is no longer a problem. You can add extra fields of any type: text, textarea, checkbox, checkbox-multiple, radio, select, select-multiple, attachment, date, time, hidden, password, and fieldset.
 
@@ -48,6 +48,16 @@ Features:
  * Pre-fill in form fields from a URL query string. [See FAQ](http://www.fastsecurecontactform.com/query-string-parameters)
  * Save emails to the WordPress database, or export to CSV or Excel. [See FAQ](http://www.fastsecurecontactform.com/save-to-database)
  * I18n language translation support. [See FAQ](http://www.fastsecurecontactform.com/how-to-translate)
+ 
+Scheduling, Meeting and Payments via vCita:
+-------------------------------------------
+ * Offer visitors to Schedule Meetings as part of your Contact Form
+ * Set your availability and synchronize your contact form with your Google calendar
+ * Meet online with web-based video meeting room
+ * Meet over phone conference
+ * Record your meetings
+ * Collect payments and bill for your time and services
+ * Send a payment request once a meeting is completed or secure a fee in advance according to your hourly rate
 
 Security:
 --------
@@ -111,7 +121,6 @@ Requirements/Restrictions:
 
 [See FAQ page: How to troubleshoot email delivery](http://www.fastsecurecontactform.com/email-does-not-send)
 
-
 = Is this plugin available in other languages? =
 
 Yes. To use a translated version, you need to obtain or make the language file for it.
@@ -138,7 +147,7 @@ The following translations are included in the download zip file:
 * Portuguese (pt_PT) - Translated by [AJBFerreira Blog](http://pws.op351.net/)
 * Portuguese Brazil (pt_BR) - Translated by [Rui Alao]
 * Romanian (ro_RO) - Translated by [Anunturi Jibo](http://www.jibo.ro)
-* Russian (ru_RU) - Translated by [Bezraznizi](http://www.sprestij.ru/)
+* Russian (ru_RU) - Translated by [Iflexion](http://www.iflexion.com/)
 * Spanish (es_ES) - Translated by [Valentin Yonte Rodriguez](http://www.activosenred.com/)
 * Swedish (sv_SE) - Translated by [Daniel Persson](http://walktheline.boplatsen.se/)
 * Traditional Chinese, Taiwan (zh_TW) - Translated by [Cjh]
@@ -182,7 +191,82 @@ No setting necessary, it just works.
 
 For more help... [See the official FAQ at FastSecureContactForm.com](http://www.fastsecurecontactform.com/faq-wordpress-version)
 
+= What is the "Set a meeting" option I have in my form? = 
+
+You can extend your contact form to let your users to Schedule Meetings based on your availability, meet online with web-based video, talk over phone conference, and collect payments for your time and services.
+
+You can enable this option in "Accept Meeting Requests" section at contact form settings page.
+You can then configure your meeting preferences, set your availability and more by activating your free vCita account (again at the contact form settings).
+
+You can learn more about vCita at [www.vcita.com](http://www.vcita.com?invite=FSContact)
+If you have any question about the Schedule Meetings feature please contact support@vcita.com
+
 == Changelog ==
+
+= 3.1.5.4 =
+- (12 May 2012) - Better detection of checkbox config errors.
+
+= 3.1.5.3 =
+- (11 Apr 2012) - vCita message dismiss feature.
+- put # for the redirect URL and it will redirect to the same page the form is on regardless of the page.
+
+= 3.1.5.2 =
+- (02 Apr 2012) - Fixed hidden shortcode settings broken since version 3.1.5
+
+= 3.1.5.1 =
+- (20 Mar 2012) - removed message "You still haven't completed your Meeting Scheduler settings." on admin pages.
+
+= 3.1.5 =
+- (20 Mar 2012) - vCita improved so your email address is not sent to VCita unless you type it in yourself when activating the service.
+- Email parameter removed from vCita banner URL.
+- Added shortcode setting to show Form Page URL in the email message [si-contact-form form='1' hidden='form_page=1']
+
+= 3.1.4.1 =
+- (24 Feb 2012) - Email will only be passed to vCita servers when you choose to enable vCita services. 
+
+= 3.1.4 =
+- (23 Feb 2012) - Fix bug in Extra field tags can be used in subject setting.
+- Fix possible error: preg_match() expects parameter to be string. 
+- Fix to use separate CC: email header.
+- vCita improvements.
+- Updated Russian (ru_RU) - Translated by [Iflexion](http://www.iflexion.com/)
+
+= 3.1.3.1 =
+- (05 Feb 2012) - Fix vCita had some uninitialized variable errors when debugging is on.
+
+= 3.1.3 =
+- (04 Feb 2012) - Extra field tags can be used in subject setting. For available field tags, click 'help' next to the 'E-mail Subject Prefix:' setting.
+- Fix vCita could not be disabled during invalid email condition.
+- Fix JS on form edit preview page.
+
+= 3.1.2 =
+- (25 Jan 2012) - Use WP function is_ssl() for better SSL compatibility.
+- Fix vCita 'JS on every page' bug in admin and WP site.
+- Fix vCita had some output when disabled.
+- Fix calendar week number bug.
+
+= 3.1.1 =
+- (21 Jan 2012) - Updated vCita functions and added new schedule a meeting buttons. 
+- Replace the use of WP_PLUGIN_URL with plugins_url() for better SSL compatibility.
+- Updated Italian language (it_IT) - Translated by [Gianni Diurno](http://gidibao.net/ "Gianni Diurno")
+
+= 3.1 =
+- (06 Dec 2011) - Add "Set a meeting" option to your contact form using vCita Meeting Scheduler. Meet users over video or phone, and collect payment for services.
+- Improved HTML code on message sent.
+
+= 3.0.5 =
+- (18 Nov 2011) - Harden security for CAPTCHA by limiting the number of created cache files. This condition could only be realized with a script. Found by [Brian St. Pierre](http://bstpierre.org/).
+- HTML validation fix, added unique id for submit and reset buttons.
+
+= 3.0.4 =
+- (09 Oct 2011) - Fix default text could not be 0.
+- Fix HTML validation with date field.
+- Fix rows and cols extra field attributes.
+- Fix javascript console error on date calendar popup.
+
+= 3.0.3.2 =
+- (27 Jul 2011) - Fixed medium XSS HTB23036 - as advised by High-Tech Bridge SA Security Research Lab.
+- Fix, added missing 00 to 24 hour time select.
 
 = 3.0.3.1 =
 - (05 Jul 2011) - Tested / fixed to be compatible with WP 3.2

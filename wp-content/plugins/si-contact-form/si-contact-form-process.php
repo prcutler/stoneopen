@@ -408,7 +408,7 @@ if ($have_attach){
          $si_contact_error_captcha = __('Could not find CAPTCHA token.', 'si-contact-form');
       }else{
          $prefix = 'xxxxxx';
-         if ( isset($_POST['si_code_ctf_'.$form_id_num]) && preg_match('/^[a-zA-Z0-9]{15,17}$/',$_POST['si_code_ctf_'.$form_id_num]) ){
+         if ( isset($_POST['si_code_ctf_'.$form_id_num]) && is_string($_POST['si_code_ctf_'.$form_id_num]) && preg_match('/^[a-zA-Z0-9]{15,17}$/',$_POST['si_code_ctf_'.$form_id_num]) ){
            $prefix = $_POST['si_code_ctf_'.$form_id_num];
          }
          if ( is_readable( $ctf_captcha_dir . $prefix . '.php' ) ) {
@@ -557,14 +557,7 @@ if ($have_attach){
       $msg .= "$email$php_eol$php_eol";
       $posted_data['from_email'] = $email;
    }
-   // subject can include posted data names feature:
-   foreach ($posted_data as $key => $data) {
-      if( is_string($data) )
-          $subj = str_replace('['.$key.']',$data,$subj);
-   }
-   $posted_form_name = ( $si_contact_opt['form_name'] != '' ) ? $si_contact_opt['form_name'] : sprintf(__('Form: %d', 'si-contact-form'),$form_id_num);
-   $subj = str_replace('[form_label]',$posted_form_name,$subj);
-   $posted_data['subject'] = $subj;
+
    if ($si_contact_opt['ex_fields_after_msg'] == 'true' && $message != '') {
         $msg .= $this->make_bold(__('Message', 'si-contact-form')).":$php_eol$message$php_eol$php_eol";
         $posted_data['message'] = $message;
@@ -676,7 +669,7 @@ if ($have_attach){
                         $msg .= $this->make_bold($si_contact_opt['ex_field'.$i.'_label']).$php_eol.${'ex_field'.$i}.$php_eol.$php_eol;
                         $posted_data["ex_field$i"] = ${'ex_field'.$i};
                         if ($si_contact_opt['ex_field'.$i.'_type'] == 'email' && $email == '' && $si_contact_opt['email_type'] == 'not_available') {
-                          // admin set the standard email field 'not_avaulable' then added an email extra field type.
+                          // admin set the standard email field 'not_available' then added an email extra field type.
                           // lets capture that as the 'from_email'.
                            $email = ${'ex_field'.$i};
                            $this->ctf_forbidifnewlines($email);
@@ -688,7 +681,7 @@ if ($have_attach){
        }
     } // end for
 
-   // allow shortcode hidden fields
+   // allow shortcode hidden fields   http://www.fastsecurecontactform.com/shortcode-options
    if ( $shortcode_hidden != '') {
       $hidden_fields_test = explode(",",$shortcode_hidden);
       if ( !empty($hidden_fields_test) ) {
@@ -698,8 +691,13 @@ if ($have_attach){
                $key   = trim($key);
                $value = trim($value);
                if ($key != '' && $value != '') {
-                 $msg .= $this->make_bold($key).$php_eol.$this->ctf_stripslashes($value).$php_eol.$php_eol;
-                 $posted_data[$key] = $value;
+                 if($key == 'form_page') {  // page url
+                   $msg .= $this->make_bold(__('Form Page', 'si-contact-form')).$php_eol.$form_action_url.$php_eol.$php_eol;
+                   $posted_data['form_page'] = $form_action_url;
+                 }else{
+                   $msg .= $this->make_bold($key).$php_eol.$this->ctf_stripslashes($value).$php_eol.$php_eol;
+                   $posted_data[$key] = $value;
+                 }
               }
           }
         }
@@ -709,6 +707,18 @@ if ($have_attach){
         $msg .= $this->make_bold(__('Message', 'si-contact-form')).":$php_eol$message$php_eol$php_eol";
         $posted_data['message'] = $message;
     }
+
+   // subject can include posted data names feature:
+   foreach ($posted_data as $key => $data) {
+         if( in_array($key,array('message','full_message','akismet')) )  // disallow these
+            continue;
+	     if( is_string($data) )
+              $subj = str_replace('['.$key.']',$data,$subj);
+   }
+   $subj = preg_replace('/(\[ex_field)(\d+)(\])/','',$subj); // remove empty ex_field tags
+   $posted_form_name = ( $si_contact_opt['form_name'] != '' ) ? $si_contact_opt['form_name'] : sprintf(__('Form: %d', 'si-contact-form'),$form_id_num);
+   $subj = str_replace('[form_label]',$posted_form_name,$subj);
+   $posted_data['subject'] = $subj;
 
   // lookup country info for this ip
   // geoip lookup using Visitor Maps and Who's Online plugin
@@ -868,10 +878,12 @@ if ($have_attach){
     }
     $header_php =  "From: $this->si_contact_from_name <$this->si_contact_from_email>\n"; // header for php mail only
 
-    // process $mail_to user1@example.com,user2@example.com,user3@example.com,[cc]user4@example.com,[bcc]user5@example.com
+    // process $mail_to user1@example.com,[cc]user2@example.com,[cc]user3@example.com,[bcc]user4@example.com,[bcc]user5@example.com
     // some are cc, some are bcc
     $mail_to_arr = explode( ',', $mail_to );
-    $mail_to = '';
+    $mail_to = trim($mail_to_arr[0]);
+    unset($mail_to_arr[0]);
+    $ctf_email_address_cc = '';
     if ($ctf_email_address_bcc != '')
             $ctf_email_address_bcc = $ctf_email_address_bcc. ',';
 	foreach ( $mail_to_arr as $key => $this_mail_to ) {
@@ -880,11 +892,13 @@ if ($have_attach){
                  $ctf_email_address_bcc .= "$this_mail_to,";
            }else{
                  $this_mail_to = str_replace('[cc]','',$this_mail_to);
-                 $mail_to .= "$this_mail_to,";
+                 $ctf_email_address_cc .= "$this_mail_to,";
            }
     }
-    $mail_to = rtrim($mail_to, ',');
-
+    if ($ctf_email_address_cc != '') {
+            $ctf_email_address_cc = rtrim($ctf_email_address_cc, ',');
+            $header .= "Cc: $ctf_email_address_cc\n"; // for php mail and wp_mail
+    }
     if ($ctf_email_address_bcc != '') {
             $ctf_email_address_bcc = rtrim($ctf_email_address_bcc, ',');
             $header .= "Bcc: $ctf_email_address_bcc\n"; // for php mail and wp_mail
@@ -948,6 +962,8 @@ if ($have_attach){
          }else {
               $ctf_geekMail->_replyTo($this->si_contact_from_email);
          }
+         if ($ctf_email_address_cc != '')
+           $ctf_geekMail->cc($ctf_email_address_cc);
          if ($ctf_email_address_bcc != '')
            $ctf_geekMail->bcc($ctf_email_address_bcc);
          $ctf_geekMail->subject($subj);

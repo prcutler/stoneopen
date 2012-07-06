@@ -25,9 +25,11 @@ if ($this->si_contact_error)
 
 $string .= '
 <!-- Fast Secure Contact Form plugin '.$this->ctf_version.' - begin - FastSecureContactForm.com -->
-<a name="FSContact'.$form_id_num.'" id="FSContact'.$form_id_num.'"></a>
-<div '.$this->ctf_form_style.'>
-';
+<div id="FSContact'.$form_id_num.'" '.$this->ctf_form_style.'>';
+
+if ($si_contact_opt['vcita_enabled'] == 'true') {
+  $string .= "\n<div style='float:left;' class='fsc_data_container'>\n";
+}
 
 if ($si_contact_opt['border_enable'] == 'true') {
   $string .= '
@@ -421,7 +423,7 @@ $string .= '
 <div '.$this->ctf_submit_div_style.'>
   <input type="hidden" name="si_contact_action" value="send" />
   <input type="hidden" name="si_contact_form_id" value="'.$form_id_num.'" />
-  <input type="submit" id="fsc-submit" '.$this->ctf_submit_style.' value="';
+  <input type="submit" id="fsc-submit-'.$form_id_num.'" '.$this->ctf_submit_style.' value="';
      $string .= ($si_contact_opt['title_submit'] != '') ? $this->ctf_output_string( $si_contact_opt['title_submit'] ) : $this->ctf_output_string( __('Submit', 'si-contact-form'));
      $string .= '" ';
    if($si_contact_opt['enable_areyousure'] == 'true') {
@@ -431,13 +433,15 @@ $string .= '
     }
      $string .= '/> ';
    if($si_contact_opt['enable_reset'] == 'true') {
-     $string .= '<input type="reset" id="fsc-reset" '.$this->ctf_reset_style.' value="';
+     $string .= '<input type="reset" id="fsc-reset-'.$form_id_num.'" '.$this->ctf_reset_style.' value="';
      $string .= ($si_contact_opt['title_reset'] != '') ? $this->ctf_output_string( $si_contact_opt['title_reset'] ) : $this->ctf_output_string( __('Reset', 'si-contact-form'));
      $string .= '" onclick="return confirm(\'';
      $string .= addslashes(__('Do you really want to reset the form?', 'si-contact-form'));
      $string .= '\')"  />'."\n";
     }
-$string .= '</div>
+	
+$string .= '
+</div>
 ';
 if ($si_contact_opt['border_enable'] == 'true') {
   $string .= '
@@ -446,7 +450,6 @@ if ($si_contact_opt['border_enable'] == 'true') {
 }
 $string .= '
 </form>
-</div>
 ';
 if ($si_contact_opt['enable_credit_link'] == 'true') {
   $this->ctf_powered_by_style = $this->si_contact_convert_css($si_contact_opt['powered_by_style']);
@@ -454,6 +457,21 @@ $string .= '
 <p '.$this->ctf_powered_by_style.'>'.__('Powered by', 'si-contact-form'). ' <a href="http://wordpress.org/extend/plugins/si-contact-form/">'.__('Fast Secure Contact Form', 'si-contact-form'). '</a></p>
 ';
 }
-$string .= '<!-- Fast Secure Contact Form plugin '.$this->ctf_version.' - end - FastSecureContactForm.com -->
-';
+
+$string .= '</div>';
+
+/* --- vCita Scheduler Display - Start --- */
+if ($si_contact_opt['vcita_enabled'] == 'true') {
+		$confirmation_token = $this->vcita_should_store_expert_confirmation_token($si_contact_opt);
+		
+		$string .= "\n<div class='fscf_vcita_container' ";
+		$string .= empty($confirmation_token) ? "" : "confirmation_token=".$confirmation_token;
+		$string .= (empty($si_contact_opt['vcita_uid']) ? "preview=true" : " vcita_uid = '").$si_contact_opt['vcita_uid']."'>
+</div>";
+        $string .= "\n<div style='clear:both;'></div>\n"; // "Reset" the float properties
+        $string .= '</div>';
+       /* --- vCita Scheduler Display - End --- */
+}
+$string .= '
+<!-- Fast Secure Contact Form plugin '.$this->ctf_version.' - end - FastSecureContactForm.com -->';	
 ?>

@@ -314,7 +314,7 @@ echo '</p>
  ';
 
  if(!isset($_GET['session'])) {
-    clean_temp_dir('../temp/', 60);
+    clean_temp_dir('../temp/');
     // pick new prefix token
     $prefix_length = 16;
     $prefix_characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
@@ -353,7 +353,7 @@ if( isset($_GET['chmod']) ) {
     echo 'Permissions for directory captcha/temp/ ';
     echo substr(sprintf('%o', fileperms('../temp')), -4);
     echo '<br />';
-  if( isset($_GET['token']) && preg_match('/^[a-zA-Z0-9]{15,17}$/',$_GET['token']) ){
+  if( isset($_GET['token']) && is_string($_GET['token']) && preg_match('/^[a-zA-Z0-9]{15,17}$/',$_GET['token']) ){
     clearstatcache();
     echo 'Permissions for captcha token file: ';
     $token = $_GET['token'];
@@ -421,12 +421,13 @@ function echo_if_error($this_error){
 }
 
 // needed for emptying temp directories for captcha session files
-function clean_temp_dir($dir, $minutes = 60) {
+function clean_temp_dir($dir, $minutes = 30) {
     // deletes all files over xx minutes old in a temp directory
   	if ( ! is_dir( $dir ) || ! is_readable( $dir ) || ! is_writable( $dir ) )
 		return false;
 
 	$count = 0;
+    $list = array();
 	if ( $handle = @opendir( $dir ) ) {
 		while ( false !== ( $file = readdir( $handle ) ) ) {
 			if ( $file == '.' || $file == '..' || $file == '.htaccess' || $file == 'index.php')
@@ -436,9 +437,20 @@ function clean_temp_dir($dir, $minutes = 60) {
 			if ( ( $stat['mtime'] + $minutes * 60 ) < time() ) {
 			    @unlink( $dir . $file );
 				$count += 1;
-			}
+			} else {
+               $list[$stat['mtime']] = $file;
+            }
 		}
 		closedir( $handle );
+        // purge xx amount of files based on age to limit a DOS flood attempt. Oldest ones first, limit 500
+        if( isset($list) && count($list) > 499) {
+          ksort($list);
+          $ct = 1;
+          foreach ($list as $k => $v) {
+            if ($ct > 499) @unlink( $dir . $v );
+            $ct += 1;
+          }
+       }
 	}
 	return $count;
 }

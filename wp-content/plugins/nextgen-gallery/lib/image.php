@@ -68,13 +68,14 @@ class nggImage{
 		$this->thumbURL 	= site_url() . '/' . $this->path . '/thumbs/thumbs_' . $this->filename;
 		$this->imagePath	= WINABSPATH.$this->path . '/' . $this->filename;
 		$this->thumbPath	= WINABSPATH.$this->path . '/thumbs/thumbs_' . $this->filename;
-		$this->meta_data	= unserialize($this->meta_data);
+        $this->meta_data	= unserialize($this->meta_data);
 		$this->imageHTML	= $this->get_href_link();
 		$this->thumbHTML	= $this->get_href_thumb_link();
 		
 		do_action_ref_array('ngg_get_image', array(&$this));
-		wp_cache_add($this->pid, $this, 'ngg_image');
-		
+        
+        // Note wp_cache_add will increase memory needs (4-8 kb)
+		//wp_cache_add($this->pid, $this, 'ngg_image');
 		// Get tags only if necessary
 		unset($this->tags);
 	}
@@ -85,6 +86,10 @@ class nggImage{
 	* Applies the filter 'ngg_get_thumbcode'
 	*/
 	function get_thumbcode($galleryname = '') {
+	   
+        // clean up the name
+        $galleryname = sanitize_title( $galleryname );
+        
 		// read the option setting
 		$ngg_options = get_option('ngg_options');
 		
@@ -103,7 +108,7 @@ class nggImage{
 	
 	function get_href_link() {
 		// create the a href link from the picture
-		$this->href  = "\n".'<a href="'.$this->imageURL.'" title="'.htmlspecialchars( stripslashes($this->description) ).'" '.$this->get_thumbcode($this->name).'>'."\n\t";
+		$this->href  = "\n".'<a href="'.$this->imageURL.'" title="'.htmlspecialchars( stripslashes( nggGallery::i18n($this->description, 'pic_' . $this->pid . '_description') ) ).'" '.$this->get_thumbcode($this->name).'>'."\n\t";
 		$this->href .= '<img alt="'.$this->alttext.'" src="'.$this->imageURL.'"/>'."\n".'</a>'."\n";
 
 		return $this->href;
@@ -111,7 +116,7 @@ class nggImage{
 
 	function get_href_thumb_link() {
 		// create the a href link with the thumbanil
-		$this->href  = "\n".'<a href="'.$this->imageURL.'" title="'.htmlspecialchars( stripslashes($this->description) ).'" '.$this->get_thumbcode($this->name).'>'."\n\t";
+		$this->href  = "\n".'<a href="'.$this->imageURL.'" title="'.htmlspecialchars( stripslashes( nggGallery::i18n($this->description, 'pic_' . $this->pid . '_description') ) ).'" '.$this->get_thumbcode($this->name).'>'."\n\t";
 		$this->href .= '<img alt="'.$this->alttext.'" src="'.$this->thumbURL.'"/>'."\n".'</a>'."\n";
 
 		return $this->href;
@@ -209,6 +214,10 @@ class nggImage{
 
 		return $this->permalink; 
 	}
+    
+    function __destruct() {
+
+    }
 }
 endif;
 ?>

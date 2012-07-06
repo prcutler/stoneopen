@@ -4,7 +4,11 @@ Fast Secure Contact Form
 Mike Challis
 http://www.642weather.com/weather/scripts.php
 */
-
+//do not allow direct access
+if ( strpos(strtolower($_SERVER['SCRIPT_NAME']),strtolower(basename(__FILE__))) ) {
+ header('HTTP/1.0 403 Forbidden');
+ exit('Forbidden');
+}
 // copy settings from one form to another
 
 // copy settings requested

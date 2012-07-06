@@ -1,6 +1,6 @@
 <?php
 
-if ( isset($_GET['prefix']) && preg_match('/^[a-zA-Z0-9]{15,17}$/',$_GET['prefix']) ){
+if ( isset($_GET['prefix']) && is_string($_GET['prefix']) && preg_match('/^[a-zA-Z0-9]{15,17}$/',$_GET['prefix']) ){   
    // no session
    $prefix = $_GET['prefix'];
 
@@ -75,6 +75,7 @@ if ( isset($_GET['prefix']) && preg_match('/^[a-zA-Z0-9]{15,17}$/',$_GET['prefix
    $img->ttf_font_directory  = getcwd() . '/ttffonts';
    $img->show('');
    if(!file_exists($img->captcha_path . $prefix . '.php')) {
+      $img->clean_temp_dir( $img->captcha_path );
       if ( $fh = fopen( $img->captcha_path . $prefix . '.php', 'w' ) ) {
 			fwrite( $fh, '<?php $captcha_word = \'' . $captcha_word . '\'; ?>' );
 			fclose( $fh );

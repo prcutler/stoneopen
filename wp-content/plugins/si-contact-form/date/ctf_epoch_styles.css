@@ -11,9 +11,14 @@ table.calendar {
 	-moz-user-select: none;
     /*-khtml-user-select: none;*/
 }
-table.calendar input, table.calendar select {
-	font-size: 10px;
-    width:45px;
+table.calendar input {
+    font-size: 10px;
+    width:35px;
+    padding: 0;
+}
+table.calendar select {
+    font-size: 10px;
+    width:50px;
     padding: 0;
 }
 table.calendar td {

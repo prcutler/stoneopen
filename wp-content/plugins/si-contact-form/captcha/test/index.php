@@ -238,7 +238,7 @@ You can find this setting on the contact form admin settings page.
 
 <?php if ($gd_support): ?>
 Since you can see this...<br /><br />
-<img src="<?php echo $_SERVER['PHP_SELF']; ?>?testimage=1" alt="Test Image" align="bottom" />
+<img src="index.php?testimage=1" alt="Test Image" align="bottom" />
 <?php else: ?>
 Based on the requirements, you do not have what it takes to run (Secureimage) CAPTCHA :(
 <?php endif; ?>

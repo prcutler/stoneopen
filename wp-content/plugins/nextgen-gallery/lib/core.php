@@ -142,10 +142,15 @@ class nggGallery {
 	* @return array $options
 	*/
 	function get_option($key) {
+        global $post;
+        
 		// get first the options from the database 
 		$options = get_option($key);
-		
-		// Get all key/value data for the current post. 
+
+        if ( $post == null )
+            return $options;
+            
+		// Get all key/value data for the current post.            
 		$meta_array = get_post_custom();
 		
 		// Ensure that this is a array
@@ -250,9 +255,10 @@ class nggGallery {
 	* @autor John Godley
 	* @param string $template_name Name of the template file (without extension)
 	* @param string $vars Array of variable name=>value that is available to the display code (optional)
+	* @param bool $callback In case we check we didn't find template we tested it one time more (optional)
 	* @return void
 	**/
-	function render($template_name, $vars = array ()) {
+	function render($template_name, $vars = array (), $callback = false) {
 		foreach ($vars AS $key => $val) {
 			$$key = $val;
 		}
@@ -266,8 +272,12 @@ class nggGallery {
 			include (STYLESHEETPATH . "/nggallery/$template_name.php");
 		} else if (file_exists (NGGALLERY_ABSPATH . "/view/$template_name.php")) {
 			include (NGGALLERY_ABSPATH . "/view/$template_name.php");
+		} else if ( $callback === true ) {
+            echo "<p>Rendering of template $template_name.php failed</p>";		  
 		} else {
-			echo "<p>Rendering of template $template_name.php failed</p>";
+            //test without the "-template" name one time more
+            $template_name = array_shift( explode('-', $template_name , 2) );
+            nggGallery::render ($template_name, $vars , true);
 		}
 	}
 	
@@ -536,6 +546,46 @@ class nggGallery {
 		}
     
         return false;    
+    }
+    
+    /**
+     * get_memory_usage
+     * 
+     * @access only for debug purpose
+     * @since 1.8.3
+     * @param string $text
+     * @return void
+     */
+    function get_memory( $text = '' ) {
+        global $memory;
+
+        $memory_peak = memory_get_usage();
+        $diff = 0;
+        
+		if ( isset($memory) )
+            $diff = $memory_peak - $memory;
+            
+        $exp = ($diff < 0) ? '-' : '';
+        $diff = ($exp == '-') ? 0 - $diff : $diff;
+        
+        $memory = $memory_peak;
+           
+        $unit = array('b','kb','mb','gb','tb','pb');
+        $rounded = @round($diff/pow(1024,($i=floor(log($diff,1024)))),2).' '.$unit[$i];
+            
+        echo $text . ': ' . $exp . $rounded .'<br />'; 
+          
+    }
+    
+    /**
+     * Show NextGEN Version in header
+     * @since 1.9.0
+     * 
+     * @return void
+     */
+    function nextgen_version() {
+        global $ngg;
+        echo apply_filters('show_nextgen_version', '<!-- <meta name="NextGEN" version="'. $ngg->version . '" /> -->' . "\n");	   
     }
 }
 ?>
