@@ -658,15 +658,15 @@ if (function_exists('get_transient')) {
 ?>
 
       <?php if ( ! empty($api->rating) ) : ?>
-	  <div class="star-holder" title="<?php echo $this->ctf_output_string(sprintf(__('(Average rating based on %s ratings)', 'si-contact-form'),number_format_i18n($api->num_ratings))); ?>">
-	  <div class="star star-rating" style="width: <?php echo $this->ctf_output_string($api->rating) ?>px"></div>
-	  <div class="star star5"><img src="<?php echo plugins_url( 'si-contact-form/star.png' ); ?>" alt="<?php _e('5 stars', 'si-contact-form') ?>" /></div>
-	  <div class="star star4"><img src="<?php echo plugins_url( 'si-contact-form/star.png' ); ?>" alt="<?php _e('4 stars', 'si-contact-form') ?>" /></div>
-	  <div class="star star3"><img src="<?php echo plugins_url( 'si-contact-form/star.png' ); ?>" alt="<?php _e('3 stars', 'si-contact-form') ?>" /></div>
-	  <div class="star star2"><img src="<?php echo plugins_url( 'si-contact-form/star.png' ); ?>" alt="<?php _e('2 stars', 'si-contact-form') ?>" /></div>
-	  <div class="star star1"><img src="<?php echo plugins_url( 'si-contact-form/star.png' ); ?>" alt="<?php _e('1 star', 'si-contact-form') ?>" /></div>
+	  <div class="fsc-star-holder" title="<?php echo $this->ctf_output_string(sprintf(__('(Average rating based on %s ratings)', 'si-contact-form'),number_format_i18n($api->num_ratings))); ?>">
+	  <div class="fsc-star fsc-star-rating" style="width: <?php echo $this->ctf_output_string($api->rating) ?>px"></div>
+	  <div class="fsc-star fsc-star5"><img src="<?php echo plugins_url( 'si-contact-form/star.png' ); ?>" alt="<?php _e('5 stars', 'si-contact-form') ?>" /></div>
+	  <div class="fsc-star fsc-star4"><img src="<?php echo plugins_url( 'si-contact-form/star.png' ); ?>" alt="<?php _e('4 stars', 'si-contact-form') ?>" /></div>
+	  <div class="fsc-star fsc-star3"><img src="<?php echo plugins_url( 'si-contact-form/star.png' ); ?>" alt="<?php _e('3 stars', 'si-contact-form') ?>" /></div>
+	  <div class="fsc-star fsc-star2"><img src="<?php echo plugins_url( 'si-contact-form/star.png' ); ?>" alt="<?php _e('2 stars', 'si-contact-form') ?>" /></div>
+	  <div class="fsc-star fsc-star1"><img src="<?php echo plugins_url( 'si-contact-form/star.png' ); ?>" alt="<?php _e('1 star', 'si-contact-form') ?>" /></div>
 	  </div>
-	  <small><?php echo sprintf(__('(Average rating based on %s ratings)', 'si-contact-form'),number_format_i18n($api->num_ratings)); ?> <a target="_blank" href="http://wordpress.org/extend/plugins/<?php echo $api->slug ?>/"> <?php _e('rate', 'si-contact-form') ?></a></small>
+	  <small><?php echo sprintf(__('(Average rating based on %s ratings)', 'si-contact-form'),number_format_i18n($api->num_ratings)); ?> <a target="_blank" href="http://wordpress.org/support/view/plugin-reviews/si-contact-form"> <?php _e('rate', 'si-contact-form') ?></a></small>
       <br />
     <?php endif;
 
@@ -686,11 +686,16 @@ if (isset($api->version)) {
 }
 ?>
 
+<p>Good news! A major update is being worked on. The Fast Secure Contact Form 4.0 project began in late August 2012 and is making great progress. Read about the changes here:<br />
+<a href="http://wordpress.org/support/topic/fast-secure-contact-form-40-project-reports" target="_blank">Fast Secure Contact Form 4.0 project reports</a></p>
+<p><strong>How you can help with the new 4.0 verion:</strong> <a href="http://www.fastsecurecontactform.com/donate" target="_blank">Donate to the project</a>, and/or contribute your ideas in the <a href="http://wordpress.org/support/topic/working-on-a-40-version" target="_blank">Working on a 4.0 Version</a> post.
+</p>
+
 <p>
 <?php echo __('Version:', 'si-contact-form'). ' '.$ctf_version.$fsc_update; ?> |
 <a href="http://wordpress.org/extend/plugins/si-contact-form/changelog/" target="_blank"><?php _e('Changelog', 'si-contact-form'); ?></a> |
 <a href="http://www.fastsecurecontactform.com/faq-wordpress-version" target="_blank"><?php _e('FAQ', 'si-contact-form'); ?></a> |
-<a href="http://wordpress.org/extend/plugins/si-contact-form/" target="_blank"><?php _e('Rate This', 'si-contact-form'); ?></a> |
+<a href="http://wordpress.org/support/view/plugin-reviews/si-contact-form" target="_blank"><?php _e('Rate This', 'si-contact-form'); ?></a> |
 <a href="http://www.fastsecurecontactform.com/support" target="_blank"><?php _e('Support', 'si-contact-form'); ?></a> |
 <a href="http://www.fastsecurecontactform.com/donate" target="_blank"><?php _e('Donate', 'si-contact-form'); ?></a> |
 <a href="http://www.642weather.com/weather/scripts.php" target="_blank"><?php _e('Free PHP Scripts', 'si-contact-form'); ?></a> |
@@ -700,6 +705,9 @@ if (isset($api->version)) {
 <?php
 // action hook for database extension menu
 do_action( 'fsctf_menu_links' );
+
+// Remotely fetch, cache, and display HTML ad for the Fast Secure Contact Form Newsletter plugin addon.
+$this->kws_get_remote_ad();
 
 if ($si_contact_gb['donated'] != 'true') {
   ?>
@@ -735,12 +743,11 @@ _e('If you find this plugin useful to you, please consider making a small donati
 	</div>
 ';
 
- $banner_alt_2 = '<div style="width:385px;height:200px; float:left;background-color:white;padding: 10px 10px 10px 20px; border: 1px solid #ddd;">
+ $banner_alt_2 = '<div style="width:305px;height:300px; float:left;background-color:white;padding: 10px 10px 10px 20px; border: 1px solid #ddd;">
 		<div>
 			<h3>' . __('ThemeFuse Original WP Themes', 'si-contact-form') .'</h3>
-            '. sprintf(__('Try <a href="%s" target="_blank">ThemeFuse</a>, they make some amazing original WP themes that have a cool 1 click auto install feature and excellent after care support services. Check out some of their themes!', 'si-contact-form'), 'https://www.e-junkie.com/ecom/gb.php?cl=136641&c=ib&aff=148937') .'
 		</div>
-        <a href="https://www.e-junkie.com/ecom/gb.php?cl=136641&c=ib&aff=148937" target="_blank"><img title="'. $this->ctf_output_string(__('ThemeFuse', 'si-contact-form')) .'" alt="'.$this->ctf_output_string(__('ThemeFuse', 'si-contact-form')).'" src="http://themefuse.com/wp-content/themes/themefuse/images/campaigns/themefuse.jpg" width="375" height="85" /></a>
+        <a href="http://themefuse.com/amember/aff/go?r=6664&i=46" target="_blank"><img src="http://themefuse.com/amember/file/get/path/.banners.505787138b254/i/6664" border=0 alt="300x250" width="300" height="250"></a>
   </div>
  ';
  $banner_alt_num = rand (1,2);
@@ -1501,9 +1508,6 @@ foreach ($captcha_difficulty_array as $k => $v) {
         <div style="text-align:left; display:none" id="si_contact_captcha_no_trans_tip">
         <?php _e('Sometimes fixes missing text on the CAPTCHA image. If this does not fix missing text, your PHP server is not compatible with the CAPTCHA functions. You can disable CAPTCHA or have your web server fixed.', 'si-contact-form') ?>
         </div>
-        <br />
-
-        <a href="<?php echo "$captcha_url_cf/test/index.php"; ?>" target="_new"><?php _e('Test if your PHP installation will support the CAPTCHA', 'si-contact-form'); ?></a>
 
 </fieldset>
 

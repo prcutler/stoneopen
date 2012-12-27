@@ -788,8 +788,9 @@ if ($have_attach){
       $c['blog_lang']       = get_locale(); // default 'en_US'
       $c['blog_charset']    = get_option('blog_charset');
 	  $c['permalink']       = $form_action_url;
-	  $c['comment_type']    = 'fscontactform';
+	  $c['comment_type']    = 'contact-form';
 	  $c['comment_author']  = $name;
+      //$c['is_test']  = "1";  // uncomment this when testing spam detection   
       //$c['comment_author']  = "viagra-test-123";  // uncomment this to test spam detection
       // or  You can just put viagra-test-123 as the name when testing the form (no need to edit this php file to test it)
       if($email != '') $c['comment_author_email'] = $email;

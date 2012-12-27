@@ -5,40 +5,39 @@
  * @package NextGEN-Gallery
  * @subpackage Administration
  */
-// look up for the path
-require_once( dirname( dirname(__FILE__) ) . '/ngg-config.php');
 
 // Flash often fails to send cookies with the POST or upload, so we need to pass it in GET or POST instead
+// We then have to validate the cookie manually. NOTE: WordPress functions, like
+// get_current_user_id() and the like are NOT available in this file.
 if ( is_ssl() && empty($_COOKIE[SECURE_AUTH_COOKIE]) && !empty($_REQUEST['auth_cookie']) )
 	$_COOKIE[SECURE_AUTH_COOKIE] = $_REQUEST['auth_cookie'];
 elseif ( empty($_COOKIE[AUTH_COOKIE]) && !empty($_REQUEST['auth_cookie']) )
 	$_COOKIE[AUTH_COOKIE] = $_REQUEST['auth_cookie'];
 if ( empty($_COOKIE[LOGGED_IN_COOKIE]) && !empty($_REQUEST['logged_in_cookie']) )
 	$_COOKIE[LOGGED_IN_COOKIE] = $_REQUEST['logged_in_cookie'];
-    
-// don't ask me why, sometimes needed, taken from wp core
-unset($current_user);
-
-// admin.php require a proper login cookie
-require_once(ABSPATH . '/wp-admin/admin.php');
 
 header('Content-Type: text/plain; charset=' . get_option('blog_charset'));
 
-//check for correct capability
-if ( !is_user_logged_in() )
-	die('Login failure. -1');
+if (wp_validate_auth_cookie()) {
+	$results = wp_parse_auth_cookie();
+	$logged_in = FALSE;
+	if (isset($results['username']) && isset($results['expiration'])) {
+		if (time() < floatval($results['expiration'])) {
+			if (($userdata = get_userdatabylogin($results['username'])))
+				$logged_in = $userdata->ID;
+		}
+	}
 
-//check for correct capability
-if ( !current_user_can('NextGEN Upload images') ) 
-	die('You do not have permission to upload files. -2');
-
-//check for correct nonce 
-check_admin_referer('ngg_swfupload');
+	if (!$logged_in) die("Login failure. -1");
+	else if (!user_can($logged_in, 'NextGEN Upload images')) {
+		die('You do not have permission to upload files. -2');
+	}
+}
 
 //check for nggallery
 if ( !defined('NGGALLERY_ABSPATH') )
 	die('NextGEN Gallery not available. -3');
-	
+
 include_once (NGGALLERY_ABSPATH. 'admin/functions.php');
 
 // get the gallery

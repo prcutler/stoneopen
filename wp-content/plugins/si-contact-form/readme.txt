@@ -2,9 +2,9 @@
 Contributors: Mike Challis
 Author URI: http://www.642weather.com/weather/scripts.php
 Donate link: http://www.FastSecureContactForm.com/donate
-Tags: Akismet, captcha, contact, contact form, form, mail, email, spam, multilingual, wpmu, buddypress
+Tags: Akismet, captcha, contact, contact form, form, mail, email, spam, multilingual, wpmu
 Requires at least: 2.8
-Tested up to: 3.3.2
+Tested up to: 3.5
 Stable tag: trunk
 
 A super customizable contact form that lets your visitors send you email. Blocks all automated spammers. No templates to mess with.
@@ -13,7 +13,7 @@ A super customizable contact form that lets your visitors send you email. Blocks
 
 This plugin allows a webmaster to easily create and add contact forms to WordPress. The contact form will let the user send emails to a site's admin, and also send a meeting request to talk over phone or video. An administration panel is present, where the webmaster can create and preview unlimited forms. 
 
-Features a super easy admin panel, multi-form feature, autoresponder, no templates to mess with, and an option to redirect visitors to any URL after the message is sent. Includes CAPTCHA and Akismet support to block all common spammer tactics. Spam is no longer a problem. You can add extra fields of any type: text, textarea, checkbox, checkbox-multiple, radio, select, select-multiple, attachment, date, time, hidden, password, and fieldset.
+Features: easy form edit, multiple forms, confirmation emails, no templates to mess with, and an option to redirect visitors to any URL after the message is sent. Includes CAPTCHA and Akismet support to block spammers. Spam is no longer a problem. You can add extra fields of any type: text, textarea, checkbox, checkbox-multiple, radio, select, select-multiple, attachment, date, time, hidden, password, and fieldset.
 
 * [FastSecureContactForm.com](http://www.fastsecurecontactform.com/)
 * [Download WordPress Plugin Version](http://downloads.wordpress.org/plugin/si-contact-form.zip)
@@ -22,6 +22,12 @@ Features a super easy admin panel, multi-form feature, autoresponder, no templat
 = Help Keep This Plugin Free =
 
 If you find this plugin useful to you, please consider [__making a small donation__](http://www.fastsecurecontactform.com/donate) to help contribute to my time invested and to further development. Thanks for your kind support! - [__Mike Challis__](http://profiles.wordpress.org/users/MikeChallis/)
+
+= Good news! A major update is being worked on =
+ 
+The Fast Secure Contact Form 4.0 project began in late August 2012 and is making great progress. Read about the changes here:
+[Fast Secure Contact Form 4.0 project reports](http://wordpress.org/support/topic/fast-secure-contact-form-40-project-reports). 
+How you can help with the new 4.0 verion: [Donate to the project](http://www.fastsecurecontactform.com/donate), and/or contribute your ideas in the [Working on a 4.0 Version](http://wordpress.org/support/topic/working-on-a-40-version) post.
 
 Features:
 --------
@@ -34,7 +40,7 @@ Features:
  * Supports sending mail to multiple departments.[See FAQ](http://www.fastsecurecontactform.com/tip-form-preview)
  * Optional - redirect to any URL after message sent.
  * Optional - posted data can be sent as a query string on the redirect URL. [See faq](http://www.fastsecurecontactform.com/sending-data-by-query-string)
- * Optional - autoresponder E-mail message.[See FAQ](http://www.fastsecurecontactform.com/tip-add-email-autoresponder)
+ * Optional - confirmation E-mail message.[See FAQ](http://www.fastsecurecontactform.com/tip-add-email-autoresponder)
  * Valid coding for HTML, XHTML, HTML STRICT, Section 508, and WAI Accessibility.
  * Uses simple inline error messages.
  * Reloads form data and warns user if user forgets to fill out a field.
@@ -60,8 +66,7 @@ Scheduling, Meeting and Payments via vCita:
  * Send a payment request once a meeting is completed or secure a fee in advance according to your hourly rate
 
 Security:
---------
- * It has very tight security, stops all automated spammers.
+---------
  * Akismet spam protection support.
  * Spam checks E-mail address input from common spammer tactics...
 prevents spammer forcing to:, cc:, bcc:, newlines, and other E-mail injection attempts to spam the world.
@@ -69,17 +74,17 @@ prevents spammer forcing to:, cc:, bcc:, newlines, and other E-mail injection at
  * Filters all form inputs from HTML and other nasties.
  * E-mail message footer shows blog username(if logged on), Date/Time timestamp, IP address, and user agent (browser version) of user who contacted you.
 
-Captcha Image Support:
+CAPTCHA Image Support:
 ---------------------
  * Uses Open-source free PHP CAPTCHA library by www.phpcaptcha.org (customized version included)
  * Abstract background with multi colored, angled, and transparent text
  * Arched lines through text
- * Refresh button to reload captcha if you cannot read it
- * CAPTCHA can be disabled in Options
+ * Refresh button to reload CAPTCHA
+ * CAPTCHA can be disabled on form edit page
 
 Requirements/Restrictions:
 -------------------------
- * Works with Wordpress 2.8+, WPMU, and BuddyPress (Wordpress 3.0+ is highly recommended)
+ * Works with Wordpress 2.8+ and WPMU (Wordpress 3.5+ is highly recommended)
  * PHP5 
  * PHP register_globals and safe_mode should be set to "Off".
 
@@ -138,7 +143,7 @@ The following translations are included in the download zip file:
 * French (fr_FR) - Translated by [Pierre Sudarovich](http://pierre.sudarovich.free.fr/)
 * German (de_DE) - Translated by [Sebastian Kreideweiss](http://sebastian.kreideweiss.info/)
 * Greek (el) - Translated by [Ioannis](http://www.jbaron.gr/)
-* Hebrew, Israel (he_IL) - Translated by [Asaf Chertkoff FreeAllWeb GUILD](http://web.freeall.org) 
+* Hebrew, Israel (he_IL) - Translated by Asaf Chertkoff FreeAllWeb GUILD
 * Hungarian (hu_HU) - Translated by [Jozsef Burgyan](http://dmgmedia.hu)
 * Italian (it_IT) - Translated by [Gianni Diurno](http://gidibao.net/ "Gianni Diurno")
 * Japanese (ja) - Translated by [Ichiro Kozuka]
@@ -157,7 +162,7 @@ The following translations are included in the download zip file:
 
 = Can I provide a translation? =
 
-Of course! 
+Yes! 
 How to translate Fast Secure Contact Form for WordPress
 http://www.fastsecurecontactform.com/how-to-translate
 
@@ -202,6 +207,26 @@ You can learn more about vCita at [www.vcita.com](http://www.vcita.com?invite=FS
 If you have any question about the Schedule Meetings feature please contact support@vcita.com
 
 == Changelog ==
+
+= 3.1.6 =
+- (23 Dec 2012) - fix form action URL is now compatible with qtranslate plugin with multi-lingual pages, so the correct /de/ /en/ language url is used.
+- fixed checkbox-multiple alignment issue on some themes. 
+
+= 3.1.5.8 =
+- (11 Dec 2012) - added announcement about the Fast Secure Contact Form 4.0 project.
+
+= 3.1.5.7 =
+- (04 Dec 2012) - Fix uninitialized error on vCita code. 
+- Powered by link will open in new window. 
+- Added support for Fast Secure Contact Form Newsletter plugin addon.
+- Use correct comment_type = contact-form for Akismet API call.
+- Improve visual style of rating stars. 
+
+= 3.1.5.6 =
+- (03 Nov 2012) - Fix HTML entity problem in multiple email list. 
+
+= 3.1.5.5 =
+- (06 Aug 2012) - Fix so permissions of the captcha temp folder is not changed.
 
 = 3.1.5.4 =
 - (12 May 2012) - Better detection of checkbox config errors.

@@ -29,19 +29,22 @@ http://www.642weather.com/weather/scripts.php
           switch ($si_contact_opt['ex_field'.$i.'_type']) {
            case 'fieldset':
                 if($ex_fieldset)
-                   $string .=   "</fieldset>\n";
+                   $string .=   "</fieldset>
+";
                 if($si_contact_opt['ex_field'.$i.'_notes'] != '') {
                    $string .=  $this->ctf_notes($si_contact_opt['ex_field'.$i.'_notes']);
                 }
                 $string .=   '<fieldset ';
          $string .= ($si_contact_opt['ex_field'.$i.'_label_css'] != '') ? $this->si_contact_convert_css($si_contact_opt['ex_field'.$i.'_label_css']) : $this->ctf_border_style;
          $string .= '>
-        <legend>' . $si_contact_opt['ex_field'.$i.'_label'] ."</legend>\n";
+        <legend>' . $si_contact_opt['ex_field'.$i.'_label'] ."</legend>
+";
                 $ex_fieldset = 1;
            break;
            case 'fieldset-close':
                 if($ex_fieldset)
-                   $string .=   "</fieldset>\n";
+                   $string .=   "</fieldset>
+";
                 $ex_fieldset = 0;
            break;
            case 'hidden':
@@ -213,9 +216,11 @@ foreach ($exf_opts_array as $k) {
  }
 
  if ($exf_opts_ct == 1 && preg_match('/^\[(.*)]$/',$k, $matches)) // "[Please select]" becomes "Please select"
-  $string .= '          <option value=""'.$selected.'>'.$this->ctf_output_string($matches[1]).'</option>'."\n";
+  $string .= '          <option value=""'.$selected.'>'.$this->ctf_output_string($matches[1]).'</option>
+';
  else
-  $string .= '          <option value="'.$this->ctf_output_string($k).'"'.$selected.'>'.$this->ctf_output_string($k).'</option>'."\n";
+  $string .= '          <option value="'.$this->ctf_output_string($k).'"'.$selected.'>'.$this->ctf_output_string($k).'</option>
+';
 
  $exf_opts_ct++;
  $selected = '';
@@ -300,7 +305,8 @@ foreach ($exf_opts_array as $k) {
  // selected by get
  if ( $ex_get && isset(${'ex_field'.$i.'_'.$exf_opts_ct}) && ${'ex_field'.$i.'_'.$exf_opts_ct} == 'selected' )
     $selected = ' selected="selected"';
- $string .= '               <option value="'.$this->ctf_output_string($k).'"'.$selected.'>'.$this->ctf_output_string($k).'</option>'."\n";
+ $string .= '               <option value="'.$this->ctf_output_string($k).'"'.$selected.'>'.$this->ctf_output_string($k).'</option>
+';
  $exf_opts_ct++;
  $selected = '';
 
@@ -354,7 +360,8 @@ if( preg_match('#(?<!\\\)\,#', $exf_array_test) && preg_match("/;/", $exf_array_
                 <label>' . $exf_opts_label  . $ex_req_field_ind.'</label>
         </div>
         <div '.$this->ctf_field_div_style.'>'. $this->ctf_echo_if_error(${'si_contact_error_ex_field'.$i});
-$string .=   "\n";
+$string .=   "
+";
 
   $ex_get = 0;
   $ex_cnt = 1;
@@ -371,7 +378,8 @@ $string .=   "\n";
   foreach ($exf_opts_array as $k) {
      $k = trim($k);
      if(!$exf_opts_inline && $ex_cnt > 1)
-               $string .= "                <br />\n";
+               $string .= '<br />
+';
      $string .= '                <span style="white-space:nowrap;"><input type="checkbox" style="width:13px;" id="si_contact_ex_field'.$form_id_num.'_'.$i.'_'.$ex_cnt.'" name="si_contact_ex_field'.$i.'_'.$ex_cnt.'" value="selected"  ';
 
     if (!isset($_POST['si_contact_form_id']) && !$ex_get && $ex_cnt == $si_contact_opt['ex_field'.$i.'_default']) {
@@ -383,12 +391,13 @@ $string .=   "\n";
 
                 if($si_contact_opt['ex_field'.$i.'_attributes'] != '')
                   $string .= ' '.$si_contact_opt['ex_field'.$i.'_attributes'];
-                $string .= ' />
-                <label style="display:inline;" for="si_contact_ex_field'.$form_id_num.'_'.$i.'_'.$ex_cnt.'">' . $k .'</label></span>';
+                $string .= ' /> <label style="display:inline;" for="si_contact_ex_field'.$form_id_num.'_'.$i.'_'.$ex_cnt.'">' . $k .'</label></span>';
      $ex_cnt++;
   }
 
-   $string .= '        </div>'."\n";
+   $string .= '
+        </div>
+';
 
 } else {
 
@@ -416,8 +425,7 @@ $string .=   "\n";
 
                 if($si_contact_opt['ex_field'.$i.'_attributes'] != '')
                   $string .= ' '.$si_contact_opt['ex_field'.$i.'_attributes'];
-                $string .= ' />
-                <label style="display:inline;" for="si_contact_ex_field'.$form_id_num.'_'.$i.'">' . $si_contact_opt['ex_field'.$i.'_label'] . $ex_req_field_ind.'</label>
+                $string .= ' /> <label style="display:inline;" for="si_contact_ex_field'.$form_id_num.'_'.$i.'">' . $si_contact_opt['ex_field'.$i.'_label'] . $ex_req_field_ind.'</label>
         </div>
 ';
 
@@ -467,7 +475,8 @@ if(!preg_match('#(?<!\\\)\,#', $exf_array_test) ) {
                 <label>' . $exf_opts_label  . $ex_req_field_ind.'</label>
         </div>
         <div '.$this->ctf_field_div_style.'>'. $this->ctf_echo_if_error(${'si_contact_error_ex_field'.$i});
-$string .=   "\n";
+$string .=   "
+";
 
 $selected = '';
 $ex_cnt = 1;
@@ -483,12 +492,12 @@ foreach ($exf_opts_array as $k) {
     }
  }
       if(!$exf_opts_inline && $ex_cnt > 1)
-               $string .= "           <br />\n";
+               $string .= '<br />
+ ';
  $string .= '           <span style="white-space:nowrap;"><input type="radio" style="width:13px;" id="si_contact_ex_field'.$form_id_num.'_'.$i.'_'.$ex_cnt.'" name="si_contact_ex_field'.$i.'" value="'.$this->ctf_output_string($k).'"'.$selected;
-                if($si_contact_opt['ex_field'.$i.'_attributes'] != '')
+                if($si_contact_opt['ex_field'.$i.'_attributes'] != '') 
                   $string .= ' '.$si_contact_opt['ex_field'.$i.'_attributes'];
-                $string .= ' />
-           <label style="display:inline;" for="si_contact_ex_field'.$form_id_num.'_'.$i.'_'.$ex_cnt.'">' . $k .'</label></span>'."\n";
+  $string .= ' /> <label style="display:inline;" for="si_contact_ex_field'.$form_id_num.'_'.$i.'_'.$ex_cnt.'">' . $k .'</label></span>';
  $selected = '';
  $ex_cnt++;
 }
@@ -594,7 +603,8 @@ for ($ii = ($si_contact_opt['time_format'] == '24') ? 0 : 1; $ii <= $tf_hours; $
       $selected = ' selected="selected"';
     }
  }
- $string .= '           <option value="'.$this->ctf_output_string($ii).'"'.$selected.'>'.$this->ctf_output_string($ii).'</option>'."\n";
+ $string .= '           <option value="'.$this->ctf_output_string($ii).'"'.$selected.'>'.$this->ctf_output_string($ii).'</option>
+';
  $selected = '';
 
 }
@@ -611,7 +621,8 @@ for ($ii = 00; $ii <= 59; $ii++) {
       $selected = ' selected="selected"';
     }
  }
- $string .= '            <option value="'.$this->ctf_output_string($ii).'"'.$selected.'>'.$this->ctf_output_string($ii).'</option>'."\n";
+ $string .= '            <option value="'.$this->ctf_output_string($ii).'"'.$selected.'>'.$this->ctf_output_string($ii).'</option>
+ ';
  $selected = '';
 
 }
@@ -629,7 +640,8 @@ foreach (array($this->ctf_output_string(__('AM', 'si-contact-form')), $this->ctf
       $selected = ' selected="selected"';
     }
  }
- $string .= '            <option value="'.$this->ctf_output_string($k).'"'.$selected.'>'.$this->ctf_output_string($k).'</option>'."\n";
+ $string .= '            <option value="'.$this->ctf_output_string($k).'"'.$selected.'>'.$this->ctf_output_string($k).'</option>
+';
  $selected = '';
 
 }
@@ -703,15 +715,20 @@ var ';
           $ex_date_var_string .= "dp_cal$form_id_num".'_'."$v,";
         }
         $ex_date_var_string = substr($ex_date_var_string,0,-1);
-$string .= "$ex_date_var_string;\n";
+$string .= "$ex_date_var_string;
+";
 $string .= 'window.onload = function () {
 ';
         foreach ($ex_date_found as $v) {
-          $string .= "dp_cal$form_id_num".'_'."$v  = new Epoch('epoch_popup$form_id_num".'_'."$v','popup',document.getElementById('si_contact_ex_field$form_id_num".'_'."$v'));\n";
+          $string .= "dp_cal$form_id_num".'_'."$v  = new Epoch('epoch_popup$form_id_num".'_'."$v','popup',document.getElementById('si_contact_ex_field$form_id_num".'_'."$v'));
+";
         }
-$string .=   "};\n</script>\n";
+$string .=   '};
+</script>
+';
 
      }
      if($ex_fieldset)
-        $string .=   "</fieldset>\n";
+        $string .=   '</fieldset>
+';
 ?>

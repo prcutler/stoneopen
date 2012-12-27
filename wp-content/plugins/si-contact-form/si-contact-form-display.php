@@ -28,7 +28,9 @@ $string .= '
 <div id="FSContact'.$form_id_num.'" '.$this->ctf_form_style.'>';
 
 if ($si_contact_opt['vcita_enabled'] == 'true') {
-  $string .= "\n<div style='float:left;' class='fsc_data_container'>\n";
+  $string .= "
+<div style='float:left;' class='fsc_data_container'>
+";
 }
 
 if ($si_contact_opt['border_enable'] == 'true') {
@@ -69,29 +71,35 @@ if ($have_attach){
 // print any input errors
 if ($this->si_contact_error) {
     $string .= '<div '.$this->ctf_required_style.'>
-    <div '.$this->ctf_error_style.'>'."\n";
+    <div '.$this->ctf_error_style.'>
+';
     $string .= ($si_contact_opt['error_correct'] != '') ? $si_contact_opt['error_correct'] : __('Please make corrections below and try again.', 'si-contact-form');
     $string .= '
     </div>
-</div>'."\n";
+</div>
+';
     if($have_attach && $attach_dir_error) {
       $string .= '<div '.$this->ctf_required_style.'>
-      <div '.$this->ctf_error_style.'>'."\n";
+      <div '.$this->ctf_error_style.'>
+';
       $string .= $attach_dir_error;
       $string .= '
       </div>
-</div>'."\n";
+</div>
+';
     }
 }
 if (empty($ctf_contacts)) {
    $string .= '<div '.$this->ctf_required_style.'>
    <div '.$this->ctf_error_style.'>'.__('ERROR: Misconfigured E-mail address in options.', 'si-contact-form').'
    </div>
-</div>'."\n";
+</div>
+';
 }
 
 if ($si_contact_opt['req_field_label_enable'] == 'true' && $si_contact_opt['req_field_indicator_enable'] == 'true' ) {
-   $string .=  '<div '.$this->ctf_required_style.'>'."\n";
+   $string .=  '<div '.$this->ctf_required_style.'>
+';
    $string .= ($si_contact_opt['tooltip_required'] != '') ? '<span class="required">'.$si_contact_opt['req_field_indicator'].'</span>' .$si_contact_opt['tooltip_required'] : '<span class="required">'.$si_contact_opt['req_field_indicator'].'</span>' . __('(denotes required field)', 'si-contact-form');
    $string .= '
    </div>
@@ -133,7 +141,8 @@ if (count($contacts) > 1) {
 ';
     $string .= '                <option value="">';
     $string .= ($si_contact_opt['title_select'] != '') ? $this->ctf_output_string($si_contact_opt['title_select']) : $this->ctf_output_string( __('Select', 'si-contact-form'));
-    $string .= '</option>'."\n";
+    $string .= '</option>
+';
 
     if ( !isset($cid) && isset($_GET[$form_id_num .'mailto_id']) ) {
         $cid = (int)$this->si_contact_get_var($form_id_num,'mailto_id');
@@ -147,12 +156,14 @@ if (count($contacts) > 1) {
           if (!empty($cid) && $cid == $k) {
                     $selected = ' selected="selected"';
           }
-          $string .= '                <option value="' . $this->ctf_output_string($k) . '"' . $selected . '>' . $this->ctf_output_string($v['CONTACT']) . '</option>' . "\n";
+          $string .= '                <option value="' . $k . '"' . $selected . '>' . $v['CONTACT'] . '</option>
+';
           $selected = '';
       }
 
       $string .= '                </select>
-      </div>' . "\n";
+      </div>
+';
 }
 else {
 
@@ -342,7 +353,8 @@ if($si_contact_opt['subject_type'] != 'not_available' ) {
 
     $string .= '               <option value="">';
     $string .= ($si_contact_opt['title_select'] != '') ? $this->ctf_output_string($si_contact_opt['title_select']) : $this->ctf_output_string( __('Select', 'si-contact-form'));
-    $string .= '</option>'."\n";
+    $string .= '</option>
+';
 
     if ( !isset($sid) && isset($_GET[$form_id_num .'subject_id']) ) {
         $sid = (int)$this->si_contact_get_var($form_id_num,'subject_id');
@@ -356,7 +368,8 @@ if($si_contact_opt['subject_type'] != 'not_available' ) {
           if (!empty($sid) && $sid == $k) {
                     $selected = ' selected="selected"';
           }
-          $string .= '                        <option value="' . $this->ctf_output_string($k) . '"' . $selected . '>' . $this->ctf_output_string($v) . '</option>' . "\n";
+          $string .= '                        <option value="' . $this->ctf_output_string($k) . '"' . $selected . '>' . $this->ctf_output_string($v) . '</option>
+      ';
           $selected = '';
       }
 
@@ -416,7 +429,8 @@ if ($si_contact_opt['ex_fields_after_msg'] == 'true') {
 // captcha is optional but recommended to prevent spam bots from spamming your contact form
 
 if ( $this->isCaptchaEnabled() ) {
-  $string .= $this->si_contact_get_captcha_html($si_contact_error_captcha,$form_id_num)."\n";
+  $string .= $this->si_contact_get_captcha_html($si_contact_error_captcha,$form_id_num)."
+";
 }
 
 $string .= '
@@ -437,7 +451,8 @@ $string .= '
      $string .= ($si_contact_opt['title_reset'] != '') ? $this->ctf_output_string( $si_contact_opt['title_reset'] ) : $this->ctf_output_string( __('Reset', 'si-contact-form'));
      $string .= '" onclick="return confirm(\'';
      $string .= addslashes(__('Do you really want to reset the form?', 'si-contact-form'));
-     $string .= '\')"  />'."\n";
+     $string .= '\')"  />
+';
     }
 	
 $string .= '
@@ -454,7 +469,7 @@ $string .= '
 if ($si_contact_opt['enable_credit_link'] == 'true') {
   $this->ctf_powered_by_style = $this->si_contact_convert_css($si_contact_opt['powered_by_style']);
 $string .= '
-<p '.$this->ctf_powered_by_style.'>'.__('Powered by', 'si-contact-form'). ' <a href="http://wordpress.org/extend/plugins/si-contact-form/">'.__('Fast Secure Contact Form', 'si-contact-form'). '</a></p>
+<p '.$this->ctf_powered_by_style.'>'.__('Powered by', 'si-contact-form'). ' <a href="http://wordpress.org/extend/plugins/si-contact-form/" target="_blank">'.__('Fast Secure Contact Form', 'si-contact-form'). '</a></p>
 ';
 }
 
@@ -464,11 +479,14 @@ $string .= '</div>';
 if ($si_contact_opt['vcita_enabled'] == 'true') {
 		$confirmation_token = $this->vcita_should_store_expert_confirmation_token($si_contact_opt);
 		
-		$string .= "\n<div class='fscf_vcita_container' ";
+		$string .= "
+<div class='fscf_vcita_container' ";
 		$string .= empty($confirmation_token) ? "" : "confirmation_token=".$confirmation_token;
 		$string .= (empty($si_contact_opt['vcita_uid']) ? "preview=true" : " vcita_uid = '").$si_contact_opt['vcita_uid']."'>
 </div>";
-        $string .= "\n<div style='clear:both;'></div>\n"; // "Reset" the float properties
+        $string .= "
+<div style='clear:both;'></div>
+"; // "Reset" the float properties
         $string .= '</div>';
        /* --- vCita Scheduler Display - End --- */
 }
