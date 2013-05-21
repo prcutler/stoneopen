@@ -1,4 +1,4 @@
-	
+
 	/* --- vCita Constants --- */
 	
 	var VC_REQUIRED_MIN_SPACE_WIDTH = 125;
@@ -94,7 +94,7 @@
 	}
 	
 	/**
-	 * Check by using cookies if the expert is associated with this doamin.
+	 * Check by using cookies if the expert is associated with this domain.
 	 */
 	function VC_FSCF_is_admin() {
 		var generic_expert = VC_FSCF_read_cookie('generic-expert');

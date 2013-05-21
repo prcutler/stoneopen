@@ -82,36 +82,7 @@ if ( strpos(strtolower($_SERVER['SCRIPT_NAME']),strtolower(basename(__FILE__))) 
         $result = mail($email,$subject,$message,$header_php);
       }
       $smtp_debug = ob_get_clean();
-    }else if ($si_contact_opt['php_mailer_enable'] == 'geekmail') {
-         // sending with geekmail
-         require_once WP_PLUGIN_DIR . '/si-contact-form/ctf_geekMail-1.0.php';
-         $ctf_geekMail = new ctf_geekMail();
-         $ctf_geekMail->setMailType('text');
-         $ctf_geekMail->_setcharSet(get_option('blog_charset'));
-         $ctf_geekMail->_setnewLine($php_eol);
-         if ($ctf_email_on_this_domain != '') {
-           $ctf_geekMail->return_path($this->si_contact_mail_sender);
-           $ctf_geekMail->x_sender($this->si_contact_mail_sender);
-         }
-         $ctf_geekMail->from($this->si_contact_from_email, $this->si_contact_from_name);
-         $ctf_geekMail->to($email);
-         if ($si_contact_opt['email_reply_to'] != '') { // custom reply_to
-              $ctf_geekMail->_replyTo($si_contact_opt['email_reply_to']);
-         }else if($email != '') {   // trying this: keep users reply to even when email_from_enforced
-              $ctf_geekMail->_replyTo($email);
-         }else {
-              $ctf_geekMail->_replyTo($this->si_contact_from_email);
-         }
-         $ctf_geekMail->subject($subject);
-         $ctf_geekMail->message($message);
-         // Start output buffering to grab smtp debugging output
-		 ob_start();
-         if ( !$result = $ctf_geekMail->send() ) {
-            $smtp_debug = ob_get_clean();
-            $smtp_debug .= $ctf_geekMail->getDebugger();
-         }
-
-     }else if ($si_contact_opt['php_mailer_enable'] == 'wordpress') {
+    } else {
         // sending with wp_mail
         add_filter( 'wp_mail_from', array(&$this,'si_contact_form_from_email'),1);
         add_filter( 'wp_mail_from_name', array(&$this,'si_contact_form_from_name'),1);
@@ -149,13 +120,13 @@ if ( strpos(strtolower($_SERVER['SCRIPT_NAME']),strtolower(basename(__FILE__))) 
 <?php if ($result != true) { ?>
 <p><?php _e('The result was:', 'si-contact-form'); ?></p>
 <?php echo '<p><a href="http://www.fastsecurecontactform.com/email-does-not-send">'.  __('See FAQ', 'si-contact-form') . '</a></p>'; ?>
-<pre><?php var_dump($result); ?></pre>
+<pre><?php esc_html(var_dump($result)); ?></pre>
 <?php
 if ($si_contact_opt['php_mailer_enable'] == 'wordpress') {
 ?>
 <p><?php _e('The full debugging output is shown below:', 'si-contact-form'); ?></p>
 <?php echo '<p><a href="http://www.fastsecurecontactform.com/email-does-not-send">'.  __('See FAQ', 'si-contact-form') . '</a></p>'; ?>
-<pre><?php var_dump($phpmailer); ?></pre>
+<pre><?php esc_html(var_dump($phpmailer)); ?></pre>
 <?php
     }
 } else {
@@ -166,7 +137,7 @@ if ($si_contact_opt['php_mailer_enable'] == 'wordpress') {
 ?>
 <p><?php _e('The E-mail debugging output is shown below:', 'si-contact-form'); ?></p>
 <?php echo '<p><a href="http://www.fastsecurecontactform.com/email-does-not-send">'.  __('See FAQ', 'si-contact-form') . '</a></p>'; ?>
-<pre><?php echo $smtp_debug ?></pre>
+<pre><?php echo esc_html($smtp_debug) ?></pre>
 <?php }
 
    }else{

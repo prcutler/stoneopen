@@ -17,8 +17,8 @@ if ( isset($_POST['ctf_action'])
     && isset($_POST['si_contact_copy_what'])
     && isset($_POST['si_contact_this_form'])
     && is_numeric($_POST['si_contact_this_form'])
-    && isset($_POST['si_contact_destination_form']) ) {
-        check_admin_referer( 'si-contact-form-copy_settings'); // nonce
+    && isset($_POST['si_contact_destination_form'])
+    && check_admin_referer( 'si-contact-form-copy_settings','copy_settings') ) {
 
         if ( function_exists('current_user_can') && !current_user_can('manage_options') )
              wp_die(__('You do not have permissions for managing this option', 'si-contact-form'));

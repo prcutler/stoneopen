@@ -3,12 +3,12 @@
 Plugin Name: Fast Secure Contact Form
 Plugin URI: http://www.FastSecureContactForm.com/
 Description: Fast Secure Contact Form for WordPress. The contact form lets your visitors send you a quick E-mail message. Super customizable with a multi-form feature, optional extra fields, and an option to redirect visitors to any URL after the message is sent. Includes CAPTCHA and Akismet support to block all common spammer tactics. Spam is no longer a problem. <a href="plugins.php?page=si-contact-form/si-contact-form.php">Settings</a> | <a href="http://www.FastSecureContactForm.com/donate">Donate</a>
-Version: 3.1.6
+Version: 3.1.8.2
 Author: Mike Challis
 Author URI: http://www.642weather.com/weather/scripts.php
 */
 
-$ctf_version = '3.1.6';
+$ctf_version = '3.1.8.2';
 
 /*  Copyright (C) 2008-2013 Mike Challis  (http://www.fastsecurecontactform.com/contact)
 
@@ -40,14 +40,35 @@ function si_contact_unset_options() {
   }
 } // end function si_contact_unset_options
 
+/**
+ * Clean up wp sessions by removing entries from the WordPress options table.
+ * wp sessions were used in version 3.1.8.1, but no longer used as of 3.1.8.2
+ * if wp session is active, this function is skipped
+ */
+function si_contact_wp_session_cleanup() {
+	global $wpdb;
+
+	if ( class_exists( 'WP_Session' ) ) {
+		return;
+    }
+
+	$expiration_keys = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_wp_session_%'" );
+
+	foreach( $expiration_keys as $expiration ) {
+	    delete_option( $expiration->option_name );
+	}
+
+}  // end function si_contact_wp_session_cleanup
+
+
 if (!class_exists('siContactForm')) {
 
  class siContactForm {
+
      var $si_contact_error;
      var $uploaded_files;
      var $ctf_notes_style;
      var $ctf_version;
-     var $ctf_add_script;
      var $vcita_add_script;
 
 function si_contact_add_tabs() {
@@ -92,14 +113,21 @@ function si_contact_options_page() {
  * Add the vcita Javascript to the admin section
  */
 function vcita_add_admin_js() {
+
 	if(isset($_GET['page']) && is_string($_GET['page']) && preg_match('/si-contact-form.php$/',$_GET['page']) ) {
+
+          $form_num = $this->si_contact_form_num();
+          $si_contact_opt = get_option("si_contact_form$form_num");
+          if ($si_contact_opt['vcita_enabled'] == 'false') {  // Mike challis added  01/15/2013
+            return;   // prevent setting vcita cookies in admin if vcita is disabled on the form
+          }
 		  wp_enqueue_script('jquery');
 		  wp_register_script('vcita_fscf', plugins_url('vcita/vcita_fscf.js', __FILE__), array('jquery'), '1.1', true);
 		  wp_register_script('vcita_fscf_admin', plugins_url('vcita/vcita_fscf_admin.js', __FILE__), array('jquery'), '1.1', true);
 		  
 		  wp_print_scripts('vcita_fscf');
           wp_print_scripts('vcita_fscf_admin');
-          
+
 	}
 }
 
@@ -137,7 +165,7 @@ function vcita_validate_initialized_user($form_num, $form_params, $general_param
     if (!empty($confirm_token) && !empty($form_params['vcita_uid'])) {
         $form_params['vcita_confirm_tokens'] = '';
         $form_params = $this->vcita_set_confirmation_token($form_params, $confirm_token);
-        	
+
         $form_params['vcita_confirm_token'] = null;
         update_option("si_contact_form$form_num", $form_params);
     }
@@ -162,6 +190,7 @@ function vcita_validate_initialized_user($form_num, $form_params, $general_param
  * @return array of the user name, id and if he finished the registration or not
  */
 function vcita_generate_or_validate_user($params) {
+
     $used_email = $params['vcita_email'];
     
 	// Don't create / validate if this isn't the expert
@@ -297,7 +326,7 @@ function vcita_add_notification($params) {
 	$confirmation_token = $this->vcita_get_confirmation_token($params);
 	
 	if ($params['vcita_enabled'] == 'false') {
-		$message = '<b>Meeting Scheduler is disabled</b>, please check the box below to allow users to request meetings via your contact form';        
+		$message = '<b>Meeting Scheduler is disabled</b>, please check the box below to allow users to request meetings via your contact form';
 		$message_type = "fsc-notice";
 		
 	} elseif (!empty($params['vcita_last_error'])) {
@@ -310,7 +339,7 @@ function vcita_add_notification($params) {
 		
         if (!$params['vcita_confirmed'] && !empty($confirmation_token)) {
 		    $message .= "<br/>Click below to set your meeting options and availability".
-						"<div style='margin-top:10px;'><a href='http://www.vcita.com/users/confirmation?force=true&non_avail=continue&confirmation_token=".$this->vcita_get_confirmation_token($params)."&o=int.2' target='_blank'><img src=".plugins_url( 'vcita/vcita_configure.png' , __FILE__ )." height='41px' width='242px' /></a></div>";
+						"<div style='margin-top:10px;'><a href='http://www.vcita.com/users/confirmation?force=true&amp;non_avail=continue&amp;confirmation_token=".$this->vcita_get_confirmation_token($params)."&amp;o=int.2' target='_blank'><img src=".plugins_url( 'vcita/vcita_configure.png' , __FILE__ )." height='41px' width='242px' /></a></div>";
 			$message_type = "fsc-error";
 	    } elseif (!empty($params['vcita_last_name'])) {
 	        $message .= "<b>Active account: </b>".$params['vcita_first_name']." ".$params['vcita_last_name'];
@@ -380,7 +409,7 @@ function vcita_add_config($params) {
 }
 
 /**
- * Print the notification for the admin page for the main plugins page or the fast secure page 
+ * Print the notification for the admin page for the main plugins page or the fast secure page
  * 
  */
 function vcita_print_admin_page_notification($si_contact_global_tmp = null, $form_params = null, $form_num = "", $internal_page = false) {
@@ -395,27 +424,27 @@ function vcita_print_admin_page_notification($si_contact_global_tmp = null, $for
     $prefix = ($internal_page) ? "" : "<p><b>Fast Secure Contact Form - </b>";
     $suffix = ($internal_page) ? "" : "</p>"; 
     $class = ($internal_page) ? "fsc-error" : "error"; 
-    $origin = ($internal_page) ? "&o=int.3" : "&o=int.5";
+    $origin = ($internal_page) ? "&amp;o=int.3" : "&amp;o=int.5";
     $notification_created = true;
     
     $vcita_section_url = admin_url( "plugins.php?ctf_form_num=$form_num&amp;page=si-contact-form/si-contact-form.php#vCitaSettings");
-    $vcita_dismiss_url = admin_url( "plugins.php?vcita_dismiss=true&amp;ctf_form_num=$form_num&amp;page=si-contact-form/si-contact-form.php"); 
+    $vcita_dismiss_url = admin_url( "plugins.php?vcita_dismiss=true&amp;ctf_form_num=$form_num&amp;page=si-contact-form/si-contact-form.php");
     
     // Show if empty, missing details, or internal page, vcita not used and upgrade 
     if (empty($form_params) || 
         $this->vcita_should_notify_missing_details($form_params) || 
         ($internal_page && !$this->vcita_is_being_used() && $this->vcita_should_show_when_not_used($si_contact_global_tmp))) {
-        
-        echo "<div id='si-fscf-vcita-warning' class='".$class."'>".$prefix."You still haven't completed your Meeting Scheduler settings. <a href='".$vcita_section_url."'>Click here to learn more</a>, or <a href='".$vcita_dismiss_url."'>Dismiss.</a>".$suffix."</div>";
-        
+
+        echo "<div id='si-fscf-vcita-warning' class='".$class."'>".$prefix."vCita Meeting Scheduler is active but some settings are missing. <a href='".esc_url($vcita_section_url)."'>Click here to SETUP the use of vCita</a>, or <a href='".esc_url($vcita_dismiss_url)."'>Disable vCita.</a>".$suffix."</div>";
+
     } elseif ($internal_page && $this->vcita_should_complete_registration($form_params)) {
         $vcita_complete_url = "http://www.vcita.com/users/confirmation?force=true&non_avail=continue&confirmation_token=".$this->vcita_get_confirmation_token($form_params).$origin."' target='_blank";
         
         if (!$internal_page) { // direct outside pages to vCita section (This currently won't happen but keeping for future use.) 
             $vcita_complete_url = $vcita_section_url;
         }
-        
-        echo "<div id='si-fscf-vcita-warning' class='".$class."'>".$prefix."Your Meeting Scheduler is active but some settings are still missing. <a href='".$vcita_complete_url."'>Click here to configure</a>, or <a href='".$vcita_section_url."'>here to disable</a>".$suffix."</div>";
+
+        echo "<div id='si-fscf-vcita-warning' class='".$class."'>".$prefix."vCita Meeting Scheduler is active but some settings are missing. <a href='".esc_url($vcita_complete_url)."'>Click here to SETUP the use of vCita</a>, or <a href='".esc_url($vcita_section_url)."'>Disable vCita</a>".$suffix."</div>";
         
     } elseif (!empty($params["vcita_last_error"])) {
         echo "<div class='".$class."'>".$prefix."<strong>"._e('Meeting Scheduler - '.$si_contact_opt["vcita_last_error"], 'si-contact-form')."</strong>".$suffix."</div>";
@@ -436,7 +465,7 @@ function vcita_should_complete_registration($form_params) {
 }
 
 /**
- * Check if a notification for the current form should be displayed to the user 
+ * Check if a notification for the current form should be displayed to the user
  */
 function vcita_should_notify_missing_details($form_params) {
     return isset($form_params['vcita_uid']) && empty($form_params['vcita_uid']) && $form_params['vcita_enabled'] == 'true';
@@ -444,8 +473,8 @@ function vcita_should_notify_missing_details($form_params) {
 
 
 /** 
- * Check if should display a warning in the admin section 
- * Warning will be shown in all admin pages (as being done by many other plugins) 
+ * Check if should display a warning in the admin section
+ * Warning will be shown in all admin pages (as being done by many other plugins)
  * Won't shown for the actual fast contact page - it is being called directly from the page 
  */
 function si_contact_vcita_admin_warning() {
@@ -476,7 +505,7 @@ function si_contact_vcita_admin_warning() {
              }
              
              if ($vcita_never_used && $this->vcita_should_show_when_not_used($si_contact_global_tmp)) {
-                 $this->vcita_print_admin_page_notification($si_contact_global_tmp, null); // Put the general 
+                 $this->vcita_print_admin_page_notification($si_contact_global_tmp, null); // Put the general
              }
          }
       }
@@ -507,6 +536,7 @@ function vcita_check_user($params) {
  * Get the confirmation token matches the current user
  */
 function vcita_get_confirmation_token($params) {
+
 	$token = "";
 	
 	if (!empty($params["vcita_confirm_tokens"])) {
@@ -550,6 +580,7 @@ function vcita_set_confirmation_token($params, $confirmation_token) {
  * Currently this means it will be also saved in the client side in a dedicated cookie.
  */
 function vcita_should_store_expert_confirmation_token($params) {
+
 	$confirmation_token = $this->vcita_get_confirmation_token($params);
 	
 	if (!empty($confirmation_token) && !empty($_SESSION) && $_SESSION['vcita_owner-of-'.$params['vcita_uid']]) {
@@ -618,7 +649,7 @@ function vcita_should_show_when_not_used($global_params) {
  * - has a confirmation_token -> in the past had a user
  */
 function vcita_is_form_used($form_param) {
-    return ((isset($form_param["vcita_enabled"]) && $form_param["vcita_enabled"] == "true") || 
+    return ((isset($form_param["vcita_enabled"]) && $form_param["vcita_enabled"] == "true") ||
             (isset($form_param["vcita_uid"]) && !empty($form_param["vcita_uid"])) || 
             (isset($form_param["vcita_confirm_tokens"]) && !empty($form_param["vcita_confirm_tokens"])));
 }
@@ -659,7 +690,7 @@ function vcita_si_contact_add_script(){
       ?>
     <script type="text/javascript">
 //<![CDATA[
-var vicita_fscf_style = "<!-- begin Fast Secure Contact Form - vCita scheduler page header -->" +  
+var vicita_fscf_style = "<!-- begin Fast Secure Contact Form - vCita scheduler page header -->" +
 "<style type='text/css'>" + 
 ".vcita-widget-right { float: left !important; } " +
 ".vcita-widget-bottom { float: none !important; clear:both;}" + 
@@ -675,85 +706,8 @@ $('head').append(vicita_fscf_style);
 }
 /* --- vCita Contact Functions - End --- */
 
-/** 
- * Send a mail for the given form 
- * 
- * This dedicated mail function receives all the required header and content part. 
- * It doesn't use any assumptions from global variable and for that can be called from different locations.
- */ 
-function si_contact_send_mail($si_contact_opt, $email, $subj, $msg, $from_name, $from_email, $reply_to, $html_mail) {
-	
-   $safe_mode = ((boolean)@ini_get('safe_mode') === false) ? 0 : 1;
-   $php_eol = (!defined('PHP_EOL')) ? (($eol = strtolower(substr(PHP_OS, 0, 3))) == 'win') ? "\r\n" : (($eol == 'mac') ? "\r" : "\n") : PHP_EOL;
-   $php_eol = (!$php_eol) ? "\n" : $php_eol;
-	 
-   $msg = wordwrap($msg, 70, $php_eol); // Always wrap the mails
-   $header_php = '';
-   $header = '';
-
-   // prepare the email header
-   $header_php =  "From: $from_name <". $from_email . ">\n";
-   $this->si_contact_from_name = $from_name;
-   $this->si_contact_from_email = $from_email;
-   $this->si_contact_mail_sender = $from_email;
-
-   $header .= "Reply-To: $reply_to\n";   // for php mail and wp_mail
-   $header .= "X-Sender: $this->si_contact_from_email\n";  // for php mail
-   $header .= "Return-Path: $this->si_contact_from_email\n";  // for php mail
-   
-   if ($html_mail == 'true') {
-		$header .= 'Content-Type: text/html; charset='. get_option('blog_charset') . $php_eol;
-   } else {
-		$header .= 'Content-Type: text/plain; charset='. get_option('blog_charset') . $php_eol;
-   }
-   
-   if(isset($si_contact_opt['email_subject']) && $si_contact_opt['email_subject'] != '') {
-		$subj = $si_contact_opt['email_subject'] ." $subj";
-   }
-
-   @ini_set('sendmail_from' , $this->si_contact_from_email);
-   		
-   if ($si_contact_opt['php_mailer_enable'] == 'php') {
-		$header_php .= $header;
-		
-		if (!$safe_mode) {
-			// Pass the Return-Path via sendmail's -f command.
-			@mail($email,$subj,$msg,$header_php, '-f '.$from_email);
-		} else {
-			// the fifth parameter is not allowed in safe mode
-			@mail($email,$subj,$msg,$header_php);
-		}
-   }else if ($si_contact_opt['php_mailer_enable'] == 'geekmail') {
-		// autoresponder sending with geekmail
-		require_once WP_PLUGIN_DIR . '/si-contact-form/ctf_geekMail-1.0.php';
-		$ctf_geekMail = new ctf_geekMail();
-		if ($html_mail == 'true') {
-				$ctf_geekMail->setMailType('html');
-		} else {
-				$ctf_geekMail->setMailType('text');
-		}
-		$ctf_geekMail->_setcharSet(get_option('blog_charset'));
-		$ctf_geekMail->_setnewLine($php_eol);
-		$ctf_geekMail->return_path($from_email);
-		$ctf_geekMail->x_sender($from_email);
-		$ctf_geekMail->from($from_email, $from_name);
-		$ctf_geekMail->_replyTo($reply_to);
-		$ctf_geekMail->to($email);
-		$ctf_geekMail->subject($subj);
-		$ctf_geekMail->message($msg);
-		@$ctf_geekMail->send();
-
-   } else {
-		add_filter( 'wp_mail_from_name', array(&$this,'si_contact_form_from_name'),1);
-		add_filter( 'wp_mail_from', array(&$this,'si_contact_form_from_email'),1);
-		add_action('phpmailer_init', array(&$this,'si_contact_form_mail_sender'),1);
-		
-		@wp_mail($email,$subj,$msg,$header);
-   }
-}
-
-/** 
- * Extract the mail contained and the received argument. 
+/**
+ * Extract the mail contained and the received argument.
  * Handles the following usecases:
  * 1. Name and email concatenation - Webmaster,mail@example.com
  * 2. Only email
@@ -769,7 +723,7 @@ function si_contact_extract_email($ctf_extracted_email) {
 	} else{
 		list($name, $email) = preg_split('#(?<!\\\)\,#',array_shift(preg_split('/[;]/',$ctf_trimmed_email)));
 	}
-	 
+
 	return $email;
 }
 
@@ -777,33 +731,94 @@ function si_contact_extract_email($ctf_extracted_email) {
 function si_contact_captcha_perm_dropdown($select_name, $checked_value='') {
         // choices: Display text => permission_level
         $choices = array (
-                 $this->ctf_output_string( __('All registered users', 'si-contact-form')) => 'read',
-                 $this->ctf_output_string( __('Edit posts', 'si-contact-form')) => 'edit_posts',
-                 $this->ctf_output_string( __('Publish Posts', 'si-contact-form')) => 'publish_posts',
-                 $this->ctf_output_string( __('Moderate Comments', 'si-contact-form')) => 'moderate_comments',
-                 $this->ctf_output_string( __('Administer site', 'si-contact-form')) => 'level_10'
+                 __('All registered users', 'si-contact-form') => 'read',
+                 __('Edit posts', 'si-contact-form') => 'edit_posts',
+                 __('Publish Posts', 'si-contact-form') => 'publish_posts',
+                 __('Moderate Comments', 'si-contact-form') => 'moderate_comments',
+                 __('Administer site', 'si-contact-form') => 'level_10'
                  );
         // print the <select> and loop through <options>
-        echo '<select name="' . $select_name . '" id="' . $select_name . '">
+        echo '<select name="' . esc_attr($select_name) . '" id="' . esc_attr($select_name) . '">
 ';
         foreach ($choices as $text => $capability) :
                 if ($capability == $checked_value) $checked = ' selected="selected" ';
-                echo '    <option value="' . $capability . '"' . $checked . ">$text</option>
-";
+                echo '    <option value="' . esc_attr($capability) . '"' . $checked . '>'.esc_html($text).'</option>
+';
                 $checked = '';
         endforeach;
-        echo "    </select>
-";
+        echo '    </select>
+';
 } // end function si_contact_captcha_perm_dropdown
 
-// this function prints the contact form
-// and does all the decision making to send the email or not
+
+// Returns a array of contacts for display
+// E-mail Contacts
+// the drop down list array will be made automatically by this code
+// checks for properly configured E-mail To: addresses in options.
+function get_contacts() {
+      global $si_contact_opt;
+
+$contacts = array ();
+$contacts[] = '';	// dummy entry to take up key 0
+$contacts_test = trim($si_contact_opt['email_to']);
+if(!preg_match("/,/", $contacts_test) ) {
+    if($this->ctf_validate_email($contacts_test)) {
+        // user1@example.com
+       $contacts[] = array('CONTACT' => __('Webmaster', 'si-contact-form'),  'EMAIL' => $contacts_test );
+    }
+} else {
+  $ctf_ct_arr = explode("\n",$contacts_test);
+  if (is_array($ctf_ct_arr) ) {
+    foreach($ctf_ct_arr as $line) {
+       // echo '|'.$line.'|' ;
+       list($key, $value) = preg_split('#(?<!\\\)\,#',$line); //string will be split by "," but "\," will be ignored
+       $key   = trim(str_replace('\,',',',$key)); // "\," changes to ","
+       $value = trim($value);
+       if ($key != '' && $value != '') {
+          if(!preg_match("/;/", $value)) {
+               // just one email here
+               // Webmaster,user1@example.com
+               $value = str_replace('[cc]','',$value);
+               $value = str_replace('[bcc]','',$value);
+               if ($this->ctf_validate_email($value)) {
+                  $contacts[] = array('CONTACT' => $key,  'EMAIL' => $value);
+               }
+          } else {
+               // multiple emails here
+               // Webmaster,user1@example.com;user2@example.com;user3@example.com;[cc]user4@example.com;[bcc]user5@example.com
+               $multi_cc_arr = explode(";",$value);
+               $multi_cc_string = '';
+               foreach($multi_cc_arr as $multi_cc) {
+                  $multi_cc_t = str_replace('[cc]','',$multi_cc);
+                  $multi_cc_t = str_replace('[bcc]','',$multi_cc_t);
+                  if ($this->ctf_validate_email($multi_cc_t)) {
+                     $multi_cc_string .= "$multi_cc,";
+                   }
+               }
+               if ($multi_cc_string != '') { // multi cc emails
+                  $contacts[] = array('CONTACT' => $key,  'EMAIL' => rtrim($multi_cc_string, ','));
+               }
+         }
+      }
+
+   } // end foreach
+  } // end if (is_array($ctf_ct_arr) ) {
+} // end else
+unset($contacts[0]);	// remove dummy entry.. the array keys now start with 1
+//print_r($ctf_contacts);
+return $contacts;
+
+} // end function get_contacts
+
+// this function builds and displays the contact form HTML content
 // [si_contact_form form='2']
+// This function may be processed more than once via shortcode when there are multiple forms on a page,
+// or when a plugin modifies "the content".
+
 function si_contact_form_short_code($atts) {
-  global $captcha_path_cf, $ctf_captcha_dir, $si_contact_opt, $si_contact_gb, $ctf_version, $ctf_add_script, $vcita_add_script;
+  global $fsc_form_posted, $captcha_path_cf, $si_contact_opt, $si_contact_gb, $ctf_version, $vcita_add_script, $fsc_error_message;
 
   $this->ctf_version = $ctf_version;
-
   // get options
   $si_contact_gb_mf = get_option("si_contact_form_gb");
 
@@ -823,358 +838,134 @@ function si_contact_form_short_code($atts) {
          $form_num = '';
     }
 
+  // reset the flag for the logic that prevents clicking the back button to mail again
+  // used in function si_contact_check_and_send
+  //if ( isset($_SESSION["fsc_form_lastpost_$form_id_num"]) )
+  //     unset($_SESSION["fsc_form_lastpost_$form_id_num"]);
+
   // http://www.fastsecurecontactform.com/shortcode-options
-  $shortcode_redirect = $redirect;
-  $shortcode_hidden = $hidden;
-  $shortcode_email_to = $email_to;
+  $_SESSION["fsc_shortcode_redirect_$form_id_num"] = $redirect;
+  $_SESSION["fsc_shortcode_hidden_$form_id_num"] = $hidden;
+  $_SESSION["fsc_shortcode_email_to_$form_id_num"] = $email_to;
 
   // get options
   $si_contact_gb = $this->si_contact_get_options($form_num);
 
-  // a couple language options need to be translated now.
-  $this->si_contact_update_lang();
-
-// Email address(s) to receive Bcc (Blind Carbon Copy) messages
-$ctf_email_address_bcc = $si_contact_opt['email_bcc']; // optional
-
-// optional subject list
-$subjects = array ();
-$subjects_test = explode("\n",trim($si_contact_opt['email_subject_list']));
-if(!empty($subjects_test) ) {
-  $ct = 1;
-  foreach($subjects_test as $v) {
-       $v = trim($v);
-       if ($v != '') {
-          $subjects["$ct"] = $v;
-          $ct++;
-       }
-  }
-}
-
-// E-mail Contacts
-// the drop down list array will be made automatically by this code
-// checks for properly configured E-mail To: addresses in options.
-$ctf_contacts = array ();
-$ctf_contacts_test = trim($si_contact_opt['email_to']);
-if(!preg_match("/,/", $ctf_contacts_test) ) {
-    if($this->ctf_validate_email($ctf_contacts_test)) {
-        // user1@example.com
-       $ctf_contacts[] = array('CONTACT' => __('Webmaster', 'si-contact-form'),  'EMAIL' => $ctf_contacts_test );
-    }
+ /*
+This next few lines of code controls logic for when two different forms are on one page.
+The error display and the form post vars should only be processed for one form that was posted.
+Only one form can be posted at a time
+$this->si_contact_error is set if the form posted had errors in si_contact_form_check
+$fsc_form_posted is set to the form # posted in si_contact_form_check_and_send, will be 0 of not posted
+$display_only means that this iteration in the display code is not a form that was posted, so ignore post vars
+*/
+$display_only = 0;
+$have_error = 0;
+if ($form_id_num != $fsc_form_posted) {
+    $display_only = 1;
 } else {
-  $ctf_ct_arr = explode("\n",$ctf_contacts_test);
-  if (is_array($ctf_ct_arr) ) {
-    foreach($ctf_ct_arr as $line) {
-       // echo '|'.$line.'|' ;
-       list($key, $value) = preg_split('#(?<!\\\)\,#',$line); //string will be split by "," but "\," will be ignored
-       $key   = trim(str_replace('\,',',',$key)); // "\," changes to ","
-       $value = trim($value);
-       if ($key != '' && $value != '') {
-          if(!preg_match("/;/", $value)) {
-               // just one email here
-               // Webmaster,user1@example.com
-               $value = str_replace('[cc]','',$value);
-               $value = str_replace('[bcc]','',$value);
-               if ($this->ctf_validate_email($value)) {
-                  $ctf_contacts[] = array('CONTACT' => $this->ctf_output_string($key),  'EMAIL' => $value);
-               }
-          } else {
-               // multiple emails here
-               // Webmaster,user1@example.com;user2@example.com;user3@example.com;[cc]user4@example.com;[bcc]user5@example.com
-               $multi_cc_arr = explode(";",$value);
-               $multi_cc_string = '';
-               foreach($multi_cc_arr as $multi_cc) {
-                  $multi_cc_t = str_replace('[cc]','',$multi_cc);
-                  $multi_cc_t = str_replace('[bcc]','',$multi_cc_t);
-                  if ($this->ctf_validate_email($multi_cc_t)) {
-                     $multi_cc_string .= "$multi_cc,";
-                   }
-               }
-               if ($multi_cc_string != '') { // multi cc emails
-                  $ctf_contacts[] = array('CONTACT' => $this->ctf_output_string($key),  'EMAIL' => rtrim($multi_cc_string, ','));
-               }
-         }
-      }
-
-   } // end foreach
-  } // end if (is_array($ctf_ct_arr) ) {
-} // end else
-
-//print_r($ctf_contacts);
-
-// Site Name / Title
-$ctf_sitename = get_option('blogname');
-
-// Site Domain without the http://www like this: $domain = '642weather.com';
-// Can be a single domain:      $ctf_domain = '642weather.com';
-// Can be an array of domains:  $ctf_domain = array('642weather.com','someothersite.com');
-        // get blog domain
-        $uri = parse_url(get_option('home'));
-        $blogdomain = preg_replace("/^www\./i",'',$uri['host']);
-
-$this->ctf_domain = $blogdomain;
-
-if(function_exists('qtrans_convertURL'))
-      // compatible with qtranslate plugin
-      // In case of multi-lingual pages, the /de/ /en/ language url is used.
-      $form_action_url = qtrans_convertURL($_SERVER['REQUEST_URI']);
-else
-      $form_action_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-
-// set the type of request (SSL or not)
-if ( is_ssl() )
-      $form_action_url = preg_replace('|http://|', 'https://', $form_action_url);
-
-// Make sure the form was posted from your host name only.
-// This is a security feature to prevent spammers from posting from files hosted on other domain names
-// "Input Forbidden" message will result if host does not match
-$this->ctf_domain_protect = $si_contact_opt['domain_protect'];
-
-// Double E-mail entry is optional
-// enabling this requires user to enter their email two times on the contact form.
-$ctf_enable_double_email = $si_contact_opt['double_email'];
-
-// You can ban known IP addresses
-// SET  $ctf_enable_ip_bans = 1;  ON,  $ctf_enable_ip_bans = 0; for OFF.
-$ctf_enable_ip_bans = 0;
-
-// Add IP addresses to ban here:  (be sure to SET  $ctf_enable_ip_bans = 1; to use this feature
-$ctf_banned_ips = array(
-'22.22.22.22', // example (add, change, or remove as needed)
-'33.33.33.33', // example (add, change, or remove as needed)
-);
-
-// Wordwrap E-Mail message text so lines are no longer than 70 characters.
-// SET  $ctf_wrap_message = 1;  ON,  $ctf_wrap_message = 0; for OFF.
-$ctf_wrap_message = 1;
-
-// add numbered keys starting with 1 to the $contacts array
-$cont = array();
-$ct = 1;
-foreach ($ctf_contacts as $v)  {
-    $cont["$ct"] = $v;
-    $ct++;
+     if ($this->si_contact_error)
+          $have_error = 1;
 }
-$contacts = $cont;
-unset($cont);
 
-// initialize vars
-$string = '';
-$this->si_contact_error = 0;
-$si_contact_error_print = '';
-$message_sent = 0;
-$mail_to    = '';
-$to_contact = '';
-$name       = $this->si_contact_get_var($form_id_num,'name');
-$f_name     = $this->si_contact_get_var($form_id_num,'f_name');
-$m_name     = $this->si_contact_get_var($form_id_num,'m_name');
-$mi_name    = $this->si_contact_get_var($form_id_num,'mi_name');
-$l_name     = $this->si_contact_get_var($form_id_num,'l_name');
-$email      = $this->si_contact_get_var($form_id_num,'email');
-$email2     = $this->si_contact_get_var($form_id_num,'email');
-$subject    = $this->si_contact_get_var($form_id_num,'subject');
-$message    = $this->si_contact_get_var($form_id_num,'message');
-$captcha_code  = '';
-$vcita_add_script = false;
-if ($si_contact_opt['vcita_enabled'] == 'true')
-  $vcita_add_script = true;
-
-// optional extra fields
-// capture query string vars
-$have_attach = '';
-for ($i = 1; $i <= $si_contact_opt['max_fields']; $i++) {
-   if ($si_contact_opt['ex_field'.$i.'_label'] != '') {
-      ${'ex_field'.$i} = '';
-      ${'si_contact_error_ex_field'.$i} = '';
-      if ($si_contact_opt['ex_field'.$i.'_type'] == 'time') {
-         ${'ex_field'.$i.'h'} = $this->si_contact_get_var($form_id_num,'ex_field'.$i.'h');
-         ${'ex_field'.$i.'m'} = $this->si_contact_get_var($form_id_num,'ex_field'.$i.'m');
-         ${'ex_field'.$i.'ap'} = $this->si_contact_get_var($form_id_num,'ex_field'.$i.'ap');
-      }
-      if( in_array($si_contact_opt['ex_field'.$i.'_type'],array('hidden','text','email','url','textarea','date','password')) ) {
-         ${'ex_field'.$i} = $this->si_contact_get_var($form_id_num,'ex_field'.$i);
-      }
-      if ($si_contact_opt['ex_field'.$i.'_type'] == 'radio' || $si_contact_opt['ex_field'.$i.'_type'] == 'select') {
-         $exf_opts_array = $this->si_contact_get_exf_opts_array($si_contact_opt['ex_field'.$i.'_label']);
-         $check_ex_field = $this->si_contact_get_var($form_id_num,'ex_field'.$i);
-         if($check_ex_field != '' && is_numeric($check_ex_field) && $check_ex_field > 0 ) {
-           if( isset($exf_opts_array[$check_ex_field-1]) )
-               ${'ex_field'.$i} = $exf_opts_array[$check_ex_field-1];
-         }
-      }
-      if ($si_contact_opt['ex_field'.$i.'_type'] == 'select-multiple') {
-         $exf_opts_array = $this->si_contact_get_exf_opts_array($si_contact_opt['ex_field'.$i.'_label']);
-         $ex_cnt = 1;
-         foreach ($exf_opts_array as $k) {
-             if( $this->si_contact_get_var($form_id_num,'ex_field'.$i.'_'.$ex_cnt) == 1 ){
-                 ${'ex_field'.$i.'_'.$ex_cnt} = 'selected';
-             }
-             $ex_cnt++;
-         }
-      }
-      if ($si_contact_opt['ex_field'.$i.'_type'] == 'checkbox' || $si_contact_opt['ex_field'.$i.'_type'] == 'checkbox-multiple') {
-         $exf_array_test = trim($si_contact_opt['ex_field'.$i.'_label'] );
-         if(preg_match('#(?<!\\\)\,#', $exf_array_test) ) {
-            $exf_opts_array = $this->si_contact_get_exf_opts_array($si_contact_opt['ex_field'.$i.'_label']);
-            $ex_cnt = 1;
-            foreach ($exf_opts_array as $k) {
-                if( $this->si_contact_get_var($form_id_num,'ex_field'.$i.'_'.$ex_cnt) == 1 ){
-                     ${'ex_field'.$i.'_'.$ex_cnt} = 'selected';
-                }
-                $ex_cnt++;
-            }
-         }else{
-              if($this->si_contact_get_var($form_id_num,'ex_field'.$i) == 1)
-              ${'ex_field'.$i} = 'selected';
-         }
-      }
-      if ($si_contact_opt['ex_field'.$i.'_type'] == 'attachment')
-         $have_attach = 'enctype="multipart/form-data" '; // for <form post
-
-   }
-}
-$req_field_ind = ( $si_contact_opt['req_field_indicator_enable'] == 'true' ) ? '<span class="required">'.$si_contact_opt['req_field_indicator'].'</span>' : '';
-$si_contact_error_captcha = '';
-$si_contact_error_contact = '';
-$si_contact_error_name    = '';
-$si_contact_error_f_name  = '';
-$si_contact_error_m_name  = '';
-$si_contact_error_mi_name = '';
-$si_contact_error_l_name  = '';
-$si_contact_error_email   = '';
-$si_contact_error_email2  = '';
-$si_contact_error_double_email = '';
-$si_contact_error_subject = '';
-$si_contact_error_message = '';
-
-// see if WP user
-global $current_user, $user_ID;
-get_currentuserinfo();
-
-// process form now
-if (isset($_POST['si_contact_action']) && ($_POST['si_contact_action'] == 'send')
-   && isset($_POST['si_contact_form_id']) && ($_POST['si_contact_form_id'] == $form_id_num)
-) {
-
-  // include the code to process the form and send the mail
-  include(WP_PLUGIN_DIR . '/si-contact-form/si-contact-form-process.php');
-
-} // end if posted si_contact_action = send
-
-if($message_sent) {
-       // Redirect to Home Page after message is sent
-       $ctf_redirect_enable = $si_contact_opt['redirect_enable'];
-       // Used for the delay timer once the message has been sent
-       $ctf_redirect_timeout = $si_contact_opt['redirect_seconds']; // time in seconds to wait before loading another Web page
-       // Web page to send the user to after the time has expired
-       $ctf_redirect_url = $si_contact_opt['redirect_url'];
-
-       // allow shortcode redirect to override redirect settings
-       if ( $shortcode_redirect != '') {
-           $ctf_redirect_enable = 'true';
-           $ctf_redirect_url = $shortcode_redirect;
-       }
-
-// The $thank_you is what gets printed after the form is sent.
-$this->ctf_form_style = $this->si_contact_convert_css($si_contact_opt['form_style']);
-$ctf_thank_you = '
-<!-- Fast Secure Contact Form plugin '.$this->ctf_version.' - begin - FastSecureContactForm.com -->
-<div id="FSContact'.$form_id_num.'" '.$this->ctf_form_style.'>
-';
-if ($si_contact_opt['text_message_sent'] != '') {
-        $ctf_thank_you .= $si_contact_opt['text_message_sent'];
-} else {
-        $ctf_thank_you .= __('Your message has been sent, thank you.', 'si-contact-form');
-}
-$ctf_thank_you .= '
-</div>
-';
-
-if ($ctf_redirect_enable == 'true') {
-  if ($ctf_redirect_url == '#')   // if you put # for the redirect URL it will redirect to the same page the form is on regardless of the page.
-    $ctf_redirect_url = $form_action_url;
-
-    // redirect query string code
-   if ($si_contact_opt['redirect_query'] == 'true') {
-      // build query string
-      $query_string = $this->si_contact_export_convert($posted_data,$si_contact_opt['redirect_rename'],$si_contact_opt['redirect_ignore'],$si_contact_opt['redirect_add'],'query');
-      if(!preg_match("/\?/", $ctf_redirect_url) )
-        $ctf_redirect_url .= '?'.$query_string;
-      else
-       $ctf_redirect_url .= '&'.$query_string;
-   }
-
- $ctf_thank_you .= <<<EOT
-
-<script type="text/javascript" language="javascript">
-//<![CDATA[
-var ctf_redirect_seconds=$ctf_redirect_timeout;
-var ctf_redirect_time;
-function ctf_redirect() {
-  document.title='Redirecting in ' + ctf_redirect_seconds + ' seconds';
-  ctf_redirect_seconds=ctf_redirect_seconds-1;
-  ctf_redirect_time=setTimeout("ctf_redirect()",1000);
-  if (ctf_redirect_seconds==-1) {
-    clearTimeout(ctf_redirect_time);
-    document.title='Redirecting ...';
-    self.location='$ctf_redirect_url';
+  // did we already get a valid and action completed form result?
+  if(!$display_only && ( isset($_POST['si_contact_action']) && $_POST['si_contact_action'] == 'send')
+      && (isset($_POST['si_contact_form_id']) && is_numeric($_POST['si_contact_form_id'])) ){
+     $form_id_posted = (int)$_POST['si_contact_form_id'];
+     // return the form HTML now
+     if( isset( $_SESSION['fsc_form_display_html'] ) ) {
+         //already processed, this variable is used to print the form results HTML to shortcode now, even more than once if other plugins cause
+         return $_SESSION['fsc_form_display_html'];
+     }
   }
-}
-function ctf_addOnloadEvent(fnc){
-  if ( typeof window.addEventListener != "undefined" )
-    window.addEventListener( "load", fnc, false );
-  else if ( typeof window.attachEvent != "undefined" ) {
-    window.attachEvent( "onload", fnc );
-  }
-  else {
-    if ( window.onload != null ) {
-      var oldOnload = window.onload;
-      window.onload = function ( e ) {
-        oldOnload( e );
-        window[fnc]();
-      };
-    }
-    else
-      window.onload = fnc;
-  }
-}
-ctf_addOnloadEvent(ctf_redirect);
-//]]>
-</script>
-EOT;
 
-$ctf_thank_you .= '
-<div '.$this->ctf_form_style.'>
-<img src="'.plugins_url( 'ctf-loading.gif' , __FILE__ ).'" alt="'.$this->ctf_output_string(__('Redirecting', 'si-contact-form')).'" />&nbsp;&nbsp;
-'.__('Redirecting', 'si-contact-form').' ...
-</div>
-<!-- Fast Secure Contact Form plugin '.$this->ctf_version.' - end - FastSecureContactForm.com -->
-';
-
-
-// do not remove the above EOT line
-
-}
-
-      // thank you message is printed here
-      $string .= $ctf_thank_you;
-}else{
-
-     // The $ctf_welcome_intro is what gets printed when the contact form is first presented.
-     // It is not printed when there is an input error and not printed after the form is completed
-     $ctf_welcome_intro = "
-".$si_contact_opt['welcome'];
-
-     // welcome intro is printed here
-     $string .= $ctf_welcome_intro;
+  // have to continue on and build the form results HTML now.
 
      // include the code to display the form
      include(WP_PLUGIN_DIR . '/si-contact-form/si-contact-form-display.php');
 
-} // end if ( message sent
 
  return $string;
 } // end function si_contact_form_short_code
+
+
+// returns the URL for the WP page the form was on
+function form_action_url( ) {
+
+  if(function_exists('qtrans_convertURL'))
+      // compatible with qtranslate plugin
+      // In case of multi-lingual pages, the /de/ /en/ language url is used.
+      $form_action_url = qtrans_convertURL(strip_tags($_SERVER['REQUEST_URI']));
+  else
+      $form_action_url = 'http://'.strip_tags($_SERVER['HTTP_HOST']).strip_tags($_SERVER['REQUEST_URI']);
+
+  // set the type of request (SSL or not)
+  if ( is_ssl() )
+      $form_action_url = preg_replace('|http://|', 'https://', $form_action_url);
+
+  return $form_action_url;
+
+} // end function form_action_url
+
+// This function decides if the form # was posted and needs to be processed, called only once during init
+// even when there are multiple forms on a page, only one can be posted to and processed
+// Also has logic that prevents clicking the back button to mail again, if you try, it will redirect to blank form.
+function si_contact_check_and_send(  ) {
+   global $fsc_form_posted, $si_contact_opt, $fsc_error_message;
+   $fsc_form_posted = 0;
+
+  // do we process one of our forms now?
+  if(   ( isset($_POST['si_contact_action']) && $_POST['si_contact_action'] == 'send')
+      && (isset($_POST['si_contact_form_id']) && is_numeric($_POST['si_contact_form_id'])) ){
+     $form_id_num = (int)$_POST['si_contact_form_id'];
+
+         // begin logic that prevents clicking the back button to mail again.
+         if (!isset($_POST["si_postonce_$form_id_num"]) || empty($_POST["si_postonce_$form_id_num"]) || strpos($_POST["si_postonce_$form_id_num"] , ',') === false ) {
+                // redirect, get out
+                wp_redirect( $this->form_action_url() ); // token was no good, missing or in incorrect format
+		        exit;
+         }
+         $vars = explode(',', $_POST["si_postonce_$form_id_num"]);
+         if ( empty($vars[0]) || empty($vars[1]) || ! preg_match("/^[0-9]+$/",$vars[1]) ) {
+                // redirect, get out
+                wp_redirect( $this->form_action_url() ); // token was no good, parts missing or in incorrect format
+		        exit;
+         }
+         if ( wp_hash( $vars[1] ) == $vars[0] ) {
+         // 04/01/13 disabled because caching plugins will cause problems with this
+            // if ( isset($_SESSION["fsc_form_lastpost_$form_id_num"]) && ($_SESSION["fsc_form_lastpost_$form_id_num"] == $vars[0])){
+            //   wp_redirect( $this->form_action_url() ); // the form was already posted, no clicking the back button to mail again, show blank form
+		    //   exit;
+            // }
+            // $_SESSION["fsc_form_lastpost_$form_id_num"] = $vars[0];
+         } else {
+                // redirect, get out
+                wp_redirect( $this->form_action_url() ); // token was no good, it was forged
+		        exit;
+         }
+         // end logic that prevents clicking the back button to mail again.
+            // prevent double action
+      		if( !isset( $_SESSION["fsc_sent_mail"] )) { // form not already emailed out
+			    // si_contact_check_form will check all posted input data and send the email if everything passes validation
+                // only called once for the form that was posted, not called if this form was not posted.
+                $fsc_form_posted = $form_id_num; // this is needed to prevent post vars and error display on wrong form when 2 diff forms on 1 page
+			   	$this->si_contact_check_form($form_id_num);
+            }
+
+  }
+} // function si_contact_check_and_send
+
+// This function will check all posted input data and send the email if everything passes validation
+// only called once for the form that was posted, not called if this form was not posted.
+// if the form validates, it will send mail and process the optional silent posts,
+// then return the results HTML in a session var
+function si_contact_check_form($form_id_num) {
+     global $this_form_posted, $captcha_path_cf, $si_contact_opt, $si_contact_gb, $ctf_version, $vcita_add_script, $fsc_error_message;
+
+     // include the code to process the form
+     include(WP_PLUGIN_DIR . '/si-contact-form/si-contact-form-process.php');
+
+} // function si_contact_check_form
 
 function si_contact_export_convert($posted_data,$rename,$ignore,$add,$return = 'array') {
     $query_string = '';
@@ -1231,12 +1022,34 @@ function si_contact_export_convert($posted_data,$rename,$ignore,$add,$return = '
       return $query_string;
 } // end function si_contact_export_convert
 
-
+// initializes and sets the GET input vars for the form display HTML
+// the var is initialized from the matching GET var of this form # if it is set
+// if the GET var is not set, then the var is initialized empty
 function si_contact_get_var($form_id_num,$name) {
    $value = (isset( $_GET["$form_id_num$name"])) ? $this->ctf_clean_input($_GET["$form_id_num$name"]) : '';
    return $value;
 }
 
+// initializes and sets the POST input vars for the form display HTML
+// if the form is display only, then the var is initialized empty
+// if the form is being processed, then the var is initialized from the post if it is set
+function si_contact_post_var($index,$display_only) {
+   $value = (isset( $_POST["$index"]) && !$display_only) ? $this->ctf_clean_input($_POST["$index"]) : '';
+   return $value;
+}
+
+// initializes and sets the input validation error messages
+// $fsc_error_message array can only have values for the form that was posted.
+// if the form is display only, then the error message is initialized empty
+// if the form is being processed, then the error message is initialized from the $fsc_error_message array
+// $fsc_error_message array messages are set in si_contact_check_form when the form that was posted is processed.
+function si_contact_error_var($index,$display_only) {
+  global $fsc_error_message;
+   $value = (isset( $fsc_error_message["$index"]) && !$display_only) ? $fsc_error_message["$index"] : '';
+   return $value;
+}
+
+// returns an array of extra field options
 function si_contact_get_exf_opts_array($label) {
   $exf_opts_array = array();
   $exf_opts_label = '';
@@ -1257,9 +1070,9 @@ function si_contact_get_exf_opts_array($label) {
       }
   } // end else
   return $exf_opts_array;
-} //end function
+} //end function si_contact_get_exf_opts_array
 
-// needed for making temp directories for attachments and captcha session files
+// needed for making temp directories for attachments
 function si_contact_init_temp_dir($dir) {
     $dir = trailingslashit( $dir );
     // make the temp directory
@@ -1281,7 +1094,9 @@ function si_contact_init_temp_dir($dir) {
 	}
 } // end function si_contact_init_temp_dir
 
-// needed for emptying temp directories for attachments and captcha session files
+// needed for emptying temp directories for attachments
+// garbage collection
+// called in si_contact_check_form
 function si_contact_clean_temp_dir($dir, $minutes = 30) {
     // deletes all files over xx minutes old in a temp directory
   	if ( ! is_dir( $dir ) || ! is_readable( $dir ) || ! is_writable( $dir ) )
@@ -1314,9 +1129,12 @@ function si_contact_clean_temp_dir($dir, $minutes = 30) {
        }
 	}
 	return $count;
-}
+} // end function si_contact_clean_temp_dir
 
-// used for file attachment feature
+
+// validates and saves uploaded file attchments for file attach field types.
+// also sets errors if the file did not upload or was not accepted.
+// called in si_contact_check_form
 function si_contact_validate_attach( $file, $ex_field  ) {
     global $si_contact_opt;
 
@@ -1376,7 +1194,7 @@ function si_contact_validate_attach( $file, $ex_field  ) {
 	$filename = $file['name'];
 
 	// safer file names for scripts.
-	if ( preg_match( '/\.(php|pl|py|rb|cgi)\d?$/', $filename ) )
+	if ( preg_match( '/\.(php|pl|py|rb|js|cgi)\d?$/', $filename ) )
 		$filename .= '.txt';
 
  	$attach_dir = WP_PLUGIN_DIR . '/si-contact-form/attachments/';
@@ -1399,9 +1217,10 @@ function si_contact_validate_attach( $file, $ex_field  ) {
     $result['file_name'] = $filename; // needed for email message
 
 	return $result;
-}
+} // end function si_contact_validate_attach
 
-// makes bold html email labels
+// makes bold html email labels for the email message
+// called in si_contact_check_form
 function make_bold($label) {
    global $si_contact_opt;
 
@@ -1414,7 +1233,7 @@ function make_bold($label) {
 
 // checks if captcha is enabled based on the current captcha permission settings set in the plugin options
 function isCaptchaEnabled() {
-   global $si_contact_opt, $ctf_add_script;
+   global $si_contact_opt;
 
    if ($si_contact_opt['captcha_enable'] !== 'true') {
         return false; // captcha setting is disabled for si contact
@@ -1427,7 +1246,6 @@ function isCaptchaEnabled() {
                return false;
         }
    }
-   $ctf_add_script = true;
    return true;
 } // end function isCaptchaEnabled
 
@@ -1454,25 +1272,45 @@ function captchaCheckRequires() {
   return true;
 }
 
-// fix for simple facebook connect plugin
-// http://wordpress.org/support/topic/402560
-function ctf_sfc_filter($classes) {
-  $classes[] = 'ctf-captcha';
-  return $classes;
-}
+// check the honeypot traps for spam bots
+// this is a very basic implementation, more agressive approaches might have to be added later
+function si_contact_check_honeypot($form_id) {
+    global $si_contact_opt;
+
+    if ($si_contact_opt['honeypot_enable'] == 'false')
+         return 'ok';
+
+    // hidden honeypot field
+    if( isset($_POST["email_$form_id"]) && trim($_POST["email_$form_id"]) != '')
+         return 'failed honeypot';
+
+    // server-side timestamp forgery token.
+    if (!isset($_POST["si_tok_$form_id"]) || empty($_POST["si_tok_$form_id"]) || strpos($_POST["si_tok_$form_id"] , ',') === false )
+         return 'no timestamp';
+
+    $vars = explode(',', $_POST["si_tok_$form_id"]);
+    if ( empty($vars[0]) || empty($vars[1]) || ! preg_match("/^[0-9]+$/",$vars[1]) )
+         return 'bad timestamp';
+
+    if ( wp_hash( $vars[1] ) != $vars[0] )
+       return 'bad timestamp';
+
+      $form_timestamp = $vars[1];
+      $now_timestamp  = time();
+      $human_typing_time = 5; // page load (1s) + submit (1s) + typing time (3s)
+      if ( $now_timestamp - $form_timestamp < $human_typing_time )
+	     return 'too fast less than 5 sec';
+      if ( $now_timestamp - $form_timestamp > 1800 )
+	     return 'over 30 min';
+
+      return 'ok';
+
+}  //  end function si_contact_validate_honeypot
 
 // this function adds the captcha to the contact form
-function si_contact_get_captcha_html($si_contact_error_captcha,$form_id_num) {
-   global $ctf_captcha_url, $ctf_captcha_dir, $captcha_path_cf, $captcha_url_cf, $si_contact_gb, $si_contact_opt;
-   $req_field_ind = ( $si_contact_opt['req_field_indicator_enable'] == 'true' ) ? '<span class="required">'.$si_contact_opt['req_field_indicator'].'</span>' : '';
-
-   $capt_disable_sess = 0;
-   if ($si_contact_gb['captcha_disable_session'] == 'true')
-     $capt_disable_sess = 1;
-
-// fix for simple facebook connect plugin
-// http://wordpress.org/support/topic/402560
-add_filter('sfc_img_exclude',array(&$this,'ctf_sfc_filter'),1);
+function si_contact_get_captcha_html($form_id_num,$display_only) {
+   global $captcha_path_cf, $captcha_url_cf, $si_contact_gb, $si_contact_opt, $fsc_error_message;
+   $req_field_ind = ( $si_contact_opt['req_field_indicator_enable'] == 'true' ) ? '<span '.$this->si_contact_convert_css($si_contact_opt['required_style']).'>'.$si_contact_opt['req_field_indicator'].'</span>' : '';
 
   $string = '';
 
@@ -1480,7 +1318,6 @@ add_filter('sfc_img_exclude',array(&$this,'ctf_sfc_filter'),1);
 if ($this->captchaCheckRequires()) {
 
   $si_contact_opt['captcha_image_style'] = 'border-style:none; margin:0; padding:0px; padding-right:5px; float:left;';
-  $si_contact_opt['audio_image_style'] = 'border-style:none; margin:0; padding:0px; vertical-align:top;';
   $si_contact_opt['reload_image_style'] = 'border-style:none; margin:0; padding:0px; vertical-align:bottom;';
 
 // the captch html
@@ -1491,122 +1328,59 @@ if ($this->captchaCheckRequires()) {
 $this->ctf_captcha_div_style_sm = $this->si_contact_convert_css($si_contact_opt['captcha_div_style_sm']);
 $this->ctf_captcha_div_style_m = $this->si_contact_convert_css($si_contact_opt['captcha_div_style_m']);
 
-// url for no session captcha image
+// url for captcha image
 $securimage_show_url = $captcha_url_cf .'/securimage_show.php?';
+
 $securimage_size = 'width="175" height="60"';
 if($si_contact_opt['captcha_small'] == 'true') {
-  $securimage_show_url .= 'ctf_sm_captcha=1&amp;';
+  $securimage_show_url .= 'ctf_sm_captcha=1&';
   $securimage_size = 'width="132" height="45"';
 }
 
 $parseUrl = parse_url($captcha_url_cf);
 $securimage_url = $parseUrl['path'];
 
-if($si_contact_opt['captcha_difficulty'] == 'low') $securimage_show_url .= 'difficulty=1&amp;';
-if($si_contact_opt['captcha_difficulty'] == 'high') $securimage_show_url .= 'difficulty=2&amp;';
-if($si_contact_opt['captcha_no_trans'] == 'true') $securimage_show_url .= 'no_trans=1&amp;';
+if($si_contact_opt['captcha_difficulty'] == 'low') $securimage_show_url .= 'difficulty=1&';
+if($si_contact_opt['captcha_difficulty'] == 'high') $securimage_show_url .= 'difficulty=2&';
+if($si_contact_opt['captcha_no_trans'] == 'true') $securimage_show_url .= 'no_trans=1&';
 
+$securimage_show_rf_url = $securimage_show_url . 'ctf_form_num=' .$form_id_num;
+$securimage_show_url .= 'ctf_form_num=' .$form_id_num;
 
-if($capt_disable_sess) {
-     // clean out old captcha no session temp files
-    $this->si_contact_clean_temp_dir($ctf_captcha_dir);
-    // pick new prefix token
-    $prefix_length = 16;
-    $prefix_characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    $prefix = '';
-    $prefix_count = strlen($prefix_characters);
-    while ($prefix_length--) {
-        $prefix .= $prefix_characters[mt_rand(0, $prefix_count-1)];
-    }
-    $securimage_show_rf_url = $securimage_show_url . 'prefix=';
-    $securimage_show_url .= 'prefix='.$prefix;
-} else {  // no session
-   $securimage_show_rf_url = $securimage_show_url . 'ctf_form_num=' .$form_id_num;
-   $securimage_show_url .= 'ctf_form_num=' .$form_id_num;
-}
 
 $string .= ($si_contact_opt['captcha_small'] == 'true') ? $this->ctf_captcha_div_style_sm : $this->ctf_captcha_div_style_m;
 $string .= '>
     <img class="ctf-captcha" id="si_image_ctf'.$form_id_num.'" ';
-    $string .= ($si_contact_opt['captcha_image_style'] != '') ? 'style="' . $this->ctf_output_string( $si_contact_opt['captcha_image_style'] ).'"' : '';
-    $string .= ' src="'.$securimage_show_url.'" '.$securimage_size.' alt="';
-    $string .= ($si_contact_opt['tooltip_captcha'] != '') ? $this->ctf_output_string( $si_contact_opt['tooltip_captcha'] ) : $this->ctf_output_string(__('CAPTCHA Image', 'si-contact-form'));
+    $string .= ($si_contact_opt['captcha_image_style'] != '') ? 'style="' . esc_attr( $si_contact_opt['captcha_image_style'] ).'"' : '';
+    $string .= ' src="'.esc_url($securimage_show_url).'" '.$securimage_size.' alt="';
+    $string .= esc_attr(($si_contact_opt['tooltip_captcha'] != '') ? $si_contact_opt['tooltip_captcha'] : __('CAPTCHA Image', 'si-contact-form'));
     $string .='" title="';
-    $string .= ($si_contact_opt['tooltip_captcha'] != '') ? $this->ctf_output_string( $si_contact_opt['tooltip_captcha'] ) : $this->ctf_output_string(__('CAPTCHA Image', 'si-contact-form'));
+    $string .= esc_attr(($si_contact_opt['tooltip_captcha'] != '') ? $si_contact_opt['tooltip_captcha'] : __('CAPTCHA Image', 'si-contact-form'));
     $string .= '" />
 ';
-    if($capt_disable_sess)
-        $string .= '    <input id="si_code_ctf_'.$form_id_num.'" type="hidden" name="si_code_ctf_'.$form_id_num.'" value="'.$prefix.'" />
-';
 
-    $ctf_audio_type = 'noaudio';
-    //Audio feature is disabled by Mike Challis until further notice because a proof of concept code CAPTCHA solving exploit was released - Security Advisory - SOS-11-007.
-    $si_contact_opt['enable_audio'] = 'false';
-
-    if($si_contact_opt['enable_audio'] == 'true') {
-        $ctf_audio_type = 'wav';
-       if($si_contact_opt['enable_audio_flash'] == 'true') {
-          $ctf_audio_type = 'flash';
-          $securimage_play_url = $securimage_url.'/securimage_play.swf?ctf_form_num='.$form_id_num;
-          $securimage_play_url2 = $securimage_url.'/securimage_play.php?ctf_form_num='.$form_id_num;
-          if($capt_disable_sess){
-             $securimage_play_url = $securimage_url.'/securimage_play.swf?prefix='.$prefix;
-             $securimage_play_url2 = $securimage_url.'/securimage_play.php?prefix='.$prefix;
-          }
-          $string .= '<div id="si_flash_ctf'.$form_id_num.'">
-        <object type="application/x-shockwave-flash"
-                data="'.$securimage_play_url.'&amp;bgColor1=#8E9CB6&amp;bgColor2=#fff&amp;iconColor=#000&amp;roundedCorner=5&amp;audio='.$securimage_play_url2.'"
-                id="SecurImage_as3_'.$form_id_num.'" width="19" height="19">
-			    <param name="allowScriptAccess" value="sameDomain" />
-			    <param name="allowFullScreen" value="false" />
-			    <param name="movie" value="'.$securimage_play_url.'&amp;bgColor1=#8E9CB6&amp;bgColor2=#fff&amp;iconColor=#000&amp;roundedCorner=5&amp;audio='.$securimage_play_url2.'" />
-			    <param name="quality" value="high" />
-			    <param name="bgcolor" value="#ffffff" />
-		</object></div>
-        ';
-      }else{
-         $securimage_play_url = $captcha_url_cf.'/securimage_play.php?ctf_form_num='.$form_id_num;
-         if($capt_disable_sess)
-                $securimage_play_url = $captcha_url_cf.'/securimage_play.php?prefix='.$prefix;
-         $string .= '    <div id="si_audio_ctf'.$form_id_num.'">
-';
-         $string .= '      <a id="si_aud_ctf'.$form_id_num.'" href="'.$securimage_play_url.'" rel="nofollow" title="';
-         $string .= ($si_contact_opt['tooltip_audio'] != '') ? $this->ctf_output_string( $si_contact_opt['tooltip_audio'] ) : $this->ctf_output_string(__('CAPTCHA Audio', 'si-contact-form'));
-         $string .= '">
-      <img src="'.$captcha_url_cf.'/images/audio_icon.png" width="22" height="20" alt="';
-         $string .= ($si_contact_opt['tooltip_audio'] != '') ? $this->ctf_output_string( $si_contact_opt['tooltip_audio'] ) : $this->ctf_output_string(__('CAPTCHA Audio', 'si-contact-form'));
-         $string .= '" ';
-         $string .= ($si_contact_opt['audio_image_style'] != '') ? 'style="' . $this->ctf_output_string( $si_contact_opt['audio_image_style'] ).'"' : '';
-         $string .= ' onclick="this.blur();" /></a>
-     </div>
-';
-     }
-   }
          $string .= '    <div id="si_refresh_ctf'.$form_id_num.'">
 ';
          $string .= '      <a href="#" rel="nofollow" title="';
-         $string .= ($si_contact_opt['tooltip_refresh'] != '') ? $this->ctf_output_string( $si_contact_opt['tooltip_refresh'] ) : $this->ctf_output_string(__('Refresh Image', 'si-contact-form'));
-         if($capt_disable_sess) {
-           $string .= '" onclick="si_contact_captcha_refresh(\''.$form_id_num.'\',\''.$ctf_audio_type.'\',\''.$securimage_url.'\',\''.$securimage_show_rf_url.'\'); return false;">
+         $string .= esc_attr(($si_contact_opt['tooltip_refresh'] != '') ? $si_contact_opt['tooltip_refresh'] : __('Refresh Image', 'si-contact-form'));
+
+         $string .= '" onclick="document.getElementById(\'si_image_ctf'.$form_id_num.'\').src = \''.esc_url($securimage_show_url).'&amp;sid=\''.' + Math.random(); return false;">
 ';
-         }else{
-           $string .= '" onclick="document.getElementById(\'si_image_ctf'.$form_id_num.'\').src = \''.$securimage_show_url.'&amp;sid=\''.' + Math.random(); return false;">
-';
-         }
+
          $string .= '      <img src="'.$captcha_url_cf.'/images/refresh.png" width="22" height="20" alt="';
-         $string .= ($si_contact_opt['tooltip_refresh'] != '') ? $this->ctf_output_string( $si_contact_opt['tooltip_refresh'] ) : $this->ctf_output_string(__('Refresh Image', 'si-contact-form'));
+         $string .= esc_attr(($si_contact_opt['tooltip_refresh'] != '') ? $si_contact_opt['tooltip_refresh'] : __('Refresh Image', 'si-contact-form'));
          $string .=  '" ';
-         $string .= ($si_contact_opt['reload_image_style'] != '') ? 'style="' . $this->ctf_output_string( $si_contact_opt['reload_image_style'] ).'"' : '';
+         $string .= ($si_contact_opt['reload_image_style'] != '') ? 'style="' . esc_attr( $si_contact_opt['reload_image_style'] ).'"' : '';
          $string .=  ' onclick="this.blur();" /></a>
    </div>
    </div>
 
       <div '.$this->ctf_title_style.'>
                 <label for="si_contact_captcha_code'.$form_id_num.'">';
-     $string .= ($si_contact_opt['title_capt'] != '') ? $si_contact_opt['title_capt'] : __('CAPTCHA Code', 'si-contact-form').':';
+     $string .= esc_html(($si_contact_opt['title_capt'] != '') ? $si_contact_opt['title_capt'] : __('CAPTCHA Code:', 'si-contact-form'));
      $string .= $req_field_ind.'</label>
         </div>
-        <div '.$this->si_contact_convert_css($si_contact_opt['field_div_style']).'>'.$this->ctf_echo_if_error($si_contact_error_captcha).'
+        <div '.$this->si_contact_convert_css($si_contact_opt['field_div_style']).'>'.$this->ctf_echo_if_error($this->si_contact_error_var('captcha',$display_only)).'
                 <input '.$this->si_contact_convert_css($si_contact_opt['captcha_input_style']).' type="text" value="" id="si_contact_captcha_code'.$form_id_num.'" name="si_contact_captcha_code" '.$this->ctf_aria_required.' size="'.absint($si_contact_opt['captcha_field_size']).'" />
        </div>
 ';
@@ -1616,15 +1390,15 @@ $string .= '>
   return $string;
 } // end function si_contact_get_captcha_html
 
-// shows contact form errors
+// shows form validation error messages
 function ctf_echo_if_error($this_error){
-  if ($this->si_contact_error) {
+  //if ($this->si_contact_error) {
     if (!empty($this_error)) {
          return '
-         <div '.$this->ctf_error_style.'>'. $this_error . '</div>
+         <div '.$this->ctf_error_style.'>'. esc_html($this_error) . '</div>
 ';
     }
-  }
+ // }
 } // end function ctf_echo_if_error
 
 // functions for protecting and validating form input vars
@@ -1733,8 +1507,6 @@ function ctf_validate_email($email) {
    }
    // regular expression used to perform the email syntax check
    // http://fightingforalostcause.net/misc/2006/compare-email-regex.php
-   //$pattern = "/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|asia|cat|jobs|tel|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i";
-   //$pattern = "/^([_a-zA-Z0-9-]+)(\.[_a-zA-Z0-9-]+)*@([a-zA-Z0-9-]+)(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/i";
    $pattern = "/^[-_a-z0-9\'+*$^&%=~!?{}]++(?:\.[-_a-z0-9\'+*$^&%=~!?{}]+)*+@(?:(?![-.])[-a-z0-9.]+(?<![-.])\.[a-z]{2,6}|\d{1,3}(?:\.\d{1,3}){3})(?::\d++)?$/iD";
    if(!preg_match($pattern, $email)){
       return false;
@@ -1760,15 +1532,22 @@ function ctf_validate_email($email) {
 // helps spam protect email input
 // finds new lines injection attempts
 function ctf_forbidifnewlines($input) {
-   if (
-       stristr($input, "\r")  !== false ||
-       stristr($input, "\n")  !== false ||
-       stristr($input, "%0a") !== false ||
-       stristr($input, "%0d") !== false) {
-         //wp_die(__('Contact Form has Invalid Input', 'si-contact-form'));
-         $this->si_contact_error = 1;
 
+ // check posted input for email injection attempts
+ // Check for these common exploits
+ // if you edit any of these do not break the syntax of the regex
+ $input_expl = "/(<CR>|<LF>|\r|\n|%0a|%0d|content-type|mime-version|content-transfer-encoding|to:|bcc:|cc:|document.cookie|document.write|onmouse|onkey|onclick|onload)/i";
+ // Loop through each POST'ed value and test if it contains one of the exploits fromn $input_expl:
+   if (is_string($input)){
+     $v = strtolower($input);
+     $v = str_replace('donkey','',$v); // fixes invalid input with "donkey" in string
+     $v = str_replace('monkey','',$v); // fixes invalid input with "monkey" in string
+     if( preg_match($input_expl, $v) ){
+                wp_die(__('Illegal characters in POST. Possible email injection attempt', 'si-contact-form'));
+     }
    }
+
+
 } // end function ctf_forbidifnewlines
 
 // helps spam protect email input
@@ -1807,7 +1586,7 @@ function ctf_spamcheckpost() {
       // Test to see if the $fromArray used www to get here.
       $wwwUsed = preg_match("/^www\./i",$fromArray['host']);
       if(!in_array((!$wwwUsed ? $fromArray['host'] : preg_replace("/^www\./i",'',$fromArray['host'])), $authHosts ) ){
-         return sprintf( __('Invalid HTTP_REFERER domain. See FAQ. The domain name posted from does not match the allowed domain names of this form: %s', 'si-contact-form'), $print_authHosts );
+         return sprintf( __('Invalid HTTP_REFERER domain. See FAQ. The domain name posted from does not match the allowed domain names of this form: %s', 'si-contact-form'), esc_html($print_authHosts) );
       }
    }
  } // end if domain protect
@@ -1815,7 +1594,7 @@ function ctf_spamcheckpost() {
  // check posted input for email injection attempts
  // Check for these common exploits
  // if you edit any of these do not break the syntax of the regex
- $input_expl = "/(content-type|mime-version|content-transfer-encoding|to:|bcc:|cc:|document.cookie|document.write|onmouse|onkey|onclick|onload)/i";
+ $input_expl = "/(%0a|%0d)/i";
  // Loop through each POST'ed value and test if it contains one of the exploits fromn $input_expl:
  foreach($_POST as $k => $v){
    if (is_string($v)){
@@ -1837,7 +1616,7 @@ function si_contact_plugin_action_links( $links, $file ) {
 	if ( ! $this_plugin ) $this_plugin = plugin_basename(__FILE__);
 
 	if ( $file == $this_plugin ){
-        $settings_link = '<a href="plugins.php?page=si-contact-form/si-contact-form.php">' . __( 'Settings', 'si-contact-form' ) . '</a>';
+        $settings_link = '<a href="plugins.php?page=si-contact-form/si-contact-form.php">' .esc_html( __('Settings', 'si-contact-form')) . '</a>';
 	    array_unshift( $links, $settings_link ); // before other links
 	}
 	return $links;
@@ -1870,7 +1649,6 @@ function si_contact_get_options($form_num) {
          'donated' => 'false',
          'max_forms' => '4',
          'max_fields' => '4',
-         'captcha_disable_session' => 'true',
 		 'vcita_auto_install' => 'true', /* --- vCita Global Settings --- */
          'vcita_dismiss' => 'false',
 		 'ctf_version' => $ctf_version
@@ -1910,6 +1688,7 @@ function si_contact_get_options($form_num) {
          'enable_audio_flash' => 'false',
          'captcha_perm' => 'false',
          'captcha_perm_level' => 'read',
+         'honeypot_enable' => 'false',
          'redirect_enable' => 'true',
          'redirect_seconds' => '3',
          'redirect_url' => get_option('home'),
@@ -1964,13 +1743,14 @@ function si_contact_get_options($form_num) {
          'button_style' => 'cursor:pointer; margin:0;',
          'reset_style' => 'cursor:pointer; margin:0;',
          'powered_by_style' => 'font-size:x-small; font-weight:normal; padding-top:5px;',
+         'redirect_style' => 'text-align:left;',
          'field_size' => '40',
          'captcha_field_size' => '6',
          'text_cols' => '30',
          'text_rows' => '10',
          'aria_required' => 'false',
          'auto_fill_enable' => 'true',
-         'title_border' => '',
+         'title_border' => __('Contact Form:', 'si-contact-form'),
          'title_dept' => '',
          'title_select' => '',
          'title_name' => '',
@@ -2007,6 +1787,7 @@ function si_contact_get_options($form_num) {
          'error_captcha_blank'  => '',
          'error_captcha_wrong'  => '',
          'error_correct'        => '',
+         'error_spambot'        => '',
          'vcita_enabled'        => 'false', /* --- vCita Settings --- */
          'vcita_approved'       => 'false', /* --- vCita Settings --- */
          'vcita_uid'            => '',
@@ -2038,6 +1819,15 @@ function si_contact_get_options($form_num) {
         $si_contact_option_defaults['ex_field'.$i.'_regex_error'] = '';
         $si_contact_option_defaults['ex_field'.$i.'_notes'] = '';
         $si_contact_option_defaults['ex_field'.$i.'_notes_after'] = '';
+  }
+
+  // upgrade path from old version 3.1.8.1 or older
+  if (!get_option('si_contact_form_version') ) {
+      // just now updating, session cleanup
+      si_contact_wp_session_cleanup();
+      update_option('si_contact_form_version', $ctf_version);
+  } elseif (get_option('si_contact_form_version') != $ctf_version) {
+      update_option('si_contact_form_version', $ctf_version);
   }
 
   // upgrade path from old version
@@ -2080,7 +1870,7 @@ function si_contact_get_options($form_num) {
   }
 
   /* --- vCita Migrate - End --- */
-  
+
   // Save the previous version 
   if (isset($si_contact_gb['ctf_version'])) {
 	$ctf_previous_version = $si_contact_gb['ctf_version'];
@@ -2100,7 +1890,7 @@ function si_contact_get_options($form_num) {
 
   // get the options from the database
   $si_contact_opt = get_option("si_contact_form$form_num");
-  
+
   if (!isset($si_contact_opt['max_fields'])) {  // updated from version < 3.0.3
           $si_contact_opt['max_fields'] = $si_contact_gb['max_fields'];
           update_option("si_contact_form$form_num", $si_contact_opt);
@@ -2169,13 +1959,13 @@ function si_contact_get_options($form_num) {
   
   /* --- vCita User Initialization - Start --- */
   
-  $si_contact_opt = $this->vcita_validate_initialized_user($form_num, 
-                                                           $si_contact_opt, 
-                                                           $si_contact_gb, 
+  $si_contact_opt = $this->vcita_validate_initialized_user($form_num,
+                                                           $si_contact_opt,
+                                                           $si_contact_gb,
                                                            $ctf_previous_version);
 
   /* --- vCita User Initialization - End --- */
-  
+          //print_r($si_contact_opt);
   return $si_contact_gb;
 
 } // end function si_contact_get_options
@@ -2187,7 +1977,7 @@ function si_contact_copy_styles($this_form_arr,$destination_form_arr) {
      'border_enable','form_style','border_style','required_style','notes_style',
      'title_style','field_style','field_div_style','error_style','select_style',
      'captcha_div_style_sm','captcha_div_style_m','captcha_input_style','submit_div_style','button_style', 'reset_style',
-     'powered_by_style','field_size','captcha_field_size','text_cols','text_rows');
+     'powered_by_style','redirect_style','field_size','captcha_field_size','text_cols','text_rows');
      foreach($style_copy_arr as $style_copy) {
            $destination_form_arr[$style_copy] = $this_form_arr[$style_copy];
      }
@@ -2195,17 +1985,22 @@ function si_contact_copy_styles($this_form_arr,$destination_form_arr) {
 }
 
 function si_contact_start_session() {
-  // a PHP session cookie is set so that the captcha can be remembered and function
+  // start the PHP session - used by CAPTCHA, the form action logic, and also used by vCita
   // this has to be set before any header output
-  //echo "starting session ctf";
-  // start cookie session, but do not start session if captcha is disabled in options
-  // Also required for vCita functionallity
+
+  // start cookie session
   if( !isset( $_SESSION ) ) { // play nice with other plugins
+    //set the $_SESSION cookie into HTTPOnly mode for better security
+    if (version_compare(PHP_VERSION, '5.2.0') >= 0)  // supported on PHP version 5.2.0  and higher
+      @ini_set("session.cookie_httponly", 1);
     session_cache_limiter ('private, must-revalidate');
     session_start();
-	
-   // echo "session started ctf";
   }
+
+  if(isset($_SESSION['fsc_form_display_html']))
+       unset($_SESSION['fsc_form_display_html']); // clear for next page
+  if(isset($_SESSION['fsc_sent_mail']))
+       unset($_SESSION['fsc_sent_mail']);  // clear for next page
   
   if (is_admin()) {
     $_SESSION["vcita_expert"] = true;
@@ -2278,7 +2073,7 @@ function get_captcha_url_cf() {
 
   //http://example.com/wordpress  WordPress address get_option( 'siteurl' )
   //http://example.com/           Blog address      get_option( 'home' )
-
+  // even works on multisite, network activated
   $site_uri = parse_url(get_option('home'));
   $home_uri = parse_url(get_option('siteurl'));
 
@@ -2325,6 +2120,11 @@ div.fsc-star img {width:19px; height:19px; border-left:1px solid #fff; border-ri
 
 }
 
+// message sent meta refresh when redirect is on
+function si_contact_form_meta_refresh() {
+ echo $this->meta_string;
+}
+
 function si_contact_form_from_email() {
  return $this->si_contact_from_email;
 }
@@ -2347,26 +2147,15 @@ function ctf_notes($notes) {
 }
 
 function si_contact_convert_css($string) {
-
-    if( preg_match("/^style=\"(.*)\"$/i", $string) ){
-      return $string;
+    // sanitize admin Modifiable CSS Style Feature
+    if( preg_match("/^style=\"(.*)\"$/i", $string, $matches) ){
+      return 'style="'.esc_attr($matches[1]).'"';
     }
-    if( preg_match("/^class=\"(.*)\"$/i", $string) ){
-      return $string;
+    if( preg_match("/^class=\"(.*)\"$/i", $string, $matches) ){
+      return 'class="'.esc_attr($matches[1]).'"';
     }
-    return 'style="'.$string.'"';
-
+    return 'style="'.esc_attr($string).'"';
 } // end function si_contact_convert_css
-
-function si_contact_add_script(){
-    global $si_contact_opt, $ctf_add_script;
-
-    if (!$ctf_add_script)
-      return;
-
-   wp_register_script('si_contact_form', plugins_url('captcha/ctf_captcha.js', __FILE__), array(), '1.0', true);
-   wp_print_scripts('si_contact_form');
-}
 
 /**
  * Remotely fetch, cache, and display HTML ad for the Fast Secure Contact Form Newsletter plugin addon.
@@ -2420,20 +2209,6 @@ function fscf_enqueue_scripts() {
 } // end of if class
 
 
-// Pre-2.8 compatibility
-if ( ! function_exists( 'esc_html' ) ) {
-	function esc_html( $text ) {
-		return wp_specialchars( $text );
-	}
-}
-
-// Pre-2.8 compatibility
-if ( ! function_exists( 'esc_attr' ) ) {
-	function esc_attr( $text ) {
-		return attribute_escape( $text );
-	}
-}
-
 if (class_exists("siContactForm")) {
  $si_contact_form = new siContactForm();
 }
@@ -2443,33 +2218,18 @@ if (isset($si_contact_form)) {
   $captcha_url_cf  = $si_contact_form->get_captcha_url_cf();
   $captcha_path_cf = WP_PLUGIN_DIR . '/si-contact-form/captcha';
 
-  // only used for the no-session captcha setting
-  $ctf_captcha_url = $captcha_url_cf  . '/temp/';
-  $ctf_captcha_dir = $captcha_path_cf . '/temp/';
-
   // si_contact initialize options
   add_action('init', array(&$si_contact_form, 'si_contact_init'),1);
 
-  $si_contact_gb = get_option("si_contact_form_gb");
-  if ( isset($si_contact_gb['captcha_disable_session']) && $si_contact_gb['captcha_disable_session'] == 'true') {
-      // add javascript (conditionally to footer)
-      // http://scribu.net/wordpress/optimal-script-loading.html
-      add_action( 'wp_footer', array(&$si_contact_form,'si_contact_add_script'));
-      add_action( 'admin_footer', array(&$si_contact_form,'si_contact_add_script'));
-      $si_contact_form->si_contact_init_temp_dir($ctf_captcha_dir);
-  }
-  //echo 'vcita:'.$si_contact_gb['vcita_dismiss'].' sess:'.$si_contact_gb['captcha_disable_session'];
+  // start the PHP session - used by CAPTCHA, the form action logic, and also used by vCita
+  add_action('init', array(&$si_contact_form,'si_contact_start_session'),1);
 
+  // process the form POST logic
+  add_action('init', array(&$si_contact_form,'si_contact_check_and_send'),10);
 
-  if ( $si_contact_gb['captcha_disable_session'] == 'false' || (isset($si_contact_gb['vcita_dismiss']) && $si_contact_gb['vcita_dismiss'] == 'false') )  {
-    // start the PHP session - used by CAPTCHA, also used by vCita
-    add_action('init', array(&$si_contact_form,'si_contact_start_session'),2);
-  }
-  
   // si contact form admin options
   add_action('admin_menu', array(&$si_contact_form,'si_contact_add_tabs'),1);
   add_action('admin_head', array(&$si_contact_form,'si_contact_admin_head'),1);
-
 
   add_action('wp_footer', array(&$si_contact_form,'vcita_si_contact_add_script'),1);
 

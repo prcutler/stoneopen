@@ -15,8 +15,8 @@ if ( strpos(strtolower($_SERVER['SCRIPT_NAME']),strtolower(basename(__FILE__))) 
 if ( isset($_POST['ctf_action'] )
     && $_POST['ctf_action'] == __('Backup Settings', 'si-contact-form')
     && isset($_POST['si_contact_backup_type'])
-    && (is_numeric($_POST['si_contact_backup_type']) || $_POST['si_contact_backup_type'] == 'all') ) {
-        check_admin_referer( 'si-contact-form-backup_settings'); // nonce
+    && (is_numeric($_POST['si_contact_backup_type']) || $_POST['si_contact_backup_type'] == 'all')
+    && check_admin_referer( 'si-contact-form-backup_settings','backup_settings') ) {
 
         if ( function_exists('current_user_can') && !current_user_can('manage_options') )
              wp_die(__('You do not have permissions for managing this option', 'si-contact-form'));
@@ -28,7 +28,7 @@ if ( isset($_POST['ctf_action'] )
         $eol = "\r\n";
 
         // format the data to be stored in contact-form-backup.txt
-        $string .= "**SERIALIZED DATA, DO NOT HAND EDIT!**$eol";
+        $string = "**SERIALIZED DATA, DO NOT HAND EDIT!**$eol";
         $string .= "Backup of forms and settings for 'Fast Secure Contact Form' WordPress plugin $ctf_version$eol";
         $string .= 'Form ID included in this backup: '.$backup_type.$eol;
         $string .= "Web site: ".get_option('home').$eol;
@@ -82,7 +82,7 @@ if ( isset($_POST['ctf_action'] )
          $filename = 'contact-form-backup-'.$backup_type.'.txt';
 
         // force download dialog to web browser
-        ob_end_clean();
+        @ob_end_clean();
 		header('Pragma: public');
 		header('Expires: 0');
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');

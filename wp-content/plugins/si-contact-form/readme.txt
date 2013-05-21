@@ -3,8 +3,8 @@ Contributors: Mike Challis
 Author URI: http://www.642weather.com/weather/scripts.php
 Donate link: http://www.FastSecureContactForm.com/donate
 Tags: Akismet, captcha, contact, contact form, form, mail, email, spam, multilingual, wpmu
-Requires at least: 2.8
-Tested up to: 3.5
+Requires at least: 3.4.2
+Tested up to: 3.5.1
 Stable tag: trunk
 
 A super customizable contact form that lets your visitors send you email. Blocks all automated spammers. No templates to mess with.
@@ -84,9 +84,9 @@ CAPTCHA Image Support:
 
 Requirements/Restrictions:
 -------------------------
- * Works with Wordpress 2.8+ and WPMU (Wordpress 3.5+ is highly recommended)
+ * Works with Wordpress 3.4.2+ and WPMU (Wordpress 3.5+ is highly recommended)
  * PHP5 
- * PHP register_globals and safe_mode should be set to "Off".
+ * PHP register_globals and safe_mode MUST be set to "Off".
 
 == Installation ==
 
@@ -207,6 +207,75 @@ You can learn more about vCita at [www.vcita.com](http://www.vcita.com?invite=FS
 If you have any question about the Schedule Meetings feature please contact support@vcita.com
 
 == Changelog ==
+
+= 3.1.8.2 =
+- (01 Apr 2013) - switched back to PHP sessions because WP Sessions had issues with cache plugins.
+- Fixed some forms sometimes blanked on Submit.
+- Fixed error logic for attachment permissions.
+- Fixed form posting issues caused by cached pages and session timeout issues.
+- Fixed sometimes missing values for select-multiple field type.
+- Fixed CAPTCHA did not work on some servers.
+- Fixed sometimes error in backup tool.
+
+
+= 3.1.8.1 =
+- (02 Feb 2013) - Fixed multiple forms on same page was broken.
+- fixed ReferenceError: VC_FSCF_set_cookie is not defined.
+
+= 3.1.8 =
+- (30 Jan 2013) - removed PHP sessions and replaced with a built-in WP session method: WP Session Manager by Eric Mann.
+- added border formatting of HTML email where it displays user info.
+
+= 3.1.7.3 =
+- (27 Jan 2013) - fix passing Passing query string parameters to contact form page feature.
+- fix Notice: Undefined variable: ctf_redirect_enable.
+- change to securimage_ctf class name for CAPTCHA.
+
+= 3.1.7.2 =
+- (19 Jan 2013) - fix a parse error when akismet is enabled.
+- fix error when the  form is called from PHP shortcode method.
+- display a more helpful error when checkbox is not configured properly.
+
+= 3.1.7.1 =
+- (18 Jan 2013) - fix a few critical errors such as "illegal characters in POST", Notice: Undefined index si-contact-form.php on line 1016, and users cannot send the form a 2nd time.
+
+= 3.1.7 =
+- (17 Jan 2013) - major fix for compatibility with JetPack, SFC Like, and other plugins that modify "The content".
+- fixed all "Could not read CAPTCHA token file" errors.
+- fixed redirect not working when other plugins modify "The content".
+- fixed "Your message has been sent" message not displaying when other plugins modify "The content".
+- fixed vCita cookie was setting even if vCita is disabled.
+- fixed some false "Invalid Input" errors on form input sanitization.
+- PHP sessions are utilized and required now.
+- removed the CAPTCHA temp folder since PHP sessions are always used now.
+- PHP session cookie now uses HTTPOnly mode for better security (PHP 5.2.0 and up) 
+- added click back button and send again prevention trap, when you try to do that, it will show a blank form.
+- changed message sent redirect from javascript to meta refresh in HTML header.
+- removed the last of the CAPTCHA audio code.
+- removed the setting "Use captcha without PHP session".
+- other bug fixes.
+
+= 3.1.6.3 =
+- (09 Jan 2013) - fixed message sent HTML when redirect is disabled.
+
+= 3.1.6.2 =
+- (08 Jan 2013) - fixed redirect query vars bug caused by 3.1.6.1
+- fixed a couple PHP errors caused by 3.1.6.1
+- fixed some field labels had a semicolon outside of the translatable text.
+- fixed styles left required indicator alignment.
+- fixed to allow HTML in "Required field indicator" setting.
+- added redirect message is inside a border when form border is enabled.
+- added new setting "CSS style for redirecting message".
+- added more help links for css settings on form edit page.
+- required field indicators are now styled by the setting "CSS style for required field text", so now it controls both the message and the indicators the same.
+
+= 3.1.6.1 =
+- (06 Jan 2013) - added new setting "Enable honeypot spambot trap". Enables empty field and time based honyepot traps for spam bots. For best results, do not enable unless you have a spam bot problem. Does not stop human spammers, Akismet should be enabled for that.
+- Many security improvements and code cleanup.
+- Autoresponder email is renamed to Confirmation email.
+- Border label can now be disabled by deleting the "Border label" setting.
+- Removed geekmail mail send function, you can still use WordPress or PHP.
+- Email field is now type=text instead of type=email because too many themes did not style for it. Version 4.0 will have an option to select this.
 
 = 3.1.6 =
 - (23 Dec 2012) - fix form action URL is now compatible with qtranslate plugin with multi-lingual pages, so the correct /de/ /en/ language url is used.
