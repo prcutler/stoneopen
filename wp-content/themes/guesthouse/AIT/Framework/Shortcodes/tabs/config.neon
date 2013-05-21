@@ -1,0 +1,15 @@
+title: Tabs and Toggles
+type: dropdown
+
+dropdownOptions:
+	title:
+		label: 'Tabs and Toggles'
+		type: header
+	option1:
+		label: 'Tabs'
+		type: option
+		value: '[tabs]<br />&nbsp;&nbsp;&nbsp;[tab title="Tab number 1"]Tab 1 content goes here.[/tab]<br />&nbsp;&nbsp;&nbsp;[tab title="Tab number 2"]Tab 2 content goes here.[/tab]<br />&nbsp;&nbsp;&nbsp;[tab title="Tab number 3"]Tab 3 content goes here.[/tab]<br />&nbsp;&nbsp;&nbsp;[tab title="Tab number 4"]Tab 4 content goes here.[/tab]<br />[/tabs]'
+	option2:
+		label: 'Toggles'
+		type: option
+		value: '[toggles]<br />&nbsp;&nbsp;&nbsp;[toggle title="Accordion number 1"]Toggle 1 content goes here.[/toggle]<br />&nbsp;&nbsp;&nbsp;[toggle title="Accordion number 2"]Toggle 2 content goes here.[/toggle]<br />&nbsp;&nbsp;&nbsp;[toggle title="Accordion number 3"]Toggle 3 content goes here.[/toggle]<br />&nbsp;&nbsp;&nbsp;[toggle title="Accordion number 4"]Toggle 4 content goes here.[/toggle]<br />[/toggles]'

@@ -1,0 +1,90 @@
+title: Buttons Shortcodes
+type: button
+
+shortcodeName: button
+popupOptions:
+	type:
+		label: Insert
+		type: type-select
+		class: all
+		default: {
+			button: {
+				label: Button with link
+				checked: true
+				shortcodeName: button
+			},
+			buttonModal: {
+				label: Button to modal window
+				shortcodeName: buttonModal
+			}
+		}
+	title:
+		label: Title
+		type: text
+		default: AIT Themes
+		class: all
+	link:
+		label: Link
+		type: text
+		default: http://www.ait-themes.com
+		class: button
+	modalname:
+		label: Modal Window Name
+		type: text
+		class: buttonModal
+	description:
+		label: Description
+		type: text
+		class: all
+	width:
+		label: Width
+		type: text
+		default: 180px
+		class: all
+	version:
+		label: Version
+		type: select
+		class: all
+		default: {
+			light: {
+				label: Light
+				checked: true
+			},
+			dark: {
+				label: Dark
+			}
+		}
+	position:
+		label: Position
+		type: select
+		class: all
+		default: {
+			left: {
+				label: Left
+				checked: true
+			},
+			right: {
+				label: Right
+			},
+			center: {
+				label: Center
+			}
+		}
+	bgcolor:
+		label: Background Color
+		type: colorpicker
+		default: '#CCCCCC'
+		class: all
+	color:
+		label: Color
+		type: colorpicker
+		default: '#CC0000'
+		class: all
+	picture:
+		label: Picture
+		type: text
+		class: all
+	height:
+		label: Height
+		type: text
+		class: all

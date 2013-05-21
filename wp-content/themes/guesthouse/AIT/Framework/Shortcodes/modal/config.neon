@@ -1,0 +1,37 @@
+title: Modal Shortcodes
+type: button
+
+shortcodeName: modal-link
+paired: yes
+insertContent: yes
+
+popupOptions:
+	type:
+		label: Insert
+		type: type-select
+		class: all
+		default: {
+			link: {
+				label: Modal Link
+				checked: true
+				shortcodeName: modal-link
+			},
+			content: {
+				label: Modal Content
+				shortcodeName: modal-content
+			}
+		}
+	name:
+		label: "Name (ID) of modal window"
+		type: text
+		class: all
+	width:
+		label: "Width (px or auto)"
+		type: text
+		default: auto
+		class: modal-content
+	height:
+		label: "Height (px or auto)"
+		type: text
+		default: auto
+		class: modal-content

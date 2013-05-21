@@ -1,0 +1,11 @@
+title: Image Shortcodes
+type: dropdown
+
+dropdownOptions:
+	title:
+		label: 'Image shortcodes'
+		type: header
+	option1:
+		label: 'Image with border'
+		type: option
+		value: '[image]$content[/image]'

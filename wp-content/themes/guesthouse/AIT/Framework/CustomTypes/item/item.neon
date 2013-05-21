@@ -1,0 +1,6 @@
+descriptionShort:
+	label: Short Description
+	type: textarea
+count:
+	label: Count
+	type: text

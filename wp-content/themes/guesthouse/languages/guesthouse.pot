@@ -1,0 +1,146 @@
+# Copyright (C) 2013 AIT-Themes.com http://ait-themes.com
+# This file is distributed under the same license as the AIT GuestHouse WordPress Theme.
+msgid ""
+msgstr ""
+"Project-Id-Version: GuestHouse 2.34\n"
+"Report-Msgid-Bugs-To: http://support.ait-themes.com/categories/wp-guesthouse\n"
+"POT-Creation-Date: 2013-02-27T10:39:56+01:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2013-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: \Templates\general-search-form.php:3
+msgid "Search for:"
+msgstr ""
+
+#: \Templates\general-search-form.php:4
+msgid "search..."
+msgstr ""
+
+#: \Templates\general-search-form.php:5
+msgid "Search"
+msgstr ""
+
+#: \Templates\main-404.php:6
+msgid "This is somewhat embarrassing, isn't it?"
+msgstr ""
+
+#: \Templates\main-404.php:15
+msgid "Apologies, but the page you requested could not be found. Perhaps searching will help."
+msgstr ""
+
+#: \Templates\main-archive.php:15
+msgid "Daily Archives:"
+msgstr ""
+
+#: \Templates\main-archive.php:17
+msgid "Monthly Archives:"
+msgstr ""
+
+#: \Templates\main-archive.php:19
+msgid "Yearly Archives:"
+msgstr ""
+
+#: \Templates\main-archive.php:21
+msgid "Blog Archives"
+msgstr ""
+
+#: \Templates\main-archive.php:40
+#: \Templates\main-index.php:34
+#: \Templates\main-search.php:32
+msgid "Sorry, but nothing matched your search criteria. Please try again with some different keywords."
+msgstr ""
+
+#: \Templates\main-author.php:13
+msgid "Author Archives:"
+msgstr ""
+
+#: \Templates\main-author.php:28
+msgid "About"
+msgstr ""
+
+#: \Templates\main-author.php:42
+#: \Templates\main-category.php:32
+#: \Templates\main-index.php:30
+#: \Templates\main-search.php:28
+#: \Templates\main-tag.php:32
+msgid "Nothing Found"
+msgstr ""
+
+#: \Templates\main-author.php:45
+#: \Templates\main-category.php:36
+#: \Templates\main-tag.php:36
+msgid "Apologies, but no results were found for the requested archive. Perhaps searching will help find a related post"
+msgstr ""
+
+#: \Templates\main-category.php:14
+msgid "Category Archives:"
+msgstr ""
+
+#: \Templates\main-homepage.php:39
+#: \Templates\main-index.php:73
+#: \Templates\main-page.php:59
+msgid "You are here:"
+msgstr ""
+
+#: \Templates\main-layout.php:155
+#: \Templates\main-page-fullwidth.php:46
+#: \Templates\main-single-ait-item.php:61
+#: \Templates\main-single-ait-room.php:60
+#: \Templates\main-single.php:93
+#: \Templates\snippet-custom-home-slider.php:171
+#: \Templates\snippet-custom-room-viewer.php:147
+msgid "You are here: "
+msgstr ""
+
+#: \Templates\main-search.php:14
+msgid "Search Results for:"
+msgstr ""
+
+#: \Templates\main-tag.php:14
+msgid "Tag Archives: "
+msgstr ""
+
+#: \Templates\snippet-comments-pagination.php:3
+msgid "&larr; Older Comments"
+msgstr ""
+
+#: \Templates\snippet-comments-pagination.php:4
+msgid "Newer Comments &rarr;"
+msgstr ""
+
+#: AIT\Framework\WpLatte\WpLatteFunctions.php:
+msgid "Home"
+msgstr ""
+
+#: AIT\Framework\WpLatte\WpLatteFunctions.php:
+msgid "Page %s"
+msgstr ""
+
+#: AIT\Framework\WpLatte\WpLatteFunctions.php:
+msgid "Edit This"
+msgstr ""
+
+#: AIT\Framework\WpLatte\WpLatteFunctions.php:
+msgid "Edit comment"
+msgstr ""
+
+#: AIT\Framework\WpLatte\WpLatteFunctions.php:
+msgid "Category: \"%s\""
+msgstr ""
+
+#: AIT\Framework\WpLatte\WpLatteFunctions.php:
+msgid "Posts tagged &quot;%s&quot;"
+msgstr ""
+
+#: AIT\Framework\WpLatte\WpLatteFunctions.php:
+msgid "Author: &quot;%s&quot;"
+msgstr ""
+
+#: AIT\Framework\WpLatte\WpLatteFunctions.php:
+msgid "Search results for &quot;%s&quot;"
+msgstr ""

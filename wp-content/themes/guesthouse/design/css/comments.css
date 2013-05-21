@@ -1,0 +1,66 @@
+/* Comments */
+
+#comments                           { margin-top: 40px; }
+#comments #comments-title			{ margin-bottom: 25px; font-weight: bold; text-transform: uppercase; }
+#comments #comments-title span		{ font-weight: normal; text-transform: none;}
+#comments ol.commentlist            { padding: 0px 0px 0px 0px; }
+#comments ol.commentlist            { margin: 0px 0px 20px 0px; padding-bottom: 1px;}
+#comments ol.commentlist ul         { list-style: none; padding: 0px; margin: 0px 0px 0px 54px; }
+#comments ol.commentlist li         { list-style: none; padding: 0px; padding-bottom: 0px; }
+
+#comments .comment-meta				{ border: 1px solid #ebebeb; background: url('../img/bck_00-05.png'); padding: 3px 0px 3px 14px;-moz-border-radius: 3px 3px 0px 0px; -webkit-border-radius: 3px 3px 0px 0px; border-radius: 3px 3px 0px 0px; }
+#comments .vcard:after				{ content: "."; display: block; height: 0; overflow:hidden; clear: both; visibility: hidden; }
+#comments .vcard .says              { display: none; }
+#comments .vcard .fn                { color: #333333; font-size: 13px; font-weight: bold; display: inline-block; margin: 0px 6px 0px 0px; }
+#comments .vcard .fn a				{ color: #333333; text-decoration: none; }
+#comments .vcard .fn a:hover		{ text-decoration: underline; }
+#comments a.comment-date			{ font-size: 11px; text-decoration: none; }
+#comments a.comment-date:hover		{ text-decoration: underline; }
+#comments .comment-links			{ display: block; float: right; }
+#comments .edit-link				{ display: block; float: left; margin-right: 4px; }
+#comments a.comment-edit-link       { color: #FFFFFF !important; font-size: 10px; font-weight: bold; text-decoration: none; text-transform: uppercase; background: #EE0000; border-width: 0px; padding: 0px 7px; display: block; -moz-border-radius: 2px; -webkit-border-radius: 2px; border-radius: 2px; }
+#comments a.comment-edit-link:hover	{ background-color: #FF0000; }
+#comments .reply                    { display: block; float: left; margin-right: 4px; }
+#comments .reply a                  { color: #ffffff !important; font-size: 10px; font-weight: bold; text-decoration: none; text-transform: uppercase; background: #333333; border-width: 0px; padding: 0px 7px; display: block; -moz-border-radius: 2px; -webkit-border-radius: 2px; border-radius: 2px; }
+#comments .reply a:hover			{ background-color: #555555;}
+#comments .reply span				{ display: none; }
+
+#comments .comment-content      	{ border: 1px solid #ebebeb; border-top-width: 0px; margin: 0px 0px 0px 0px; padding: 9px 9px 1px 9px; -moz-border-radius: 0px 0px 3px 3px; -webkit-border-radius: 0px 0px 3px 3px; border-radius: 0px 0px 3px 3px;  margin-bottom: 20px; }
+#comments .comment-content:after	{ content: "."; display: block; height: 0; overflow:hidden; clear: both; visibility: hidden; }
+#comments .comment-avatar			{ display: block; float: left; margin-bottom: 9px; padding-bottom: 3px; background: url('../img/thumb_small_shadow.png') center bottom no-repeat; -moz-background-size: 100% 4px; -webkit-background-size: 100% 4px; background-size: 100% 4px; }
+#comments .avatar					{ display: block; width: 39px; height: 39px; float: left; padding: 3px; border: 1px solid #ebebeb; background: #FFFFFF; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
+#comments .comment-content p		{ font-size: 12px; margin-bottom: 10px; margin-left: 60px; }
+
+#comments label                     { background-color: #F4F4F4; font-weight: bold; left: 10px; line-height: 21px; position: absolute; top: 3px;  }
+#comments label span                { font-size: 11px; font-weight: normal; }
+#comments input,
+#comments input                     { width: 241px; }
+#comments textarea                  { width: 95%; }
+#comments p                         { margin: 0px 0px 20px 0px; position: relative }
+
+#respond							{ padding: 0px; margin-bottom: 20px; border: 1px solid #ebebeb; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;}
+#respond #commentform				{ padding: 0px 9px 9px 10px; }
+#respond li #reply-title           	{ position: relative;}
+#respond li #reply-title small		{ position: absolute; top: 10px; right: 10px; }
+#respond p.form-submit				{ margin: 0px; }
+#respond p.comment-notes			{ width: 45%; float: right; line-height: 18px; font-style: italic;  }
+#respond p.comment-notes .required	{ display: none; }
+#respond #reply-title      			{ margin: 0px 0px 0px 0px; padding: 9px 9px 0px 9px; text-transform: uppercase; }
+#respond #reply-title small			{ float: right; font-weight: bold; }
+#respond #reply-title small a		{ color: #333333; }
+#respond #submit                   	{ color: #dddddd; border-width: 0px; cursor: pointer; display: inline; font-weight: bold; width: auto; background: #333333; }
+#respond #submit:hover				{ color: #FFFFFF; }
+
+#respond input, 
+#respond textarea       			{ background: #F4F4F4; border: 1px solid #E8E8E8; color: #636363; display: block; font-family: 'Arial', sans-serif; font-size: 12px; margin: 0px; padding: 5px 8px; 
+    								  -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;}
+#respond .comment-form-author		{ margin-top: 20px; }
+#respond p							{ margin-bottom: 10px; }
+#respond p.logged-in-as				{ }
+#respond p.logged-in-as a			{ text-decoration: none; }
+#respond p.logged-in-as a:hover		{ text-decoration: underline; }
+#respond .required					{ display: block; font-size: 0px; line-height: 0px; text-indent: -9999px; width: 5px; height: 5px; position: absolute; top: 0px; left: 0px; background: url('../img/required.gif') top left no-repeat;}
+#respond .form-allowed-tags			{ display: none; }
+#respond .form-allowed-tags code	{ display: block; font-size: 11px; line-height: 16px; }
+
+		

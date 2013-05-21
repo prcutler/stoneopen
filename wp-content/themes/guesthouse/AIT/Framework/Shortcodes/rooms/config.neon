@@ -1,0 +1,74 @@
+title: Rooms Shortcodes
+type: button
+
+shortcodeName: get_rooms	
+popupOptions:
+	display:
+		label: Display version
+		type: select
+		class: all
+		default: {
+			1: {
+				label: Type 1
+				checked: true
+			},
+			2: {
+				label: Type 2
+			}
+		}
+	type:
+		label: Insert
+		type: type-select
+		class: all
+		default: {
+			posts: {
+				label: Latest rooms
+				checked: true
+				shortcodeName: get_rooms
+			},
+			post: {
+				label: One specific room
+				shortcodeName: get_room
+			},
+			postsCategory: {
+				label: Rooms by category
+				shortcodeName: get_room_category
+			}
+		}
+	excerpt:
+		label: Excerpt lenght
+		type: text
+		default: 290
+		class: all
+	number:
+		label: Number of Rooms
+		type: text
+		default: 3
+		class: all
+	id:
+		label: Room ID
+		type: text
+		class: get_room
+	category:
+		label: Category ID
+		type: select-category
+		category: room
+		class: get_room_category
+	readmore:
+		label: Show Read More Link
+		type: select
+		class: all
+		default: {
+			'yes': {
+				label: 'Yes'
+			},
+			'no': {
+				label: 'No'
+				checked: true
+			}
+		}
+	readmoretext:
+		label: Read More Text
+		type: text
+		class: all
+		default: Read more

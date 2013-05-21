@@ -1,0 +1,55 @@
+title: Google Chart Shortcodes
+type: button
+
+shortcodeName: googlechart
+
+popupOptions:
+	type:
+		label: Map Type
+		type: select
+		class: all
+		default: {
+			G_NORMAL_MAP: {
+				label: Normal Map
+				checked: true
+			},
+			G_SATELLITE_MAP: {
+				label: Satellite Map
+			},
+			G_HYBRID_MAP: {
+				label: Hybrid Map
+			}
+		}
+	border:
+		label: Border
+		type: checkbox
+		class: all
+	width:
+		label: "Width (px or false)"
+		type: text
+		class: all
+		default: 'false'
+	height:
+		label: "Height (px or false)"
+		type: text
+		class: all
+		default: '400'
+	latitude:
+		label: Latitude
+		type: text
+		class: all
+		default: '0'
+	longitude:
+		label: Longitude
+		type: text
+		class: all
+		default: '0'
+	address:
+		label: Address
+		type: text
+		class: all
+	zoom:
+		label: Zoom
+		type: text
+		class: all
+		default: '3'

@@ -1,0 +1,13 @@
+title: Language Text Shortcode
+type: button
+
+shortcodeName: lang
+paired: yes
+insertContent: yes
+disableInPosts: yes
+	
+popupOptions:
+	code:
+		label: Select language
+		type: select-language
+		class: all

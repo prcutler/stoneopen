@@ -1,0 +1,264 @@
+/*
+	AnythingSlider v1.5.10+ Default (base) theme
+	By Chris Coyier: http://css-tricks.com
+	with major improvements by Doug Neiner: http://pixelgraphics.us/
+	based on work by Remy Sharp: http://jqueryfordesigners.com/
+*/
+#slider { width: 960px; }
+.slider { height: auto;}
+.subslider{height: 280px; }
+/* hide arrows */
+
+
+#slider-container ul.thumbNav { float: right; margin-right: 5px; }
+
+#main-background-slider-bottom { position:absolute; width:100%; height:100%; }
+#main-background-slider-top { position:absolute; width:100%; height:100%; }
+
+/******* SET DEFAULT DIMENSIONS HERE ********/
+div.anythingSlider {
+	display: block;
+	/*overflow: hidden;*/ /* needed for Opera and Safari */
+	position: relative;
+}
+div.anythingSlider .arrow a{
+  display:block;
+  position: absolute;
+  top: 50%;
+  z-index: 100;
+  height:40px;
+  width: 40px;
+}
+
+div.anythingSlider .arrow a span{
+  display: none;
+}
+
+div.anythingSlider .back a{
+  left: -50px;
+  background: url('../img/slide_arrow_left.png') no-repeat 0 0;
+}
+
+div.anythingSlider .forward a{
+  right: -50px;
+  background: url('../img/slide_arrow_right.png') no-repeat 0 0;
+}
+/****** SET COLORS HERE *******/
+/* Default State */
+div.anythingSlider .anythingWindow {
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	z-index: 8;
+	-moz-border-radius-bottomLeft: 20px; -moz-border-radius-topRight: 20px; -webkit-border-bottom-left-radius: 20px; -webkit-border-top-right-radius: 20px; border-bottom-left-radius: 20px; border-top-right-radius: 20px;
+}
+div.anythingSlider .start-stop {
+	/* background-color: #040; */
+	color: #fff;
+}
+div.anythingSlider .start-stop.playing {
+	/* background-color: #800; */
+}
+div.anythingSlider .start-stop:hover, div.anythingSlider .start-stop.hover {
+	color: #ddd;
+}
+
+/* Active State */
+div.anythingSlider.activeSlider .anythingWindow {
+	border-color: #7C9127;
+}
+
+div.anythingSlider .thumbNav a {
+	display:block;
+	width:13px;
+	height:6px;	
+	/*background-image:url('../images/slider_id.png');*/
+	background-repeat:no-repeat;
+}
+
+div.anythingSlider .thumbNav a.cur {
+	display:block;
+	width:13px;
+	height:6px;
+	/*background-image:url('../images/slider_id_cur.png');*/
+	background-repeat:no-repeat;
+}
+
+div.anythingSlider .thumbNav li {
+	float:left;
+	/*margin-right:5px;*/
+}
+
+div.anythingSlider .thumbNav li span {
+	display:none;
+}
+
+div.anythingSlider .start-stop {
+	color: #333333;
+	display:none;
+}
+div.anythingSlider .start-stop.playing {
+	/* background-color: #ffffff; */
+}
+div.anythingSlider .start-stop:hover, div.anythingSlider .start-stop.hover {
+	color: #DD0000;
+}
+
+/**** DO NOT CHANGE BELOW THIS LINE ****/
+/* anythingSlider viewport window */
+div.anythingSlider .anythingWindow {
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+/* wrapper: 45px right & left padding for the arrows, 28px @ bottom for navigation */
+div.anythingSlider {
+	position: relative;
+	padding: 0px;
+}
+/* anythingSlider base UL */
+ul.anythingBase {
+	background: transparent;
+	list-style: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 0;
+	padding: 0;
+}
+ul.anythingBase li.panel {
+	background: transparent;
+	display: block;
+	overflow: hidden;
+	float: left;
+	padding: 0;
+	margin: 0;
+}
+
+/* Navigation Links */
+/* div.anythingSlider .anythingControls { position:absolute; bottom:10px; right:20px; z-index:15; } */
+div.anythingSlider .thumbNav { margin: 0; padding: 0; }
+div.anythingSlider .thumbNav li { display: inline; }
+
+/* slider autoplay right-to-left, reverse order of nav links to look better */
+div.anythingSlider.rtl .thumbNav a { float: right; } /* reverse order of nav links */
+div.anythingSlider.rtl .thumbNav { float: left; }    /* move nav link group to left */
+div.anythingSlider.rtl .anythingWindow {
+	direction: ltr;
+	unicode-bidi: bidi-override;
+}
+/* div.anythingSlider.rtl .start-stop { float: right; } */ /* move start/stop button - in case you want to switch sides */
+
+/* Autoplay Start/Stop button */
+div.anythingSlider .start-stop {
+	font-size: 11px; font-weight: bold; text-transform: lowercase;
+	padding: 0px;
+	width: 36px;
+	height: 20px;
+	text-align: center;
+	text-decoration: none;
+	float: right;
+	z-index: 100;
+	outline: 0;
+	position: relative;
+	top: -2px; 
+}
+div.anythingSlider .start-stop span	{
+	display: block; 
+	width: 36px;
+	height: 20px;	
+	text-indent: -9999px; 
+}
+
+div.anythingSlider .start-stop:hover, div.anythingSlider .start-stop.hover { /* background-image: none; */ }
+
+div.anythingSlider .start-stop { display: none; }
+
+/* images with caption */
+#slider img 
+{ 
+  -moz-border-radius-bottomLeft: 20px; -moz-border-radius-topRight: 20px; -webkit-border-bottom-left-radius: 20px; -webkit-border-top-right-radius: 20px; border-bottom-left-radius: 20px; border-top-right-radius: 20px;
+}
+/* position the panels so the captions appear correctly */
+#slider .panel { position: relative; }
+/* captions */
+#slider .caption-top, #slider .caption-right,
+#slider .caption-bottom, #slider .caption-left {
+/*background: #000;*/
+color: #fff;
+padding: 10px;
+margin: 0;
+position: relative;
+z-index: 9999;
+opacity: .8;
+filter: alpha(opacity=80);
+}
+/* Top caption - padding is included in the width (480px here, 500px in the script), same for height */
+#slider .caption-top {
+left: 0;
+top: 0;
+width: 480px;
+height: 30px;
+}
+/* Right caption - padding is included in the width (130px here, 150px in the script), same for height */
+#slider .caption-right {
+right: 0;
+bottom: 0;
+width: 130px;
+height: 180px;
+}
+/* Bottom caption - padding is included in the width (480px here, 500px in the script), same for height */
+#slider .caption-bottom {
+left: 0;
+bottom: 0;
+width: 480px;
+height: 30px;
+}
+/* Left caption - padding is included in the width (130px here, 150px in the script), same for height */
+#slider .caption-left {
+left: 0;
+bottom: 0;
+width: 130px;
+height: 180px;
+}
+/* Caption close button */
+.caption-top .close, .caption-right .close,
+.caption-bottom .close, .caption-left .close {
+font-size: 80%;
+cursor: pointer;
+float: right;
+/*display: inline-block;*/
+display: none;
+}
+ 
+/* captions */
+/* set to position: relative here in case javascript is disabled, script sets captions to position: absolute */
+#slider .caption-top,
+#slider .caption-right,
+#slider .caption-bottom,
+#slider .caption-left   { /*background: #000;*/ color: #fff; padding: 15px; padding-right: 30px; padding-bottom: 18px; margin: 0; position: absolute; z-index: 8; opacity: .8; filter: alpha(opacity=80); font-size:13px; 
+}
+
+#slider .caption-right	{border-radius: 10px 0px 0px 10px; -moz-border-radius: 10px 0px 0px 10px; -webkit-border-radius: 10px 0px 0px px;}
+#slider .caption-left	{border-radius: 0px 10px 10px 0px; -moz-border-radius: 0px 10px 10px 0px; -webkit-border-radius: 0px 10px 10px 0px;}
+
+#slider .caption-top h2,
+#slider .caption-right h2,
+#slider .caption-bottom h2,
+#slider .caption-left h2  {
+	padding-bottom: 10px; font-size:14px;
+}
+
+/* Top caption - padding is included in the width (480px here, 500px in the script), same for height */
+#slider .caption-top    { left: 0; top: 0; width: 960px; height: auto; }
+
+/* Right caption - padding is included in the width (130px here, 150px in the script), same for height */
+#slider .caption-right  { right: 0; bottom: 50px; width: 350px; height: auto;  }
+
+/* Bottom caption  - padding is included in the width (480px here, 500px in the script), same for height */
+#slider .caption-bottom { left: 0; bottom: 0; width: 960px; height: auto; }
+
+/* Left caption - padding is included in the width (130px here, 150px in the script), same for height */
+#slider .caption-left   { left: 0; bottom: 50px; width: 350px; height: auto; }

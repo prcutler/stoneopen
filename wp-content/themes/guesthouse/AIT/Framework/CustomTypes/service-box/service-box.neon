@@ -1,0 +1,15 @@
+boxText:
+	label: Text
+	type: textarea
+
+boxLink:
+	label: Link
+	type: text
+
+boxWidth:
+	label: 'Custom Width (add&nbsp;"px")'
+	type: text
+
+boxMoreText:
+	label: More text
+	type: text

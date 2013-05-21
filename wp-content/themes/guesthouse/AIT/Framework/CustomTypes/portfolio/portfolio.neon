@@ -1,0 +1,37 @@
+itemType:
+	label: Portfolio Item Type
+	type: radio
+	default: {
+		image: {
+			label: Large image
+			checked: true
+		},
+		website: {
+			label: Website
+		},
+		video: {
+			label: Video
+		}
+	}
+itemTitle:
+	label: Title
+	type: text
+
+itemDescription:
+	label: Description
+	type: textarea
+
+"Link to image": section-title
+imageLink:
+	label: Link to image
+	type: image-url
+
+"Link to website": section-title
+websiteLink:
+	label: Link to website
+	type: text
+
+"Link to video": section-title
+videoLink:
+	label: Link to video
+	type: text

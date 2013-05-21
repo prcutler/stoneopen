@@ -1,0 +1,137 @@
+/*---------------
+ZOOM DEFAULT
+---------------*/
+
+a.zoom:hover	{border-color: #FFFFFF; }
+/*
+.entry-thumb-img .zoom {
+	width:200px;
+	height:180px;  
+    display:block; 
+    position:relative; 
+    overflow:hidden; 
+    border:0px solid #ddd; 
+    background:#fff url(../img/loader.gif) no-repeat center;
+}
+
+.single .entry-thumb-img .zoom {
+	width:574px;
+	height:200px;  
+    display:block; 
+    position:relative; 
+    overflow:hidden; 
+    border:0px solid #ddd; 
+    background:#fff url(../img/loader.gif) no-repeat center;
+}
+.entry-thumb-img .zoom img { display:none }
+*/
+
+.gallery-item .zoom {  
+    display:block; 
+    position:relative; 
+    overflow:hidden; 
+    border:2px solid #ddd; 
+    background:#fff url(../img/loader.gif) no-repeat center;
+}
+.gallery-item .zoom img { display:none; border: none !important; }
+
+.ait-portfolio .zoom {  
+    display:block; 
+    position:relative; 
+    overflow:hidden; 
+    border:2px solid #ddd; 
+    background:#fff url(../img/loader.gif) no-repeat center;
+}
+
+.ait-portfolio .zoom img { display:none; border: none !important; }
+
+a.sc-image-link.zoom {  
+    display:inline-block; 
+    position:relative; 
+    overflow:hidden; 
+    border:0px solid #ddd; 
+    background: url(../img/loader.gif) no-repeat center;
+}
+
+a.sc-image-link.zoom img { display:none; border: none !important; vertical-align: top;}
+
+.zoomOverlay {
+    position:absolute;
+    top:0; left:0;
+    bottom:0; right:0;
+    display:none;
+    background-image:url(../img/zoom.png);
+    background-repeat:no-repeat;
+	background-position:center;
+}
+/* Portfolio image */
+.ait-portfolio a.image-type .zoomOverlay {
+	background-image:url(../img/zoom.png);
+    background-repeat:no-repeat;
+	background-position:center;
+}
+/* Portfolio website */
+.ait-portfolio a.website-type .zoomOverlay {
+	background-image:url(../img/zoom_website.png);
+    background-repeat:no-repeat;
+	background-position:center;
+}
+/* Portfolio video */
+.ait-portfolio a.video-type .zoomOverlay {
+	background-image:url(../img/zoom_video.png);
+    background-repeat:no-repeat;
+	background-position:center;
+}
+
+/* Shortcode image */
+a.sc-image-link.image-type .zoomOverlay {
+	background-image:url(../img/zoom.png);
+    background-repeat:no-repeat;
+	background-position:center;
+}
+/* Shortcode website */
+a.sc-image-link.website-type .zoomOverlay {
+	background-image:url(../img/zoom_website.png);
+    background-repeat:no-repeat;
+	background-position:center;
+}
+/* Shortcode video */
+a.sc-image-link.video-type .zoomOverlay {
+	background-image:url(../img/zoom_video.png);
+    background-repeat:no-repeat;
+	background-position:center;
+}
+
+.zoomOverlay { color:#FFFFFF; text-align: center; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

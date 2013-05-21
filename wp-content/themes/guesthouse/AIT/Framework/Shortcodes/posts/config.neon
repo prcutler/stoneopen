@@ -1,0 +1,60 @@
+title: Posts Shortcodes
+type: button
+
+shortcodeName: get_posts	
+popupOptions:
+	type:
+		label: Insert
+		type: type-select
+		class: all
+		default: {
+			posts: {
+				label: Latest posts
+				checked: true
+				shortcodeName: get_posts
+			},
+			post: {
+				label: One specific post
+				shortcodeName: get_post
+			},
+			postsCategory: {
+				label: Posts by category
+				shortcodeName: get_posts_category
+			}
+		}
+	excerpt:
+		label: Excerpt lenght
+		type: text
+		default: 290
+		class: all
+	number:
+		label: Number of Posts
+		type: text
+		default: 3
+		class: all
+	id:
+		label: Post ID
+		type: text
+		class: get_post
+	category:
+		label: Category ID
+		type: select-category
+		class: get_posts_category
+	readmore:
+		label: Show Read More Link
+		type: select
+		class: all
+		default: {
+			'yes': {
+				label: 'Yes'
+			},
+			'no': {
+				label: 'No'
+				checked: true
+			}
+		}
+	readmoretext:
+		label: Read More Text
+		type: text
+		class: all
+		default: Read more

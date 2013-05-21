@@ -1,0 +1,74 @@
+title: Items Shortcodes
+type: button
+
+shortcodeName: get_items	
+popupOptions:
+	display:
+		label: Display version
+		type: select
+		class: all
+		default: {
+			1: {
+				label: Type 1
+				checked: true
+			},
+			2: {
+				label: Type 2
+			}
+		}
+	type:
+		label: Insert
+		type: type-select
+		class: all
+		default: {
+			posts: {
+				label: Latest items
+				checked: true
+				shortcodeName: get_items
+			},
+			post: {
+				label: One specific item
+				shortcodeName: get_item
+			},
+			postsCategory: {
+				label: Items by category
+				shortcodeName: get_item_category
+			}
+		}
+	excerpt:
+		label: Excerpt lenght
+		type: text
+		default: 290
+		class: all
+	number:
+		label: Number of Items
+		type: text
+		default: 3
+		class: all
+	id:
+		label: Item ID
+		type: text
+		class: get_item
+	category:
+		label: Category ID
+		type: select-category
+		category: item
+		class: get_item_category
+	readmore:
+		label: Show Read More Link
+		type: select
+		class: all
+		default: {
+			'yes': {
+				label: 'Yes'
+			},
+			'no': {
+				label: 'No'
+				checked: true
+			}
+		}
+	readmoretext:
+		label: Read More Text
+		type: text
+		class: all
+		default: Read more

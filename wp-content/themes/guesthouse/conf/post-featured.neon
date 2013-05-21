@@ -1,0 +1,6 @@
+hideFeatured:
+	label: Hide featured image in post
+	type: checkbox
+	default:
+		'yes': 
+			label: 'Yes'

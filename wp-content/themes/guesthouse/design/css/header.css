@@ -1,0 +1,50 @@
+/* CLUSTER TEXT */
+#cluster-container {
+	position: relative;
+	width: 1000px;
+	height: 360px;
+	margin: 0 auto;
+}
+#to_cluster.clustered {
+
+}
+#to_cluster {
+	position: absolute;
+	text-indent: -9999px;
+	width: 900px;
+	margin: auto;
+	font-family: sans-serif;
+	font-weight: bold;
+	/* line-height: 200%; */
+	display: block;
+	font-size: 200px;
+	text-align: center;
+}
+
+.clustered svg {
+  	position: absolute;
+	left:10px;
+	top:10px;
+}
+
+/* PUNCHOUT TEXT */
+#to_punch {
+	font-size: 360px;
+	color: black;
+	position: relative;
+	left: 50%;
+	width: 1000px;
+	text-indent: -9999px;
+	line-height: 0;
+	font-family: sans-serif;
+	font-style: normal;
+	font-size: 200px;
+	height: 500px;
+}
+
+#to_punch .shellac {
+	position: absolute;
+	display: block;
+	top: -40px;
+	left: 0;
+}

@@ -1,0 +1,19 @@
+title: Common Shortcodes
+type: dropdown
+
+dropdownOptions:
+	title:
+		label: 'Common shortcodes'
+		type: header
+	option1:
+		label: 'Disable WP Autoformatting'
+		type: option
+		value: '[raw]$content[/raw]'
+	option2:
+		label: 'Horizontal rule'
+		type: option
+		value: '[rule]'
+	option3:
+		label: 'Horizontal rule with TOP button'
+		type: option
+		value: '[rule_top]'

@@ -1,0 +1,225 @@
+roomViewerHeight:
+	label: 'Height of images (px)'
+	type: text
+	default: auto
+roomViewerDelay:
+	label: 'Slide Delay'
+	type: text
+	default: 3000
+roomViewerAnimTime:
+	label: 'Animation time'
+	type: text
+	default: 600
+roomViewerAnimation:
+	label: Room Viewer Animation Type
+	type: select
+	default: {
+		linear: {
+			label: linear
+		}
+		easeInSine: {
+			label: easeInSine
+		}
+		easeOutSine: {
+			label: easeOutSine
+		}
+		easeInOutSine: {
+			label: easeInOutSine
+		}
+		easeInQuad: {
+			label: easeInQuad
+		}
+		easeOutQuad: {
+			label: easeOutQuad
+		}
+		easeInOutQuad: {
+			label: easeInOutQuad
+		}
+		easeInCubic: {
+			label: easeInCubic
+		}
+		easeOutCubic: {
+			label: easeOutCubic
+		}
+		easeInOutCubic: {
+			label: easeInOutCubic
+		}
+		easeInQuart: {
+			label: easeInQuart
+		}
+		easeOutQuart: {
+			label: easeOutQuart
+		}
+		easeInOutQuart: {
+			label: easeInOutQuart
+		}
+		easeInQuint: {
+			label: easeInQuint
+		}
+		easeOutQuint: {
+			label: easeOutQuint
+		}
+		easeInOutQuint: {
+			label: easeInOutQuint
+		}
+		easeInExpo: {
+			label: easeInExpo
+		}
+		easeOutExpo: {
+			label: easeOutExpo
+		}
+		easeInOutExpo: {
+			label: easeInOutExpo
+		}
+		easeInCirc: {
+			label: easeInCirc
+		}
+		easeOutCirc: {
+			label: easeOutCirc
+		}
+		easeInOutCirc: {
+			label: easeInOutCirc
+		}
+		easeInElastic: {
+			label: easeInElastic
+		}
+		easeOutElastic: {
+			label: easeOutElastic
+		}
+		easeInOutElastic: {
+			label: easeInOutElastic
+		}
+		easeInBack: {
+			label: easeInBack
+		}
+		easeOutBack: {
+			label: easeOutBack
+		}
+		easeInOutBack: {
+			label: easeInOutBack
+			checked: true
+		}
+		easeInBounce: {
+			label: easeInBounce
+		}
+		easeOutBounce: {
+			label: easeOutBounce
+		}
+		easeInOutBounce: {
+			label: easeInOutBounce
+		}
+	}
+roomViewerType:
+	label: "Room Viewer Type"
+	type: select
+	default: {
+		'big': {
+			label: 'Big'
+			checked: yes
+		},
+		'small': {
+			label: 'Small'
+		}
+	}
+Reservation settings : section
+##############################
+roomViewerCat:
+	label: Room Viewer Category
+	type: dropdown-categories
+	default: 'room'
+displayRoomReservationSearch:
+	label: Display Reservation Searchbox
+	type: checkbox
+	default:
+		'yes':
+			label: 'Yes'
+			checked: true
+displayRoomReservation:
+	label: Display Reservation
+	type: checkbox
+	default:
+		'yes':
+			label: 'Yes'
+roomReservationText:
+	label: Room Reservation Icon Title
+	type: text
+	default: 'Room Reservation'
+displayRoomDescription:
+	label: Display Room Description
+	type: checkbox
+	default:
+		'yes':
+			label: 'Yes'
+roomDescriptionText:
+	label: Room Description Icon Title
+	type: text
+	default: 'Room Description'
+displayRoomAdditionalServices:
+	label: Display Custom Services
+	type: checkbox
+	default:
+		'yes':
+			label: 'Yes'
+roomCustomServicesImage:
+	label: Custom Services Icon
+	type: image-url
+	default: 'design/img/room-viewer-icon3.png'
+roomCustomServicesText:
+	label: Custom Services Icon Title
+	type: text
+	default: 'Custom Services'
+roomCustomServicesLink:
+	label: Custom Services Icon Link
+	type: text
+	default: '#'
+datepickerFormat:
+	label: "Date Format"
+	type: select
+	default: {
+		'mm/dd/yy': {
+			label: 'Default - mm/dd/yy'
+			checked: yes
+		},
+		'yy-mm-dd': {
+			label: 'ISO 8601 - yy-mm-dd'
+		},
+		'd M, y': {
+			label: 'Short - d M, y'
+		},
+		'd MM, y': {
+			label: 'Medium - d MM, y'
+		},
+		'DD, d MM, yy': {
+			label: 'Full - DD, d MM, yy'
+		}
+	}
+roomFormDefaultRoomText:
+	label: Form Rooms Default Title
+	type: text
+	default: 'Choose your Room'
+displayroomFormDefaultFromText:
+	label: Display Datepicker 1
+	type: checkbox
+	default:
+		'yes':
+			label: 'Yes'
+			checked: true
+roomFormDefaultFromText:
+	label: Form Datepicker 1 Default Title
+	type: text
+	default: 'From'
+displayroomFormDefaultToText:
+	label: Display Datepicker 2
+	type: checkbox
+	default:
+		'yes':
+			label: 'Yes'
+			checked: true
+roomFormDefaultToText:
+	label: Form Datepicker 2 Default Title
+	type: text
+	default: 'To'
+roomFormBookNowText:
+	label: Form Button Title
+	type: text
+	default: 'BOOK NOW'

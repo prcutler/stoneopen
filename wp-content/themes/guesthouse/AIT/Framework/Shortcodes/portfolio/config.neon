@@ -1,0 +1,40 @@
+title: Portfolio Shortcodes
+type: button
+
+shortcodeName: ait-portfolio
+
+popupOptions:
+	cat_id:
+		label: Portfolio Category
+		type: select-category
+		category: portfolio
+		class: all
+	width:
+		label: "Item Width (px)"
+		type: text
+		class: all
+	height:
+		label: "Item Height (px)"
+		type: text
+		class: all
+	cols:
+		label: "Number of columns"
+		type: text
+		default: 2
+		class: all
+	showdescription:
+		label: "Show Description"
+		type: select
+		class: all
+		default: {
+			hover: {
+				label: 'In Hover Effect'
+				checked: true
+			},
+			right: {
+				label: 'Right'
+			},
+			down: {
+				label: 'Down'
+			}
+		}

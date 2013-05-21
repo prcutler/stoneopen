@@ -1,0 +1,10 @@
+overrideGlobalServiceBox:
+	label: Use these settings
+	type: checkbox
+	default:
+		'yes':
+			label: 'Yes'
+serviceBoxCategory:
+	label: Service Boxes Category
+	type: dropdown-categories
+	default: 'service-box'

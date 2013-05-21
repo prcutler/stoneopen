@@ -1,0 +1,6 @@
+roomDescriptionShort:
+	label: Short Description
+	type: textarea
+roomCount:
+	label: Number of beds
+	type: text

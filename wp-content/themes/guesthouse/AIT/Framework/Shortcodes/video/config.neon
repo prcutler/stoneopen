@@ -1,0 +1,37 @@
+title: Video Shortcodes
+type: button
+
+shortcodeName: video
+
+popupOptions:
+	type:
+		label: VideoServer
+		type: select
+		class: all
+		default: {
+			youtube: {
+				label: Youtube
+				checked: true
+			},
+			vimeo: {
+				label: Vimeo
+			}
+		}
+	border:
+		label: Border
+		type: checkbox
+		class: all
+	link:
+		label: Link
+		type: text
+		class: all
+	width:
+		label: Width
+		type: text
+		default: 100%
+		class: all
+	height:
+		label: Height
+		type: text
+		default: 350px
+		class: all

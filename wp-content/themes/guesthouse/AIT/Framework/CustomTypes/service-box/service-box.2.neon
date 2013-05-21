@@ -1,0 +1,16 @@
+text:
+	label: Text
+	type: textarea
+
+link:
+	label: Link
+	type: text
+
+label:
+	label: '"More" text or other label'
+	type: text
+
+labelColor:
+	label: Label color
+	type: colorpicker
+	default: "#DDDDDD"

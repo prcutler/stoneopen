@@ -1,0 +1,27 @@
+title: Notifications Shortcodes
+type: button
+
+shortcodeName: notification
+paired: yes
+content: '<strong>Title:</strong> Lorem ipsum dolor sit amet...'
+
+popupOptions:
+	type:
+		label: Type
+		type: select
+		class: all
+		default: {
+			error: {
+				label: Warning
+				checked: true
+			},
+			success: {
+				label: Success
+			},
+			info: {
+				label: Information
+			},
+			attention: {
+				label: Attention
+			},
+		}

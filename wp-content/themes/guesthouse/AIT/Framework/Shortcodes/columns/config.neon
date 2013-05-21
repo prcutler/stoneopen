@@ -1,0 +1,27 @@
+title: Columns Shortcodes
+type: dropdown
+
+dropdownOptions:
+	title:
+		label: 'Columns'
+		type: header
+	option1:
+		label: '1/2 standard column - 1/2 standard column'
+		type: option
+		value: '[one_half]<br />&nbsp;&nbsp;&nbsp;Text<br />[/one_half]<br />[one_half_last]<br />Text<br />[/one_half_last]'
+	option2:
+		label: '1/3 column - 2/3 column'
+		type: option
+		value: '[one_third]<br />&nbsp;&nbsp;&nbsp;Text<br />[/one_third]<br />[two_third_last]<br />&nbsp;&nbsp;&nbsp;Text<br />[/two_third_last]'
+	option3:
+		label: '2/3 column - 1/3 column'
+		type: option
+		value: '[two_third]<br />&nbsp;&nbsp;&nbsp;Text<br />[/two_third]<br />[one_third_last]<br />&nbsp;&nbsp;&nbsp;Text<br />[/one_third_last]'
+	option4:
+		label: '1/4 column - 3/4 column'
+		type: option
+		value: '[one_fourth]<br />&nbsp;&nbsp;&nbsp;Text<br />[/one_fourth]<br />[three_fourth_last]<br />&nbsp;&nbsp;&nbsp;Text<br />[/three_fourth_last]'
+	option5:
+		label: '3/4 column - 1/4 column'
+		type: option
+		value: '[three_fourth]<br />&nbsp;&nbsp;&nbsp;Text<br />[/three_fourth]<br />[one_fourth_last]<br />&nbsp;&nbsp;&nbsp;Text<br />[/one_fourth_last]'

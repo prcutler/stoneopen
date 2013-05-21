@@ -1,0 +1,37 @@
+title: Lists Shortcodes
+type: button
+
+shortcodeName: list
+paired: yes
+content: '<li>Lorem ipsum dolor</li><li>Sit amet consecteur</li><li>Adipisicing elit</li>'
+
+popupOptions:
+	style:
+		label: Style
+		type: select
+		class: all
+		default: {
+			style1: {
+				label: Style 1
+				checked: true
+			},
+			style2: {
+				label: Style 2
+			},
+			style3: {
+				label: Style 3
+			},
+			style4: {
+				label: Style 4
+			},
+			style5: {
+				label: Style 5
+			},
+			style6: {
+				label: Style 6
+			}
+		}
+	line:
+		label: Line
+		type: checkbox
+		class: all

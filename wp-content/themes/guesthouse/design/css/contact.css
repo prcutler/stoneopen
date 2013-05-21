@@ -1,0 +1,68 @@
+/**************************************/
+/* ---------- CONTACT PAGE ---------- */
+/**************************************/
+
+.frame .wpcf7 form				{ padding-top: 5px; padding-bottom: 5px;}
+.wpcf7 label                    { color: #636363; background-color: #F4F4F4; font-weight: bold; left: 10px; line-height: 21px; position: absolute; top: 3px; z-index: 10;}
+.wpcf7 label span               { font-weight: normal; cursor: pointer; }
+.wpcf7 p                    	{ position: relative; margin-bottom: 10px; }
+.wpcf7 p:after 					{ clear: both; content:"."; display:block; height:0; overflow:hidden; visibility:hidden; }
+.wpcf7 input,
+.wpcf7 textarea          		{ background: none; border: 1px solid #E8E8E8; color: #636363; display: block; font-family: 'Arial', sans-serif; font-size: 12px; margin: 0px; padding: 5px 0px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+
+.wpcf7 h3 input {
+	color         : #000;
+	font-size     : 15px;
+	font-weight   : bold;
+	text-shadow   : 1px 1px 0 #fff;
+	text-transform: uppercase;}
+
+.text-summary input, .text-summary textarea {width:230px;}
+
+.text-summary select {padding: 4px 5px 4px 10px; width: 168px;}
+
+.wpcf7-list-item                { margin: 0px !important; }
+.wpcf7-list-item input          { display: inline-block; margin: 0px 10px 0px 0px; }
+.wpcf7 textarea 				{ width: 90%; }
+.wpcf7 .required				{ display: block; font-size: 0px; line-height: 0px; text-indent: -9999px; width: 5px; height: 5px; position: absolute; top: -3px; left: -10px; background: url('../img/required.gif') top left no-repeat;}
+.wpcf7 .wpcf7-form-control-wrap	{ display: block; position: relative; }
+.wpcf7 .wpcf7-submit            { color: #dddddd; background: #333333; border: 0px solid #e8e8e8; font-family: arial; font-size: 12px; cursor: pointer; display: inline; font-weight: bold; width: auto; padding: 5px 8px; margin: 0px; /* text-shadow: 1px 1px 1px rgba( 255, 255, 255, 0.5);*/ margin-top: 20px; float: left; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
+.wpcf7 .wpcf7-submit:hover		{ color: #FFFFFF; /*text-shadow: 1px 1px 1px rgba( 0, 0, 0, 0.5);*/}
+
+.wpcf7 .selectbox label						{ position: relative; top: 0px; left: 0px; float: left; line-height: 15px; padding: 5px 8px; border: 1px solid #E8E8E8; border-right-width: 0px; border-radius: 3px 0px 0px 3px; -moz-border-radius: 3px 0px 0px 3px; -webkit-border-radius: 3px 0px 0px 3px;}
+.wpcf7 .selectbox .wpcf7-form-control-wrap	{ display: block; float: left; height: 25px; padding: 0px 8px; background: #f4f4f4; border: 1px solid #E8E8E8; border-left-width: 0px; border-radius: 0px 3px 3px 0px; -moz-border-radius: 0px 3px 3px 0px; -webkit-border-radius: 0px 3px 3px 0px;}
+.wpcf7 .selectbox select					{ border: 1px solid #e8e8e8; margin-top: 3px; #margin-top: 2px;}
+.wpcf7 .selectbox .required					{ top: -1px; left: -1px;}
+
+.wpcf7 .checkbox							{ margin: 0 0 10px 0; }
+.wpcf7 .checkbox label						{ position: static; top: 0px; left: 0px; line-height: 15px; padding: 0px; border-width: 0px; border-radius: 0px; -moz-border-radius: 0px; -webkit-border-radius: 0px; background: none; font-weight: normal; }
+.wpcf7 .checkbox input						{ background: none; padding: 0px; margin-right: 5px; vertical-align: middle; border-width: 0px; position: relative; top: -1px;}
+.wpcf7 .checkbox .wpcf7-list-item			{ display: block; padding: 0 0 5px 0;}
+
+.wpcf7 .radiobuts-horizontal				{ white-space: nowrap; }
+.wpcf7 .radiobuts-horizontal label,
+.wpcf7 .radiobuts-vertical label			{ position: static; top: 0px; left: 0px; line-height: 15px; padding: 0px; border-width: 0px; border-radius: 0px; -moz-border-radius: 0px; -webkit-border-radius: 0px; background: none; font-weight: normal; }
+.wpcf7 .radiobuts-horizontal input,
+.wpcf7 .radiobuts-vertical input			{ background: none; padding: 0px; margin-right: 5px; vertical-align: middle; border-width: 0px; position: relative; top: -1px;}
+.wpcf7 .radiobuts-horizontal .label,
+.wpcf7 .radiobuts-vertical .label			{ display: inline-block; font-weight: bold; padding-right: 10px; }
+
+.wpcf7 .radiobuts-horizontal .wpcf7-list-item			{ padding-right: 10px; }
+.wpcf7 .radiobuts-horizontal .wpcf7-form-control-wrap	{ display: inline-block; }	
+
+.wpcf7 .radiobuts-vertical								{ margin: 0 0 10px 0; }
+.wpcf7 .radiobuts-vertical .label						{ float: left; }
+.wpcf7 .radiobuts-vertical .wpcf7-form-control-wrap		{ float: left; }
+.wpcf7 .radiobuts-vertical .wpcf7-list-item				{ display: block; padding-bottom: 5px;}
+
+.wpcf7 .captcha			{}
+.wpcf7 .captcha	img		{float: left; margin-right: 10px; border: 1px solid #DDDDDD; }
+
+.wpcf7 div.wpcf7-validation-errors		{ margin: 20px 0px 0px 0px; padding: 2px 8px; line-height: 18px; background: #e7d700; border: 1px solid #F7E700; color: #111111; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
+.wpcf7 span.wpcf7-not-valid-tip			{ position: absolute; top: 0px; left: 0px; background: #dd0000; color: #FFFFFF; padding: 2px 8px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; width: 204px;} 
+.wpcf7 span.wpcf7-not-valid-tip-no-ajax	{ position: absolute; top: 0px; left: 0px; background: #dd0000; color: #FFFFFF; padding: 2px 8px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; width: 204px;}
+.wpcf7 div.wpcf7-mail-sent-ok			{ margin: 20px 0px 0px 0px; padding: 2px 8px; line-height: 18px; background: #398F14; border: 1px solid #40A315; color: #ffffff; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
+
+
+.wpcf7 img.ajax-loader					{ display: block; float: left; padding: 3px; background: #f4f4f4; border: 1px solid #E8E8E8; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; margin-top: 22px; margin-bottom: 0px;}
+ 

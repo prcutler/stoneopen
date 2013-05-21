@@ -1,0 +1,312 @@
+/**
+ * AIT WordPress Framework
+ *
+ * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.com)
+ */
+
+.form-table .ait-clone-form-table{
+	border-collapse: collapse;
+	margin:0 0 1em 0;
+	clear: both;
+	width:100%;
+}
+
+.form-table .ait-clone-form-table td, .form-table .ait-clone-form-table th{
+	background:#f6f6f6;
+}
+
+.postbox-container .form-table .ait-clone-form-table td, .postbox-container .form-table .ait-clone-form-table th{
+	background: transparent;
+}
+
+
+.form-table .ait-clone-form-table .ait-clone-form-table-delete{
+	text-align:right;
+	padding-bottom:10px;
+}
+
+.form-table .ait-clone-form-table .ait-clone-form-table-delete .button-secondary{
+	color:#701e1e;
+	background:#fff0f0;
+	border-color:#a85858;
+}
+
+.form-table .ait-clone-form-table th.ait-clone-form-table-counter-label{
+	background:transparent;
+}
+
+.form-table .ait-clone-form-table:first-child th{
+	padding-top:0;
+}
+
+.form-table .ait-clone-form-table:first-child th h3{
+	margin-top:0;
+}
+
+
+
+.form-table #ait-clone-form_noforms_template{
+	margin:0 0 1.5em 0;
+	font-style: italic;
+}
+
+#ait-settings-form .postbox-container .meta-box-sortables{
+	min-height:0;
+}
+
+.ait-form-table-help-label{
+	border-bottom:1px dotted #666;
+	text-decoration:none;
+	color:#666;
+	font-size:10px;
+	padding:0 3px;
+	position:relative;
+	cursor: help;
+}
+
+.ait-form-table-help-label .ait-form-table-help-tooltip{
+	position:absolute;
+	top:1.2em;
+	left:0;
+	min-width:9em;
+	background:rgba(0, 0, 0, 0.8);
+	color:#fff;
+	padding:5px;
+	text-shadow:none;
+	font-size:13px;
+	border-radius:3px;
+	display:none;
+        z-index: 10;
+}
+
+.ait-form-table-wysiwyg{
+	border:1px solid #ccc;
+	float:left;
+	border-radius:4px;
+	clear:left;
+}
+
+
+
+
+
+.ait-custom-fields > table{
+	width:100%;
+	margin:15px 0;
+	border-spacing: 0;
+}
+
+.ait-custom-fields > table.ait-custom-fields-section{
+	border: 1px solid #DFDFDF;
+	background-color: #F9F9F9;
+	border-radius:3px;
+}
+
+.ait-custom-fields > table.ait-custom-fields-section th{
+	text-align: left;
+	background-color: #F1F1F1;
+	padding:10px;
+}
+
+.ait-custom-fields table td{
+	padding:10px;
+}
+
+.ait-custom-fields table  table{
+	width:95%;
+	border-spacing:0;
+	border-collapse: collapse;
+}
+
+.ait-custom-fields table table td{
+	padding:0;
+}
+
+.ait-custom-fields-label{
+	font-weight:normal;
+	width:20%;
+	text-align:left;
+}
+
+.ait-custom-fields table input[type=text],.ait-custom-fields table input[type=button], .ait-custom-fields table textarea{
+	width:95%;
+}
+
+.ait-custom-fields table  table input[type=text], .ait-custom-fields table table textarea{
+	margin-left:0;
+	margin-right:0;
+	width:100%;
+}
+
+#ait-sortable-elements, .ait-sortable-elements{
+	width:450px;
+	position:relative;
+}
+
+.ait-sortable-updated, .ait-order-updated{
+	padding: 0 10px;
+	margin-left:20px;
+	display:inline-block;
+	color:green;
+}
+
+#ait-sortable-elements .ait-sortable-placeholder, .ait-order-elements .ait-order-placeholder{
+	line-height: 20px;
+	height: 35px;
+	background:#eee;
+	margin-top:13px;
+	width:410px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	background: #fbf9ee;
+	border: 1px solid #FED22F;
+}
+
+
+.ait-form-actions{
+	float:right;
+	padding-right:15px;
+}
+
+.ait-form-actions a{
+	padding-left:15px;
+}
+
+ #ait-reset-options{
+ 	color:#D54E21;
+ }
+
+ #ait-reset-options:hover{
+	text-decoration:none;
+ }
+
+  .wrap table td, .wrap table th{
+	font-size:12px;
+  }
+
+.ait-custom-fields-section h3 { border: 1px solid #DFDFDF; background: #F1F1F1; border-radius: 3px; }
+
+#ait-_ait_sections_order-order-option .menu-item-handle,
+#ait-sectionsOrder-option .menu-item-handle 				{ width: 250px; border: 1px solid #dfdfdf; padding: 10px; margin-bottom: 5px; border-radius: 5px; }
+#ait-_ait_sections_order-order-option .menu-item-handle .item-title,
+#ait-sectionsOrder-option .menu-item-handle .item-title		{ margin-right: 0px; }
+
+#toplevel_page_ait-admin a.toplevel_page_ait-admin {font-size: 12.5px !important;}
+#toplevel_page_ait-admin .update-plugins {margin-left:2px !important;}
+
+
+#search-plugins input[type="search"] { width: 50%; padding: 0.5em; }
+
+
+/* ==================================================================
+ * AIT Dashboard styling
+ * ------------------------------------------------------------------ */
+
+#ait-dashboard-page .postbox 	{min-width: inherit; }
+.postbox h3{cursor:default;}
+.ait-box				{ font-family: arial; font-size: 12px; color: #666666; padding: 15px 15px 5px 15px; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
+.ait-box:after 			{ content: "."; display: block; height: 0; overflow:hidden; clear: both; visibility: hidden; }
+.ait-box p				{ margin: 0px; padding: 0px; margin-bottom: 15px; line-height: 20px; }
+.ait-box strong			{ color: #333333; }
+
+/*** About box ***/
+.ait-about 						{ margin: -6px -10px -8px -10px; }
+.ait-about .ait-box				{ background: url('../dashboard/img/gear.png') bottom left no-repeat; }
+.ait-about .ait-logo			{ width: 30%; float: left; text-align: center; }
+.ait-about .ait					{ display: block; width: 94px; height: 94px; text-indent: -9999px; background: url('../dashboard/img/ait-logo.png') center center no-repeat; margin: auto; margin-bottom: 6px; }
+.ait-about .ait-links			{ width: 68%; float: right; text-align: center; padding-top: 5px; }
+.ait-about .ait-links p			{ font-size: 12px; line-height: 20px; text-align: center;}
+
+.ait-button					{ display: inline-block; vertical-align: top; width: 43%; min-width: 115px; max-width: 150px; height: 31px; line-height: 31px; background: #848C90; border: 2px solid #848C90; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; box-shadow: 0px 2px 3px rgba(0,0,0,0.2), 0px 0px 10px rgba(255,255,255,0.2) inset, 0px 15px 0px rgba(255,255,255,0.1) inset; font-weight: bold; text-decoration: none; margin: 0px 5px 10px 5px; }
+.ait-button:hover			{ text-decoration: none; }
+.ait-button	.ait-butwrap	{ display: block; font-size: 0px; line-height: 0px; text-indent: -9999px; }
+.ait-button .title			{ display: block; height: 31px; padding: 0px;}
+
+.ait-button.themeforest .title	{ width: 108px; background: url('../dashboard/img/icon_tf.png') top center no-repeat;}
+.ait-button.themeforest:hover	{ background: #906840; border-color: #906840; }
+.ait-button.facebook .title		{ width: 90px; background: url('../dashboard/img/icon_fb.png') top center no-repeat;}
+.ait-button.facebook:hover		{ background: #5071AB; border-color: #5071AB; }
+.ait-button.twitter .title		{ width: 83px; background: url('../dashboard/img/icon_tw.png') top center no-repeat;}
+.ait-button.twitter:hover		{ background: #13ABDC; border-color: #13ABDC; }
+.ait-button.youtube .title		{ width: 85px; background: url('../dashboard/img/icon_yt.png') top center no-repeat;}
+.ait-button.youtube:hover		{ background: #D02D2C; border-color: #D02D2C; }
+.ait-button.google .title		{ width: 104px; background: url('../dashboard/img/icon_go.png') top center no-repeat;}
+.ait-button.google:hover		{ background: #D4482C; border-color: #D4482C; }
+.ait-button.rss .title			{ width: 84px; background: url('../dashboard/img/icon_rs.png') top center no-repeat;}
+.ait-button.rss:hover			{ background: #FF9000; border-color: #FF9000; }
+
+
+/*** Themes box ***/
+.ait-themes .themes				{ list-style-type: none; margin: 0px 0px 10px 0px; padding: 0px; }
+.ait-themes .themes:after 		{ content: "."; display: block; height: 0; overflow:hidden; clear: both; visibility: hidden; }
+.ait-themes .themes li			{ width: 70px; float: left; margin-right: 10px; margin-bottom: 10px; position: relative; }
+.ait-themes .themes li:hover	{ z-index: 1000; }
+.ait-themes .themes a			{ display: block; }
+.ait-themes .themes .thumb		{ display: block; width: 60px; height: 60px; padding: 4px; border: 1px solid #DFDFDF; background: #FFFFFF; }
+.ait-themes .themes .preview			{ display: none; }
+.ait-themes .themes a:hover .preview	{ display: block; position: absolute; left: 50px; bottom: 50px; padding: 5px; border: 1px solid #DFDFDF; background: #FFFFFF; -moz-box-shadow: 0px 2px 5px rgba(0,0,0,0.3); -webkit-box-shadow: 0px 2px 5px rgba(0,0,0,0.3); box-shadow: 0px 2px 5px rgba(0,0,0,0.3);}
+
+/*** AIT News and Theme Versions ***/
+.ait-info .ait-button					{ width: 44px;  min-width: 44px; height: auto; text-align: center; margin: 0px 0px 15px 0px; float: left; }
+.ait-info .ait-button.ait-new-news		{ background: #0096B7; border-color: #0096B7;}
+.ait-info .ait-button .ait-butwrap		{ font-size: 12px; line-height: 13px; font-weight: normal; text-indent: 0px; color: #FFFFFF; padding: 3px 0px 5px 0px; text-shadow: 1px 1px 0px rgba(0,0,0,0.2); }
+.ait-info .ait-button .ait-day			{ display: block; font-size: 24px; font-weight: bold; line-height: 26px;}
+.ait-info .ait-button .ait-month		{ display: block; }
+.ait-info .ait-button .ait-year			{ display: block; font-size: 11px; }
+.ait-info .ait-news-title				{ color: #333333; margin: 0px 0px 7px 65px; padding: 2px 0px 0px 0px; font-size: 13px; line-height: 20px; font-family: arial; font-weight: bold; background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; border-width: 0px; }
+.ait-info .ait-news-content				{ margin-left: 65px; }
+.ait-info .separator					{ clear: both; width: 100%; height: 16px; border-top: 1px solid #FFFFFF; box-shadow: 0px 1px 0px #dfdfdf inset;}
+
+.ait-info.ait-update .ait-button.ait-new-version	{ background: #cc3333; border-color: #cc3333;}
+.ait-info #disableUpdatesNotifications				{ margin-right: 5px; }
+.ait-info .ait-current-version-msg					{ background: #ececec; border: 1px solid #dfdfdf; padding: 5px; text-align: center; border-radius: 3px; box-shadow: 0px 1px 0px #ffffff; }
+
+.ait-info .ait-news-content h1	{ color: #333333; line-height: normal; font-size: 20px !important; font-weight: bold !important; margin: 0px 0px 15px !important; 	background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; border-width: 0px; padding: 0px; }
+.ait-info .ait-news-content h2	{ color: #333333; line-height: normal; font-size: 18px !important; font-weight: bold !important; margin: 0px 0px 15px !important; 	background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; border-width: 0px; padding: 0px; }
+.ait-info .ait-news-content h3	{ color: #333333; line-height: normal; font-size: 16px !important; font-weight: bold !important; margin: 0px 0px 10px !important; 	background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; border-width: 0px; padding: 0px; }
+.ait-info .ait-news-content h4	{ color: #333333; line-height: normal; font-size: 14px !important; font-weight: bold !important; margin: 0px 0px 10px !important; 	background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; border-width: 0px; padding: 0px; }
+.ait-info .ait-news-content h5	{ color: #333333; line-height: normal; font-size: 12px !important; font-weight: bold !important; margin: 0px 0px 10px !important; 	background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; border-width: 0px; padding: 0px; }
+.ait-info .ait-news-content h6	{ color: #333333; line-height: normal; font-size: 12px !important; font-weight: normal !important; margin: 0px 0px 10px !important; 	background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; border-width: 0px; padding: 0px; }
+.ait-info .ait-news-content ul	{ margin: 0px 0px 15px 0px; padding: 0px 0px 0px 16px; list-style-type: square; }
+.ait-info .ait-news-content li	{ margin: 0px; }
+
+.ait-versions-list 	{max-height: 400px; overflow: auto;margin-bottom: 15px;}
+
+
+/*** Documentation ***/
+#ait-theme-doc-content .aligncenter		{ display: block; margin: auto; }
+#ait-theme-doc-content .alignleft		{ float: left; margin-right: 20px;  }
+#ait-theme-doc-content .alignright		{ float: right; margin-left: 20px;  }
+#ait-theme-doc-content img				{ max-width: 95%; height: auto !important; border: 5px solid #EEEEEE; margin-bottom: 20px;}
+#ait-theme-doc-content ul				{ padding: 0px 0px 0px 16px; list-style-type: disc; margin-bottom: 20px; }
+#ait-theme-doc-content p				{ margin: 0px 0px 20px 0px; line-height:1.7; }
+#ait-theme-doc-content .ait-theme-doc-update	{ border-bottom: 1px solid #DDDDDD; padding-bottom: 7px; margin-bottom: 30px; }
+
+#ait-theme-doc h2				{ margin-bottom: 20px; }
+#ait-theme-doc-content h3		{ padding:0; margin-bottom:20px; }
+#ait-theme-doc .date			{ display: block; float: left; margin-right: 15px; text-align: center; padding: 9px 7px; border: 1px solid #DDDDDD; margin-top: 10px; border-radius: 3px; }
+#ait-theme-faq #ait-theme-doc .date	{ display: none; }
+#ait-theme-doc h1				{ font-size: 20px; font-weight: normal; margin: 0px; margin-bottom: 5px; }
+#ait-theme-doc h1 a				{ text-decoration: none; }
+#ait-theme-doc h1 a:hover		{ text-decoration: underline; }
+#ait-theme-doc p				{ margin: 0px;}
+#ait-theme-doc .dated-content	{ display: block; padding: 10px 0px; }
+
+#ait-theme-doc-sidebar #ait-theme-doc h3			{ cursor: default; }
+#ait-theme-doc-sidebar #ait-theme-doc h1			{ font-size: 16px; margin-bottom: 15px; padding: 9px 15px 4px 0; line-height: 29px;}
+#ait-theme-doc-sidebar #ait-theme-doc h2			{ font-size: 13px; margin-bottom: 5px; margin-top: 0px; padding: 0; line-height: 1.4em;}
+#ait-theme-doc-sidebar #ait-theme-doc h2 a			{ text-decoration: none; }
+#ait-theme-doc-sidebar #ait-theme-doc h2 a:hover	{ text-decoration: underline; }
+#ait-theme-doc-sidebar #ait-theme-doc .date			{ display: none; }
+#ait-theme-doc-sidebar #ait-theme-doc p				{ margin: 0px;}
+#ait-theme-doc-sidebar #ait-theme-doc .dated-content	{ display: block; padding: 5px 0px; }
+#ait-theme-doc-sidebar #ait-theme-doc article	{ border-top: 1px solid #ddd; padding: 10px 0 5px;}
+
+#dashboard-widgets .ait-info .ait-news-title a			{ color: #333333; text-decoration: none; }
+#dashboard-widgets .ait-info .ait-news-title a:hover	{ color: #21759B; text-decoration: none; }
+#dashboard-widgets .ait-update .ait-news-title a		{ color: #21759B; text-decoration: none; }
+#dashboard-widgets .ait-update .ait-news-title a:hover	{ color: #333333; text-decoration: none; }
+
+.form-table tr td input.color {width: 115px}
+.form-table tr td input.opacity {width: 30px}

@@ -1,0 +1,156 @@
+"Main" : section
+overrideGlobalSlider:
+	label: Use these settings
+	type: checkbox
+	default:
+		'yes':
+			label: 'Yes'
+headerType:
+	label: Show header type
+	type: select
+	default: {
+		slider: {
+			label: Slider
+			checked: true
+		},
+		cluster: {
+			label: Cluster Text
+		},
+		3dslider: {
+			label: 3D Slider
+		}
+	}
+sliderType:
+	label: Slider type
+	type: dropdown-categories
+	default: 'slider-creator'
+headerBgColor:
+	label: Background Color
+	type: colorpicker
+	default: '#FFFFFF'
+	themebox: { label: Header Background, page: all }
+headerBg:
+	label: Background Image
+	type: image-url
+	themebox: {
+		title: Header Background,
+		page: all,
+		{title: Floral, img: design/img/patterns/floral.png, repeat: repeat, x: left, y: top, attach: scroll}
+		{title: Sand, img: design/img/patterns/sand.png, repeat: repeat, x: left, y: top, attach: scroll}
+		{title: Wood, img: design/img/patterns/wood.png, repeat: repeat, x: left, y: top, attach: scroll}
+	}
+headerBgY:
+	label: Vertical Position
+	type: select
+	default: {
+		top: {
+			label: Top
+			checked: true
+		},
+		center: {
+			label: Center
+		},
+		bottom: {
+			label: Bottom
+		}
+	}
+headerBgX:
+	label: Horizontal Position
+	type: select
+	default: {
+		left: {
+			label: Left
+			checked: true
+		},
+		center: {
+			label: Center
+		},
+		right: {
+			label: Right
+		}
+	}
+headerBgRepaeat:
+	label: Repeat
+	type: select
+	default: {
+		no-repeat: {
+			label: No Repeat
+		},
+		repeat: {
+			label: Repeat
+			checked: true
+		},
+		repeat-x: {
+			label: Repeat X
+		},
+		repeat-y: {
+			label: Repeat Y
+		}
+	}
+"Cluster" : section
+###################################
+headerHeight:
+	label: "Header Height (px)"
+	type: text
+	default: 360
+clusterDensity:
+	label: Cluster Density
+	type: text
+	default: 8
+	help: 'Frequency of circles'
+clusterRadius:
+	label: Cluster Radius
+	type: text
+	default: 3
+	help: 'The radius of the circles'
+clusterSpeed:
+	label: Cluster Speed
+	type: text
+	default: 1000
+	help: 'The speed of the fade in'
+clusterAlternateColor:
+	label: "Alternate Color Title (IE7, IE8)"
+	type: colorpicker
+	default: "#000000"
+	help: "Cluster effect don't work in IE7 and IE8, because these browsers don't support HTML 5 features, so in IE7 and IE8 it's appear Cufon alternate text"
+clusterColor1:
+	label: Cluster Color 1
+	type: colorpicker
+	default: "#00B6B8"
+clusterColor2:
+	label: Cluster Color 2
+	type: colorpicker
+	default: "#ED5F4C"
+clusterColor3:
+	label: Cluster Color 3
+	type: colorpicker
+	default: "#F9A235"
+clusterColor4:
+	label: Cluster Color 4
+	type: colorpicker
+	default: "#2E3192"
+clusterTimeout:
+	label: Cluster Timeout
+	type: text
+	default: 700
+	help: 'Wait before animation timeout' 
+clusterText:
+	label: Cluster Text
+	type: text
+	default: Creator
+clusterFontSize:
+	label: "Cluster Font Size (px)"
+	type: text
+	default: 250
+clusterTextWidth:
+	label: "Cluster Text Width (px)"
+	type: text
+	default: 900 
+clusterPositionX:
+	label: "Cluster Left Position (px)"
+	type: text
+	default: 30
+clusterPositionY:
+	label: "Cluster Top Position (px)"
+	type: text
+	default: 0

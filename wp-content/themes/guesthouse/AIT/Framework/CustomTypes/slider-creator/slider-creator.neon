@@ -1,0 +1,278 @@
+slideType:
+	label: Slide Type
+	type: select
+	default: {
+		normal: {
+			label: Normal Slide
+			checked: true
+		},
+		advanced: {
+			label: 3D Slide
+		}
+	}
+advancedItemType:
+	label: Content Type
+	type: select
+	default: {
+		image: {
+			label: Image
+			checked: true
+		},
+		video: {
+			label: Video
+		},
+		flash: {
+			label: Flash
+		}
+	}
+advancedImageSource:
+	label: Image Source
+	type: image-url
+advancedImageTitle:
+	label: Image Title
+	type: text
+advancedImageText:
+	label: Text
+	type: textarea
+advancedImageLink:
+	label: Link
+	type: text
+advancedImageLinkTarget:
+	label: Link Target
+	type: select
+	default: {
+		blank: {
+			label: _blank
+			checked: true
+		},
+		top: {
+			label: _top
+		}
+		self: {
+			label: _self
+		}
+		parent: {
+			label: _parent
+		}
+	}
+advancedVideoSource:
+	label: Video Source
+	type: image-url
+advancedVideoTitle:
+	label: Video Title
+	type: text
+advancedVideoWidth:
+	label: Video Width
+	type: text
+advancedVideoHeight:
+	label: Video Height
+	type: text
+advancedVideoAutoplay:
+	label: Autoplay
+	type: radio
+	default:
+		'true':
+			label: 'Yes'
+			checked: true
+		'false':
+			label: 'No'
+advancedVideoPreview:
+	label: Preview Picture
+	type: image-url
+advancedSwfSource:
+	label: SWF source
+	type: image-url
+advancedSwfTitle:
+	label: SWF Title
+	type: text
+advancedSwfPreview:
+	label: Preview Picture
+	type: image-url
+advancedTransitionPieces:
+	label: Transition Pieces
+	type: text
+	default: 9
+advancedTransitionTime:
+	label: Transition Time
+	type: text
+	default: 1.2
+advancedTransitionType:
+	label: Transition Type
+	type: select
+	default: {
+		linear: {
+			label: linear
+		}
+		easeInSine: {
+			label: easeInSine
+		}
+		easeOutSine: {
+			label: easeOutSine
+		}
+		easeInOutSine: {
+			label: easeInOutSine
+		}
+		easeInQuad: {
+			label: easeInQuad
+		}
+		easeOutQuad: {
+			label: easeOutQuad
+		}
+		easeInOutQuad: {
+			label: easeInOutQuad
+		}
+		easeInCubic: {
+			label: easeInCubic
+		}
+		easeOutCubic: {
+			label: easeOutCubic
+		}
+		easeInOutCubic: {
+			label: easeInOutCubic
+		}
+		easeInQuart: {
+			label: easeInQuart
+		}
+		easeOutQuart: {
+			label: easeOutQuart
+		}
+		easeInOutQuart: {
+			label: easeInOutQuart
+		}
+		easeInQuint: {
+			label: easeInQuint
+		}
+		easeOutQuint: {
+			label: easeOutQuint
+		}
+		easeInOutQuint: {
+			label: easeInOutQuint
+		}
+		easeInExpo: {
+			label: easeInExpo
+		}
+		easeOutExpo: {
+			label: easeOutExpo
+		}
+		easeInOutExpo: {
+			label: easeInOutExpo
+		}
+		easeInCirc: {
+			label: easeInCirc
+		}
+		easeOutCirc: {
+			label: easeOutCirc
+		}
+		easeInOutCirc: {
+			label: easeInOutCirc
+		}
+		easeInElastic: {
+			label: easeInElastic
+		}
+		easeOutElastic: {
+			label: easeOutElastic
+		}
+		easeInOutElastic: {
+			label: easeInOutElastic
+		}
+		easeInBack: {
+			label: easeInBack
+		}
+		easeOutBack: {
+			label: easeOutBack
+		}
+		easeInOutBack: {
+			label: easeInOutBack
+			checked: true
+		}
+		easeInBounce: {
+			label: easeInBounce
+		}
+		easeOutBounce: {
+			label: easeOutBounce
+		}
+		easeInOutBounce: {
+			label: easeInOutBounce
+		}
+	}
+advancedTransitionDelay:
+	label: Transition Delay
+	type: text
+	default: 0.1
+advancedTransitionDepthOffset:
+	label: Transition Depth Offset
+	type: text
+	default: 300
+advancedTransitionCubeDistance:
+	label: Transition Cube Distance
+	type: text
+	default: 30
+
+
+itemType:
+	label: Select
+	type: select
+	default: {
+		image: {
+			label: Image
+			checked: true
+		},
+		video: {
+			label: Video
+		}
+	}
+
+topImage:
+	label: Top Image
+	type: image-url
+
+backgroundImage:
+	label: Background Image
+	type: image-url
+
+link:
+	label: Link
+	type: text
+
+videoUrl:
+	label: Video URL
+	type: text
+
+description:
+	label: Description
+	type: textarea
+
+descriptionPosition:
+	label: Description Position
+	type: select
+	default: {
+		hide: {
+			label: Hide description
+			checked: true
+		},
+		left: {
+			label: Left
+		},
+		right: {
+			label: Right
+		}
+	}
+
+##slideEffect:
+##	label: Slide Effect
+##	type: select
+##	default: {
+##		none: {
+##			label: None
+##			checked: true
+##		},
+##		fade: {
+##			label: Fade
+##		},
+##		from-top: {
+##			label: From-Top
+##		},
+##		expand: {
+##			label: Expand
+##		}
+##	}

@@ -1,0 +1,27 @@
+title: Boxes and Frames Shortcodes
+type: button
+
+
+shortcodeName: frame
+paired: yes
+insertContent: yes
+
+popupOptions:
+	bgcolor:
+		label: Color
+		type: colorpicker
+		default: '#445565'
+		class: all
+	version:
+		label: Version
+		type: select
+		class: all
+		default: {
+			light: {
+				label: Light
+				checked: true
+			},
+			dark: {
+				label: Dark
+			}
+		}

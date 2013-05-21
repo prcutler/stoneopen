@@ -1,0 +1,42 @@
+# We recomend to not edit this file, unless you know what are you doing
+branding:
+	options:
+		'Your own branding for AIT Admin': section
+		#########################################
+
+		adminTitle:
+			label: Admin title
+			type: text
+			default: Theme Admin
+			help: Will be displayed if user has Editors role
+
+		loginScreenLogo:
+			label: Login Screen Logo
+			type: text
+			default: 'design/admin-branding/ait-login-logo.png'
+			help: Relative path to the image from Theme root
+
+		loginScreenCss:
+			label: Custom CSS for login page
+			type: textarea
+			class: code
+			# {$img} will be replaced with image from loginScreenLogo
+			default: "h1 a {\n\tbackground: url('{$img}') no-repeat top center !important;\n}"
+
+		adminTitleIcon:
+			label: "Big Admin Icon (32x32)"
+			type: text
+			default: 'design/admin-branding/ait-admin-icon32.png'
+			help: Relative path to the image from Theme root
+
+		adminMenuIcon:
+			label: "Small Admin Menu Icon (16x16)"
+			type: text
+			default: 'design/admin-branding/ait-admin-menu-icon16.png'
+			help: Relative path to the image from Theme root
+
+		adminFooterText:
+			label: "Custom Admin Footer Text"
+			type: wysiwyg
+			# Use only double quotes with HTML attributtes
+			default: 'Created by <a href="http://www.ait-themes.com">AIT Themes</a>. Powered by <a href="http://www.wordpress.org">WordPress</a> with <a href="http://www.ait-themes.com">AIT WordPress Framework</a>.'

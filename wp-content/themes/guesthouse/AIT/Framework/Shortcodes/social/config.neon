@@ -1,0 +1,128 @@
+title: Social Shortcodes
+type: button
+
+shortcodeName: fb-box
+	
+popupOptions:
+	type:
+		label: Insert
+		type: type-select
+		class: all
+		default: {
+			fb-box: {
+				label: Facebook Box
+				checked: true
+				shortcodeName: fb-box
+			},
+			fb-comments: {
+				label: Facebook Comments
+				shortcodeName: fb-comments
+			},
+			twitter: {
+				label: Twitter
+				shortcodeName: twitter
+			}
+		}
+	border:
+		label: Border
+		type: checkbox
+		class: all
+	variant:
+		label: Variant
+		type: select
+		class: all
+		default: {
+			light: {
+				label: Light
+				checked: true
+			},
+			dark: {
+				label: Dark
+			}
+		}
+	link:
+		label: Fanpage link
+		type: text
+		default: http://www.facebook.com/AitThemes
+		class: fb-box
+	width:
+		label: "Width (px)"
+		type: text
+		default: 600
+		class: all
+	height:
+		label: "Height (px)"
+		type: text
+		default: 600
+		class: all
+	faces:
+		label: Show Faces
+		type: select
+		class: fb-box
+		default: {
+			'true': {
+				label: Show
+				checked: true
+			},
+			'false': {
+				label: Hide
+			}
+		}
+	stream:
+		label: Stream
+		type: select
+		class: fb-box
+		default: {
+			'true': {
+				label: Show
+				checked: true
+			},
+			'false': {
+				label: Hide
+			}
+		}
+	posts:
+		label: Show Posts
+		type: text
+		default: 15
+		class: fb-comments
+	username:
+		label: Username
+		type: text
+		default: AitThemes
+		class: twitter
+	tweets:
+		label: Show tweets
+		type: text
+		default: 10
+		class: twitter
+	interval:
+		label: "Interval (milisec)"
+		type: text
+		default: 6000
+		class: twitter
+	titlecolor:
+		label: Title Color
+		type: colorpicker
+		default: '#5B8090'
+		class: twitter
+	headercolor:
+		label: Header Color
+		type: colorpicker
+		default: '0'
+		class: twitter
+	backgroundcolor:
+		label: Background Color
+		type: colorpicker
+		default: '#FFFFFF'
+		class: twitter
+	textcolor:
+		label: Text Color
+		type: colorpicker
+		default: '#000000'
+		class: twitter
+	linkscolor:
+		label: Links Color
+		type: colorpicker
+		default: '#1985B5'
+		class: twitter
