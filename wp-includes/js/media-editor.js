@@ -170,10 +170,7 @@
 				icontag:    'dt',
 				captiontag: 'dd',
 				columns:    '3',
-<<<<<<< HEAD
-=======
 				link:       'post',
->>>>>>> Upgrade to Wordpress 3.5.2
 				size:       'thumbnail',
 				orderby:    'menu_order ID'
 			},
