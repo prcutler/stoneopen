@@ -1661,7 +1661,7 @@ function discover_pingback_server_uri( $url, $deprecated = '' ) {
 	if ( 0 === strpos($url, $uploads_dir['baseurl']) )
 		return false;
 
-	$response = wp_remote_head( $url, array( 'timeout' => 2, 'httpversion' => '1.0' ) );
+	$response = wp_remote_head( $url, array( 'timeout' => 2, 'httpversion' => '1.0', 'reject_unsafe_urls' => true ) );
 
 	if ( is_wp_error( $response ) )
 		return false;
@@ -1674,7 +1674,7 @@ function discover_pingback_server_uri( $url, $deprecated = '' ) {
 		return false;
 
 	// Now do a GET since we're going to look in the html headers (and we're sure its not a binary file)
-	$response = wp_remote_get( $url, array( 'timeout' => 2, 'httpversion' => '1.0' ) );
+	$response = wp_remote_get( $url, array( 'timeout' => 2, 'httpversion' => '1.0', 'reject_unsafe_urls' => true ) );
 
 	if ( is_wp_error( $response ) )
 		return false;
@@ -1908,6 +1908,7 @@ function trackback($trackback_url, $title, $excerpt, $ID) {
 
 	$options = array();
 	$options['timeout'] = 4;
+	$options['reject_unsafe_urls'] = true;
 	$options['body'] = array(
 		'title' => $title,
 		'url' => get_permalink($ID),
@@ -1955,11 +1956,16 @@ function weblog_ping($server = '', $path = '') {
  * Default filter attached to pingback_ping_source_uri to validate the pingback's Source URI
  *
  * @since 3.5.1
+<<<<<<< HEAD
+=======
+ * @see wp_http_validate_url()
+>>>>>>> Upgrade to Wordpress 3.5.2
  *
  * @param string $source_uri
  * @return string
  */
 function pingback_ping_source_uri( $source_uri ) {
+<<<<<<< HEAD
 	$uri = esc_url_raw( $source_uri, array( 'http', 'https' ) );
 	if ( ! $uri )
 		return '';
@@ -2011,6 +2017,9 @@ function pingback_ping_source_uri( $source_uri ) {
 		return $uri;
 
 	return '';
+=======
+	return (string) wp_http_validate_url( $source_uri );
+>>>>>>> Upgrade to Wordpress 3.5.2
 }
 
 /**

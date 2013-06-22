@@ -4,21 +4,29 @@
  *
  * @global string $wp_version
  */
+<<<<<<< HEAD
 $wp_version = '3.5.1';
+=======
+$wp_version = '3.5.2';
+>>>>>>> Upgrade to Wordpress 3.5.2
 
 /**
  * Holds the WordPress DB revision, increments when changes are made to the WordPress DB schema.
  *
  * @global int $wp_db_version
  */
-$wp_db_version = 22441;
+$wp_db_version = 22442;
 
 /**
  * Holds the TinyMCE version
  *
  * @global string $tinymce_version
  */
+<<<<<<< HEAD
 $tinymce_version = '358-23224';
+=======
+$tinymce_version = '358-24486';
+>>>>>>> Upgrade to Wordpress 3.5.2
 
 /**
  * Holds the required PHP version

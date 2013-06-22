@@ -536,6 +536,11 @@ $_old_files = array(
 'wp-includes/js/jquery/ui/jquery.effects.transfer.min.js',
 'wp-includes/js/jquery/ui/jquery.effects.fold.min.js',
 'wp-admin/options-privacy.php',
+<<<<<<< HEAD
+=======
+// 3.5.2
+'wp-includes/js/swfupload/swfupload-all.js',
+>>>>>>> Upgrade to Wordpress 3.5.2
 );
 
 /**
