@@ -8430,7 +8430,11 @@ class NFileStorage extends NObject implements ICacheStorage
 				return;
 			}
 		}
-		$handle = @fopen($cacheFile, 'r+b');
+
+		$handle = false;
+		if(file_exists($cacheFile))
+			$handle = @fopen($cacheFile, 'r+b');
+
 		if (!$handle) {
 			$handle = fopen($cacheFile, 'wb');
 			if (!$handle) {
@@ -8534,7 +8538,11 @@ class NFileStorage extends NObject implements ICacheStorage
 
 	protected function readMetaAndLock($file, $lock)
 	{
-		$handle = @fopen($file, 'r+b');
+		$handle = false;
+
+		if(file_exists($file))
+			$handle = @fopen($file, 'r+b');
+
 		if (!$handle) {
 			return NULL;
 		}

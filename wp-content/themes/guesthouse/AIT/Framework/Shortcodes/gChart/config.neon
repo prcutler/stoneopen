@@ -1,55 +1,72 @@
 title: Google Chart Shortcodes
 type: button
 
-shortcodeName: googlechart
+shortcodeName: chart
 
 popupOptions:
+	data:
+		label: Data
+		type: text
+		class: all
+		default: ""
+	colors:
+		label: Colors
+		type: text
+		class: all
+		default: ""
+	size:
+		label: Size
+		type: text
+		class: all
+		default: "400x200"
+	bg:
+		label: Background
+		type: text
+		class: all
+		default: "ffffff"
+	title:
+		label: Title
+		type: text
+		class: all
+		default: ""
+	labels:
+		label: Labels
+		type: text
+		class: all
+		default: ""
+	advanced:
+		label: Advanced
+		type: text
+		class: all
+		default: ""
 	type:
-		label: Map Type
+		label: Type
 		type: select
 		class: all
 		default: {
-			G_NORMAL_MAP: {
-				label: Normal Map
+			pie: {
+				label: Pie 3D
 				checked: true
 			},
-			G_SATELLITE_MAP: {
-				label: Satellite Map
+			pie2d: {
+				label: Pie 2D
 			},
-			G_HYBRID_MAP: {
-				label: Hybrid Map
+			line: {
+				label: Line
+			},
+			xyline: {
+				label: XY Line
+			},
+			sparkline: {
+				label: Sparkline
+			},
+			meter: {
+				label: Meter
+			},
+			scatter: {
+				label: Scatter
+			},
+			venn: {
+				label: Venn
 			}
 		}
-	border:
-		label: Border
-		type: checkbox
-		class: all
-	width:
-		label: "Width (px or false)"
-		type: text
-		class: all
-		default: 'false'
-	height:
-		label: "Height (px or false)"
-		type: text
-		class: all
-		default: '400'
-	latitude:
-		label: Latitude
-		type: text
-		class: all
-		default: '0'
-	longitude:
-		label: Longitude
-		type: text
-		class: all
-		default: '0'
-	address:
-		label: Address
-		type: text
-		class: all
-	zoom:
-		label: Zoom
-		type: text
-		class: all
-		default: '3'

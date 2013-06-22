@@ -36,6 +36,7 @@ popupOptions:
 		label: Description
 		type: text
 		class: all
+		default: ''
 	width:
 		label: Width
 		type: text
@@ -84,7 +85,9 @@ popupOptions:
 		label: Picture
 		type: text
 		class: all
+		default: ''
 	height:
 		label: Height
 		type: text
 		class: all
+		default: ''

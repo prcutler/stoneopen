@@ -87,7 +87,8 @@ function ait_type_taxonomy_filter_request( $query ) {
       $var = &$query->query_vars[$tax_slug];
       if ( isset( $var ) ) {
         $term = get_term_by( 'id', $var, $tax_slug );
-        $var = $term->slug;
+        if($term)
+        	$var = $term->slug;
       }
     }
   }

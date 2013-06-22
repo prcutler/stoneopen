@@ -111,7 +111,8 @@
 	.post-links {height: 18px; width: 52px;}
 	.title-no-thumbnail .tool-buttons {top: 13px;}
 
-	.single-post .entry-thumbnail img {max-width: 440px; height: auto; width: 440px;}
+	.single-post .entry-thumbnail img,
+	.subpage .entry-content img {max-width: 440px; height: auto; width: 440px;}
 	.subpage .entry-content img.thumb {max-width: 420px; height: auto; width: 420px;}
 
 		.single .post-footer .cat-links span, .single .post-footer .tag-links span {width: 105px;}
@@ -421,6 +422,7 @@ div.anythingSlider .arrow a {top: 85px !important;}
 /* Slider SubPage */
 .toolbar,
 .subpage-slider-container .container-control {display: none;}
+.subpage-slider-container .anythingSlider 	{ height: 137px !important; }
 
 .slider .subpage-room-options-container-left {
 	-webkit-border-radius: 0;

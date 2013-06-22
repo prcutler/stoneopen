@@ -3,10 +3,10 @@ Author: Patto
 */
 (function($){
 
-    $.fn.extend({ 
+    $.fn.extend({
 
         hoverZoom: function(settings) {
- 
+
             var defaults = {
                 overlay: true,
                 overlayColor: '#2e9dbd',
@@ -14,35 +14,35 @@ Author: Patto
                 zoom: 25,
                 speed: 300
             };
-             
+
             var settings = $.extend(defaults, settings);
-         
+
             return this.each(function() {
-            
+
                 var s = settings;
                 var hz = $(this);
                 var image = $('img', hz);
 
                 image.one('load', function() {
-                    
+
                     if(s.overlay === true) {
                     	var desc = $(this).parent().parent().find('.image-description').html();
                         $(this).parent().append('<div class="zoomOverlay"><span class="zoom-description">' + desc + '</span></div>');
                         $(this).parent().find('.zoomOverlay').css({
-                            opacity:0, 
-                            display: 'block', 
+                            opacity:0,
+                            display: 'block',
                             backgroundColor: s.overlayColor
-                        }); 
+                        });
                     }
-                
+
                     var width = $(this).width();
                     var height = $(this).height();
-                
+
                     $(this).fadeIn(1000, function() {
                         $(this).parent().css('background-image', 'none');
                         hz.hover(function() {
                             $('img', this).stop().animate({
-                                height: height + s.zoom,
+                                /*height: height + s.zoom,*/
                                 marginLeft: -(s.zoom),
                                 marginTop: -(s.zoom)
                             }, s.speed);
@@ -53,7 +53,7 @@ Author: Patto
                             }
                         }, function() {
                             $('img', this).stop().animate({
-                                height: height,
+                                /*height: height,*/
                                 marginLeft: 0,
                                 marginTop: 0
                             }, s.speed);
@@ -69,15 +69,15 @@ Author: Patto
 						if(s.overlay === true) {
 	                        $(this).parent().append('<div class="zoomOverlay" />');
 	                        $(this).parent().find('.zoomOverlay').css({
-	                            opacity:0, 
-	                            display: 'block', 
+	                            opacity:0,
+	                            display: 'block',
 	                            backgroundColor: s.overlayColor
-	                        }); 
+	                        });
 	                    }
-	                
+
 	                    var width = $(this).width();
 	                    var height = $(this).height();
-	                
+
 	                    $(this).fadeIn(1000, function() {
 	                        $(this).parent().css('background-image', 'none');
 	                        hz.hover(function() {
@@ -105,10 +105,10 @@ Author: Patto
 	                        });
 	                    });
                     }
-					if(this.complete){ 
+					if(this.complete){
 
-					$(this).trigger("load"); 
-					
+					$(this).trigger("load");
+
 					}
 				});
             });

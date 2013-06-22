@@ -35,12 +35,27 @@ class Posts_Widget extends WP_Widget
 		/* Before widget(defined by theme)*/
 		echo $before_widget;
 
-		$query_string = '';
+		$query = array();
 
 		if ( !empty( $instance['number_of_posts'] ))
-            $query_string .= '&showposts=' . $instance['number_of_posts'];
+            $query['showposts'] = $instance['number_of_posts'];
         else
-            $query_string .= '&showposts=1';
+            $query['showposts'] = 1;
+
+		$formats = get_post_format_slugs();
+		foreach ((array) $formats as $i => $format ) {
+			$formats[$i] = 'post-format-' . $format;
+		}
+
+		$query['tax_query'] = array(
+			array(
+				'taxonomy' => 'post_format',
+				'field' => 'slug',
+				'terms' => $formats,
+				'operator' => 'NOT IN'
+			)
+		);
+
 		/* START Widget body */
         //if ( isset( $instance['title'] ) ) echo $before_title . $instance['title'] . $after_title;
         if ( !empty( $instance['title'] ) )
@@ -49,7 +64,7 @@ class Posts_Widget extends WP_Widget
         }
 
         $i = 1;
-        $num_posts = sizeof( query_posts( $query_string ) );
+        $num_posts = sizeof( query_posts( $query ) );
 
         if (have_posts()) : ?>
         <div class="postitems-wrapper">

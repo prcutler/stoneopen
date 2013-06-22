@@ -564,6 +564,7 @@ class WPAlchemy_MetaBox
 		if (WPALCHEMY_MODE_ARRAY == $this->mode AND $key == $this->id)
 		{
 			// maybe_unserialize fixes a wordpress bug which double serializes already serialized data during export/import
+			$value = str_replace("\r\n", "\n", $value);
 			update_post_meta($post_id, $key, maybe_unserialize($value));
 		}
 	}
@@ -986,6 +987,11 @@ class WPAlchemy_MetaBox
 		</td>
 		<?php endif; ?>
 
+		<?php if($value['type'] == 'dropdown-posts-list'): ?>
+		<td>
+			<?php $this->dropdownPostsList($key, $value, $config); ?>
+		</td>
+		<?php endif; ?>
 
 		<?php if($value['type'] == 'dropdown-sliders'): ?>
 		<td>
@@ -1033,6 +1039,12 @@ class WPAlchemy_MetaBox
 		<?php if($value['type'] == 'order'): ?>
 		<td>
 			<?php $this->orderControl($key, $value, $config); ?>
+		</td>
+		<?php endif; ?>
+
+		<?php if($value['type'] == 'js-animations'): ?>
+		<td>
+			<?php $this->jsAnimationsControl($key, $value, $config); ?>
 		</td>
 		<?php endif; ?>
 
@@ -1431,6 +1443,35 @@ class WPAlchemy_MetaBox
 
 
 	/**
+	 * Dropdown with list of custom posts
+	 * @param string $key
+	 * @param array $value
+	 * @param array $config
+	 */
+	public function dropdownPostsList($key, $value, $config)
+	{
+		$this->the_field($key);
+
+		$params = array(
+			'post_type'			=> $config[$key]['default'],
+			'nopaging'			=>	true,
+			'post_status'		=> 'publish'
+		);
+
+		$query = new WP_Query($params);
+		if(count($query->posts) > 0){
+			echo "<select id='ait-{$this->id}-{$key}' name='{$this->get_the_name()}'>";
+			foreach ($query->posts as $post) {
+				$selected = ($this->get_the_value() == $post->ID) ? " selected='selected'" : "";
+				echo "<option value='{$post->ID}'{$selected}>{$post->post_title}</option>";
+			}
+			echo "</select>";
+		}
+	}
+
+
+
+	/**
 	 * Select combobox for fonts
 	 * @param string $key
 	 * @param array $value
@@ -1509,6 +1550,35 @@ class WPAlchemy_MetaBox
 		</label>
 		<br>
 		<?php endforeach;
+	}
+
+
+
+	/**
+	 * Select box with predefined js animations
+	 * @param string $key
+	 * @param array $value
+	 * @param array $config
+	 */
+	public function jsAnimationsControl($key, $value, $config)
+	{
+		$this->the_field($key);
+		$animations = array('linear', 'easeInSine', 'easeOutSine', 'easeInOutSine', 'easeInQuad', 'easeOutQuad', 'easeInOutQuad', 'easeInCubic', 'easeOutCubic', 'easeInOutCubic', 'easeInQuart', 'easeOutQuart', 'easeInOutQuart', 'easeInQuint', 'easeOutQuint', 'easeInOutQuint', 'easeInExpo', 'easeOutExpo', 'easeInOutExpo', 'easeInCirc', 'easeOutCirc', 'easeInOutCirc', 'easeInElastic', 'easeOutElastic', 'easeInOutElastic', 'easeInBack', 'easeOutBack', 'easeInOutBack', 'easeInBounce', 'easeOutBounce', 'easeInOutBounce');
+
+		$out = array();
+		$val = $this->get_the_value();
+
+		if(is_null($val)) $val = $value['default'];
+
+		foreach($animations as $a){
+			$s = selected($a, $val, false);
+			$out[] = "<option value='{$a}' {$s}>{$a}</option>";
+		}
+		?>
+		<select name="<?php $this->the_name(); ?>" id="ait-<?php "{$this->id}-{$key}" ?>">
+			<?php echo implode('', $out); ?>
+		</select>
+		<?php
 	}
 
 

@@ -158,7 +158,7 @@ function theme_init () {
 		// contact
 		wp_enqueue_style( 'CSS_contact', THEME_CSS_URL . '/contact.css');
 		// scroll to
-		wp_enqueue_script( 'JS_scrollto', THEME_JS_URL . '/libs/jquery.scroll-to.js',  array('jquery') );
+		wp_enqueue_script( 'JS_scrollto', THEME_JS_URL . '/libs/jquery.scrollTo-1.4.3.1.js',  array('jquery') );
 
 		// hoverZoom
 		wp_enqueue_style( 'CSS_hover_zoom', THEME_CSS_URL . '/hoverZoom.css');

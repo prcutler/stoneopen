@@ -314,11 +314,16 @@ class WpLatteFunctions
 	 */
 	public static function breadcrumbs($args = array())
 	{
+
 		if(!isset($args['delimiter']))
 			$delimiter = '&raquo;';
+		else
+			$delimiter = $args['delimiter'];
 
 		if(!isset($args['home']))
 			$home = __('Home', 'ait');
+		else
+			$home = $args['home'];
 
 		$return = '';
 
@@ -370,9 +375,11 @@ class WpLatteFunctions
 					$return .= $before . get_the_title() . $after;
 				}else{
 					$cat = get_the_category();
-					$cat = $cat[0];
-					$return .= get_category_parents($cat, TRUE, ' ' . $delimiter . ' ');
-					$return .= $before . get_the_title() . $after;
+					if(!empty($cat)){
+						$cat = $cat[0];
+						$return .= get_category_parents($cat, TRUE, ' ' . $delimiter . ' ');
+						$return .= $before . get_the_title() . $after;
+					}
 				}
 
 			}elseif(!is_single() && !is_search() && !is_page() && get_post_type() != 'post' && !is_404()){
@@ -585,8 +592,8 @@ class WpLatteFunctions
 			      'format' => 'page/%#%',
 			      'current' => $current_page,
 			      'total' => $total_pages,
-			      'prev_text' => 'Prev',
-			      'next_text' => 'Next'
+			      'prev_text' => __('Prev', 'ait'),
+			      'next_text' => __('Next', 'ait'),
 			    ));
 
 			  $return .= '</div>';

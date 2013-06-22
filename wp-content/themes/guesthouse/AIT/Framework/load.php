@@ -74,10 +74,10 @@ function aitAddAdminBarMenu($wpAdminBar)
 		$showAdmin['branding'] = "enabled";
 	}
 
-	if(isset($showAdmin['backup']) && @$showAdmin['backup'] != 'disabled'){ $rootId = 'ait-admin-backup'; }
-	if(isset($showAdmin['skins']) && @$showAdmin['skins'] != 'disabled'){ $rootId = 'ait-admin-skins'; }
+	if(@$showAdmin['backup'] != 'disabled'){ $rootId = 'ait-admin-backup'; }
+	if(@$showAdmin['skins'] != 'disabled'){ $rootId = 'ait-admin-skins'; }
 	if(@$showAdmin['branding'] != 'disabled'){ $rootId = 'ait-admin-branding'; }
-	if(isset($showAdmin['website_settings']) && @$showAdmin['website_settings'] != 'disabled'){
+	if(@$showAdmin['website_settings'] != 'disabled'){
 		$c = array_slice($aitThemeConfig, 0, 1);
 		$key = reset(array_keys($c));
 		$rootHref = 'ait-admin-' . $key;
@@ -86,16 +86,14 @@ function aitAddAdminBarMenu($wpAdminBar)
 	}
 
 	$pages = array();
-	if(!isset($aitDisableBranding)){
-		$aitDisableBranding = '';
-	}
-	if(isset($showAdmin['branding']) && @$showAdmin['branding'] != 'disabled' and !@$aitDisableBranding){ $pages['branding'] = __('Admin Branding', 'ait'); }
-	if(isset($showAdmin['skins']) && @$showAdmin['skins'] != 'disabled'){ $pages['skins'] = __('Skins', 'ait'); }
-	if(isset($showAdmin['backup']) && @$showAdmin['backup'] != 'disabled'){ $pages['backup'] = __('Backup', 'ait'); }
+
+	if(@$showAdmin['branding'] != 'disabled' and isset($aitDisableBranding) and !@$aitDisableBranding){ $pages['branding'] = __('Admin Branding', 'ait'); }
+	if(@$showAdmin['skins'] != 'disabled'){ $pages['skins'] = __('Skins', 'ait'); }
+	if(@$showAdmin['backup'] != 'disabled'){ $pages['backup'] = __('Backup', 'ait'); }
 
 	if ($rootId) {
 		// root node
-		if(isset($showAdmin['dashboard']) && @$showAdmin['dashboard'] != 'disabled'){
+		if(@$showAdmin['dashboard'] != 'disabled'){
 			$wpAdminBar->add_node(array(
 				'id' => $rootId,
 				'title' => __('AIT Themes Admin', 'ait'),
@@ -112,7 +110,7 @@ function aitAddAdminBarMenu($wpAdminBar)
 
 
 	// Dashboard pages
-	if(isset($showAdmin['dashboard']) && @$showAdmin['dashboard'] != 'disabled'){
+	if(@$showAdmin['dashboard'] != 'disabled'){
 		$dashboardPages = array(
 			//'dashboard' => 	__('Dashboard', 'ait'),
 			'docs' => 		__('Documentation', 'ait'),
@@ -138,7 +136,7 @@ function aitAddAdminBarMenu($wpAdminBar)
 
 
 	//  Config pages
-	if(isset($showAdmin['website_settings']) && @$showAdmin['website_settings'] != 'disabled'){
+	if(@$showAdmin['website_settings'] != 'disabled'){
 		foreach($aitThemeConfig as $key => $page){
 
 			$wpAdminBar->add_node(array(

@@ -338,66 +338,6 @@ function aitSaveLess2Css($input = null, $output = null, $options = null)
 
 
 /**
- * Generates CSS from LESS
- * @param string $input Absolut path to LESS file
- * @param string $output Absolut path to CSS file
- * @param array $options
- */
-function aitGenerateCss($input = null, $output = null, $options = null)
-{
-	if($input === null and $output === null and $options === null){
-		$options = get_option(AIT_OPTIONS_KEY);
-		$input = THEME_DIR . "/style.less.css";
-		$outputName = "style." . (defined('ICL_LANGUAGE_CODE') ? ICL_LANGUAGE_CODE : 'en') . ".css";
-		$output = AIT_CACHE_DIR . "/$outputName";
-	}
-
-	if($options === false){ // for theme preview
-		$options = aitGetThemeDefaultOptions($GLOBALS['aitThemeConfig']);
-	}
-
-	$less = new AitLess();
-	$less->importDir = THEME_DIR . '/';
-
-	$content = file_get_contents($input);
-
-	$onlyDesignVars = true;
-
-	$configTypes = aitGetOptionsTypes($GLOBALS['aitThemeConfig'], $onlyDesignVars);
-
-	$customCss = aitGetOptionsByType(array('custom-css', 'custom-css-vars'), $configTypes, $options);
-
-	if(isset($customCss['custom-css'])){
-		foreach($customCss['custom-css'] as $css){
-			$content .= $css['value'];
-			unset($options[$css['section']][$css['key']]);
-		}
-	}
-
-	$variables = aitPrepareVariablesForLess($options, $configTypes);
-	try{
-		$css = $less->parse($content, $variables);
-	}catch(Exception $e){
-		wp_die($e->getMessage());
-	}
-
-	if(!defined('AIT_DEVELOPMENT') or AIT_DEVELOPMENT != true)
-		$css = preg_replace('~\\s*([:;{},])\\s*~', '\\1', preg_replace('~/\\*.*\\*/~sU', '', $css));
-
-	@chmod($output, 0777);
-	$written = @file_put_contents($output, $css);
-	@chmod($output, 0755);
-
-	if($written === false)
-		return false;
-	else
-		return true;
-}
-
-
-
-
-/**
  * Converts structured config array to simple key => value array
  * @param array $options Config array
  * @return array
@@ -432,8 +372,13 @@ function aitPrepareVariablesForLess($options = array(), $configTypes = null)
 						$variables[$option] = "\"$variables[$option]\"";
 
 				}elseif(is_array($value) and isset($value['font']) and !empty($value['type'])){
-					$variables[$option] = "'" . str_replace('+', ' ', $value['font']) . "'";
+					$font = str_replace('+', ' ', $value['font']);
+					$pos = strpos($font, ':');
 
+					if($pos !== false)
+						$font = substr($font, 0, $pos);
+
+					$variables[$option] = "'" . $font . "'";
 
 				}elseif($configTypes[$section][$option] == 'transparent' and is_array($value) and isset($value['color'])){
 					if(startsWith('#', $value['color']) and $value['opacity'] == 1){
@@ -461,6 +406,7 @@ function aitPrepareVariablesForLess($options = array(), $configTypes = null)
 			}
 		}
 	}
+
 	return $variables;
 }
 

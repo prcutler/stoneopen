@@ -147,16 +147,9 @@ function aitAdminInit()
 
 function aitSaveCss($errorMessages = false)
 {
-	if(defined("AIT_FW_VERSION") and version_compare(AIT_FW_VERSION, "1.1", ">=")){
-		$written = aitGenerateCss();
-		if($errorMessages)
-			aitCssErrorMessages($written, true);
-
-	}else{
-		$written = aitSaveLess2Css();
-		if($errorMessages)
-			aitCssErrorMessages($written);
-	}
+	$written = aitSaveLess2Css();
+	if($errorMessages)
+		aitCssErrorMessages($written);
 }
 
 

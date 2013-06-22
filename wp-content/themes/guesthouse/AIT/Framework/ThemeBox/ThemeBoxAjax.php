@@ -34,13 +34,9 @@ if(is_user_logged_in() and isset($_SERVER['HTTP_X_REQUESTED_WITH']) and $_SERVER
 	$updated = update_option($opt, $result);
 
 	if($updated){
-		if(defined(AIT_FW_VERSION) and version_compare(AIT_FW_VERSION, "1.1", ">=")){
-			aitGenerateCss();
-		}else{
-			aitSaveLess2Css();
-		}
+		aitSaveLess2Css();
 
-		$payload->msg = '<p class="ait-themebox-success">' . __('Settings succesfully saved. Wheee ^_^', THEME_CODE_NAME) . '</p>';
+		$payload->msg = '<p class="ait-themebox-success">' . __('Settings succesfully saved.', THEME_CODE_NAME) . '</p>';
 
 	}else{
 		$payload->msg = '<p class="ait-themebox-error">' . __('I could not save the settings. Change some values or please try again.', THEME_CODE_NAME) . '</p>';

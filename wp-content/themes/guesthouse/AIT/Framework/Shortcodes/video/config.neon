@@ -25,6 +25,7 @@ popupOptions:
 		label: Link
 		type: text
 		class: all
+		default: ''
 	width:
 		label: Width
 		type: text

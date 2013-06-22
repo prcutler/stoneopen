@@ -94,7 +94,7 @@ generalOptions:
 					type: text
 					skinable: true
 					default: 280px
-				Header Appereance - Global Settings : section
+				Header Appearance - Global Settings : section
 				#################
 				headerType:
 					label: "Header Type"
@@ -140,7 +140,7 @@ generalOptions:
 						{title: Wood, img: design/img/patterns/wood.png}
 						{title: Structure, img: design/img/patterns/structure.png}
 					}
-				Room Viewer Appereance - Global Settings : section
+				Room Viewer Appearance - Global Settings : section
 				#################
 				roomViewerHeight:
 					label: 'Height of images (px)'
@@ -269,7 +269,7 @@ generalOptions:
 					label: Room Viewer Category
 					type: dropdown-categories
 					default: 'room'
-				Slider Appereance - Global Settings : section
+				Slider Appearance - Global Settings : section
 				#################
 				sliderHeight:
 					label: 'Height of images (px)'
@@ -398,7 +398,7 @@ generalOptions:
 					label: Slider Category
 					type: dropdown-categories
 					default: 'slider-creator'
-				DropDown Panel Appereance - Global Settings : section
+				DropDown Panel Appearance - Global Settings : section
 				#################
 				dropdownPanelShow:
 					label: Display Ribbon

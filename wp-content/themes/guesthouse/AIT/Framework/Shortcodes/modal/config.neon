@@ -25,6 +25,7 @@ popupOptions:
 		label: "Name (ID) of modal window"
 		type: text
 		class: all
+		default: ''
 	width:
 		label: "Width (px or auto)"
 		type: text

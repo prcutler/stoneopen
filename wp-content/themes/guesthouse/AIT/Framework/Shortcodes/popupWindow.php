@@ -1,8 +1,18 @@
 <?php
 require '../../../../../../wp-load.php';
 
-$data = NNeon::decode(file_get_contents(dirname(__FILE__) . "/{$_REQUEST['plugin']}/config.neon", true));
+$shortcode = $_REQUEST['plugin'];
+$ver = $GLOBALS['aitThemeShortcodes'][$shortcode];
 
+if($ver == 1)
+	$ver = '';
+
+$configFile = dirname(__FILE__) . "/$shortcode/config{$ver}.neon";
+
+if(!file_exists($configFile))
+	$configFile = dirname(__FILE__) . "/$shortcode/config.neon";
+
+$data = NNeon::decode(file_get_contents($configFile, true));
 ?>
 
 <script type="text/javascript">
@@ -60,6 +70,7 @@ $data = NNeon::decode(file_get_contents(dirname(__FILE__) . "/{$_REQUEST['plugin
             }
           });
         } else {
+
           jQuery('#popup-shortcode-form input:checkbox').each(function(){
   		    	if((!jQuery(this).hasClass('hide-option')) && (jQuery(this).hasClass('type-'+shortcodeType) || jQuery(this).hasClass('type-all'))){
   			    	if(jQuery(this).is(':checked')){
@@ -71,10 +82,12 @@ $data = NNeon::decode(file_get_contents(dirname(__FILE__) . "/{$_REQUEST['plugin
   		    });
 		    }
 		    // multi-select box
+
 		    var tempString = '';
         var catNum = 0;
-        var catNumAll = jQuery('.ait-grid-portfolio-category-checklist input:checkbox').size();
-		    jQuery('.ait-grid-portfolio-category-checklist input:checkbox').each(function(){
+        var catNumAll = jQuery('#popup-shortcode-form .cat-checklist input:checkbox').size();
+		    jQuery('#popup-shortcode-form .cat-checklist input:checkbox').each(function(){
+
           if(jQuery(this).is(':checked')){
             tempString += jQuery(this).val()+', ';
             catNum++;
@@ -160,8 +173,8 @@ $data = NNeon::decode(file_get_contents(dirname(__FILE__) . "/{$_REQUEST['plugin
     echo '<td>';
 		// textfield
 		if($value['type'] == 'text'){
-
-			echo '<input type="text" id="ait-'.$key.'" name="'.$key.'" value="'.$value['default'].'" class="regular-text type-'.$value['class'].'">';
+			$val = isset($value['default']) ? $value['default'] : '';
+			echo '<input type="text" id="ait-'.$key.'" name="'.$key.'" value="' . $val . '" class="regular-text type-'.$value['class'].'">';
 
 		// image-select
 		} elseif($value['type'] == 'image-url'){

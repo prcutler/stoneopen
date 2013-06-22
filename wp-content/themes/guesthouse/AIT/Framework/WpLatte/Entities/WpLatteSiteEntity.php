@@ -163,6 +163,12 @@ class WpLatteSiteEntity extends WpLatteBaseEntity
 	protected $isMobile;
 
 	/**
+	 * Is paged?
+	 * @var bool
+	 */
+	protected $isPaged;
+
+	/**
 	 * @internal
 	 * @var WpLatteSiteEntity
 	 */
@@ -222,18 +228,21 @@ class WpLatteSiteEntity extends WpLatteBaseEntity
 			self::$instance = new self;
 		}
 
-		self::$instance->isHome = $GLOBALS['wp_query']->is_home;
-		self::$instance->isSingle = $GLOBALS['wp_query']->is_single;
-		self::$instance->isPage = $GLOBALS['wp_query']->is_page;
-		self::$instance->isSearch = $GLOBALS['wp_query']->is_search;
-		self::$instance->isArchive = ($GLOBALS['wp_query']->is_archive && !$GLOBALS['wp_query']->is_category && !$GLOBALS['wp_query']->is_tag && !$GLOBALS['wp_query']->is_author);
-		self::$instance->isCategory = $GLOBALS['wp_query']->is_category;
-		self::$instance->isAuthor = $GLOBALS['wp_query']->is_author;
-		self::$instance->isTag = $GLOBALS['wp_query']->is_tag;
-		self::$instance->is404 = $GLOBALS['wp_query']->is_404;
-		self::$instance->isBlog = $GLOBALS['wp_query']->is_home and $GLOBALS['wp_query']->is_posts_page;
+		global $wp_query;
+
+		self::$instance->isHome = $wp_query->is_home;
+		self::$instance->isSingle = $wp_query->is_single;
+		self::$instance->isPage = $wp_query->is_page;
+		self::$instance->isSearch = $wp_query->is_search;
+		self::$instance->isArchive = ($wp_query->is_archive && !$wp_query->is_category && !$wp_query->is_tag && !$wp_query->is_author);
+		self::$instance->isCategory = $wp_query->is_category;
+		self::$instance->isAuthor = $wp_query->is_author;
+		self::$instance->isTag = $wp_query->is_tag;
+		self::$instance->is404 = $wp_query->is_404;
+		self::$instance->isBlog = $wp_query->is_home and $wp_query->is_posts_page;
 		self::$instance->isFrontPage = is_front_page();
 		self::$instance->isHomepage = is_front_page(); // alias
+		self::$instance->isPaged = is_paged(); // alias
 
 		$ua = $_SERVER['HTTP_USER_AGENT'];
 		self::$instance->isIpad = strpos($ua, 'iPad') !== false;
@@ -324,6 +333,13 @@ class WpLatteSiteEntity extends WpLatteBaseEntity
 				$widgets[] = $key;
 		}
 		return $widgets;
+	}
+
+
+
+	public function isActiveWidgetArea($areaId)
+	{
+		return is_active_sidebar($areaId);
 	}
 
 

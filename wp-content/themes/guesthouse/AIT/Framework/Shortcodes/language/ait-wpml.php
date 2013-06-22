@@ -7,17 +7,16 @@ function theme_wpml($atts, $content = null ) {
 		'code' => '',
 	), $atts));
 
-	if(ICL_LANGUAGE_CODE == $code){
+	if(defined('ICL_LANGUAGE_CODE') and ICL_LANGUAGE_CODE == $code){
 		$result = do_shortcode($content);
 	} else {
 		$result = "";
 	}
-	
+
 	return $result;
 }
 add_shortcode('lang', 'theme_wpml');
 
 
-				
-				
-			
+
+

@@ -146,6 +146,8 @@ class WpLattePostEntity extends WpLatteBaseEntity
 
 	protected $thumbnailSrc;
 
+	protected $thumbnailUrl;
+
 	protected $isSingle;
 
 	protected $isSticky;
@@ -172,8 +174,10 @@ class WpLattePostEntity extends WpLatteBaseEntity
 	/** @internal */
 	protected $rawExcerpt;
 
+	public $rawPost;
+
 	/** @internal */
-	private $rawPost;
+	protected $featuredGallery;
 
 
 	/**
@@ -270,6 +274,36 @@ class WpLattePostEntity extends WpLatteBaseEntity
 	 * @param type $stripTeaser int 0, 1 whether to strip teaser or not
 	 * @return HTML content of Post
 	 */
+	public function remainingContent($more = null, $stripTeaser = false)
+	{
+
+		global $wp_version;
+
+ 		if(version_compare($wp_version, "3.6beta", ">=")){
+			$this->setupData();
+
+			$extra = get_the_remaining_content($more, $stripTeaser );
+
+			remove_filter('the_content', 'post_formats_compat', 7);
+			$content = apply_filters('the_content', $extra);
+			add_filter('the_content', 'post_formats_compat', 7);
+
+			wp_reset_postdata();
+			return str_replace(']]>', ']]&gt;', $content);
+		}else{
+			return $this->content($more, $stripTeaser);
+		}
+
+	}
+
+
+
+	/**
+	 * Gets content of Post
+	 * @param string $more "More" text
+	 * @param type $stripTeaser int 0, 1 whether to strip teaser or not
+	 * @return HTML content of Post
+	 */
 	protected function getContent($more = null, $stripTeaser = 0)
 	{
 		global $wp_query;
@@ -278,14 +312,11 @@ class WpLattePostEntity extends WpLatteBaseEntity
 			return apply_filters('the_content', $this->rawContent);
 		}else{
 
-			global $post;
 
 			if($wp_query->current_post == -1) // loop has just started
 				do_action_ref_array('loop_start', array(&$wp_query));
 
-			$post = $this->rawPost;
-
-			setup_postdata($post);
+			$this->setupData();
 
 			$content = get_the_content($more, $stripTeaser);
 			$content = apply_filters('the_content', $content);
@@ -319,6 +350,110 @@ class WpLattePostEntity extends WpLatteBaseEntity
 	protected function getPermalink()
 	{
 		return get_permalink($this->id);
+	}
+
+
+	/**
+	 * Alias for has_post_format();
+	 */
+	public function hasFormat($format)
+	{
+		return has_post_format($format, $this->id);
+	}
+
+
+
+	public function setupData()
+	{
+		global $post;
+		$post = $this->rawPost;
+		setup_postdata($post);
+	}
+
+
+
+	/**
+	 * the_post_format_*() alias
+	 */
+	public function format($format, $params = null)
+	{
+		$output = '';
+
+		$this->setupData();
+
+		$null = null; // variable pass by reference
+
+		global $wp_version;
+
+ 		if(version_compare($wp_version, "3.6beta", ">=")){
+			// wp-includes/post-formats.php:599
+			if($format == 'chat'){
+				$output  = '<dl class="chat">';
+				$stanzas = get_the_post_format_chat();
+
+				foreach ( $stanzas as $stanza ) {
+					foreach ( $stanza as $row ) {
+						$time = '';
+						if ( ! empty( $row['time'] ) )
+							$time = sprintf( '<time class="chat-timestamp">%s</time>', esc_html( $row['time'] ) );
+
+						$output .= sprintf(
+							'<dt class="chat-author chat-author-%1$s vcard">%2$s <cite class="fn">%3$s</cite>: </dt>
+								<dd class="chat-text">%4$s</dd>
+							',
+							esc_attr( sanitize_title_with_dashes( $row['author'] ) ), // Slug.
+							$time,
+							esc_html( $row['author'] ),
+							$row['message']
+						);
+					}
+				}
+
+				$output .= '</dl><!-- .chat -->';
+
+			}elseif($format == 'video'){
+
+				$output = get_the_post_format_media('video', $null, 1);
+
+			}elseif($format == 'audio'){
+
+				$output = get_the_post_format_media('audio', $null, 1);
+
+			}elseif($format == 'image'){
+
+				$output = get_the_post_format_image($params,  $null);
+
+			}elseif($format == 'gallery'){
+
+				$output = get_post_gallery();
+
+			}elseif($format == 'link'){
+				$has_url = get_the_post_format_url();
+
+				return ( $has_url ) ? $has_url : apply_filters( 'the_permalink', get_permalink() );
+			}
+		}else{
+			$output = $this->content();
+		}
+		return $output;
+	}
+
+
+
+
+	public function date($d = '')
+	{
+		// we need cop&paste from get_the_date()
+		// becacuse of passing parent id to get_post
+		$post = get_post($this->id);
+		$the_date = '';
+
+		if ( '' == $d )
+			$the_date .= mysql2date(get_option('date_format'), $post->post_date);
+		else
+			$the_date .= mysql2date($d, $post->post_date);
+
+		return apply_filters('get_the_date', $the_date, $d);
 	}
 
 
@@ -520,6 +655,17 @@ class WpLattePostEntity extends WpLatteBaseEntity
 
 
 
+
+	/**
+	 * Is post multiauthor?
+	 * @return bool
+	 */
+	protected function getIsMulti()
+	{
+		return is_multi_author();
+	}
+
+
 	/**
 	 * Gets meta options for Post
 	 * @param string $key
@@ -529,11 +675,11 @@ class WpLattePostEntity extends WpLatteBaseEntity
 	{
 		if(is_array($this->meta) and isset($this->meta[$key])){
 			if(!isset($this->metaCache[$key]) or is_null($this->metaCache[$key])){
-				$m = (object) $this->meta[$key]->the_meta($this->id);
+				$m = $this->meta[$key]->the_meta($this->id);
 				if($m == ''){
 					$this->metaCache[$key] = $this->meta[$key]->configDefaults;
 				}else{
-					$this->metaCache[$key] = $m;
+					$this->metaCache[$key] = (object) $m;
 				}
 				return $this->metaCache[$key];
 			}else{
@@ -620,6 +766,18 @@ class WpLattePostEntity extends WpLatteBaseEntity
 		}
 		return '';
 	}
+
+
+
+	/**
+	 * Just alias for getThumbnailSrc()
+	 * @return string
+	 */
+	protected function getThumbnailUrl($size = 'full')
+	{
+		return $this->getThumbnailSrc($size);
+	}
+
 
 
 

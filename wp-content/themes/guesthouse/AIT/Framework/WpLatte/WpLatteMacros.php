@@ -284,15 +284,15 @@ class WpLatteMacros extends NMacroSet
 
 	public function googleAnalyticsCodeMacro($node, $writer)
 	{
-		$code = '
+		$code = '?>
 		<?php if(!empty(%node.word)): ?>
 	<script>
-		var _gaq=[["_setAccount","%node.word"],["_trackPageview"]];
+		var _gaq=[["_setAccount","<?php echo %node.word ?>"],["_trackPageview"]];
 		(function(d,t){ var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
 		g.src="//www.google-analytics.com/ga.js";
 		s.parentNode.insertBefore(g,s) }(document,"script"));
 	</script>
-	<?php endif; ?>
+	<?php endif;
 		';
 		return $writer->write($code);
 	}

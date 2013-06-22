@@ -26,7 +26,7 @@ function theme_shortcode_googlemap($atts, $content = null, $code) {
 		"type" => 'ROADMAP',
 		"marker" => 'true',
 		'align' => false,
-		'border' => ''
+		'border' => 'no'
 	), $atts));
 
 	if($width && is_numeric($width)){
@@ -40,7 +40,7 @@ function theme_shortcode_googlemap($atts, $content = null, $code) {
 		$height = '';
 	}
 
-	if($border != ""){
+	if($border == "yes"){
 		$borderStyle = ' border';
 	} else {
 		$borderStyle = "";
@@ -49,6 +49,11 @@ function theme_shortcode_googlemap($atts, $content = null, $code) {
 
 	$align = $align?' align'.$align:'';
 	$id = rand(100,1000);
+
+	$centerCode = ($latitude == 0 && $latitude == 0 && trim($address) != '') ? "" : "center:[{$latitude}, {$longitude}],";
+	$latLngCode = ($latitude == 0 && $latitude == 0 && trim($address) != '') ? "" : "latLng:[{$latitude}, {$longitude}],";
+	$addressCode = ($centerCode == "") ? "address: '{$address}'," : "";
+
 	if($marker != 'false'){
 		return <<<HTML
 <div class="sc-map{$borderStyle}"><div class="wrap">
@@ -59,22 +64,22 @@ jQuery(document).ready(function($) {
 	jQuery("#google_map_{$id}").bind('initGmap',function(){
 		jQuery(this).gmap3({
 			map:{
+				{$addressCode}
 				options:{
-					center:[{$latitude}, {$longitude}],
+					{$centerCode}
 					mapTypeId: google.maps.MapTypeId.{$type},
 					zoom: {$zoom},
 					scrollwheel:{$scrollwheel}
 				}
 			},
 			marker:{
-				address: "{$address}",
-			    latLng:[{$latitude}, {$longitude}],
+				{$addressCode}
+			    {$latLngCode}
 			    content: "{$text}"
 			}
 		});
 		jQuery(this).data("gMapInited",true);
 	}).data("gMapInited",false);
-
 	// in tabs shortcode
 	var tabs = jQuery("#google_map_{$id}").parents('.ait-tabs');
 	if(tabs.size()!=0){
@@ -90,6 +95,10 @@ jQuery(document).ready(function($) {
 	}
 });
 </script>
+<style type="text/css">
+/* map style fix */
+.sc-map img{ max-width: inherit !important; }
+</style>
 </div></div>
 HTML;
 	}else{
@@ -102,16 +111,17 @@ jQuery(document).ready(function($) {
 	jQuery("#google_map_{$id}").bind('initGmap',function(){
 		jQuery(this).gmap3({
 			map:{
+				{$addressCode}
 				options:{
-					center:[{$latitude}, {$longitude}],
+					{$centerCode}
 					mapTypeId: google.maps.MapTypeId.{$type},
 					zoom: {$zoom},
 					scrollwheel:{$scrollwheel}
 				}
 			},
 			marker:{
-				address: "{$address}",
-			    latLng:[{$latitude}, {$longitude}],
+				{$addressCode}
+			    {$latLngCode}
 			    content: "{$text}"
 			}
 		});

@@ -4,8 +4,10 @@ function theme_shortcode_list($atts, $content = null, $code) {
 		'style' => '',
 		'line' => '',
 	), $atts));
-	if($line){
+	if($line == "yes"){
 		$line = " line";
+	} else {
+		$line = " ";
 	}
 	if($style){
 		$style = " ".$style;

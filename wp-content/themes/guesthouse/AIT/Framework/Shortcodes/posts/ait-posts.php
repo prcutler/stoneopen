@@ -9,11 +9,11 @@ function get_custom_post( $params ) {
     if ($id) {
         $latest_post['0'] = get_post($id);
     }
-    else {
-        //$latest_post = get_posts( 'numberposts=1&suppress_filters=false' );   OLD
-        $latest_post = query_posts( 'p=' . $id );
-        wp_reset_query();
+
+    if(empty($latest_post['0'])){
+        $latest_post = get_posts( 'numberposts=1&suppress_filters=false' );
     }
+
     $author = get_the_author_meta('nickname', $latest_post['0']->post_author );
     $post_link = get_permalink( $latest_post['0']->ID );
     $date = mysql2date(get_option('date_format'), $latest_post['0']->post_date);

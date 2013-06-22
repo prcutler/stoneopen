@@ -29,7 +29,16 @@ function aitRenderThemeOptionsForm($optionKey, $key, $page)
 		<?php
 	}
 
-	$allOptions = get_option($opt);
+	$o = get_option($opt);
+	if($o === false)
+		$o = get_option(AIT_DEFAULT_OPTIONS_KEY);
+
+	global $aitThemeConfig;
+
+	if($o !== false)
+		$allOptions = $o;
+	else
+		$allOptions = aitGetThemeDefaultOptions($aitThemeConfig);
 
 
 	if($opt == AIT_OPTIONS_KEY and $allOptions === false and defined('ICL_LANGUAGE_CODE')){
@@ -1110,6 +1119,7 @@ function aitRenderThemeOptionsForm($optionKey, $key, $page)
 
 <?php
 	unset($allOptions[$current_key]);
+
 	foreach($allOptions as $k => $v){
 		foreach($v as $id => $o){
 			if(!is_array($o)){ // cloned items

@@ -6,9 +6,7 @@
  * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.com)
  */
 
-define('AIT_FW_VERSION', "1.0");
-
-if(!defined('THEME_CODE_NAME'))	define('THEME_CODE_NAME', strtolower(basename(get_stylesheet_directory())));
+if(!defined('THEME_CODE_NAME'))	define('THEME_CODE_NAME', sanitize_key(strtolower(wp_get_theme()->stylesheet)));
 
 
 if(!defined('THEME_SHORT_NAME')){
@@ -47,9 +45,10 @@ define("AIT_CACHE_URL", get_stylesheet_directory_uri() . '/ait-cache');
 
 define("AIT_TEMPLATES_DIR", get_stylesheet_directory() . '/Templates');
 
-$showAdmin = array();
+$showAdmin = array('dashboard' => 'enabled', 'backup' => 'enabled', 'skins' => 'enabled', 'branding' => 'disable', 'website_settings' => 'enabled', 'ait_news_notifications' => 'enabled', 'wysiwyg' => 'enabled');
+
 if(file_exists(THEME_DIR."/config.php")){
-	$showAdmin = parse_ini_file(THEME_DIR."/config.php");
+	$showAdmin = array_merge($showAdmin, parse_ini_file(THEME_DIR."/config.php"));
 }
 
 if(file_exists(THEME_DIR . '/tn.php'))

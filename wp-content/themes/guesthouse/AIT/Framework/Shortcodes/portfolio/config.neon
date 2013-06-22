@@ -13,10 +13,12 @@ popupOptions:
 		label: "Item Width (px)"
 		type: text
 		class: all
+		default: 50
 	height:
 		label: "Item Height (px)"
 		type: text
 		class: all
+		default: 50
 	cols:
 		label: "Number of columns"
 		type: text
