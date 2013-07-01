@@ -26,258 +26,352 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA	 02110-1301	 USA
 */
 
 
-
 if (!class_exists('Twitter_Widget')) :
 
-	class Twitter_Widget extends WP_Widget {
+	class Twitter_Widget extends WP_Widget
+	{
+		const TWEETS_COUNT = 5;
+		const UPDATE_INTERVAL = 1800;
+		const DATE_FORMAT = 'j F Y';
+		const DISPLAY_DATE = TRUE;
+		const LINKS_CLICKABLE = TRUE;
+		const HIDE_ERRORS = TRUE;
+		const ESCAPE_SPECIAL_CHARS = TRUE;
 
+		private $wpHttp;
 
-		function Twitter_Widget() {
-									
-			// Widget settings
+		function Twitter_Widget()
+		{
 			$widget_ops = array('classname' => 'widget_twitter', 'description' => 'Display your latest tweets.');
-
-			// Create the widget
 			$this->WP_Widget('twitter-widget', 'Theme &rarr; Twitter', $widget_ops);
+			$this->wpHttp = new WP_Http();
 		}
-		
-		
-		function widget($args, $instance) {
-			
+
+		function widget($args, $instance)
+		{
+			$before_widget = $after_widget = $before_title = $after_title = '';
 			extract($args);
-			
-			global $interval;
-			
+
+			global $updateInterval;
+
 			// User-selected settings
 			$title = apply_filters('widget_title', $instance['title']);
+			$consumerKey = $instance['consumer_key'];
+			$consumerSecret = $instance['consumer_secret'];
 			$username = $instance['username'];
-			$posts = $instance['posts'];
-			$interval = $instance['interval'];
-			$date = $instance['date'];
-			$datedisplay = $instance['datedisplay'];
-			//$datebreak = $instance['datebreak'];
-			$clickable = $instance['clickable'];
-			$hideerrors = $instance['hideerrors'];
-			$encodespecial = $instance['encodespecial'];
+			$tweetsCount = $instance['posts'];
+			$updateInterval = $instance['update_interval'];
+			$hideErrors = $instance['hideerrors'];
+
+			$printOptions = array(
+				'dateFormat' => isset($instance['date']) ? $instance['date'] : self::DATE_FORMAT,
+				'displayDate' => isset($instance['datedisplay']) ? $instance['datedisplay'] : FALSE,
+				'linksClickable' => isset($instance['clickable']) ? $instance['clickable'] : FALSE,
+				'escapeSpecialChars' => isset($instance['encodespecial']) ? $instance['encodespecial'] : FALSE
+			);
 
 			// Before widget (defined by themes)
-			echo $before_widget;
+			print($before_widget);
 
-			// Set internal Wordpress feed cache interval, by default it's 12 hours or so
-			add_filter('wp_feed_cache_transient_lifetime', array(&$this, 'setInterval'));
+			// Set internal Wordpress feed cache update_interval, by default it's 12 hours or so
+			add_filter('wp_feed_cache_transient_lifetime', array(&$this, 'getInterval'));
 			include_once(ABSPATH . WPINC . '/feed.php');
 
-			// Get current upload directory
-			$upload = wp_upload_dir();
-			$cachefile = $upload['basedir'] . '/_twitter_' . $username . '_' . $posts . '.txt';
+			$cacheFile = $this->getCacheFile();
 
 			// Title of widget (before and after defined by themes)
 			if (!empty($title)) echo $before_title . $title . $after_title;
 
-			// If cachefile doesn't exist or was updated more than $interval ago, create or update it, otherwise load from file
-			if (!file_exists($cachefile) || (file_exists($cachefile) && (filemtime($cachefile) + $interval) < time())) :
-
-				$feed = fetch_feed('http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=' . $username);
-
-				// This check prevents fatal errors — which can't be turned off in PHP — when feed updates fail
-				if (method_exists($feed, 'get_items')) :
-
-					$tweets = $feed->get_items(0, $posts);
-
-					$result = '
-						<ul class="twitter">';
-
-					//$result .= 'COUNT: ' . $posts;
-
-					foreach ($tweets as $t) :
-						$result .= '<li class="twitter-item">';
-
-						// Get message
-						$text = $t->get_description();
-						
-						// Get date/time and convert to Unix timestamp
-						$time = strtotime($t->get_date());
-
-						// If status update is newer than 1 day, print time as "... ago" instead of date stamp
-						if ((abs(time() - $time)) < 86400) :
-							$time = human_time_diff($time) . ' ago';
-						else :
-							$time = date(($date), $time);
-						endif;
-						
-						// HTML encode special characters like ampersands
-						if ($encodespecial) :
-							$text = htmlspecialchars($text);
-						endif;
-
-						// Make links and Twitter names clickable
-						if ($clickable) :
-							// Match URLs
-							$text = preg_replace('`\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))`', '<a href="$0">$0</a>', $text);
-
-							// Match @name
-							$text = preg_replace('/(@)([a-zA-Z0-9\_]+)/', '@<a href="https://twitter.com/$2">$2</a>', $text);
-							
-							// Match #hashtag
-							$text = preg_replace('/(#)([a-zA-Z0-9\_]+)/', '#<a href="https://twitter.com/search/?q=$2">$2</a>', $text);
-						endif;
-
-						// Display message without username prefix
-						$prefixlen = strlen($username . ": ");
-						$result .= '
-								<p class="twitter-message">' . substr($text, $prefixlen, strlen($text) - $prefixlen) . '</p>';
-
-						// Display date/time
-						if ($datedisplay) $result .= '
-								<span class="twitter-timestamp"><a href="'. $t->get_permalink() .'">' . $time . '</a></span>';
-
-						$result .= '
-							</li>';
-					endforeach;
-					
-					$result .= '
-						</ul>
-						';
-					
-					// Save updated feed to cache file
-					@file_put_contents($cachefile, $result);
-
-					// Display everything
-					echo $result;
-
-
-				// If loading from Twitter fails, try loading from the file instead
-				else :
-					if (file_exists($cachefile)) :
-						$result = @file_get_contents($cachefile);
-					endif;
-
-					if (!empty($result)) :
-						echo $result;
-
-					// If loading from the file failed too, display error
-					elseif (!$hideerrors) :
-						echo '<p>Error while loading Twitter feed.</p>';
-					endif;
-				endif;
-
-
-			// If cache file exists or if it was updated not long ago, load from file straight away
-			else :
-				$result = @file_get_contents($cachefile);
-
-				if (!empty($result)) :
-					echo $result;
-				elseif (!$hideerrors) :
-					echo '<p>Error while loading Twitter feed.</p>';			
-				endif;
-			endif;
-
+			$cacheFileIsInvalid = !file_exists($cacheFile) || (file_exists($cacheFile) && (filemtime($cacheFile) + $updateInterval) < time());
+			if ($cacheFileIsInvalid) {
+				try {
+					$bearerToken = $this->getBearerToken($consumerKey, $consumerSecret);
+					$tweets = $this->getTweets($bearerToken, $username, $tweetsCount);
+					$html = $this->printTweets($tweets, $printOptions);
+					$this->saveToCacheFile($html);
+				} catch (AitTwitterException $exception) {
+					if ($hideErrors) {
+						$this->printCacheFile($cacheFile);
+					} else {
+						print($exception->getMessage());
+					}
+				}
+			} else {
+				$this->printCacheFile($cacheFile);
+			}
 
 			// After widget (defined by themes)
-			echo $after_widget;
-		}
-		
-		
-		// Callback helper for the cache interval filter
-		function setInterval() {
-			
-			global $interval;
-			
-			return $interval;
+			print($after_widget);
 		}
 
-		
-		function update($new_instance, $old_instance) {
-			
+		function update($new_instance, $old_instance)
+		{
 			$instance = $old_instance;
 
 			$instance['title'] = $new_instance['title'];
+			$instance['consumer_key'] = $new_instance['consumer_key'];
+			$instance['consumer_secret'] = $new_instance['consumer_secret'];
+			$instance['access_token'] = $new_instance['access_token_secret'];
+			$instance['access_token_secret'] = $new_instance['access_token_secret'];
 			$instance['username'] = $new_instance['username'];
 			$instance['posts'] = $new_instance['posts'];
-			$instance['interval'] = $new_instance['interval'];
+			$instance['update_interval'] = $new_instance['update_interval'];
 			$instance['date'] = $new_instance['date'];
 			$instance['datedisplay'] = $new_instance['datedisplay'];
-			//$instance['datebreak'] = $new_instance['datebreak'];
 			$instance['clickable'] = $new_instance['clickable'];
 			$instance['hideerrors'] = $new_instance['hideerrors'];
 			$instance['encodespecial'] = $new_instance['encodespecial'];
-			
+
 			// Delete the cache file when options were updated so the content gets refreshed on next page load
-			$upload = wp_upload_dir();
-			$cachefile = $upload['basedir'] . '/_twitter_' . $old_instance['username'] . '_' . $instance['posts'] . '.txt';
-			@unlink($cachefile);
+			$this->deleteCacheFile();
 
 			return $instance;
 		}
-		
-		
-		function form($instance) {
 
-			// Set up some default widget settings
-			$defaults = array('title' => 'Latest Tweets', 'username' => '', 'posts' => 5, 'interval' => 1800, 'date' => 'j F Y', 'datedisplay' => true, 'clickable' => true, 'hideerrors' => true, 'encodespecial' => false);
-			$instance = wp_parse_args((array) $instance, $defaults);
-?>
-				
-			<p>
-				<label for="<?php echo $this->get_field_id('title'); ?>">Title:</label>
-				<input class="widefat" type="text" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $instance['title']; ?>">
-			</p>
 
-			<p>
-				<label for="<?php echo $this->get_field_id('username'); ?>">Your Twitter username:</label>
-				<input class="widefat" type="text" id="<?php echo $this->get_field_id('username'); ?>" name="<?php echo $this->get_field_name('username'); ?>" value="<?php echo $instance['username']; ?>">
-			</p>
+		function form($instance)
+		{
+			$defaults = array(
+				'title' => 'Latest Tweets',
+				'consumer_key' => '',
+				'consumer_secret' => '',
+				'access_token' => '',
+				'access_token_secret' => '',
+				'username' => '',
+				'posts' => self::TWEETS_COUNT,
+				'update_interval' => self::UPDATE_INTERVAL,
+				'date' => self::DATE_FORMAT,
+				'datedisplay' => self::DISPLAY_DATE,
+				'clickable' => self::LINKS_CLICKABLE,
+				'hideerrors' => self::HIDE_ERRORS,
+				'encodespecial' => self::ESCAPE_SPECIAL_CHARS
+			);
+			$instance = wp_parse_args((array)$instance, $defaults);
+			?>
 
-			<p>
-				<label for="<?php echo $this->get_field_id('posts'); ?>">Number of posts to display</label>
-				<input class="widefat" type="text" id="<?php echo $this->get_field_id('posts'); ?>" name="<?php echo $this->get_field_name('posts'); ?>" value="<?php echo $instance['posts']; ?>">
-			</p>
+        <p>
+            <label for="<?php echo $this->get_field_id('title'); ?>">Title:</label>
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('title'); ?>"
+                   name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $instance['title']; ?>">
+        </p>
 
-			<p>
-				<label for="<?php echo $this->get_field_id('interval'); ?>">Update interval (in seconds):</label>
-				<input class="widefat" type="text" id="<?php echo $this->get_field_id('interval'); ?>" name="<?php echo $this->get_field_name('interval'); ?>" value="<?php echo $instance['interval']; ?>">
-			</p>
+        <p>
+            <label for="<?php echo $this->get_field_id('consumer_key'); ?>">Consumer key:</label>
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('consumer_key'); ?>"
+                   name="<?php echo $this->get_field_name('consumer_key'); ?>"
+                   value="<?php echo $instance['consumer_key']; ?>">
+        </p>
 
-			<p>
-				<label for="<?php echo $this->get_field_id('date'); ?>">Date format (see PHP <a href="http://php.net/manual/en/function.date.php">date</a>):</label>
-				<input class="widefat" type="text" id="<?php echo $this->get_field_id('date'); ?>" name="<?php echo $this->get_field_name('date'); ?>" value="<?php echo $instance['date']; ?>">
-			</p>
-								
-			<p>
-				<input class="checkbox" type="checkbox" <?php if ($instance['datedisplay']) echo 'checked="checked" '; ?>id="<?php echo $this->get_field_id('datedisplay'); ?>" name="<?php echo $this->get_field_name('datedisplay'); ?>">
-				<label for="<?php echo $this->get_field_id('datedisplay'); ?>">Display date</label>
-				
-				<br>
+        <p>
+            <label for="<?php echo $this->get_field_id('consumer_secret'); ?>">Consumer secret:</label>
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('consumer_secret'); ?>"
+                   name="<?php echo $this->get_field_name('consumer_secret'); ?>"
+                   value="<?php echo $instance['consumer_secret']; ?>">
+        </p>
 
-				<input class="checkbox" type="checkbox" <?php if ($instance['clickable']) echo 'checked="checked" '; ?>id="<?php echo $this->get_field_id('clickable'); ?>" name="<?php echo $this->get_field_name('clickable'); ?>">
-				<label for="<?php echo $this->get_field_id('clickable'); ?>">Clickable URLs, names &amp; hashtags</label>
-				
-				<br>
+        <p>
+            <label for="<?php echo $this->get_field_id('username'); ?>">Twitter username:</label>
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('username'); ?>"
+                   name="<?php echo $this->get_field_name('username'); ?>" value="<?php echo $instance['username']; ?>">
+        </p>
 
-				<input class="checkbox" type="checkbox" <?php if ($instance['hideerrors']) echo 'checked="checked" '; ?>id="<?php echo $this->get_field_id('hideerrors'); ?>" name="<?php echo $this->get_field_name('hideerrors'); ?>">
-				<label for="<?php echo $this->get_field_id('hideerrors'); ?>">Hide error message if update fails</label>
+        <p>
+            <label for="<?php echo $this->get_field_id('posts'); ?>">Number of posts to display</label>
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('posts'); ?>"
+                   name="<?php echo $this->get_field_name('posts'); ?>" value="<?php echo $instance['posts']; ?>">
+        </p>
 
-				<br>
+        <p>
+            <label for="<?php echo $this->get_field_id('update_interval'); ?>">Update interval (in seconds):</label>
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('interval'); ?>"
+                   name="<?php echo $this->get_field_name('update_interval'); ?>" value="<?php echo $instance['update_interval']; ?>">
+        </p>
 
-				<input class="checkbox" type="checkbox" <?php if ($instance['encodespecial']) echo 'checked="checked" '; ?>id="<?php echo $this->get_field_id('encodespecial'); ?>" name="<?php echo $this->get_field_name('encodespecial'); ?>">
-				<label for="<?php echo $this->get_field_id('encodespecial'); ?>">HTML-encode special characters</label>
-			</p>
-			
-<?php
+        <p>
+            <label for="<?php echo $this->get_field_id('date'); ?>">Date format (see PHP <a
+                    href="http://php.net/manual/en/function.date.php">date</a>):</label>
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('date'); ?>"
+                   name="<?php echo $this->get_field_name('date'); ?>" value="<?php echo $instance['date']; ?>">
+        </p>
+
+        <p>
+            <input class="checkbox" type="checkbox"
+			       <?php if ($instance['datedisplay']) echo 'checked="checked" '; ?>id="<?php echo $this->get_field_id('datedisplay'); ?>"
+                   name="<?php echo $this->get_field_name('datedisplay'); ?>">
+            <label for="<?php echo $this->get_field_id('datedisplay'); ?>">Display date</label>
+
+            <br>
+
+            <input class="checkbox" type="checkbox"
+			       <?php if ($instance['clickable']) echo 'checked="checked" '; ?>id="<?php echo $this->get_field_id('clickable'); ?>"
+                   name="<?php echo $this->get_field_name('clickable'); ?>">
+            <label for="<?php echo $this->get_field_id('clickable'); ?>">Clickable URLs, names &amp; hashtags</label>
+
+            <br>
+
+            <input class="checkbox" type="checkbox"
+			       <?php if ($instance['hideerrors']) echo 'checked="checked" '; ?>id="<?php echo $this->get_field_id('hideerrors'); ?>"
+                   name="<?php echo $this->get_field_name('hideerrors'); ?>">
+            <label for="<?php echo $this->get_field_id('hideerrors'); ?>">Hide error message if update fails</label>
+
+            <br>
+
+            <input class="checkbox" type="checkbox"
+			       <?php if ($instance['encodespecial']) echo 'checked="checked" '; ?>id="<?php echo $this->get_field_id('encodespecial'); ?>"
+                   name="<?php echo $this->get_field_name('encodespecial'); ?>">
+            <label for="<?php echo $this->get_field_id('encodespecial'); ?>">HTML-encode special characters</label>
+        </p>
+
+		<?php
 		}
-	} 
+
+		private function getBearerToken($consumerKey, $consumerSecret)
+		{
+			$bearerTokenCredentials = base64_encode(urlencode($consumerKey) . ':' . urlencode($consumerSecret));
+
+			$postArgs = array(
+				'headers' => array(
+					'authorization' => "Basic $bearerTokenCredentials",
+					'content-type' => 'application/x-www-form-urlencoded;charset=UTF-8',
+					'content-length' => 29,
+					'accept-encoding' => 'gzip'
+				),
+				'body' => 'grant_type=client_credentials'
+			);
+			$response = $this->wpHttp->post('https://api.twitter.com/oauth2/token', $postArgs);
+
+			if ($response['response']['code'] == 200) {
+				$body = json_decode($response['body']);
+				if (isset($body->token_type) && isset($body->access_token) && $body->token_type == 'bearer') {
+					return $body->access_token;
+				}
+			}
+
+			throw new AitTwitterException('Could not authenticate with Twitter: ' .
+				$response['response']['code'] . ' ' . $response['response']['message']);
+		}
+
+		private function getTweets($bearerToken, $username, $count)
+		{
+			$getArgs = array(
+				'headers' => array(
+					'authorization' => "Bearer " . $bearerToken,
+					'accept-encoding' => 'gzip'
+				)
+			);
+			$response = $this->wpHttp
+				->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=$username&count=$count", $getArgs);
+
+			if ($response['response']['code'] == 200) {
+				$tweets = json_decode($response['body']);
+				return $tweets;
+			}
+
+			throw new AitTwitterException("Could not get tweets of Twitter user \"$username\":" .
+				$response['response']['code'] . ' ' . $response['response']['message']);
+		}
+
+		private function printCacheFile()
+		{
+			$cacheFile = $this->getCacheFile();
+			if (file_exists($cacheFile)) {
+				$result = @file_get_contents($cacheFile);
+			}
+
+			if (!empty($result)) {
+				echo $result;
+			}
+		}
+
+		private function printTweets($tweets, $options)
+		{
+			$html = '
+					<ul class="twitter">';
+
+			foreach ($tweets as $tweet) {
+				$html .= '<li class="twitter-item">';
+
+				$text = $tweet->text;
+				$timestamp = strtotime($tweet->created_at);
+
+				$isLessThanOneDayOld = (abs(time() - $timestamp)) < 86400;
+				if ($isLessThanOneDayOld) {
+					$timestamp = human_time_diff($timestamp) . ' ago';
+				} else {
+					$timestamp = date(($options['dateFormat']), $timestamp);
+				}
+
+				// HTML encode special characters like ampersands
+				if ($options['escapeSpecialChars']) {
+					$text = htmlspecialchars($text);
+				}
+
+				// Make links and Twitter names clickable
+				if ($options['linksClickable']) {
+					// Match URLs
+					$text = preg_replace('`\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))`', '<a href="$0">$0</a>', $text);
+
+					// Match @name
+					$text = preg_replace('/(@)([a-zA-Z0-9\_]+)/', '@<a href="https://twitter.com/$2">$2</a>', $text);
+
+					// Match #hashtag
+					$text = preg_replace('/(#)([a-zA-Z0-9\_]+)/', '#<a href="https://twitter.com/search/?q=$2">$2</a>', $text);
+				}
+
+				$html .= '
+							<p class="twitter-message">' . $text . '</p>';
+
+				if ($options['displayDate']) $html .= '
+						<span class="twitter-timestamp"><a href="http://twitter.com/' . $tweet->user->screen_name . '/status/' . $tweet->id_str . '">' . $timestamp . '</a></span>';
+
+				$html .= '
+						</li>';
+			}
+
+			$html .= '
+					</ul>
+					';
+
+			print($html);
+
+			return $html;
+		}
+
+		private function saveToCacheFile($content)
+		{
+			@file_put_contents($this->getCacheFile(), $content);
+		}
+
+		private function deleteCacheFile()
+		{
+			unlink($this->getCacheFile());
+		}
+
+		private function getCacheFile()
+		{
+			$upload = wp_upload_dir();
+			return $upload['basedir'] . '/_twitter_' . $this->number . '.txt';
+		}
+
+		// Callback helper for the cache interval filter
+		// mario: I have no idea what does this do, it is used by wordpress feed (rss, etc.) generator somehow, I just keep it here
+		//
+		function getInterval()
+		{
+			global $interval;
+			return $interval;
+		}
+	}
+
+	class AitTwitterException extends Exception {}
+
 endif;
-
-
-
-
 
 // Register the plugin/widget
 if (class_exists('Twitter_Widget')) :
 
-	function loadTwitterWidget() {
-		
+	function loadTwitterWidget()
+	{
 		register_widget('Twitter_Widget');
 	}
 
