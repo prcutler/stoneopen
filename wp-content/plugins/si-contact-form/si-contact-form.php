@@ -3,12 +3,12 @@
 Plugin Name: Fast Secure Contact Form
 Plugin URI: http://www.FastSecureContactForm.com/
 Description: Fast Secure Contact Form for WordPress. The contact form lets your visitors send you a quick E-mail message. Super customizable with a multi-form feature, optional extra fields, and an option to redirect visitors to any URL after the message is sent. Includes CAPTCHA and Akismet support to block all common spammer tactics. Spam is no longer a problem. <a href="plugins.php?page=si-contact-form/si-contact-form.php">Settings</a> | <a href="http://www.FastSecureContactForm.com/donate">Donate</a>
-Version: 3.1.8.2
+Version: 3.1.8.3
 Author: Mike Challis
 Author URI: http://www.642weather.com/weather/scripts.php
 */
 
-$ctf_version = '3.1.8.2';
+$ctf_version = '3.1.8.3';
 
 /*  Copyright (C) 2008-2013 Mike Challis  (http://www.fastsecurecontactform.com/contact)
 
@@ -39,27 +39,6 @@ function si_contact_unset_options() {
     delete_option("si_contact_form$i");
   }
 } // end function si_contact_unset_options
-
-/**
- * Clean up wp sessions by removing entries from the WordPress options table.
- * wp sessions were used in version 3.1.8.1, but no longer used as of 3.1.8.2
- * if wp session is active, this function is skipped
- */
-function si_contact_wp_session_cleanup() {
-	global $wpdb;
-
-	if ( class_exists( 'WP_Session' ) ) {
-		return;
-    }
-
-	$expiration_keys = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_wp_session_%'" );
-
-	foreach( $expiration_keys as $expiration ) {
-	    delete_option( $expiration->option_name );
-	}
-
-}  // end function si_contact_wp_session_cleanup
-
 
 if (!class_exists('siContactForm')) {
 
@@ -132,7 +111,7 @@ function vcita_add_admin_js() {
 }
 
 /**
- * Validate the user is initialized currenctly be performing the following. 
+ * Validate the user is initialized correctly by performing the following:
  * 1. Migration from old versions.
  * 2. New User - enable vCita if the auto install flag is set to true  
  * 3. Upgrade - enable vCita if wasn't previously disabled - Currently nothing is done
@@ -838,10 +817,6 @@ function si_contact_form_short_code($atts) {
          $form_num = '';
     }
 
-  // reset the flag for the logic that prevents clicking the back button to mail again
-  // used in function si_contact_check_and_send
-  //if ( isset($_SESSION["fsc_form_lastpost_$form_id_num"]) )
-  //     unset($_SESSION["fsc_form_lastpost_$form_id_num"]);
 
   // http://www.fastsecurecontactform.com/shortcode-options
   $_SESSION["fsc_shortcode_redirect_$form_id_num"] = $redirect;
@@ -1272,8 +1247,8 @@ function captchaCheckRequires() {
   return true;
 }
 
-// check the honeypot traps for spam bots
-// this is a very basic implementation, more agressive approaches might have to be added later
+// check the honeypot trap for spam bots
+// this is very basic, just checks if an empty field was filled in
 function si_contact_check_honeypot($form_id) {
     global $si_contact_opt;
 
@@ -1283,25 +1258,6 @@ function si_contact_check_honeypot($form_id) {
     // hidden honeypot field
     if( isset($_POST["email_$form_id"]) && trim($_POST["email_$form_id"]) != '')
          return 'failed honeypot';
-
-    // server-side timestamp forgery token.
-    if (!isset($_POST["si_tok_$form_id"]) || empty($_POST["si_tok_$form_id"]) || strpos($_POST["si_tok_$form_id"] , ',') === false )
-         return 'no timestamp';
-
-    $vars = explode(',', $_POST["si_tok_$form_id"]);
-    if ( empty($vars[0]) || empty($vars[1]) || ! preg_match("/^[0-9]+$/",$vars[1]) )
-         return 'bad timestamp';
-
-    if ( wp_hash( $vars[1] ) != $vars[0] )
-       return 'bad timestamp';
-
-      $form_timestamp = $vars[1];
-      $now_timestamp  = time();
-      $human_typing_time = 5; // page load (1s) + submit (1s) + typing time (3s)
-      if ( $now_timestamp - $form_timestamp < $human_typing_time )
-	     return 'too fast less than 5 sec';
-      if ( $now_timestamp - $form_timestamp > 1800 )
-	     return 'over 30 min';
 
       return 'ok';
 
@@ -1340,9 +1296,6 @@ if($si_contact_opt['captcha_small'] == 'true') {
 $parseUrl = parse_url($captcha_url_cf);
 $securimage_url = $parseUrl['path'];
 
-if($si_contact_opt['captcha_difficulty'] == 'low') $securimage_show_url .= 'difficulty=1&';
-if($si_contact_opt['captcha_difficulty'] == 'high') $securimage_show_url .= 'difficulty=2&';
-if($si_contact_opt['captcha_no_trans'] == 'true') $securimage_show_url .= 'no_trans=1&';
 
 $securimage_show_rf_url = $securimage_show_url . 'ctf_form_num=' .$form_id_num;
 $securimage_show_url .= 'ctf_form_num=' .$form_id_num;
@@ -1682,10 +1635,6 @@ function si_contact_get_options($form_num) {
          'akismet_send_anyway' => 'true',
          'captcha_enable' => 'true',
          'captcha_small' => 'false',
-         'captcha_difficulty' => 'medium',
-         'captcha_no_trans' => 'false',
-         'enable_audio' => 'true',
-         'enable_audio_flash' => 'false',
          'captcha_perm' => 'false',
          'captcha_perm_level' => 'read',
          'honeypot_enable' => 'false',
@@ -1770,7 +1719,6 @@ function si_contact_get_options($form_num) {
          'text_message_sent' => '',
          'tooltip_required' => '',
          'tooltip_captcha' => '',
-         'tooltip_audio' => '',
          'tooltip_refresh' => '',
          'tooltip_filetypes' => '',
          'tooltip_filesize' => '',
@@ -1823,10 +1771,12 @@ function si_contact_get_options($form_num) {
 
   // upgrade path from old version 3.1.8.1 or older
   if (!get_option('si_contact_form_version') ) {
-      // just now updating, session cleanup
-      si_contact_wp_session_cleanup();
+      // just now updating from version 3.1.8.1 or older, run any related functions you need here
+
       update_option('si_contact_form_version', $ctf_version);
   } elseif (get_option('si_contact_form_version') != $ctf_version) {
+       // just now updating from newer version than 3.1.8.1, run any related functions you need here
+
       update_option('si_contact_form_version', $ctf_version);
   }
 
