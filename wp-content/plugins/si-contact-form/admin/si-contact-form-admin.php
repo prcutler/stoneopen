@@ -288,7 +288,6 @@ if ( strpos(strtolower($_SERVER['SCRIPT_NAME']),strtolower(basename(__FILE__))) 
          'text_message_sent' =>   trim($_POST['si_contact_text_message_sent']), // can have HTML
          'tooltip_required' =>    strip_tags($_POST['si_contact_tooltip_required']), // can be a space
          'tooltip_captcha' =>     strip_tags(trim($_POST['si_contact_tooltip_captcha'])),
-         'tooltip_audio' =>       strip_tags(trim($_POST['si_contact_tooltip_audio'])),
          'tooltip_refresh' =>     strip_tags(trim($_POST['si_contact_tooltip_refresh'])),
          'tooltip_filetypes' =>   strip_tags(trim($_POST['si_contact_tooltip_filetypes'])),
          'tooltip_filesize' =>    strip_tags(trim($_POST['si_contact_tooltip_filesize'])),
@@ -2612,7 +2611,6 @@ foreach ($silent_send_array as $k => $v) {
 <br />
 
         <label for="si_contact_tooltip_captcha"><?php _e('CAPTCHA Image', 'si-contact-form'); ?></label><input name="si_contact_tooltip_captcha" id="si_contact_tooltip_captcha" type="text" value="<?php echo esc_attr($si_contact_opt['tooltip_captcha']);  ?>" size="50" /><br />
-        <label for="si_contact_tooltip_audio"><?php _e('CAPTCHA Audio', 'si-contact-form'); ?></label><input name="si_contact_tooltip_audio" id="si_contact_tooltip_audio" type="text" value="<?php echo esc_attr($si_contact_opt['tooltip_audio']);  ?>" size="50" /><br />
         <label for="si_contact_tooltip_refresh"><?php _e('Refresh Image', 'si-contact-form'); ?></label><input name="si_contact_tooltip_refresh" id="si_contact_tooltip_refresh" type="text" value="<?php echo esc_attr($si_contact_opt['tooltip_refresh']);  ?>" size="50" /><br />
         <label for="si_contact_tooltip_filetypes"><?php _e('Acceptable file types:', 'si-contact-form'); ?></label><input name="si_contact_tooltip_filetypes" id="si_contact_tooltip_filetypes" type="text" value="<?php echo esc_attr($si_contact_opt['tooltip_filetypes']);  ?>" size="50" /><br />
         <label for="si_contact_tooltip_filesize"><?php _e('Maximum file size:', 'si-contact-form'); ?></label><input name="si_contact_tooltip_filesize" id="si_contact_tooltip_filesize" type="text" value="<?php echo esc_attr($si_contact_opt['tooltip_filesize']);  ?>" size="50" />
