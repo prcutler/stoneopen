@@ -187,8 +187,12 @@ aitAddDashboardWidgets($dWidgets);
 
 	$opt = get_option('disableAitThemeUpdates');
 
-	$currentVersion = wp_get_theme()->version;
-
+    if (function_exists('wp_get_theme')) {
+        $currentVersion = wp_get_theme()->version;
+    } else {
+        $theme = get_theme_data(get_current_theme());
+        $currentVersion = isset($theme['Version']) ? $theme['Version'] : 1.0;
+    }
 
 	$disableUpdatesNotifying = ($opt !== false and $opt);
 

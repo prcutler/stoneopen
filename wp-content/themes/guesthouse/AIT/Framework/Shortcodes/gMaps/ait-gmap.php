@@ -56,6 +56,10 @@ function theme_shortcode_googlemap($atts, $content = null, $code) {
 
 	if($marker != 'false'){
 		return <<<HTML
+<style type="text/css" scoped="scoped">
+/* map style fix */
+.sc-map img{ max-width: inherit !important; }
+</style>
 <div class="sc-map{$borderStyle}"><div class="wrap">
 <div id="google_map_{$id}" class="google_map google_map{$align}" style="{$width}{$height}"></div>
 <script type="text/javascript">
@@ -95,14 +99,14 @@ jQuery(document).ready(function($) {
 	}
 });
 </script>
-<style type="text/css">
-/* map style fix */
-.sc-map img{ max-width: inherit !important; }
-</style>
 </div></div>
 HTML;
 	}else{
 return <<<HTML
+<style type="text/css" scoped="scoped">
+/* map style fix */
+.sc-map img{ max-width: inherit !important; }
+</style>
 <div class="sc-map{$borderStyle}"><div class="wrap">
 <div id="google_map_{$id}" class="google_map google_map{$align}" style="{$width}{$height}"></div>
 <script type="text/javascript">

@@ -8,13 +8,13 @@ function theme_facebook_comments( $params, $content = null) {
     	'height' => '1000',
     	'variant' => 'light',
     	'posts' => '15',
-    	'border' => ''
+    	'borderFBC' => ''
     ), $params ) );
 	
 	$currURI = explode("?", $_SERVER['REQUEST_URI']);
 	$currUrl = (!empty($_SERVER['HTTPS'])) ? "https://".$_SERVER['SERVER_NAME'].$currURI[0] : "http://".$_SERVER['SERVER_NAME'].$currURI[0];
 	
-	if($border == 'yes') {
+	if($borderFBC == 'yes') {
 		$borderStyle = ' border'; 
 	} else {
 		$borderStyle = ''; 

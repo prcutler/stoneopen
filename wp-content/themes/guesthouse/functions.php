@@ -284,6 +284,9 @@ function ait_setup() {
 	// Add default posts and comments RSS feed links to <head>.
 	add_theme_support('automatic-feed-links');
 
+	// Woocommerce basic support
+	add_theme_support('woocommerce');
+
 	// This theme uses wp_nav_menu() in one location.
 	register_nav_menu( 'primary-menu', __( 'Primary Menu', 'guesthouse' ) );
 	register_nav_menu( 'footer-menu', __( 'Footer Menu', 'guesthouse' ) );
@@ -386,6 +389,17 @@ function ait_widgets_init() {
 		'after_title' => '</h5>',
 	));
 
+	// Shop sidebar
+	register_sidebar(array(
+		'name' => __('Shop Sidebar', 'guesthouse'),
+		'id' => 'shop-sidebar',
+		'description' => __(''),
+		'before_widget' => '<div id="%1$s" class="box widget-container %2$s"><div class="box-wrapper">',
+		'after_widget' => "</div></div>",
+		'before_title' => '<h5 class="widget-title">',
+		'after_title' => '</h5>',
+	));
+
 }
 add_action('widgets_init', 'ait_widgets_init');
 
@@ -458,3 +472,6 @@ class description_walker extends Walker_Nav_Menu
             $output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
             }
 }
+
+// disable woocommerce title and breadcrumbs to allow our own positioning */
+add_filter('woocommerce_show_page_title', '__return_false');
