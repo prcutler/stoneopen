@@ -23,11 +23,16 @@ require_once AIT_FRAMEWORK_DIR . '/Libs/AitImageResizer.inc';
 /**
  * Widgets
  */
-if(isset($aitThemeWidgets) and !empty($aitThemeWidgets)){
-	foreach($aitThemeWidgets as $widget){
-		require_once AIT_FRAMEWORK_DIR . "/Widgets/ait-{$widget}-widget.php";
+
+function aitLoadWidgets(){
+	global $aitThemeWidgets;
+	if(isset($aitThemeWidgets) and !empty($aitThemeWidgets)){
+		foreach($aitThemeWidgets as $widget){
+			require_once AIT_FRAMEWORK_DIR . "/Widgets/ait-{$widget}-widget.php";
+		}
 	}
 }
+add_action('widgets_init', 'aitLoadWidgets');
 
 /**
  * Shortcodes

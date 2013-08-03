@@ -61,7 +61,7 @@
      </div>
 	   <div class="room-options-container-bottom">
 	     <div class="room-data">
-         {if $reservationOptions->displayRoomReservationSearch}
+         {if isset($reservationOptions->displayRoomReservationSearch)}
                  <div class="reservation-form" style="display: none">
            <form id="reservation-form-1" action="#" method="post">
                 <input type="hidden" value="{$themeOptions->general->contactFormAddress}" name="formLink" id="formLink"/>

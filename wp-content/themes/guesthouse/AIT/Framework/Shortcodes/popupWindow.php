@@ -246,7 +246,7 @@ $data = NNeon::decode(file_get_contents($configFile, true));
 
 			echo '<select id="ait-'.$key.'" name="'.$key.'" class="'.$hide.' type-'.$value['class'].'">';
 			foreach($value['default'] as $k => $v){
-				if($v['checked'] == 'true') $checked = ' selected'; else $checked = '';
+				if(isset($v['checked']) && $v['checked'] == 'true') $checked = ' selected'; else $checked = '';
 
 				if($value['type'] == 'type-select'){
 					echo '<option value="'.$k.'"'.$checked.' class="shortcodeName-'.$v['shortcodeName'].'">'.$v['label'].'</option>';
@@ -257,7 +257,8 @@ $data = NNeon::decode(file_get_contents($configFile, true));
 			echo '</select>';
 		// checkbox
 		} elseif($value['type'] == 'checkbox'){
-			echo '<input type="checkbox" id="ait-'.$key.'" name="'.$key.'" class="type-'.$value['class'].'">';
+			$checked = isset($value['default']) && $value['default'] == 'checked' ? " checked" : "";
+			echo '<input type="checkbox" id="ait-'.$key.'" name="'.$key.'" class="type-'.$value['class'].'"'.$checked.'>';
 
     // examples
     } elseif($value['type'] == 'examples-select'){

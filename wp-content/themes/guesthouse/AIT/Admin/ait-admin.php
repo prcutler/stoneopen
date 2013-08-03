@@ -1494,7 +1494,12 @@ function aitUpdateAitNews()
 function aitUpdateThemeVersions()
 {
 	$current = get_site_transient('ait_theme_versions_update');
-	$currentVersion = wp_get_theme()->version;
+    if (function_exists('wp_get_theme')) {
+        $currentVersion = wp_get_theme()->version;
+    } else {
+        $theme = get_theme_data(get_current_theme());
+        $currentVersion = isset($theme['Version']) ? $theme['Version'] : 1.0;
+    }
 
 	if (!is_object($current)){
 		$current = new stdClass;

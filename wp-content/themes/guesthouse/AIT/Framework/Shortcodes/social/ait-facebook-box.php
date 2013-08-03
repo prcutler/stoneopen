@@ -8,7 +8,7 @@ function theme_facebook_box( $params, $content = null) {
     	'width' => '600',
     	'height' => '600',
     	'variant' => 'light',
-    	'border' => '',
+    	'borderFB' => '',
     	'faces' => 'true',
     	'stream' => 'true',
     	'header' => 'true'
@@ -16,7 +16,7 @@ function theme_facebook_box( $params, $content = null) {
 	
 	if($link == "") { return ""; }
 	
-	if($border == 'yes') {
+	if($borderFB == 'yes') {
 		$borderStyle = ' border'; 
 	} else {
 		$borderStyle = ''; 

@@ -5,12 +5,16 @@
  *
  * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.com)
  */
-
-if(!defined('THEME_CODE_NAME'))	define('THEME_CODE_NAME', sanitize_key(strtolower(wp_get_theme()->stylesheet)));
-
+if(!defined('THEME_CODE_NAME'))	define('THEME_CODE_NAME', sanitize_key(strtolower(get_stylesheet())));
 
 if(!defined('THEME_SHORT_NAME')){
-	define('THEME_SHORT_NAME', wp_get_theme()->name);
+    if (function_exists('wp_get_theme')) {
+        define('THEME_SHORT_NAME', wp_get_theme()->name);
+    } else if (function_exists('get_current_theme')) {
+        define('THEME_SHORT_NAME', get_current_theme());
+    } else {
+        define('THEME_SHORT_NAME', THEME_CODE_NAME);
+    }
 }
 
 if(!defined('THEME_LONG_NAME')) define('THEME_LONG_NAME', THEME_SHORT_NAME . ' Wordpress Theme');

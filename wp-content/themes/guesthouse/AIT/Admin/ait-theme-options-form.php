@@ -417,7 +417,7 @@ function aitRenderThemeOptionsForm($optionKey, $key, $page)
 				<?php
 				$orderKeys = isset($options[$key]) ? $options[$key] : array();
 				$orderSections = $config[$key]['default'];
-				aitRenderOrderType($orderKeys, $orderSections, $current_key, $key, $opt, $value['meta']);
+				aitRenderOrderType($orderKeys, $orderSections, $current_key, $key, $opt, isset($value['meta']) ? $value['meta'] : '');
 				?>
 			</td>
 			<?php endif; ?>

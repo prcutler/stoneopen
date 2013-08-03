@@ -56,11 +56,11 @@ if (!class_exists('Twitter_Widget')) :
 
 			// User-selected settings
 			$title = apply_filters('widget_title', $instance['title']);
-			$consumerKey = $instance['consumer_key'];
-			$consumerSecret = $instance['consumer_secret'];
+			$consumerKey = !empty($instance['consumer_key']) ? $instance['consumer_key'] : '';
+			$consumerSecret = !empty($instance['consumer_secret']) ? $instance['consumer_secret'] : '';
 			$username = $instance['username'];
 			$tweetsCount = $instance['posts'];
-			$updateInterval = $instance['update_interval'];
+			$updateInterval = !empty($instance['update_interval']) ? $instance['update_interval'] : '';
 			$hideErrors = $instance['hideerrors'];
 
 			$printOptions = array(
@@ -367,15 +367,4 @@ if (!class_exists('Twitter_Widget')) :
 
 endif;
 
-// Register the plugin/widget
-if (class_exists('Twitter_Widget')) :
-
-	function loadTwitterWidget()
-	{
-		register_widget('Twitter_Widget');
-	}
-
-	add_action('widgets_init', 'loadTwitterWidget');
-
-endif;
-?>
+register_widget('Twitter_Widget');
