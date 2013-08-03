@@ -3,12 +3,12 @@
 Plugin Name: Fast Secure Contact Form
 Plugin URI: http://www.FastSecureContactForm.com/
 Description: Fast Secure Contact Form for WordPress. The contact form lets your visitors send you a quick E-mail message. Super customizable with a multi-form feature, optional extra fields, and an option to redirect visitors to any URL after the message is sent. Includes CAPTCHA and Akismet support to block all common spammer tactics. Spam is no longer a problem. <a href="plugins.php?page=si-contact-form/si-contact-form.php">Settings</a> | <a href="http://www.FastSecureContactForm.com/donate">Donate</a>
-Version: 3.1.8.4
+Version: 3.1.8.5
 Author: Mike Challis
 Author URI: http://www.642weather.com/weather/scripts.php
 */
 
-$ctf_version = '3.1.8.4';
+$ctf_version = '3.1.8.5';
 
 /*  Copyright (C) 2008-2013 Mike Challis  (http://www.fastsecurecontactform.com/contact)
 
@@ -672,7 +672,7 @@ function vcita_si_contact_add_script(){
 var vicita_fscf_style = "<!-- begin Fast Secure Contact Form - vCita scheduler page header -->" +
 "<style type='text/css'>" + 
 ".vcita-widget-right { float: left !important; } " +
-".vcita-widget-bottom { float: none !important; clear:both;}" + 
+".vcita-widget-bottom { float: none !important; clear:both;}" +
 "</style>" + 
 "<!-- end Fast Secure Contact Form - vCita scheduler page header -->";
 jQuery(document).ready(function($) {
@@ -1248,7 +1248,7 @@ function captchaCheckRequires() {
 }
 
 // check the honeypot trap for spam bots
-// this is very basic, just checks if an empty field was filled in
+// this is very basic, just checks if a hidden empty field was filled in
 function si_contact_check_honeypot($form_id) {
     global $si_contact_opt;
 
@@ -1699,6 +1699,8 @@ function si_contact_get_options($form_num) {
          'text_rows' => '10',
          'aria_required' => 'false',
          'auto_fill_enable' => 'true',
+         'form_attributes' => '',
+         'submit_attributes' => '',
          'title_border' => __('Contact Form:', 'si-contact-form'),
          'title_dept' => '',
          'title_select' => '',
