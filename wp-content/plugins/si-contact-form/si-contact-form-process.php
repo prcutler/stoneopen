@@ -347,7 +347,7 @@ get_currentuserinfo();
                if( (${'ex_field'.$i} == '' || ${'ex_field'.$i} == $cal_date_array[$si_contact_opt['date_format']]) && $si_contact_opt['ex_field'.$i.'_req'] == 'true') {
                   $this->si_contact_error = 1;
                   $fsc_error_message["ex_field$i"]  = ($si_contact_opt['error_field'] != '') ? $si_contact_opt['error_field'] : __('This field is required.', 'si-contact-form');
-               } else if (! $this->validate_date( ${'ex_field'.$i} ) ) {
+               } else if (${'ex_field'.$i} != $cal_date_array[$si_contact_opt['date_format']] && !$this->validate_date( ${'ex_field'.$i} ) ) {
 	              $this->si_contact_error = 1;
                   $fsc_error_message["ex_field$i"]  = sprintf(__('Please select a valid date in this format: %s', 'si-contact-form'), $cal_date_array[$si_contact_opt['date_format']]);
                }

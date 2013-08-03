@@ -208,6 +208,12 @@ If you have any question about the Schedule Meetings feature please contact supp
 
 == Changelog ==
 
+= 3.1.8.5 =
+- (18 Jul 2013) - added new settings: "Submit button input attributes" and "Form action attributes". These can be used for Google Analytics tracking code.
+- added captcha font randomization.
+- fixed date does not have to be required.
+- fixed date error message translation.
+
 = 3.1.8.4 =
 - (07 Jul 2013) - Fixed CAPTCHA PHP warning on some servers.
 - Added better date input validation.

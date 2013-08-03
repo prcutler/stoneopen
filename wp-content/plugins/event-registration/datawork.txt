@@ -1,2 +1,0 @@
-http://codex.wordpress.org/Data_Validation#Whitelist
-http://codex.wordpress.org/Function_Reference/wpdb_Class
