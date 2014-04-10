@@ -86,23 +86,25 @@ $emefs_config = array(
 	'display_notice' => false, // Do not override
 );
 
-class EMEFS{
+class EMEFS {
 
 	/**
 	 * Function that loads up configuration, sets up hooks, and all, on the condition that EME is activated as well.
 	 *
 	 **/
 	
-	function init(){
+	public static function init() {
 		global $emefs_config;
 		
-		if(in_array('events-made-easy/events-manager.php', apply_filters('active_plugins', get_option( 'active_plugins' )))){
+      if (function_exists('is_multisite') && is_multisite() && array_key_exists('events-made-easy/events-manager.php',get_site_option('active_sitewide_plugins'))) {
 			$emefs_config['enabled'] = true;
-		}else{
+		} elseif (in_array('events-made-easy/events-manager.php', apply_filters('active_plugins', get_option( 'active_plugins' )))) {
+			$emefs_config['enabled'] = true;
+		} else {
 			$emefs_config['display_notice'] = true;
 		}
 		
-		if(!is_admin() && $emefs_config['enabled']){
+		if (!is_admin() && $emefs_config['enabled']) {
 								
 			$config_filename = locate_template(array(
 				'events-made-easy-frontend-submit/config.php',
@@ -111,7 +113,7 @@ class EMEFS{
 				'eme/config.php',
 			));
 			
-			if(!empty($config_filename)){
+			if (!empty($config_filename)) {
 				include($config_filename);
 				$emefs_config = array_merge($emefs_config, $config);
 			}
@@ -131,7 +133,7 @@ class EMEFS{
 		
 	}
 	
-	function pageHasForm() { 
+	public static function pageHasForm() { 
 		global $wp_query, $emefs_config;
 		if ( is_page() || is_single() ) {
 			$post = $wp_query->get_queried_object();
@@ -155,11 +157,11 @@ class EMEFS{
 	 *
 	 **/
 	
-	function do_dependencies_notice(){
+	public static function do_dependencies_notice() {
 		global $emefs_config;
 		
-		if($emefs_config['display_notice'] == true){
-			$message = __( "The Events Made Easy Frontend Submit plugin is an extension to the Events Made Easy plugin, which has to be installed and activated first. The plugin has been deactivated." );
+		if ($emefs_config['display_notice'] == true) {
+			$message = __( "The Events Made Easy Frontend Submit plugin is an extension to the Events Made Easy plugin, which has to be installed and activated first. The plugin has been deactivated.", 'emefs' );
 			echo sprintf('<div class="error"><p>%s</p></div>', $message);
 		}
 	}
@@ -169,15 +171,15 @@ class EMEFS{
 	 *
 	 */
 
-	function processForm(){
+	public static function processForm() {
 	
 		global $emefs_event_errors, $emefs_event_data, $emefs_has_errors, $emefs_config;
 		
-		if(!$emefs_config['success_page']){
+		if (!$emefs_config['success_page']) {
 			return false;
 		}
 			
-		if( 'POST' == $_SERVER['REQUEST_METHOD'] && !empty( $_POST['event']['action'] ) && wp_verify_nonce( $_POST['new-event'], 'action_new_event' ) ) {
+		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && !empty( $_POST['event']['action'] ) && wp_verify_nonce( $_POST['new-event'], 'action_new_event' ) ) {
 			
 			$hasErrors = false;
 			
@@ -186,19 +188,25 @@ class EMEFS{
 			if ( isset($event_data['event_name']) && !empty($event_data['event_name']) ) { 
 				$event_data['event_name'] = esc_attr( $event_data['event_name'] );
 			} else {
-				$emefs_event_errors['event_name'] = __('Please enter a name for the event');
+				$emefs_event_errors['event_name'] = __('Please enter a name for the event', 'emefs');
 			}
 			
 			if ( isset($event_data['event_start_date']) && !empty($event_data['event_start_date']) ) { 
 				$event_data['event_start_date'] = esc_attr( $event_data['event_start_date'] );
 			} else {
-				$emefs_event_errors['event_start_date'] = __('Enter the event\'s start date');
+				$emefs_event_errors['event_start_date'] = __('Enter the event\'s start date', 'emefs');
 			}
 			
 			if ( isset($event_data['event_start_time']) && !empty($event_data['event_start_time']) ) { 
-				$event_data['event_start_time'] = esc_attr( $event_data['event_start_time'] );
+				$event_data['event_start_time'] = date ("H:i:00", strtotime ($event_data['event_start_time']));
 			} else {
 				$event_data['event_start_time'] = '00:00';
+			}
+			
+			if ( isset($event_data['event_end_time']) && !empty($event_data['event_end_time']) ) { 
+				$event_data['event_end_time'] = date ("H:i:00", strtotime ($event_data['event_end_time']));
+			} else {
+				$event_data['event_end_time'] = $event_data['event_start_time'];
 			}
 			
 			if ( isset($event_data['event_end_date']) && !empty($event_data['event_end_date']) ) { 
@@ -211,33 +219,27 @@ class EMEFS{
 			$time_end = strtotime($event_data['event_end_date'].' '.$event_data['event_end_time']);
 			
 			if(!$time_start){
-				$emefs_event_errors['event_start_time'] = __('Check the start\'s date and time');
+				$emefs_event_errors['event_start_time'] = __('Check the start\'s date and time', 'emefs');
 			}
 			
 			if(!$time_end){
-				$emefs_event_errors['event_end_time'] =  __('Check the end\'s date and time');
+				$emefs_event_errors['event_end_time'] =  __('Check the end\'s date and time', 'emefs');
 			}
 			
 			if($time_start && $time_end && $time_start > $time_end){
-				$emefs_event_errors['event_time'] =  __('The event\'s end must be <strong>after</strong> the event\'s start');
-			}
-			
-			if ( isset($event_data['event_end_time']) && !empty($event_data['event_end_time']) ) { 
-				$event_data['event_end_time'] = esc_attr( $event_data['event_end_time'] );
-			} else {
-				$event_data['event_end_time'] = $event_data['event_start_time'];
+				$emefs_event_errors['event_time'] =  __('The event\'s end must be <strong>after</strong> the event\'s start', 'emefs');
 			}
 			
 			if ( isset($event_data['event_notes']) && !empty($event_data['event_notes']) ) { 
 				$event_data['event_notes'] = esc_attr( $event_data['event_notes'] ); 
 			} else { 
-				$emefs_event_errors['event_notes'] = __('Please enter a description for the event'); 
+				$emefs_event_errors['event_notes'] = __('Please enter a description for the event', 'emefs'); 
 			}
 			
 			if ( isset($event_data['event_category_ids']) && !empty($event_data['event_category_ids']) && $event_data['event_category_ids'] != 0 ) { 
 				$event_data['event_category_ids'] = (int) esc_attr( $event_data['event_category_ids'] ); 
 			} else { 
-				$emefs_event_errors['event_category_ids'] = __('Please select an Event Category');
+				$emefs_event_errors['event_category_ids'] = __('Please select an Event Category', 'emefs');
 			}
 			 
 			$event_data['event_contactperson_email_body'] = esc_attr( $event_data['event_contactperson_email_body'] );
@@ -246,7 +248,7 @@ class EMEFS{
 			
 			$event_data = self::processLocation($event_data);
 			
-			foreach($emefs_event_errors as $error){
+			foreach ($emefs_event_errors as $error) {
 				if($error){
 					$emefs_has_errors = true;
 					break;
@@ -256,33 +258,31 @@ class EMEFS{
 			if ( !$emefs_has_errors ) {
 			
 				$emefs_event_data_compiled = array_merge($emefs_event_data, $event_data);
-				$emefs_event_data_compiled['event_start_time'] .= ':00';
-				$emefs_event_data_compiled['event_end_time'] .= ':00';
 				unset($emefs_event_data_compiled['action']);
 				
-				foreach($emefs_event_data_compiled as $key => $value){
-					if(strpos($key,'location') !== false && $key != 'location_id'){
+				foreach ($emefs_event_data_compiled as $key => $value) {
+					if (strpos($key,'location') !== false && $key != 'location_id') {
 						unset($emefs_event_data_compiled[$key]);
 						$location_data[$key] = $value;
 					}
 				}
 				
-				if($emefs_config['auto_publish']){
+				if ($emefs_config['auto_publish']) {
 					$emefs_event_data_compiled['event_status'] = $emefs_config['auto_publish'];
 				}
 
-				if($event_id = eme_db_insert_event($emefs_event_data_compiled)){
-					if($emefs_config['auto_publish']){
+				if ($event_id = eme_db_insert_event($emefs_event_data_compiled)) {
+					if ($emefs_config['auto_publish']) {
 						wp_redirect(html_entity_decode(eme_event_url(eme_get_event($event_id))));
-					}else{
+					} else {
 						wp_redirect(get_permalink($emefs_config['success_page']));
 					}
 					exit;
-				}else{
+				} else {
 					$emefs_has_errors = true;
 				}
 				
-			}else{
+			} else {
 				$emefs_event_data = array_merge($emefs_event_data, $event_data);	
 			}
 		
@@ -295,7 +295,7 @@ class EMEFS{
 	 *  
 	 */
 	
-	function processLocation($event_data){
+	public static function processLocation($event_data) {
 	
 		global $wpdb;
 
@@ -341,10 +341,10 @@ class EMEFS{
 	 *
 	 */
 	
-	function deployForm($atts, $content){
+	public static function deployForm($atts, $content) {
 		global $emefs_event_errors, $emefs_event_data, $emefs_config;
 		
-		if(!$emefs_config['success_page']){
+		if (!$emefs_config['success_page']) {
 			?>
 			<div class="emefs_error">
 				<h2><?php _e('Basic Configuration is Missing', 'emefs'); ?></h2>
@@ -357,7 +357,7 @@ class EMEFS{
 			return false;
 		}
 		
-		if(!$emefs_config['public_submit'] && !$emefs_config['public_not_allowed_page']){
+		if (!$emefs_config['public_submit'] && !$emefs_config['public_not_allowed_page']) {
 			?>
 			<div class="emefs_error">
 				<h2><?php _e('Basic Configuration is Missing', 'emefs'); ?></h2>
@@ -376,9 +376,15 @@ class EMEFS{
 			'events-made-easy/form.php',
 			'eme/form.php',
 		));
-		if(empty($filename)){
+		if (empty($filename)) {
 			$filename = 'templates/form.php';
 		}
+      // check if the user wants AM/PM or 24 hour notation
+      $time_format = get_option('time_format');
+      $show24Hours = 'true';
+      if (preg_match ( "/a/i", $time_format ))
+         $show24Hours = 'false';
+
 		ob_start();
 		require($filename);
 		?>
@@ -387,7 +393,7 @@ class EMEFS{
 			emefs_autocomplete_url = "<?php bloginfo('url'); ?>/wp-content/plugins/events-made-easy/locations-search.php";
 			emefs_gmap_enabled = 1;
 			emefs_gmap_hasSelectedLocation = <?php echo ($emefs_event_data['location_id'])?'1':'0'; ?>;
-			emefs_deploy();
+			emefs_deploy(<?php echo $show24Hours; ?>);
 		});
 		</script>
 		<?php
@@ -403,7 +409,7 @@ class EMEFS{
 	 *
 	 */
 	
-	function end_form($submit = 'Submit Event'){
+	public static function end_form($submit = 'Submit Event') {
 		echo sprintf('<input type="submit" value="%s" id="submit" />', __($submit));
 		echo '<input type="hidden" name="event[action]" value="new_event" />';
 		wp_nonce_field( 'action_new_event', 'new-event' );
@@ -414,20 +420,20 @@ class EMEFS{
 	 *
 	 */
 	
-	function field($field = false, $type = 'text', $field_id = false, $more = null){
+	public static function field($field = false, $type = 'text', $field_id = false, $more = null) {
 		global $emefs_event_data;
 		
-		if(!$field || !isset($emefs_event_data[$field]))
+		if (!$field || !isset($emefs_event_data[$field]))
 			return false;
 		
-		if(is_array($field)){
+		if (is_array($field)) {
 			$field = $field[0];
 			$context = $field[1]; 
-		}else{
+		} else {
 			$context = 'event';
 		}
 		
-		switch($field){
+		switch($field) {
 			case 'event_notes':
 				$type = 'textarea';
 				break;
@@ -453,7 +459,7 @@ class EMEFS{
 		
 		$field_id = ($field_id)?$field_id:$field;
 	
-		switch($type){
+		switch($type) {
 			case 'text':
 			case 'textarea':
 			case 'hidden':
@@ -473,9 +479,9 @@ class EMEFS{
 	 *
 	 */
 	
-	function error($field = false, $html = '<span class="error">%s</span>'){
+	public static function error($field = false, $html = '<span class="error">%s</span>') {
 		global $emefs_event_errors;
-		if(!$field || !$emefs_event_errors[$field])
+		if (!$field || !$emefs_event_errors[$field])
 			return false;
 		echo sprintf($html, $emefs_event_errors[$field]);
 	}
@@ -485,8 +491,9 @@ class EMEFS{
 	 *
 	 */
 	
-	function getCategories(){
-		return eme_get_categories();
+	public static function getCategories() {
+		$categories = eme_get_categories();
+      if (has_filter('emefs_categories_filter')) $categories=apply_filters('emefs_categories_filter',$categories);
 	}
 	
 	/**
@@ -494,7 +501,7 @@ class EMEFS{
 	 *
 	 */
 	
-	function getCategoriesRadio(){
+	public static function getCategoriesRadio() {
 		global $emefs_event_data;
 		
 		$categories = self::getCategories();
@@ -516,7 +523,7 @@ class EMEFS{
 	 *
 	 */
 	
-	function categoriesRadio(){
+	public static function categoriesRadio() {
 		echo self::getCategoriesRadio();
 	}
 	
@@ -525,7 +532,7 @@ class EMEFS{
 	 *
 	 */
 	
-	function getCategoriesSelect($select_id = 'event_category_ids'){
+	public static function getCategoriesSelect($select_id = 'event_category_ids') {
 		global $emefs_event_data;
 		
 		$category_select = array();
@@ -548,7 +555,7 @@ class EMEFS{
 	 *
 	 */
 	
-	function categoriesSelect(){
+	public static function categoriesSelect() {
 		echo self::getCategoriesSelect();
 	}
 	
@@ -557,7 +564,7 @@ class EMEFS{
 	 *
 	 */
 
-	function registerAssets(){
+	public static function registerAssets() {
 		global $emefs_config;
 
 		wp_register_script( 'jquery-ui-datepicker', EME_PLUGIN_URL.'js/jquery-ui-datepicker/ui.datepicker.js', array('jquery-ui-core'));
@@ -596,8 +603,8 @@ class EMEFS{
 	 *
 	 */
 	
-	function printScripts(){
-		if(!is_admin()){
+	public static function printScripts() {
+		if (!is_admin()) {
 			wp_enqueue_script( 'emefs' );
 		}
 	}
@@ -607,8 +614,8 @@ class EMEFS{
 	 *
 	 */
 	
-	function printStyles(){
-		if(!is_admin()){
+	public static function printStyles() {
+		if (!is_admin()) {
 			wp_enqueue_style('emefs');
 			wp_enqueue_style('emefs-internal');
 			wp_enqueue_style('jquery-ui-datepicker');
