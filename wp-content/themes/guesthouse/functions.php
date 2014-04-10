@@ -171,9 +171,12 @@ function theme_init () {
 		wp_enqueue_style( 'CSS_prettySociable', THEME_CSS_URL . '/prettySociable.css');
 		wp_enqueue_script( 'JS_prettySociable', THEME_JS_URL . '/libs/jquery.prettySociable.js',  array('jquery') );
 
-    // jquery UI for datepicker
-    wp_enqueue_style( 'CSS_UI', THEME_CSS_URL . '/jquery-ui-1.8.17.custom.css');
-		wp_enqueue_script( 'JS_UI', THEME_JS_URL . '/libs/jquery-ui-1.8.17.custom.min.js',  array('jquery') );
+    	// jquery UI for datepicker
+    	wp_enqueue_style( 'CSS_UI', THEME_CSS_URL . '/jquery-ui-1.8.17.custom.css');
+		//wp_enqueue_script( 'JS_UI', THEME_JS_URL . '/libs/jquery-ui-1.8.17.custom.min.js',  array('jquery') );
+		wp_enqueue_script( 'jquery-ui-tabs' );
+		wp_enqueue_script( 'jquery-ui-accordion' );
+		wp_enqueue_script( 'jquery-ui-datepicker' );
 	}
 }
 add_action('init', 'theme_init');
@@ -475,3 +478,6 @@ class description_walker extends Walker_Nav_Menu
 
 // disable woocommerce title and breadcrumbs to allow our own positioning */
 add_filter('woocommerce_show_page_title', '__return_false');
+
+require_once TEMPLATEPATH.DIRECTORY_SEPARATOR.'Plugins'.DIRECTORY_SEPARATOR.'contact-form-7-dynamic-text-extension'.DIRECTORY_SEPARATOR.'wpcf7_dynamic_text.php';
+add_action( 'after_setup_theme', 'wpcf7_dynamictext_init');

@@ -57,19 +57,22 @@ class WpLatte extends NFileTemplate
 	 * @param string $file Absolut path to template file
 	 * @param array $params Variables for template
 	 */
-	public function __construct($file, $params)
+	public function __construct($file, $params, $absolutePath = false)
 	{
-		$prefix = "main-";
 
-		$file = basename($file, '.php');
+		if (!$absolutePath) {
+			$prefix = "main-";
 
-		$file = self::$templatesDir . "/%s{$file}.php";
+			$file = basename($file, '.php');
 
-		if(is_file(sprintf($file, $prefix))){
-			$file = sprintf($file, $prefix);
-		}else{
-			$prefix = "";
-			$file = sprintf($file, $prefix);
+			$file = self::$templatesDir . "/%s{$file}.php";
+
+			if(is_file(sprintf($file, $prefix))){
+				$file = sprintf($file, $prefix);
+			}else{
+				$prefix = "";
+				$file = sprintf($file, $prefix);
+			}
 		}
 
 		parent::__construct($file);
@@ -147,9 +150,9 @@ class WpLatte extends NFileTemplate
 	 * @param array $params Params for template
 	 * @return WpLatte
 	 */
-	public static function createTemplate($file, $params)
+	public static function createTemplate($file, $params, $absolutePath = false)
 	{
-		return new self($file, $params);
+		return new self($file, $params, $absolutePath);
 	}
 
 

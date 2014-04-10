@@ -237,8 +237,10 @@ function aitGenerateAdminMenu($config, $brandingOptions)
 	$updateData = aitGetAitUpdatesData();
 
 	$c = array_slice($config, 0, 1);
-	$key = reset(array_keys($c));
-	$page = reset(array_values($c));
+	$_keys = array_keys($c);
+	$key = reset($_keys);
+	$_values = array_values($c);
+	$page = reset($_values);
 	unset($c);
 	$wkey = $key;
 
@@ -951,6 +953,8 @@ function aitRenderSkinsPage($page, $tab, $tabTitle)
  */
 function aitCreateNewSkin($page, $tab)
 {
+	global $aitThemeConfig;
+
 	if(empty($_POST))
 		return false;
 

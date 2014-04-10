@@ -84,7 +84,8 @@ function aitRenderThemeOptionsForm($optionKey, $key, $page)
 		}
 
 		if(empty($current_tab)){
-			$current_key = reset(array_keys($page['tabs']));
+            $keys = array_keys($page['tabs']);
+			$current_key = reset($keys);
 		}elseif(isset($page['tabs'][$current_tab])){
 			$current_key = $current_tab;
 		}else{

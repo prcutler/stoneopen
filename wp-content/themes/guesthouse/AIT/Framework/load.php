@@ -84,7 +84,8 @@ function aitAddAdminBarMenu($wpAdminBar)
 	if(@$showAdmin['branding'] != 'disabled'){ $rootId = 'ait-admin-branding'; }
 	if(@$showAdmin['website_settings'] != 'disabled'){
 		$c = array_slice($aitThemeConfig, 0, 1);
-		$key = reset(array_keys($c));
+		$_keys = array_keys($c);
+		$key = reset($_keys);
 		$rootHref = 'ait-admin-' . $key;
 		$rootId = $adminId;
 

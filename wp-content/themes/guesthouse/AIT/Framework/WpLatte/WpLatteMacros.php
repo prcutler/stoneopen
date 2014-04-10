@@ -245,7 +245,7 @@ class WpLatteMacros extends NMacroSet
 
 		$me->addMacro('widget', 'the_widget(%node.word, %node.array)');
 
-		$me->addMacro('googleAnalyticsCode', array($me, 'googleAnalyticsCodeMacro'));
+		$me->addMacro('googleAnalyticsCode',  'echo ' . __CLASS__ . '::googleAnalyticsCode(%node.word);');
 
 		$me->addMacro('includePart', array($me, 'macroIncludePart'));
 	}
@@ -282,19 +282,24 @@ class WpLatteMacros extends NMacroSet
 
 
 
-	public function googleAnalyticsCodeMacro($node, $writer)
+	public static function googleAnalyticsCode($uaCode = '')
 	{
-		$code = '?>
-		<?php if(!empty(%node.word)): ?>
-	<script>
-		var _gaq=[["_setAccount","<?php echo %node.word ?>"],["_trackPageview"]];
-		(function(d,t){ var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
-		g.src="//www.google-analytics.com/ga.js";
-		s.parentNode.insertBefore(g,s) }(document,"script"));
-	</script>
-	<?php endif;
-		';
-		return $writer->write($code);
+		if($uaCode){
+			return "
+<!-- Google Analytics -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', '{$uaCode}', 'auto');
+ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+			";
+		}else{
+			return '';
+		}
 	}
 
 

@@ -32,7 +32,7 @@ branding:
 			type: textarea
 			class: code
 			# {$img} will be replaced with image from loginScreenLogo
-			default: "/* Notice variable {$img} here. It will be replaced with 'Login Screen Logo' image. */\n\n body.login { background: #f4f4f4; margin: 50px 0px; padding-bottom: 50px; } h1 a { background: url('{$img}') no-repeat top center !important; } p#nav, p#backtoblog {text-align: center;} p#nav a, p#backtoblog a {text-decoration: none;} p#nav a:hover, p#backtoblog a:hover {text-decoration: underline;}"
+			default: "/* Notice variable {$img} here. It will be replaced with 'Login Screen Logo' image. */\n\n #login a { width: auto; }body.login { background: #f4f4f4; margin: 50px 0px; padding-bottom: 50px; } h1 a { background: url('{$img}') no-repeat top center !important; } p#nav, p#backtoblog {text-align: center;} p#nav a, p#backtoblog a {text-decoration: none;} p#nav a:hover, p#backtoblog a:hover {text-decoration: underline;}"
 
 		adminTitleIcon:
 			label: "Big Admin Icon (32x32)"

@@ -4,7 +4,7 @@ Theme URI: http://preview.ait-themes.com/guesthouse/
 Author: AIT-Themes.com
 Author URI: http://ait-themes.com
 Description: Follow us on <a href="http://themeforest.net/user/ait/follow">Themeforest</a> or <a href="http://twitter.com/AitThemes">Twitter</a>
-Version: 2.40
+Version: 2.44
 License: GNU General Public License
 License URI: http://www.gnu.org/licenses/gpl.html
 */
@@ -1185,6 +1185,8 @@ article.ait-room .entry-content, article.ait-item .entry-content {padding-bottom
 
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active,
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { background-color: @boxBgColor !important; }
+
+.ui-accordion .ui-accordion-header a { margin-left: 13px; }
 
 /***************************************/
 /******** THEMEBOX GRID-GALLERY ********/

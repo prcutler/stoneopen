@@ -32,19 +32,19 @@
               <a href="#" rel="prettySociable"><img class="share" src="{$themeUrl}/design/img/share.png" /></a>
               <div class="info-box-inside">
                 <h3>{$post->date|date:"j M"}</h3>
-                <small>posted by <a class="url fn n" href="{$post->author->postsUrl}" title="View all posts by {$post->author->name}" rel="author">{$post->author->name}</a></small>
+                <small>{__ 'posted by '}<a class="url fn n" href="{$post->author->postsUrl}" title="View all posts by {$post->author->name}" rel="author">{$post->author->name}</a></small>
                 <br><br>
                 {if $post->type == 'post'}
     					    {if $post->categories}
-                <span><b>Categories: </b>{!$post->categories}</span>
+                <span><b>{__ 'Categories: '}</b>{!$post->categories}</span>
                 <br><br>
                   {/if}
                   {if $post->tags}
-                <span><b>Tags: </b>{!$post->tags}</span>
+                <span><b>{__ 'Tags: '}</b>{!$post->tags}</span>
                 <br><br>
                   {/if}
                 {/if}
-                <span><b>Comments: </b>{$post->commentsCount}</span>
+                <span><b>{__ 'Comments: '}</b>{$post->commentsCount}</span>
 
 
               </div>

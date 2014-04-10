@@ -45,8 +45,8 @@ class Flickr_Widget extends WP_Widget {
     foreach ($photos as $photo) {
       ?>
       <li class="thumb">
-        <a href="<?php echo $photo['url_big']; ?>" title="<?php echo $photo['title']; ?>" rel="tag">
-          <img src="<?php echo $photo['url']; ?>" alt="<?php echo $photo['alt']; ?>" width="<?php echo $instance['thumbnail_width']; ?>" height="<?php echo $instance['thumbnail_height']; ?>" />
+        <a href="<?php echo $photo['url_big']; ?>" title="<?php echo $photo['title']; ?>" rel="prettyPhoto[flickr-widget]">
+          <img src="<?php echo $photo['url']; ?>" alt="<?php //echo $photo['alt']; ?>" width="<?php echo $instance['thumbnail_width']; ?>" height="<?php echo $instance['thumbnail_height']; ?>" />
         </a>
       </li>
       <?php

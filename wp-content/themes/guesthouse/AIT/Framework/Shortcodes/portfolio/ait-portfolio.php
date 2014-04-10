@@ -99,9 +99,15 @@ function ait_portfolio( $params ) {
 		  if (!empty($showdescription) && ($showdescription == "right" || $showdescription == "down")) {
 		    $result .= '<script class="image-description" type="text/template"></script>';
 		    $result .= '<h3 '.$descrAdd.'>'.$meta['itemTitle'].'</h3>';
-			$result .= '<div class="portfolio-item-description" '.$descrAdd.'>'.$meta['itemDescription'].'</div>';
+		    if(!empty($meta['itemDescription'])){
+				$result .= '<div class="portfolio-item-description" '.$descrAdd.'>'.$meta['itemDescription'].'</div>';
+			}
 		  } else {
-		    $result .= '<script class="image-description" type="text/template">'.$meta['itemTitle'].'</script>';
+		  	if(isset($meta['itemTitle'])){
+		    	$result .= '<script class="image-description" type="text/template">'.$meta['itemTitle'].'</script>';
+			} else {
+				$result .= '<script class="image-description" type="text/template"></script>';
+			}
 		  }
           $result .= '</div>';
 

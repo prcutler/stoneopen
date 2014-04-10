@@ -114,9 +114,11 @@ add_filter( "manage_ait-portfolio_posts_columns", "aitPortfolioChangeColumns");
 
 function aitPortfolioCustomColumns($column, $post_id)
 {
+	$meta_type = get_post_meta($post_id, '_ait-portfolio', TRUE);
+	if(!$meta_type) $meta_type = array('itemType' => ''); // defaults
+
 	switch ($column){
 		case "itemType":
-			$meta_type = get_post_meta($post_id, '_ait-portfolio', TRUE);
 			if($meta_type['itemType'] == "image"){
 				echo "Large image";
 			}elseif($meta_type['itemType'] == "website"){
@@ -127,8 +129,6 @@ function aitPortfolioCustomColumns($column, $post_id)
 		break;
 
 		case "itemUrl":
-			$meta_type = get_post_meta($post_id, '_ait-portfolio', TRUE);
-
 			$link = '';
 
 			if($meta_type['itemType'] == "image"){
@@ -143,7 +143,7 @@ function aitPortfolioCustomColumns($column, $post_id)
 					$link = $meta_type['videoLink'];
 			}
 			if(!empty($link))
-				echo '<a href="' . esc_url($link) . '">' . htmlspecialchars($link) . '</a>';
+				echo '<a href="' . esc_url($link) . '">' . esc_html($link) . '</a>';
 			else
 				echo '';
 		break;

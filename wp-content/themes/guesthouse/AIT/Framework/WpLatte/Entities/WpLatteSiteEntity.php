@@ -261,7 +261,9 @@ class WpLatteSiteEntity extends WpLatteBaseEntity
 	 */
 	protected function getLangAttributes()
 	{
-		return language_attributes();
+		ob_start();
+		language_attributes();
+		return ob_get_clean();
 	}
 
 

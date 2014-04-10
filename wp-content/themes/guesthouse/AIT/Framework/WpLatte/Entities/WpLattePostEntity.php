@@ -277,22 +277,22 @@ class WpLattePostEntity extends WpLatteBaseEntity
 	public function remainingContent($more = null, $stripTeaser = false)
 	{
 
-		global $wp_version;
+		//global $wp_version;
 
- 		if(version_compare($wp_version, "3.6beta", ">=")){
-			$this->setupData();
+ 		//if(version_compare($wp_version, "3.6beta", ">=")){
+		//	$this->setupData();
 
-			$extra = get_the_remaining_content($more, $stripTeaser );
+		//	$extra = get_the_remaining_content($more, $stripTeaser );
 
-			remove_filter('the_content', 'post_formats_compat', 7);
-			$content = apply_filters('the_content', $extra);
-			add_filter('the_content', 'post_formats_compat', 7);
+		//	remove_filter('the_content', 'post_formats_compat', 7);
+		//	$content = apply_filters('the_content', $extra);
+		//	add_filter('the_content', 'post_formats_compat', 7);
 
-			wp_reset_postdata();
-			return str_replace(']]>', ']]&gt;', $content);
-		}else{
+		//	wp_reset_postdata();
+		//	return str_replace(']]>', ']]&gt;', $content);
+		//}else{
 			return $this->content($more, $stripTeaser);
-		}
+		//}
 
 	}
 
@@ -385,6 +385,7 @@ class WpLattePostEntity extends WpLatteBaseEntity
 
 		global $wp_version;
 
+		/*
  		if(version_compare($wp_version, "3.6beta", ">=")){
 			// wp-includes/post-formats.php:599
 			if($format == 'chat'){
@@ -433,8 +434,10 @@ class WpLattePostEntity extends WpLatteBaseEntity
 				return ( $has_url ) ? $has_url : apply_filters( 'the_permalink', get_permalink() );
 			}
 		}else{
+		*/
 			$output = $this->content();
-		}
+
+		//}
 		return $output;
 	}
 

@@ -1926,7 +1926,7 @@ if ( ! class_exists( 'WP_Upgrader' ) && ( isset( $_GET[sanitize_key( 'page' )] )
 	 		 *
 	 		 * @param array $args Arguments to pass for use within the class
 	 		 */
-			public function __construct( $args = array() ) {
+			function __construct( $args = array() ) {
 
 				/** Parse default and new args */
 				$defaults = array( 'url' => '', 'nonce' => '', 'names' => array() );
@@ -1948,7 +1948,7 @@ if ( ! class_exists( 'WP_Upgrader' ) && ( isset( $_GET[sanitize_key( 'page' )] )
 	 		 *
 	 		 * @since 2.2.0
 	 		 */
-			public function add_strings() {
+			function add_strings() {
 
 				/** Automatic activation strings */
 				if ( TGM_Plugin_Activation::$instance->is_automatic ) {
@@ -1974,7 +1974,7 @@ if ( ! class_exists( 'WP_Upgrader' ) && ( isset( $_GET[sanitize_key( 'page' )] )
 	 		 *
 	 		 * @since 2.2.0
 	 		 */
-			public function before() {
+			function before($title = '') {
 
 				/** We are currently in the plugin installation loop, so set to true */
 				$this->in_loop = true;
@@ -1996,7 +1996,7 @@ if ( ! class_exists( 'WP_Upgrader' ) && ( isset( $_GET[sanitize_key( 'page' )] )
 	 		 *
 	 		 * @since 2.2.0
 	 		 */
-			public function after() {
+			function after($title = '') {
 
 				/** Close install strings */
 				echo '</p></div>';
@@ -2028,7 +2028,7 @@ if ( ! class_exists( 'WP_Upgrader' ) && ( isset( $_GET[sanitize_key( 'page' )] )
 	 		 *
 	 		 * @since 2.2.0
 	 		 */
-			public function bulk_footer() {
+			function bulk_footer() {
 
 				/** Serve up the string to say installations (and possibly activations) are complete */
 				parent::bulk_footer();
@@ -2066,7 +2066,7 @@ if ( ! class_exists( 'WP_Upgrader' ) && ( isset( $_GET[sanitize_key( 'page' )] )
 	 		 *
 	 		 * @since 2.2.0
 	 		 */
-			public function before_flush_output() {
+			function before_flush_output() {
 
 				wp_ob_end_flush_all();
 				flush();
@@ -2079,7 +2079,7 @@ if ( ! class_exists( 'WP_Upgrader' ) && ( isset( $_GET[sanitize_key( 'page' )] )
 	 		 *
 	 		 * @since 2.2.0
 	 		 */
-			public function after_flush_output() {
+			function after_flush_output() {
 
 				wp_ob_end_flush_all();
 				flush();

@@ -508,6 +508,8 @@ div.anythingSlider .arrow a {top: 85px !important;}
 
 .ui-tabs .ui-tabs-nav li a {padding: 0.5em 5px !important;}
 
+.ui-accordion-content { height: auto !important; }
+
 
 /* Portfolio Shortcodes */
 

@@ -21,7 +21,8 @@ class AitCategoryDropdownWalker extends Walker_CategoryDropdown
 	 * @param int $depth Depth of category. Used for padding.
 	 * @param array $args Uses 'selected', 'show_count', and 'show_last_update' keys, if they exist.
 	 */
-	function start_el(&$output, $category, $depth, $args) {
+	function start_el(&$output, $category, $depth = 0, $args = array(), $id = 0)
+	{
 		$pad = str_repeat('&nbsp;', $depth * 3);
 
 		if(is_object($category)){
