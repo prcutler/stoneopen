@@ -8,8 +8,7 @@ function eme_filter_form_shortcode($atts) {
    $multiple = ($multiple==="false" || $multiple==="0") ? false : $multiple;
 
    if ($template_id) {
-      $format_arr = eme_get_template($template_id);
-      $filter_form_format=$format_arr['format'];
+      $filter_form_format= eme_get_template_format($template_id);
    } else {
       $filter_form_format = get_option('eme_filter_form_format');
    }
@@ -77,7 +76,7 @@ function eme_replace_filter_form_placeholders($format, $multiple, $multisize, $s
    if ($fields == "all")
       $fields="categories,locations,towns,weeks,months";
 
-   preg_match_all("/#_[A-Za-z0-9_\[\]]+/", $format, $placeholders);
+   preg_match_all("/#_[A-Za-z0-9_]+/", $format, $placeholders);
    usort($placeholders[0],'sort_stringlenth');
 
    // if one of these changes, also the eme_events.php needs changing for the "Next page" part
@@ -114,7 +113,7 @@ function eme_replace_filter_form_placeholders($format, $multiple, $multisize, $s
             $cat_list = array();
             foreach ($categories as $this_category) {
                $id=$this_category['category_id'];
-               $cat_list[$id]=eme_trans_sanitize_html($this_category['category_name']);
+               $cat_list[$id]=eme_translate($this_category['category_name']);
             }
             asort($cat_list);
             if ($multiple) {
@@ -136,7 +135,7 @@ function eme_replace_filter_form_placeholders($format, $multiple, $multisize, $s
             $loc_list = array();
             foreach ($locations as $this_location) {
                $id=$this_location['location_id'];
-               $loc_list[$id]=eme_trans_sanitize_html($this_location['location_name']);
+               $loc_list[$id]=eme_translate($this_location['location_name']);
             }
             asort($loc_list);
             if ($multiple) {
@@ -156,7 +155,7 @@ function eme_replace_filter_form_placeholders($format, $multiple, $multisize, $s
          if (strstr($fields,'towns') && $towns) {
             $town_list = array();
             foreach ($towns as $this_town) {
-               $id=eme_trans_sanitize_html($this_town['location_town']);
+               $id=eme_translate($this_town['location_town']);
                $town_list[$id]=$id;
             }
             asort($town_list);

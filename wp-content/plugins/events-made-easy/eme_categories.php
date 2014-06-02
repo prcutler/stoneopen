@@ -6,37 +6,38 @@ function eme_categories_page() {
    if (!current_user_can( get_option('eme_cap_categories')) && (isset($_GET['eme_admin_action']) || isset($_POST['eme_admin_action']))) {
       $message = __('You have no right to update categories!','eme');
       eme_categories_table_layout($message);
-   } elseif (isset($_GET['eme_admin_action']) && $_GET['eme_admin_action'] == "editcat") { 
+      return;
+   }
+   
+   if (isset($_GET['eme_admin_action']) && $_GET['eme_admin_action'] == "editcat") { 
       // edit category  
       eme_categories_edit_layout();
-   } else {
+      return;
+   }
+
+   $validation_result = '';
+   $message = '';
+   if (isset($_POST['eme_admin_action'])) {
       // Insert/Update/Delete Record
       $categories_table = $wpdb->prefix.CATEGORIES_TBNAME;
-      $validation_result = '';
-      if (isset($_POST['eme_admin_action']) && $_POST['eme_admin_action'] == "edit" ) {
+      if ($_POST['eme_admin_action'] == "edit" ) {
          // category update required  
          $category = array();
          $category['category_name'] = trim(stripslashes($_POST['category_name']));
          $validation_result = $wpdb->update( $categories_table, $category, array('category_id' => intval($_POST['category_ID'])) );
-      } elseif ( isset($_POST['eme_admin_action']) && $_POST['eme_admin_action'] == "add" ) {
+      } elseif ($_POST['eme_admin_action'] == "add" ) {
          // Add a new category
          $category = array();
          $category['category_name'] = trim(stripslashes($_POST['category_name']));
          $validation_result = $wpdb->insert($categories_table, $category);
-      } elseif ( isset($_POST['eme_admin_action']) && $_POST['eme_admin_action'] == "delete" ) {
+      } elseif ($_POST['eme_admin_action'] == "delete" ) {
          // Delete category or multiple
          $categories = $_POST['categories'];
          if (is_array($categories)) {
-            //Make sure the array is only numbers
-            foreach ($categories as $cat_id) {
-               if (is_numeric($cat_id)) {
-                  $cats[] = "category_id = $cat_id";
-               }
-            }
             //Run the query if we have an array of category ids
             if (count($cats > 0)) {
-               $validation_result = $wpdb->query( "DELETE FROM $categories_table WHERE ". implode(" OR ", $cats) );
-               if (is_numeric($validation_result))
+               $validation_result = $wpdb->query( "DELETE FROM $categories_table WHERE category_id IN ( ". implode(",", $cats) .")" );
+               if ($validation_result !== false)
                   $message = __("Successfully deleted the selected categories.","eme");
             } else {
                $validation_result = false;
@@ -47,18 +48,13 @@ function eme_categories_page() {
             $message = __("Couldn't delete the categories. Incorrect category IDs supplied. Please try again.","eme");
          }
       }
-      //die(print_r($_POST));
-      if (is_numeric($validation_result) ) {
+      if ($validation_result !== false && !empty($validation_result) ) {
          $message = (isset($message)) ? $message : __("Successfully {$_POST['eme_admin_action']}ed category", "eme");
-         eme_categories_table_layout($message);
-      } elseif ( $validation_result === false ) {
-         $message = (isset($message)) ? $message : __("There was a problem {$_POST['eme_admin_action']}ing your category, please try again.");
-         eme_categories_table_layout($message);
       } else {
-         // no action, just a categories list
-         eme_categories_table_layout();
+         $message = (isset($message)) ? $message : __("There was a problem {$_POST['eme_admin_action']}ing your category, please try again.");
       }
    }
+   eme_categories_table_layout($message);
 } 
 
 function eme_categories_table_layout($message = "") {
@@ -190,10 +186,7 @@ function eme_categories_edit_layout($message = "") {
          </table>
       <p class='submit'><input type='submit' class='button-primary' name='submit' value='".__('Update category', 'eme')."' /></p>
       </form>
-         
-      
    </div>
-         
    ";  
    echo $layout;
 }
@@ -221,7 +214,7 @@ function eme_get_categories($eventful=false,$scope="future",$extra_conditions=""
          $event_cats=join(",",$categories);
          if ($extra_conditions !="")
             $extra_conditions = " AND ($extra_conditions)";
-         $result = $wpdb->get_results("SELECT * FROM $categories_table where category_id in ($event_cats) $extra_conditions $orderby", ARRAY_A);
+         $result = $wpdb->get_results("SELECT * FROM $categories_table WHERE category_id IN ($event_cats) $extra_conditions $orderby", ARRAY_A);
       }
    } else {
       if ($extra_conditions !="")

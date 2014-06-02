@@ -1,24 +1,26 @@
 === Events Made Easy ===  
 Contributors: liedekef
 Donate link: http://www.e-dynamics.be/wordpress
-Tags: events, manager, booking, calendar, gigs, concert, maps, geotagging, paypal  
+Tags: events, manager, booking, calendar, gigs, concert, maps, geotagging, paypal, rsvp  
 Requires at least: 3.5
-Tested up to: 3.8.1
-Stable tag: 1.3.4
+Tested up to: 3.9.1
+Stable tag: 1.4.4
 
-Manage and display events. Includes recurring events; locations; widgets; Google maps; RSVP; ICAL and RSS feeds; Paypal and other payment gateways support. SEO compatible.
+Manage and display events, recurring events, locations and maps, widgets, RSVP, ICAL and RSS feeds, payment gateways support. SEO compatible.
              
 == Description ==
 Events Made Easy is a full-featured event management solution for Wordpress. Events Made Easy supports public, private, draft and recurring events, locations management, RSVP (+ optional approval), Paypal, 2Checkout, Google Checkout and Google maps. With Events Made Easy you can plan and publish your event, or let people reserve spaces for your weekly meetings. You can add events list, calendars and description to your blog using multiple sidebar widgets or shortcodes; if you are a web designer you can simply employ the template tags provided by Events Made Easy. 
 
 Events Made Easy integrates with Google Maps; thanks to geocoding, Events Made Easy can find the location of your event and accordingly display a map. 
-Events Made Easy also integrates payments for events using paypal. 
+Events Made Easy handles RSVP and bookings, integrates payments for events using paypal and other payment gateways and allows payment tracking.
 
 Events Made Easy provides also a RSS and ICAL feed, to keep your subscribers updated about the events you're organising. 
 
-Events Made Easy is fully customisable; you can customise the amount of data displayed and their format in events lists, pages and in the RSS/ICAL feed. You can choose to show or hide the events page, and change its title.  
+Events Made Easy is fully customisable; you can customise the amount of data displayed and their format in events lists, locations, attendees and in the RSS/ICAL feed. Also the RSVP form can be changed to your liking with extra fields, and by using EME templates let you change the layout even per page!
 
 Events Made Easy is fully localisable and already partially localised in Italian, Spanish, German, Swedish, French and Dutch. 
+
+Events Made Easy is also fully compatible with qtranslate (and mqtranslate): most of the settings allow for language tags so you can show your events in different languages to different people. The booking mails also take the choosen language into account.
 
 For more information visit the [Documentation Page](http://www.e-dynamics.be/wordpress/) and [Support Forum](http://www.e-dynamics.be/bbpress/). 
 
@@ -28,10 +30,10 @@ Always take a backup of your db before doing the upgrade, just in case ...
 1. Upload the `events-made-easy` folder to the `/wp-content/plugins/` directory  
 2. Activate the plugin through the 'Plugins' menu in WordPress  
 3. Add events list or calendars following the instructions in the Usage section.  
-== Upgrade from the older Events Manager plugin ==
 
-Events Made Easy is completely backwards compatible with the old data from Events Manager 2.2.2. Just deactivate the old plugin, remove the files if you want, and proceed with the Events Made Easy installation as usual. Events Made Easy takes care of your events database migration automatically. 
-Again my note of warning: Events Made Easy (EME) is a fork (NOT an extension) of the older Events Manager (EM) version 2.2.2 (April 2010). After months, the original plugin came back to life with a new codebase, but I added so much features already that it is very hard to go back to being one plugin. Read here for the differences since 2.2.2: http://www.e-dynamics.be/wordpress/?page_id=2
+== Upgrade from the older Events Manager Extended plugin ==
+
+Events Made Easy is completely backwards compatible with the old data from Events Manager Extended. Just deactivate the old plugin, remove the files if you want, and proceed with the Events Made Easy installation as usual. Events Made Easy takes care of your events database migration automatically. 
 
 == Usage == 
 
@@ -60,6 +62,53 @@ Events list and calendars can be added to your blogs through widgets, shortcodes
 See the FAQ section at [the documentation site](http://www.e-dynamics.be/wordpress).
 
 == Changelog ==
+
+= 1.4.4 =
+* Feature: added placeholders #_12HSTARTTIME_NOLEADINGZERO and #_12HENDTIME_NOLEADINGZERO
+* Feature: added filter eme_eval_booking_filter, doing evaluations before the person is entered in the db. One parameter: $event. And $_POST can be used too of course.
+* Feature: added #_BOOKINGPRICEPERSEAT and #_BOOKINGPRICEPERSEAT{xx} rsvp placeholders, to return the end-price per booked seat (either normally or for multiprice for the indicated price category). The filter eme_insert_rsvp_action is taken into account, so the end-price includes anything you do with it (including discounts)
+* Feature: subjects of mails being send to bookers is now also customizable and multi-lang ready
+* Feature: you can now delete "unused" people (people without bookings, can happen if you delete old events)
+* Feature: you can now select a template for mail message and body when sending after-mails, and for many format settings when creating/editing an event
+* Feature: added an option to no longer show the RSVP form after a successful booking
+* Improvement: a little more polite bad-boy message
+* Improvement: renamed an eme option, no big deal
+* Improvement: all RSVP prices are now showing as floating point, with 2 digits behind the "."
+* Bugfix: removing a person and his booking info left orphaned answers, cleaning those now
+* Bugfix: when using the #_PAYMENT_URL in an email, all works ok but a php warning was shown (third variable for a function not initialized). Fixed
+* Bugfix: when deleting 1 template, all were deleted.
+
+= 1.4.3 =
+* Bugfix: the filter eme_eval_booking_form_filter was called too early, causing the second argument to be empty
+* Bugfix: the captcha isn't taken into account when adding a booking via admin backend, but it prevented adding a booking then
+
+= 1.4.2 =
+* Bugfix: some undef values fixed
+* Bugfix: make the default use the new notation too for captchas (for new installations)
+* Bugfix: the frontend submission plugin has been updated to account for new jquery timeentry plugin too
+
+= 1.4.1 =
+* Bugfix: fixed a bug with a undefined var, preventing activation of the plugin for new installations
+* Bugfix: for plugin deletion, the tables were not deleted for multisite blogs
+
+= 1.4.0 =
+* Feature: more consistent notation for placeholders, see http://www.e-dynamics.be/wordpress/?p=51559
+* Feature: people page can now do merging of bookings, show all bookings per person and allows person editing
+* Feature: RSS feed now shows html (no maps or forms), as does all other parts of wordpress do
+* Feature: use language selected at booking time for sending mail concerning the booking or the attendee
+* Feature: the cancel registration form can now also be formatted (also per event if wanted)
+* Feature: locations can now also be duplicated
+* Feature: added field tags to form fields, these are shown to the booker and are (m)qtranslate-compatible
+* Bugfix: don't show the captcha when showing the booking form in the admin backend, it was ignored but still it's best not to confuse people
+* Bugfix: if the current day had an event, the calendar didn't show the eventfull class
+* Bugfix: don't match "[...]"  for location placeholders, solved more generically by the new placeholders notation feature.
+* Bugfix: show weekday initials only again for small calendar format
+* Bugfix: the wordpress nonce was being outputted too much times. Although the fields are hidden, it's not good to do so.
+* Bugfix: when inserting or updating a booking, the action hook was executed before the answers for extra fields were stored in the db
+* Improvement: the events database now gets updated upon first site visit (admin or not), so no more deactivate/reactivate action needed
+* Improvement: when the events page setting changes, the SEO rules are flushed, so no more deactivate/reactivate action needed
+* Improvement: code dedup for locations page
+* Improvement: show a warning if a custom field requires a value but it was left empty
 
 = 1.3.4 =
 * Feature: when doing the "quick" deny for registrations while editing an event, no mails were being sent. There's now a general option in the Mail section that allows you to change that.

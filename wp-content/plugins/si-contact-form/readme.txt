@@ -4,7 +4,7 @@ Author URI: http://www.642weather.com/weather/scripts.php
 Donate link: http://www.FastSecureContactForm.com/donate
 Tags: Akismet, captcha, contact, contact form, form, mail, email, spam, multilingual, wpmu
 Requires at least: 3.4.2
-Tested up to: 3.8
+Tested up to: 3.9.1
 Stable tag: trunk
 
 An easy and powerful form builder that lets your visitors send you email. Blocks all automated spammers. No templates to mess with.
@@ -246,6 +246,14 @@ If you have additional questions visit [vCita Support Page](http://support.vcita
 
 == Changelog ==
 
+- akismet 3.xx compatible
+- Bug fix: ampersand and quotes were showing as entity in the To: name in the email 
+
+= 4.0.19 =
+- (15 May 2014) - Removed themefuse ad (their site was flagged by Google as possibly infected).
+- Bug Fix: the 'follow' feature was not working correctly if fields were re-sorted.
+- New feature: When Name field is set to "First Name, Last Name" you can use the check box "inline" to get the last name to follow the first name on the same line.
+- tested for WP 3.9.1
 
 = 4.0.18 =
 - (07 Dec 2013) - Bug fix: query into hidden field type was not working.

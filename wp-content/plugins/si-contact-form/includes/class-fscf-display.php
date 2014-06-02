@@ -461,6 +461,14 @@ $string .= '
           'placeholder'	 => 'false',
          );
 
+		// Create a list of follow values for fields
+		$field_follow = array();
+		foreach ( self::$form_options['fields'] as $key => $field ) {
+			if ( 'true' != $field['disable'] ) 
+				$field_follow[] = $field['follow'];
+		}
+		
+		$fld_cnt = 0;
 		$fields_in_use = array();
 		foreach ( self::$form_options['fields'] as $key => $field ) {
 
@@ -487,14 +495,18 @@ $string .= '
 					$string .= "\n" . '<div id="fscf_div_clear' . self::$form_id_num.'_'.$key.'" '.self::get_this_css('clear_style').'>' . "\n" . '  ';
                     $string .= '<div id="fscf_div_field' . self::$form_id_num.'_'.$key.'" ';
                     // find out if this field preceeds a follow field or vcita enabled (narrow), else it needs to be (wide)
-                    if ( ( isset(self::$form_options['fields'][$key+1] ) && self::$form_options['fields'][$key+1]['follow'] == 'true' )
-                      || ( self::$form_options['vcita_scheduling_button'] == 'true' && self::is_vcita_activated() )
-                       )
-                      $string .= self::get_this_css('field_prefollow_style').'>'; // narrow
-                    else
-                      $string .= self::get_this_css('field_left_style').'>'; // wide
+//                    if ( ( isset(self::$form_options['fields'][$key+1] ) && self::$form_options['fields'][$key+1]['follow'] == 'true' )
+                    if ( ( isset($field_follow[$fld_cnt+1] ) && $field_follow[$fld_cnt+1] == 'true' )
+						// Added by Ken Carlson for displaying name parts inline
+						|| ( FSCF_NAME_FIELD == $field['standard'] && 'name' != self::$form_options['name_format'] && 'true' == $field['inline'] )
+                      || ( self::$form_options['vcita_scheduling_button'] == 'true' && self::is_vcita_activated() 
+                       ) )
+						  $string .= self::get_this_css('field_prefollow_style').'>'; // narrow
+					   else
+						  $string .= self::get_this_css('field_left_style').'>'; // wide
 				}
 			}
+			$fld_cnt++;
 
 			// Display code common to all/most field types
 			if ( ! in_array( $field['type'], array('fieldset', 'fieldset-close', 'hidden') ) ) {
@@ -846,10 +858,16 @@ if ( 'true' == $field['placeholder'] && $field['default'] != '') {
 				break;
 			case 'first_last':
 				$string .= $f_name_string;
+				// See if name parts are to be displayed inline
+				if ( 'true' == $field['inline'] )
+					$string .= '</div><div ' . self::get_this_css('field_follow_style').'>';
 				$string .= $l_name_string;
 				break;
 			case 'first_middle_i_last':
 				$string .= $f_name_string;
+                // See if name parts are to be displayed inline
+				if ( 'true' == $field['inline'] )
+					$string .= '</div><div ' . self::get_this_css('field_follow_style').'>';
 				$string .= '
     <div ' . self::get_this_css('title_style') . ">\n";
               if ( 'false' == $field['hide_label'] ) {
@@ -873,10 +891,16 @@ $string .= '    </div>
         $string .= ' />
     </div>
 ';
+				// See if name parts are to be displayed inline
+				if ( 'true' == $field['inline'] )
+					$string .= '</div><div ' . self::get_this_css('field_follow_style').'>';
 				$string .= $l_name_string;
 				break;
 			case 'first_middle_last':
 				$string .= $f_name_string;
+                // See if name parts are to be displayed inline
+				if ( 'true' == $field['inline'] )
+					$string .= '</div><div ' . self::get_this_css('field_follow_style').'>';
 				$string .= '
     <div ' . self::get_this_css('title_style') . ">\n";
               if ( 'false' == $field['hide_label'] ) {
@@ -899,6 +923,9 @@ $string .= '    </div>
  }
         $string .= ' />
     </div>';
+    				// See if name parts are to be displayed inline
+				if ( 'true' == $field['inline'] )
+					$string .= '</div><div ' . self::get_this_css('field_follow_style').'>';
 				$string .= $l_name_string;
 				break;
 		}

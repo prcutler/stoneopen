@@ -4,10 +4,15 @@ function eme_add_options($reset=0) {
    $contact_person_email_body_localizable = __("#_RESPNAME (#_RESPEMAIL) will attend #_EVENTNAME on #m #d, #Y. He wants to reserve #_RESPSPACES space(s).<br/>Now there are #_RESERVEDSPACES space(s) reserved, #_AVAILABLESPACES are still available.<br/><br/>Yours faithfully,<br/>Events Manager",'eme') ;
    $contactperson_cancelled_email_body_localizable = __("#_RESPNAME (#_RESPEMAIL) has cancelled for #_EVENTNAME on #m #d, #Y. <br/>Now there are #_RESERVEDSPACES space(s) reserved, #_AVAILABLESPACES are still available.<br/><br/>Yours faithfully,<br/>Events Manager",'eme') ;
    $contact_person_pending_email_body_localizable = __("#_RESPNAME (#_RESPEMAIL) would like to attend #_EVENTNAME on #m #d, #Y. He wants to reserve #_RESPSPACES space(s).<br/>Now there are #_RESERVEDSPACES space(s) reserved, #_AVAILABLESPACES are still available.<br/><br/>Yours faithfully,<br/>Events Manager",'eme') ;
+   $respondent_email_subject_localizable = __("Reservation for '#_EVENTNAME' confirmed",'eme');
    $respondent_email_body_localizable = __("Dear #_RESPNAME,<br/><br/>you have successfully reserved #_RESPSPACES space(s) for #_EVENTNAME.<br/><br/>Yours faithfully,<br/>#_CONTACTPERSON",'eme');
+   $registration_pending_email_subject_localizable = __("Reservation for '#_EVENTNAME' is pending",'eme');
    $registration_pending_email_body_localizable = __("Dear #_RESPNAME,<br/><br/>your request to reserve #_RESPSPACES space(s) for #_EVENTNAME is pending.<br/><br/>Yours faithfully,<br/>#_CONTACTPERSON",'eme');
+   $registration_cancelled_email_subject_localizable = __("Reservation for '#_EVENTNAME' cancelled",'eme');
    $registration_cancelled_email_body_localizable = __("Dear #_RESPNAME,<br/><br/>your request to reserve #_RESPSPACES space(s) for #_EVENTNAME has been cancelled.<br/><br/>Yours faithfully,<br/>#_CONTACTPERSON",'eme');
+   $registration_denied_email_subject_localizable = __("Reservation for '#_EVENTNAME' denied",'eme');
    $registration_denied_email_body_localizable = __("Dear #_RESPNAME,<br/><br/>your request to reserve #_RESPSPACES space(s) for #_EVENTNAME has been denied.<br/><br/>Yours faithfully,<br/>#_CONTACTPERSON",'eme');
+   $registration_updated_email_subject_localizable = __("Reservation for '#_EVENTNAME' updated",'eme');
    $registration_updated_email_body_localizable = __("Dear #_RESPNAME,<br/><br/>your request to reserve #_RESPSPACES space(s) for #_EVENTNAME has been updated.<br/><br/>Yours faithfully,<br/>#_CONTACTPERSON",'eme');
    $registration_recorded_ok_html_localizable = __('Your booking has been recorded','eme');
    $registration_form_format_localizable = "<table class='eme-rsvp-form'>
@@ -16,7 +21,14 @@ function eme_add_options($reset=0) {
             <tr><th scope='row'>".__('Phone number', 'eme').":</th><td>#_PHONE</td></tr>
             <tr><th scope='row'>".__('Seats', 'eme')."*:</th><td>#_SPACES</td></tr>
             <tr><th scope='row'>".__('Comment', 'eme').":</th><td>#_COMMENT</td></tr>
-            #_CAPTCHAHTML[<tr><th scope='row'>Please fill in the code displayed here:</th><td>#_CAPTCHA</td></tr>]
+            #_CAPTCHAHTML{<tr><th scope='row'>Please fill in the code displayed here:</th><td>#_CAPTCHA</td></tr>}
+            </table>
+            #_SUBMIT
+            ";
+   $cancel_form_format_localizable = "<table class='eme-rsvp-form'>
+            <tr><th scope='row'>".__('Name', 'eme')."*:</th><td>#_NAME</td></tr>
+            <tr><th scope='row'>".__('E-Mail', 'eme')."*:</th><td>#_EMAIL</td></tr>
+            #_CAPTCHAHTML{<tr><th scope='row'>Please fill in the code displayed here:</th><td>#_CAPTCHA</td></tr>}
             </table>
             #_SUBMIT
             ";
@@ -61,16 +73,22 @@ function eme_add_options($reset=0) {
    'eme_contactperson_email_body' => preg_replace("/<br ?\/?>/", "\n", $contact_person_email_body_localizable),
    'eme_contactperson_cancelled_email_body' => preg_replace("/<br ?\/?>/", "\n", $contactperson_cancelled_email_body_localizable),
    'eme_contactperson_pending_email_body' => preg_replace("/<br ?\/?>/", "\n", $contact_person_pending_email_body_localizable),
+   'eme_respondent_email_subject' => $respondent_email_subject_localizable,
    'eme_respondent_email_body' => preg_replace("/<br ?\/?>/", "\n", $respondent_email_body_localizable),
+   'eme_registration_pending_email_subject' => $registration_pending_email_subject_localizable,
    'eme_registration_pending_email_body' => preg_replace("/<br ?\/?>/", "\n", $registration_pending_email_body_localizable),
+   'eme_registration_cancelled_email_subject' => $registration_cancelled_email_subject_localizable,
    'eme_registration_cancelled_email_body' => preg_replace("/<br ?\/?>/", "\n", $registration_cancelled_email_body_localizable),
+   'eme_registration_denied_email_subject' => $registration_denied_email_subject_localizable,
    'eme_registration_denied_email_body' => preg_replace("/<br ?\/?>/", "\n", $registration_denied_email_body_localizable),
+   'eme_registration_updated_email_subject' => $registration_updated_email_subject_localizable,
    'eme_registration_updated_email_body' => preg_replace("/<br ?\/?>/", "\n", $registration_updated_email_body_localizable),
    'eme_registration_recorded_ok_html' => $registration_recorded_ok_html_localizable,
    'eme_registration_form_format' => $registration_form_format_localizable,
-   'eme_rsvp_mail_port' => 25,
+   'eme_cancel_form_format' => $cancel_form_format_localizable,
    'eme_deny_mail_event_edit' => 0,
    'eme_smtp_host' => 'localhost',
+   'eme_smtp_port' => 25,
    'eme_mail_sender_name' => '',
    'eme_rsvp_mail_send_method' => 'smtp',
    'eme_rsvp_send_html' => 0,
@@ -78,6 +96,8 @@ function eme_add_options($reset=0) {
    'eme_rsvp_registered_users_only' => 0,
    'eme_rsvp_reg_for_new_events' => 0,
    'eme_rsvp_require_approval' => 0,
+   'eme_rsvp_show_form_after_booking' => 1,
+   'eme_rsvp_hide_full_events' => 0,
    'eme_attendees_list_format' => DEFAULT_ATTENDEES_LIST_FORMAT,
    'eme_bookings_list_format' => DEFAULT_BOOKINGS_LIST_FORMAT,
    'eme_bookings_list_header_format' => DEFAULT_BOOKINGS_LIST_HEADER_FORMAT,
@@ -154,7 +174,10 @@ function eme_add_options($reset=0) {
    'eme_payment_fail_format' => '',
    'eme_payment_add_bookingid_to_return' => 0,
    'eme_loop_protection' => 'simple',
-   'eme_enable_notes_placeholders' => 0
+   'eme_enable_notes_placeholders' => 0,
+   'eme_deprecated' => 1,
+   'eme_legacy' => 0,
+   'eme_legacy_warning' => 1
    );
    
    foreach($eme_options as $key => $value){
@@ -179,7 +202,7 @@ function eme_add_option($key, $value, $reset) {
 // WP options registration/deletion
 ////////////////////////////////////
 function eme_options_delete() {
-   $options = array ('eme_version', 'eme_events_page', 'eme_display_calendar_in_events_page', 'eme_event_list_item_format_header', 'eme_event_list_item_format', 'eme_event_list_item_format_footer', 'eme_event_page_title_format', 'eme_event_html_title_format', 'eme_single_event_format', 'eme_list_events_page', 'eme_events_page_title', 'eme_no_events_message', 'eme_location_page_title_format','eme_location_html_title_format', 'eme_location_baloon_format', 'eme_single_location_format', 'eme_location_event_list_item_format', 'eme_show_period_monthly_dateformat','eme_show_period_yearly_dateformat', 'eme_location_no_events_message', 'eme_gmap_is_active', 'eme_gmap_zooming', 'eme_seo_permalink', 'eme_rss_main_title', 'eme_rss_main_description', 'eme_rss_title_format', 'eme_rss_description_format', 'eme_rss_show_pubdate', 'eme_rss_pubdate_startdate', 'eme_rsvp_mail_notify_is_active', 'eme_contactperson_email_body', 'eme_contactperson_cancelled_email_body', 'eme_contactperson_pending_email_body', 'eme_respondent_email_body', 'eme_registration_recorded_ok_html', 'eme_mail_sender_name', 'eme_smtp_username', 'eme_smtp_password', 'eme_default_contact_person','eme_captcha_for_booking', 'eme_mail_sender_address', 'eme_mail_receiver_address', 'eme_smtp_host', 'eme_rsvp_mail_send_method', 'eme_rsvp_mail_port', 'eme_rsvp_send_html', 'eme_rsvp_mail_SMTPAuth', 'eme_rsvp_registered_users_only', 'eme_rsvp_reg_for_new_events', 'eme_rsvp_require_approval', 'eme_rsvp_default_number_spaces', 'eme_rsvp_addbooking_submit_string', 'eme_rsvp_delbooking_submit_string', 'eme_image_max_width', 'eme_image_max_height', 'eme_image_max_size', 'eme_full_calendar_event_format', 'eme_use_select_for_locations', 'eme_attributes_enabled', 'eme_recurrence_enabled','eme_rsvp_enabled','eme_categories_enabled','eme_small_calendar_event_title_format','eme_small_calendar_event_title_separator','eme_registration_pending_email_body','eme_registration_denied_email_body','eme_registration_updated_email_body','eme_registration_cancelled_email_body','eme_attendees_list_format','eme_bookings_list_format','eme_bookings_list_header_format','eme_bookings_list_footer_format','eme_uninstall_drop_tables','eme_uninstall_drop_data','eme_time_remove_leading_zeros','eme_rsvp_hide_full_events','eme_donation_done','eme_hello_to_user','eme_filter_form_format','eme_rsvp_addbooking_min_spaces','eme_rsvp_addbooking_max_spaces','eme_shortcodes_in_widgets','eme_load_js_in_header','eme_use_client_clock','eme_event_list_number_items', 'eme_cap_add_event', 'eme_cap_author_event', 'eme_cap_publish_event', 'eme_cap_edit_events', 'eme_cap_list_events', 'eme_cap_add_locations', 'eme_cap_edit_locations', 'eme_cap_author_locations', 'eme_cap_categories','eme_cap_templates', 'eme_cap_people', 'eme_cap_approve', 'eme_cap_registrations', 'eme_cap_forms', 'eme_cap_cleanup', 'eme_cap_settings', 'eme_cap_send_mails', 'eme_cap_send_other_mails', 'eme_event_html_headers_format', 'eme_location_html_headers_format','eme_permalink_events_prefix','eme_permalink_locations_prefix','eme_paypal_url','eme_paypal_business', 'eme_2co_business', 'eme_2co_secret', 'eme_2co_demo', 'eme_webmoney_purse', 'eme_webmoney_secret', 'eme_webmoney_demo', 'eme_google_checkout_type', 'eme_google_merchant_id', 'eme_google_merchant_key', 'eme_location_list_format_header', 'eme_location_list_format_item', 'eme_location_list_format_footer','eme_event_initial_state', 'eme_registration_form_format', 'eme_smtp_debug','eme_default_currency','eme_default_price', 'eme_rsvp_number_days', 'eme_rsvp_number_hours', 'eme_paypal_s_encrypt', 'eme_paypal_s_pubcert', 'eme_paypal_s_privkey', 'eme_paypal_s_paypalcert', 'eme_paypal_s_certid', 'eme_thumbnail_size','eme_fdgg_url','eme_fdgg_store_name','eme_fdgg_shared_secret','eme_fb_app_id','eme_loop_protection','eme_ical_title_format','eme_ical_description_format','eme_global_zoom_factor','eme_indiv_zoom_factor','eme_global_maptype','eme_indiv_maptype','eme_payment_form_header_format','eme_payment_form_footer_format','eme_enable_notes_placeholders','eme_payment_succes_format','eme_payment_fail_format','eme_payment_add_bookingid_to_return','eme_payment_show_custom_return_page','eme_deny_mail_event_edit');
+   $options = array ('eme_version', 'eme_events_page', 'eme_display_calendar_in_events_page', 'eme_event_list_item_format_header', 'eme_event_list_item_format', 'eme_event_list_item_format_footer', 'eme_event_page_title_format', 'eme_event_html_title_format', 'eme_single_event_format', 'eme_list_events_page', 'eme_events_page_title', 'eme_no_events_message', 'eme_location_page_title_format','eme_location_html_title_format', 'eme_location_baloon_format', 'eme_single_location_format', 'eme_location_event_list_item_format', 'eme_show_period_monthly_dateformat','eme_show_period_yearly_dateformat', 'eme_location_no_events_message', 'eme_gmap_is_active', 'eme_gmap_zooming', 'eme_seo_permalink', 'eme_rss_main_title', 'eme_rss_main_description', 'eme_rss_title_format', 'eme_rss_description_format', 'eme_rss_show_pubdate', 'eme_rss_pubdate_startdate', 'eme_rsvp_mail_notify_is_active', 'eme_contactperson_email_body', 'eme_contactperson_cancelled_email_body', 'eme_contactperson_pending_email_body', 'eme_respondent_email_subject', 'eme_respondent_email_body', 'eme_registration_recorded_ok_html', 'eme_mail_sender_name', 'eme_smtp_username', 'eme_smtp_password', 'eme_default_contact_person','eme_captcha_for_booking', 'eme_mail_sender_address', 'eme_mail_receiver_address', 'eme_smtp_host', 'eme_rsvp_mail_send_method', 'eme_smtp_port', 'eme_rsvp_send_html', 'eme_rsvp_mail_SMTPAuth', 'eme_rsvp_registered_users_only', 'eme_rsvp_reg_for_new_events', 'eme_rsvp_require_approval', 'eme_rsvp_default_number_spaces', 'eme_rsvp_addbooking_submit_string', 'eme_rsvp_delbooking_submit_string', 'eme_image_max_width', 'eme_image_max_height', 'eme_image_max_size', 'eme_full_calendar_event_format', 'eme_use_select_for_locations', 'eme_attributes_enabled', 'eme_recurrence_enabled','eme_rsvp_enabled','eme_categories_enabled','eme_small_calendar_event_title_format','eme_small_calendar_event_title_separator','eme_registration_pending_email_subject','eme_registration_pending_email_body','eme_registration_denied_email_subject','eme_registration_denied_email_body','eme_registration_updated_email_subject','eme_registration_updated_email_body','eme_registration_cancelled_email_subject','eme_registration_cancelled_email_body','eme_attendees_list_format','eme_bookings_list_format','eme_bookings_list_header_format','eme_bookings_list_footer_format','eme_uninstall_drop_tables','eme_uninstall_drop_data','eme_time_remove_leading_zeros','eme_rsvp_hide_full_events','eme_rsvp_show_form_after_booking','eme_donation_done','eme_hello_to_user','eme_filter_form_format','eme_rsvp_addbooking_min_spaces','eme_rsvp_addbooking_max_spaces','eme_shortcodes_in_widgets','eme_load_js_in_header','eme_use_client_clock','eme_event_list_number_items', 'eme_cap_add_event', 'eme_cap_author_event', 'eme_cap_publish_event', 'eme_cap_edit_events', 'eme_cap_list_events', 'eme_cap_add_locations', 'eme_cap_edit_locations', 'eme_cap_author_locations', 'eme_cap_categories','eme_cap_templates', 'eme_cap_people', 'eme_cap_approve', 'eme_cap_registrations', 'eme_cap_forms', 'eme_cap_cleanup', 'eme_cap_settings', 'eme_cap_send_mails', 'eme_cap_send_other_mails', 'eme_event_html_headers_format', 'eme_location_html_headers_format','eme_permalink_events_prefix','eme_permalink_locations_prefix','eme_paypal_url','eme_paypal_business', 'eme_2co_business', 'eme_2co_secret', 'eme_2co_demo', 'eme_webmoney_purse', 'eme_webmoney_secret', 'eme_webmoney_demo', 'eme_google_checkout_type', 'eme_google_merchant_id', 'eme_google_merchant_key', 'eme_location_list_format_header', 'eme_location_list_format_item', 'eme_location_list_format_footer','eme_event_initial_state', 'eme_registration_form_format', 'eme_cancel_form_format', 'eme_smtp_debug','eme_default_currency','eme_default_price', 'eme_rsvp_number_days', 'eme_rsvp_number_hours', 'eme_paypal_s_encrypt', 'eme_paypal_s_pubcert', 'eme_paypal_s_privkey', 'eme_paypal_s_paypalcert', 'eme_paypal_s_certid', 'eme_thumbnail_size','eme_fdgg_url','eme_fdgg_store_name','eme_fdgg_shared_secret','eme_fb_app_id','eme_loop_protection','eme_ical_title_format','eme_ical_description_format','eme_global_zoom_factor','eme_indiv_zoom_factor','eme_global_maptype','eme_indiv_maptype','eme_payment_form_header_format','eme_payment_form_footer_format','eme_enable_notes_placeholders','eme_payment_succes_format','eme_payment_fail_format','eme_payment_add_bookingid_to_return','eme_payment_show_custom_return_page','eme_deny_mail_event_edit','eme_legacy','eme_legacy_warning','eme_deprecated');
    foreach ( $options as $opt ) {
       delete_option ( $opt );
    }
@@ -211,7 +234,7 @@ function eme_options_register() {
    $tab = isset( $_POST['tab'] ) ? esc_attr($_POST['tab']) : 'general';
    switch ( $tab ){
 	      case 'general' :
-                 $options = array ('eme_use_select_for_locations','eme_recurrence_enabled', 'eme_rsvp_enabled', 'eme_categories_enabled', 'eme_attributes_enabled', 'eme_gmap_is_active', 'eme_gmap_zooming', 'eme_load_js_in_header','eme_use_client_clock','eme_uninstall_drop_data','eme_shortcodes_in_widgets','eme_loop_protection','eme_enable_notes_placeholders');
+                 $options = array ('eme_use_select_for_locations','eme_recurrence_enabled', 'eme_rsvp_enabled', 'eme_categories_enabled', 'eme_attributes_enabled', 'eme_gmap_is_active', 'eme_gmap_zooming', 'eme_load_js_in_header','eme_use_client_clock','eme_uninstall_drop_data','eme_shortcodes_in_widgets','eme_loop_protection','eme_enable_notes_placeholders','eme_legacy','eme_deprecated');
 	         break;
 	      case 'seo' :
                  $options = array ('eme_seo_permalink','eme_permalink_events_prefix','eme_permalink_locations_prefix');
@@ -232,10 +255,10 @@ function eme_options_register() {
                  $options = array ('eme_rss_main_title','eme_rss_main_description','eme_rss_title_format','eme_rss_description_format','eme_rss_show_pubdate','eme_rss_pubdate_startdate','eme_ical_description_format','eme_ical_title_format');
 	         break;
 	      case 'rsvp' :
-                 $options = array ('eme_default_contact_person','eme_rsvp_registered_users_only','eme_rsvp_reg_for_new_events','eme_rsvp_require_approval','eme_rsvp_default_number_spaces','eme_rsvp_addbooking_min_spaces','eme_rsvp_addbooking_max_spaces','eme_captcha_for_booking','eme_rsvp_hide_full_events','eme_rsvp_addbooking_submit_string','eme_rsvp_delbooking_submit_string','eme_attendees_list_format','eme_bookings_list_header_format','eme_bookings_list_format','eme_bookings_list_footer_format','eme_registration_recorded_ok_html','eme_registration_form_format', 'eme_rsvp_number_days', 'eme_rsvp_number_hours');
+                 $options = array ('eme_default_contact_person','eme_rsvp_registered_users_only','eme_rsvp_reg_for_new_events','eme_rsvp_require_approval','eme_rsvp_default_number_spaces','eme_rsvp_addbooking_min_spaces','eme_rsvp_addbooking_max_spaces','eme_captcha_for_booking','eme_rsvp_hide_full_events','eme_rsvp_show_form_after_booking','eme_rsvp_addbooking_submit_string','eme_rsvp_delbooking_submit_string','eme_attendees_list_format','eme_bookings_list_header_format','eme_bookings_list_format','eme_bookings_list_footer_format','eme_registration_recorded_ok_html','eme_registration_form_format', 'eme_cancel_form_format', 'eme_rsvp_number_days', 'eme_rsvp_number_hours');
 	         break;
 	      case 'mail' :
-                 $options = array ('eme_rsvp_mail_notify_is_active','eme_deny_mail_event_edit','eme_contactperson_email_body','eme_contactperson_cancelled_email_body','eme_contactperson_pending_email_body','eme_respondent_email_body','eme_registration_pending_email_body','eme_registration_cancelled_email_body','eme_registration_denied_email_body','eme_registration_updated_email_body','eme_mail_sender_name','eme_mail_sender_address','eme_rsvp_mail_send_method','eme_smtp_host','eme_rsvp_mail_port','eme_rsvp_mail_SMTPAuth','eme_smtp_username','eme_smtp_password', 'eme_smtp_debug','eme_rsvp_send_html');
+                 $options = array ('eme_rsvp_mail_notify_is_active','eme_deny_mail_event_edit','eme_contactperson_email_body','eme_contactperson_cancelled_email_body','eme_contactperson_pending_email_body','eme_respondent_email_subject','eme_respondent_email_body','eme_registration_pending_email_subject','eme_registration_pending_email_body','eme_registration_cancelled_email_subject','eme_registration_cancelled_email_body','eme_registration_denied_email_subject','eme_registration_denied_email_body','eme_registration_updated_email_subject','eme_registration_updated_email_body','eme_mail_sender_name','eme_mail_sender_address','eme_rsvp_mail_send_method','eme_smtp_host','eme_smtp_port','eme_rsvp_mail_SMTPAuth','eme_smtp_username','eme_smtp_password', 'eme_smtp_debug','eme_rsvp_send_html');
 	         break;
 	      case 'payments' :
                  $options = array ('eme_payment_form_header_format','eme_payment_form_footer_format','eme_payment_show_custom_return_page','eme_payment_succes_format','eme_payment_fail_format','eme_payment_add_bookingid_to_return','eme_default_currency','eme_default_price','eme_paypal_url','eme_paypal_business','eme_2co_demo','eme_2co_business','eme_2co_secret','eme_google_checkout_type','eme_google_merchant_id','eme_google_merchant_key','eme_webmoney_purse', 'eme_webmoney_secret', 'eme_webmoney_demo', 'eme_paypal_s_encrypt', 'eme_paypal_s_pubcert', 'eme_paypal_s_privkey', 'eme_paypal_s_paypalcert', 'eme_paypal_s_certid','eme_fdgg_url','eme_fdgg_store_name','eme_fdgg_shared_secret');
@@ -256,16 +279,21 @@ function eme_handle_get() {
       return;
 
    // Disable Hello to new user if requested
-   if (current_user_can( get_option('eme_cap_settings') ) && isset ( $_GET ['disable_hello_to_user'] ) && $_GET ['disable_hello_to_user'] == 'true')
+   if (current_user_can( get_option('eme_cap_settings') ) && isset($_GET['disable_hello_to_user']) && $_GET['disable_hello_to_user'] == 'true')
       update_option('eme_hello_to_user', 0 );
 
-   if (current_user_can( get_option('eme_cap_settings') ) && isset ( $_GET ['disable_donate_message'] ) && $_GET ['disable_donate_message'] == 'true')
+   // Disable donation message if requested
+   if (current_user_can( get_option('eme_cap_settings') ) && isset($_GET['disable_donate_message']) && $_GET['disable_donate_message'] == 'true')
       update_option('eme_donation_done', 1 );
 
+   // Disable legacy warning
+   if (current_user_can( get_option('eme_cap_settings') ) && isset($_GET['disable_legacy_warning']) && $_GET['disable_legacy_warning'] == 'true')
+      update_option('eme_legacy_warning', 0 );
+
    // do the UTF-8 conversion if wanted
-   if (current_user_can( get_option('eme_cap_settings') ) && isset ( $_GET ['do_character_conversion'] ) && $_GET ['do_character_conversion'] == 'true' && $wpdb->has_cap('collation')) {
-                if ( ! empty($wpdb->charset)) {
-                        $charset = "CHARACTER SET $wpdb->charset";
+   if (current_user_can( get_option('eme_cap_settings') ) && isset($_GET['do_character_conversion']) && $_GET['do_character_conversion'] == 'true' && $wpdb->has_cap('collation')) {
+      if ( ! empty($wpdb->charset)) {
+         $charset = "CHARACTER SET $wpdb->charset";
          $collate="";
          if ( ! empty($wpdb->collate) )
             $collate = "COLLATE $wpdb->collate";
@@ -275,9 +303,19 @@ function eme_handle_get() {
                         eme_convert_charset(BOOKINGS_TBNAME,$charset,$collate);
                         eme_convert_charset(PEOPLE_TBNAME,$charset,$collate);
                         eme_convert_charset(CATEGORIES_TBNAME,$charset,$collate);
-                }
+      }
       update_option('eme_conversion_needed', 0 );
       print "<div id=\"message\" class=\"updated\">".__('Conversion done, please check your events and restore from backup if you see any sign of troubles.')."</div>";
+   }
+
+   // if settings have been changed, check if the SEO rules need to be flushed
+   if ($plugin_page == 'eme-options' && isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') {
+      $old_events_page=get_option('eme_old_events_page');
+      $events_page=get_option('eme_events_page');
+      if ($events_page != $old_events_page) {
+         eme_flushRules();
+         update_option('eme_old_events_page',$events_page);
+      }
    }
 }
 
@@ -343,6 +381,8 @@ function eme_options_page() {
    eme_options_radio_binary ( __ ( 'Delete all EME data when upgrading or deactivating?', 'eme' ), 'eme_uninstall_drop_data', __ ( 'Check this option if you want to delete all EME data (database tables and options) when upgrading or deactivating the plugin.', 'eme' ) );
    eme_options_radio_binary ( __ ( 'Enable shortcodes in widgets', 'eme' ), 'eme_shortcodes_in_widgets', __ ( 'Check this option if you want to enable the use of shortcodes in widgets (affects shortcodes of any plugin used in widgets, so use with care).', 'eme' ) );
    eme_options_radio_binary ( __ ( 'Enable placeholders in event notes', 'eme' ), 'eme_enable_notes_placeholders', __ ( 'Check this option if you want to enable the use of placeholders in the event notes. By default placeholders in notes are not being touched at all so as not to interfere with possible format settings for other shortcodes you can/want to use, so use with care.', 'eme' ) );
+   eme_options_radio_binary ( __ ( 'Allow deprecated placeholders', 'eme' ), 'eme_deprecated', __ ( 'Check this option if you want to use some deprecated placeholders.', 'eme' ) .' '.__('For more information, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?p=51559'>".__('the documentation', 'eme').'</a>' );
+   eme_options_radio_binary ( __ ( 'Re-enable legacy placeholder syntax', 'eme' ), 'eme_legacy', __ ( 'Check this option if you want to re-enable the use of the older placeholder syntax with square brackets. Be aware of the fact that the new placeholder syntax will not work then.', 'eme' ) .' '.__('For more information, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?p=51559'>".__('the documentation', 'eme').'</a>' );
    ?>
 </table>
 
@@ -475,7 +515,7 @@ function eme_options_page() {
    eme_options_input_text ( __ ( 'RSS main title', 'eme' ), 'eme_rss_main_title', __ ( 'The main title of your RSS events feed.', 'eme' ) );
    eme_options_input_text ( __ ( 'RSS main description', 'eme' ), 'eme_rss_main_description', __ ( 'The main description of your RSS events feed.', 'eme' ) );
    eme_options_input_text ( __ ( 'RSS title format', 'eme' ), 'eme_rss_title_format', __ ( 'The format of the title of each item in the events RSS feed.', 'eme' ) );
-   eme_options_input_text ( __ ( 'RSS description format', 'eme' ), 'eme_rss_description_format', __ ( 'The format of the description of each item in the events RSS feed. Follow the previous formatting instructions.', 'eme' ) );
+   eme_options_textarea ( __ ( 'RSS description format', 'eme' ), 'eme_rss_description_format', __ ( 'The format of the description of each item in the events RSS feed. Follow the previous formatting instructions.', 'eme' ) );
    eme_options_radio_binary ( __ ( 'RSS Pubdate usage', 'eme' ), 'eme_rss_show_pubdate', __ ( 'Show the event creation/modification date as PubDate info in the in the events RSS feed.', 'eme' ) );
    eme_options_radio_binary ( __ ( 'RSS Pubdate is start date', 'eme' ), 'eme_rss_pubdate_startdate', __ ( 'If you select this, the pubDate field in RSS will be the event start date, not the modification date.', 'eme' ) );
    eme_options_input_text ( __ ( 'ICAL title format', 'eme' ), 'eme_ical_title_format', __ ( 'The format of the title of each item in the events ICAL feed.', 'eme' ) );
@@ -510,14 +550,16 @@ function eme_options_page() {
    eme_options_input_text ( __ ( 'Bookings list header format', 'eme' ), 'eme_bookings_list_header_format', __ ( "The header format for the bookings list when using the <code>#_BOOKINGS</code> placeholder.", 'eme' ). sprintf(__(" The default is '%s'",'eme'),eme_sanitize_html(DEFAULT_BOOKINGS_LIST_HEADER_FORMAT)));
    eme_options_input_text ( __ ( 'Bookings list format', 'eme' ), 'eme_bookings_list_format', __ ( "The format for the bookings list when using the <code>#_BOOKINGS</code> placeholder.", 'eme' ). __('For all placeholders you can use here, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=45'>".__('the documentation', 'eme').'</a>' .__('For more information about form fields, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=44'>".__('the documentation', 'eme').'</a>' );
    eme_options_input_text ( __ ( 'Bookings list footer format', 'eme' ), 'eme_bookings_list_footer_format', __ ( "The footer format for the bookings list when using the <code>#_BOOKINGS</code> placeholder.", 'eme' ). sprintf(__(" The default is '%s'",'eme'),eme_sanitize_html(DEFAULT_BOOKINGS_LIST_FOOTER_FORMAT)));
-   eme_options_input_text ( __ ( 'Booking recorded message', 'eme' ), 'eme_registration_recorded_ok_html', __ ( "The text (html allowed) shown to the user when the booking has been made successfully.", 'eme' ) );
+   eme_options_textarea ( __ ( 'Booking recorded message', 'eme' ), 'eme_registration_recorded_ok_html', __ ( "The text (html allowed) shown to the user when the booking has been made successfully.", 'eme' ) );
+   eme_options_radio_binary ( __ ( 'Show RSVP form again after booking?', 'eme' ), 'eme_rsvp_show_form_after_booking', __ ( "Uncheck this option if you don't want to show the RSVP booking form again after a successful booking.", 'eme' ) );
    ?>
 </table>
 
 <h3><?php _e ( 'RSVP: form format', 'eme' ); ?></h3>
 <table class='form-table'>
    <?php
-      eme_options_textarea (__('Form format','eme'),'eme_registration_form_format', __("The look and feel of the form for registrations. #_NAME, #_EMAIL and #_SEATS are obligated fields, if not present then the form will not be shown. Use #_FIELD1, #_FIELD2, ... for own defined fields.",'eme')  .'<br/>'.__('For more information about form fields, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=44'>".__('the documentation', 'eme').'</a>');
+      eme_options_textarea (__('Form format','eme'),'eme_registration_form_format', __("The look and feel of the form for registrations. #_NAME, #_EMAIL and #_SEATS are obligated fields, if not present then the form will not be shown.",'eme')  .'<br/>'.__('For more information about form fields, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=44'>".__('the documentation', 'eme').'</a>');
+      eme_options_textarea (__('Cancel form format','eme'),'eme_cancel_form_format', __("The look and feel of the cancel form for registrations. #_NAME and #_EMAIL are obligated fields, if not present then the form will not be shown.", 'eme').'<br/>'.__('For more information about form fields, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=5950'>".__('the documentation', 'eme').'</a>');
    ?>
 </table>
 
@@ -540,16 +582,21 @@ function eme_options_page() {
    eme_options_textarea ( __ ( 'Contact person email format', 'eme' ), 'eme_contactperson_email_body', __ ( 'The format of the email which will be sent to the contact person.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
    eme_options_textarea ( __ ( 'Contact person cancelled email format', 'eme' ), 'eme_contactperson_cancelled_email_body', __ ( 'The format of the email which will be sent to the contact person for a cancellation.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
    eme_options_textarea ( __ ( 'Contact person pending email format', 'eme' ), 'eme_contactperson_pending_email_body', __ ( 'The format of the email which will be sent to the contact person if approval is needed.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
+   eme_options_input_text ( __ ( 'Respondent email subject format', 'eme' ), 'eme_respondent_email_subject', __ ( 'The format of the email subject which will be sent to the respondent.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
    eme_options_textarea ( __ ( 'Respondent email format', 'eme' ), 'eme_respondent_email_body', __ ( 'The format of the email which will be sent to the respondent.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
+   eme_options_input_text ( __ ( 'Registration pending email subject format', 'eme' ), 'eme_registration_pending_email_subject', __ ( 'The format of the email subject which will be sent to the respondent when the event requires registration approval.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
    eme_options_textarea ( __ ( 'Registration pending email format', 'eme' ), 'eme_registration_pending_email_body', __ ( 'The format of the email which will be sent to the respondent when the event requires registration approval.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
+   eme_options_input_text ( __ ( 'Registration cancelled email subject format', 'eme' ), 'eme_registration_cancelled_email_subject', __ ( 'The format of the email subject which will be sent to the respondent when the respondent cancels the registrations for an event.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
    eme_options_textarea ( __ ( 'Registration cancelled email format', 'eme' ), 'eme_registration_cancelled_email_body', __ ( 'The format of the email which will be sent to the respondent when the respondent cancels the registrations for an event.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
+   eme_options_input_text ( __ ( 'Registration denied email subject format', 'eme' ), 'eme_registration_denied_email_subject', __ ( 'The format of the email subject which will be sent to the respondent when the admin denies the registration request if the event requires registration approval.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
    eme_options_textarea ( __ ( 'Registration denied email format', 'eme' ), 'eme_registration_denied_email_body', __ ( 'The format of the email which will be sent to the respondent when the admin denies the registration request if the event requires registration approval.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
+   eme_options_input_text ( __ ( 'Registration updated email subject format', 'eme' ), 'eme_registration_updated_email_subject', __ ( 'The format of the email subject which will be sent to the respondent when the admin updates the registration request.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
    eme_options_textarea ( __ ( 'Registration updated email format', 'eme' ), 'eme_registration_updated_email_body', __ ( 'The format of the email which will be sent to the respondent when the admin updates the registration request.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
    eme_options_input_text ( __ ( 'Notification sender name', 'eme' ), 'eme_mail_sender_name', __ ( "Insert the display name of the notification sender.", 'eme' ) );
    eme_options_input_text ( __ ( 'Notification sender address', 'eme' ), 'eme_mail_sender_address', __ ( "Insert the address of the notification sender. It must correspond with your Gmail account user", 'eme' ) );
    eme_options_select ( __ ( 'Mail sending method', 'eme' ), 'eme_rsvp_mail_send_method', array ('smtp' => 'SMTP', 'mail' => __ ( 'PHP mail function', 'eme' ), 'sendmail' => 'Sendmail', 'qmail' => 'Qmail', 'wp_mail' => 'WP Mail' ), __ ( 'Select the method to send email notification.', 'eme' ) );
    eme_options_input_text ( 'SMTP host', 'eme_smtp_host', __ ( "The SMTP host. Usually it corresponds to 'localhost'. If you use Gmail, set this value to 'ssl://smtp.gmail.com:465'.", 'eme' ) );
-   eme_options_input_text ( 'Mail sending port', 'eme_rsvp_mail_port', __ ( "The port through which you e-mail notifications will be sent. Make sure the firewall doesn't block this port", 'eme' ) );
+   eme_options_input_text ( 'Mail sending port', 'eme_smtp_port', __ ( "The port through which you e-mail notifications will be sent. Make sure the firewall doesn't block this port", 'eme' ) );
    eme_options_radio_binary ( __ ( 'Use SMTP authentication?', 'eme' ), 'eme_rsvp_mail_SMTPAuth', __ ( 'SMTP authentication is often needed. If you use Gmail, make sure to set this parameter to Yes', 'eme' ) );
    eme_options_input_text ( __ ( 'SMTP username', 'eme' ), 'eme_smtp_username', __ ( "Insert the username to be used to access your SMTP server.", 'eme' ) );
    eme_options_input_password ( __ ( 'SMTP password', 'eme' ), 'eme_smtp_password', __ ( "Insert the password to be used to access your SMTP server", 'eme' ) );
@@ -642,7 +689,7 @@ function eme_options_page() {
 <h3><?php _e ( 'Images size', 'eme' ); ?></h3>
 <table class='form-table'>
    <?php
-   eme_options_select ( __('Thumbnail size','eme'), 'eme_thumbnail_size', eme_thumbnail_sizes(), __('Choose thumbnail size to be shown when placeholders involging thumbnails like e.g. #_EVENTIMAGETHUMB, #_LOCATIONIMAGETHUMB ...','eme') );
+   eme_options_select ( __('Thumbnail size','eme'), 'eme_thumbnail_size', eme_thumbnail_sizes(), __('Choose the default thumbnail size to be shown when using placeholders involving thumbnails like e.g. #_EVENTIMAGETHUMB, #_LOCATIONIMAGETHUMB, ...','eme') );
    ?>
 </table>
 

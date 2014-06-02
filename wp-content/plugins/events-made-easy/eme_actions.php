@@ -5,6 +5,23 @@ function eme_actions_init() {
    nocache_headers();
    eme_load_textdomain();
 
+   // now, first update the DB if needed
+   $db_version = get_option('eme_version');
+   if ($db_version && $db_version != EME_DB_VERSION) {
+      // add possible new options
+      eme_add_options();
+
+      // update the DB tables
+      // to do: check if the DB update succeeded ...
+      eme_create_tables();
+
+      // now set the version correct
+      update_option('eme_version', EME_DB_VERSION);
+
+      // let the admin side know if the update succeeded
+      update_option('eme_update_done',1);         
+   }
+
    // now first all ajax ops: exit needed
    if (isset ( $_GET ['eme_ical'] ) && $_GET ['eme_ical'] == 'public_single' && isset ( $_GET ['event_id'] )) {
       header("Content-type: text/calendar; charset=utf-8");
@@ -86,6 +103,19 @@ add_action('init','eme_actions_init');
 function eme_actions_admin_init() {
    eme_enqueue_js();
    eme_options_register();
+
+   // let the admin know the DB has been updated
+   if (current_user_can( get_option('eme_cap_settings') ) && isset($_GET['disable_update_message']) && $_GET['disable_update_message'] == 'true')
+      delete_option('eme_update_done');
+   if (get_option('eme_update_done')) {
+      add_action('admin_notices', 'eme_explain_dbupdate_done');
+   }
+
+   // make sure the captcha doesn't cause problems
+   if (get_option('eme_captcha_for_booking') && !function_exists('imagecreatetruecolor'))
+      update_option('eme_captcha_for_booking', 0);
+
+   // flush the SEO rules if the event page has been changed
    eme_handle_get();
 }
 add_action('admin_init','eme_actions_admin_init');
@@ -102,6 +132,7 @@ if (get_option('eme_use_client_clock')) {
    if (!session_id()) add_action('init', 'session_start', 1);
    add_action('wp_enqueue_scripts', 'eme_client_clock_enqueue_scripts');
 }
+
 if (get_option('eme_captcha_for_booking')) {
    // the captcha needs a session
    if (!session_id()) add_action('init', 'session_start', 1);
@@ -120,9 +151,6 @@ add_action('template_redirect', 'eme_change_canonical_url' );
 add_action('wp_enqueue_scripts','eme_general_css');
 add_action('admin_notices', 'eme_alert_events_page' );
 add_action('admin_head', 'eme_locations_autocomplete');
-if (get_option('eme_gmap_is_active' )) {
-   add_action ( 'admin_head', 'eme_admin_map_script' );
-}
 
 // when editing other profiles then your own
 add_action('edit_user_profile', 'eme_user_profile') ;

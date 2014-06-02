@@ -2829,7 +2829,7 @@ if( self::$form_options['external_style'] == 'true' ) {
 		<?php
 		$akismet_installed = 0;
 		if ( self::$form_options['akismet_disable'] == 'false' ) {
-			if ( function_exists( 'akismet_verify_key' ) ) {
+			if ( is_callable( array( 'Akismet', 'verify_key' ) ) || function_exists( 'akismet_verify_key' ) ) {
 				if ( ! isset( self::$form_options['akismet_check'] ) ) {
 					echo '<span style="background-color:#99CC99;">' . __( 'Akismet is installed.', 'si-contact-form' ) . '</span>';
 					$akismet_installed = 1;
@@ -2842,7 +2842,10 @@ if( self::$form_options['external_style'] == 'true' ) {
 					if ( empty( $key ) ) {
 						$key_status = 'empty';
 					} else {
-						$key_status = akismet_verify_key( $key );
+                        if ( is_callable( array( 'Akismet', 'verify_key' ) ) )
+						    $key_status = Akismet::verify_key( $key );  // akismet 3.xx
+                        else
+                             $key_status = akismet_verify_key( $key );  // akismet 2.xx
 					}
 					if ( $key_status == 'valid' ) {
 						$akismet_installed = 1;
@@ -2864,7 +2867,7 @@ if( self::$form_options['external_style'] == 'true' ) {
 				  <input name="<?php echo self::$form_option_name; ?>[akismet_check]" id="si_contact_akismet_check" type="checkbox" value="true" />
 				  <label for="<?php echo self::$form_option_name; ?>[akismet_check]"><?php _e( 'Check this and click "Save Changes" to determine if Akismet key is active.', 'si-contact-form' ); ?></label>
 				<br />
-				<?php echo '<a href="' . admin_url( "plugins.php?page=akismet-key-config" ) . '">' . __( 'Configure Akismet', 'si-contact-form' ) . '</a>'; ?>
+				<?php echo '<a href="' . admin_url( "options-general.php?page=akismet-key-config" ) . '">' . __( 'Configure Akismet', 'si-contact-form' ) . '</a>'; ?>
 				<?php
 			} else {
 				echo '<div class="fsc-notice">' . __( 'Akismet plugin is not installed or is deactivated.', 'si-contact-form' ) . '</div>';
@@ -3227,7 +3230,7 @@ if (!function_exists('sicf_ctct_admin_form')) { // skip if the plugin is already
 		
 		<fieldset class="fscf_settings_group">
 		<legend><strong><?php _e( 'Reset and Delete', 'si-contact-form' ); ?></strong></legend>
-		<strong><?php _e('These options will premanantly affect all tabs on this form. (Form 1 cannot be deleted).', 'si-contact-form' ); ?></strong>
+		<strong><?php _e('These options will permanantly affect all tabs on this form. (Form 1 cannot be deleted).', 'si-contact-form' ); ?></strong>
 		<br /><br/>
 
 		<input type="button" name="reset" value="<?php esc_attr_e( 'Reset Form', 'si-contact-form' ); ?>" onclick="fscf_reset_form()" />
@@ -3915,28 +3918,13 @@ if (!function_exists('sicf_ctct_admin_form')) { // skip if the plugin is already
         <img src="' . plugins_url( 'si-contact-form/includes/images/vcita_banner.jpg').'" class="fscf_centered" /></a>
 ';
 
-        $themefuse = '  <a href="http://themefuse.com/amember/aff/go?r=6664&amp;i=46" target="_blank">
-        <img src="http://themefuse.com/amember/file/get/path/.banners.505787138b254/i/6664" class="fscf_centered" /></a>
-';
 
-        $sharasale1 = '  <a href="http://www.shareasale.com/r.cfm?b=415758&u=861636&m=41388&urllink=&afftrack=" target="_blank">
-        <img src="' . plugins_url( 'si-contact-form/includes/images/Feature-Fast-300x250.jpeg').'" class="fscf_centered" /></a>
-';
-
-        $sharasale2 = '  <a href="http://www.shareasale.com/r.cfm?b=415758&u=861636&m=41388&urllink=&afftrack=" target="_blank">
-        <img src="' . plugins_url( 'si-contact-form/includes/images/WPE_Orange_300x250.jpg').'" class="fscf_centered" /></a>
-';
-
-        $sharasale3 = '  <a href="http://www.shareasale.com/r.cfm?b=415758&u=861636&m=41388&urllink=&afftrack=" target="_blank">
-        <img src="' . plugins_url( 'si-contact-form/includes/images/WPE_New_300x250.jpg').'" class="fscf_centered" /></a>
-';
-
-/*        $hostgator = '
+        $hostgator = '
         '.sprintf(__('"I recommend <a href="%s" target="_blank">HostGator Web Hosting</a>. All my sites are hosted there. The prices are great and they offer compatibility for WordPress. If you click this link and start an account at HostGator, I get a small commission." - Mike Challis', 'si-contact-form'), 'http://secure.hostgator.com/~affiliat/cgi-bin/affiliates/clickthru.cgi?id=mchallis-fscwp&amp;page=http://www.hostgator.com/apps/wordpress-hosting.shtml').
    '
     <a href="http://secure.hostgator.com/~affiliat/cgi-bin/affiliates/clickthru.cgi?id=mchallis-fscwp&amp;page=http://www.hostgator.com/apps/wordpress-hosting.shtml" target="_blank"><img title="'.esc_attr(__('Web Site Hosting', 'si-contact-form')).'" alt="'. esc_attr(__('Web Site Hosting', 'si-contact-form')).'" src="'.plugins_url( 'si-contact-form/includes/images/hostgator-blog.gif' ).'" width="100" height="100" /></a>
 ';
-*/
+
 
         $show_vcita = 0;
      if (self::$form_options['vcita_scheduling_button'] != 'true') {
@@ -3946,18 +3934,7 @@ if (!function_exists('sicf_ctct_admin_form')) { // skip if the plugin is already
 
      if ($show_vcita)
 		self::$ads[] = $vcita;
-		self::$ads[] = $themefuse;
-		self::$ads[] = $sharasale1;
-
-     if ($show_vcita)
-		self::$ads[] = $vcita;
-		self::$ads[] = $themefuse;
-		self::$ads[] = $sharasale2;
-
-     if ($show_vcita)
-		self::$ads[] = $vcita;
-		self::$ads[] = $themefuse;
-		self::$ads[] = $sharasale3;
+		self::$ads[] = $hostgator;
 
 
 		}	// end function define_ads()

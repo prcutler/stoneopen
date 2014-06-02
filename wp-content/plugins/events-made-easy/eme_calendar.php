@@ -94,9 +94,9 @@ function eme_get_calendar($args="") {
 
    if (get_option('eme_use_client_clock')) {
       // these come from client unless their clock is wrong
-      $iNowDay= (int) $_SESSION['eme_client_mday'];
-      $iNowMonth= (int) $_SESSION['eme_client_month'];
-      $iNowYear= (int) $_SESSION['eme_client_fullyear'];
+      $iNowDay= sprintf("%02d",$_SESSION['eme_client_mday']);
+      $iNowMonth= sprintf("%02d",$_SESSION['eme_client_month']);
+      $iNowYear= sprintf("%04d",$_SESSION['eme_client_fullyear']);
    } else {
 	// Get current year, month and day
 	list($iNowYear, $iNowMonth, $iNowDay) = explode('-', date('Y-m-d'));
@@ -273,7 +273,7 @@ function eme_get_calendar($args="") {
 			   elseif ($isNextMonth)
 				   $sClass .= " eventful-post event-day-$iCalendarDay";
 			   elseif ($calstring == "$iNowYear-$iNowMonth-$iNowDay")
-				   $sClass .= "eventful-today event-day-$iCalendarDay";
+				   $sClass .= " eventful-today event-day-$iCalendarDay";
 			   else
 				   $sClass .= " eventful event-day-$iCalendarDay";
 			   $sCalTblRows .= '<td class="'.$sClass.'">'.$cells[$calstring]. "</td>\n";
@@ -309,7 +309,10 @@ function eme_get_calendar($args="") {
    for ($i=$start_of_week; $i<$start_of_week+7; $i++) {
 	   $j=$i;
 	   if ($j==7) $j-=7;
-	   $sCalDayNames.= "<td>".$wp_locale->get_weekday_abbrev($weekdays[$j])."</td>";
+      if ($full)
+         $sCalDayNames.= "<td>".$wp_locale->get_weekday_abbrev($weekdays[$j])."</td>";
+      else
+         $sCalDayNames.= "<td>".$wp_locale->get_weekday_initial($weekdays[$j])."</td>";
    }
 
    // the real links are created via jquery when clicking on the prev-month or next-month class-links

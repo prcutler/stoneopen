@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Events Made Easy
-Version: 1.3.4
+Version: 1.4.4
 Plugin URI: http://www.e-dynamics.be/wordpress
 Description: Description: Manage and display events. Includes recurring events; locations; widgets; Google maps; RSVP; ICAL and RSS feeds; Paypal, 2Checkout and Google Checkout. <a href="admin.php?page=eme-options">Settings</a> | <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=SMGDS4GLCYWNG&lc=BE&item_name=To%20support%20development%20of%20EME&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted">Donate</a>
 Author: Franky Van Liedekerke
@@ -103,7 +103,7 @@ function eme_client_clock_callback() {
 }
 
 // Setting constants
-define('EME_DB_VERSION', 49);
+define('EME_DB_VERSION', 58);
 define('EME_PLUGIN_URL', plugins_url('',plugin_basename(__FILE__)).'/'); //PLUGIN URL
 define('EME_PLUGIN_DIR', ABSPATH.PLUGINDIR.'/'.str_replace(basename( __FILE__),"",plugin_basename(__FILE__))); //PLUGIN DIRECTORY
 define('EVENTS_TBNAME','eme_events');
@@ -222,23 +222,18 @@ add_filter('eme_notes', 'wptexturize');
 add_filter('eme_notes', 'convert_smilies');
 add_filter('eme_notes', 'convert_chars');
 add_filter('eme_notes', 'wpautop');
+add_filter('eme_notes', 'shortcode_unautop');
 add_filter('eme_notes', 'prepend_attachment');
-// RSS general filters
-add_filter('eme_general_rss', 'wp_strip_all_tags');
-add_filter('eme_general_rss', 'convert_chars', 8);
+// RSS general filters (corresponding to those of  "the_content_rss")
 add_filter('eme_general_rss', 'ent2ncr', 8);
-//add_filter('eme_general_rss', 'esc_html');
-// RSS content filter
-add_filter('eme_notes_rss', 'wp_strip_all_tags');
-add_filter('eme_notes_rss', 'convert_chars', 8);
-add_filter('eme_notes_rss', 'ent2ncr', 8);
+// RSS excerpt filter (corresponding to those of  "the_excerpt_rss")
+add_filter('eme_excerpt_rss', 'convert_chars', 8);
+add_filter('eme_excerpt_rss', 'ent2ncr', 8);
+
 // TEXT content filter
 add_filter('eme_text', 'wp_strip_all_tags');
 add_filter('eme_text', 'ent2ncr', 8);
 
-add_filter('eme_notes_map', 'convert_chars', 8);
-add_filter('eme_notes_map', 'js_escape');
- 
 // we only want the google map javascript to be loaded if needed, so we set a global
 // variable to 0 here and if we detect #_MAP, we set it to 1. In a footer filter, we then
 // check if it is 1 and if so: include it
@@ -348,11 +343,6 @@ function eme_install($networkwide) {
 
 // the private function; for activation
 function _eme_install() {
-   global $wpdb;
-   // check the user is allowed to make changes
-   if ( !current_user_can( SETTING_CAPABILITY  ) ) {
-      return;
-   }
    eme_add_options();
 
    $db_version = get_option('eme_version');
@@ -365,28 +355,15 @@ function _eme_install() {
    if ($db_version>0 && $db_version<49) {
       delete_option('eme_events_admin_limit');
    }
-
-   // Creates the events table if necessary
-   require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-   $charset="";
-   $collate="";
-   if ( $wpdb->has_cap('collation') ) {
-      if ( ! empty($wpdb->charset) )
-         $charset = "DEFAULT CHARACTER SET $wpdb->charset";
-      if ( ! empty($wpdb->collate) )
-         $collate = "COLLATE $wpdb->collate";
+   if ($db_version>0 && $db_version<55) {
+      $smtp_port=get_option('eme_rsvp_mail_port');
+      delete_option('eme_rsvp_mail_port');
+      update_option('eme_smtp_port', $smtp_port); 
    }
-   eme_create_events_table($charset,$collate);
-   eme_create_recurrence_table($charset,$collate);
-   eme_create_locations_table($charset,$collate);
-   eme_create_bookings_table($charset,$collate);
-   eme_create_people_table($charset,$collate);
-   eme_create_categories_table($charset,$collate);
-   eme_create_templates_table($charset,$collate);
-   eme_create_formfields_table($charset,$collate);
-   eme_create_answers_table($charset,$collate);
-   
-   update_option('eme_version', EME_DB_VERSION); 
+
+   // make sure the captcha doesn't cause problems
+   if (!function_exists('imagecreatetruecolor'))
+      update_option('eme_captcha_for_booking', 0); 
 
    // always reset the drop data option
    update_option('eme_uninstall_drop_data', 0); 
@@ -404,8 +381,13 @@ function _eme_install() {
       eme_create_events_page(); 
    }
 
-    // SEO rewrite rules
-    eme_flushRules();
+   eme_create_tables();
+
+   // SEO rewrite rules
+   eme_flushRules();
+   
+   // now set the version correct
+   update_option('eme_version', EME_DB_VERSION); 
 }
 
 function eme_uninstall($networkwide) {
@@ -429,9 +411,9 @@ function eme_uninstall($networkwide) {
    _eme_uninstall();
 }
 
-function _eme_uninstall() {
+function _eme_uninstall($force_drop=0) {
    $drop_data = get_option('eme_uninstall_drop_data');
-   if ($drop_data) {
+   if ($drop_data || $force_drop) {
       eme_drop_table(EVENTS_TBNAME);
       eme_drop_table(RECURRENCE_TBNAME);
       eme_drop_table(LOCATIONS_TBNAME);
@@ -460,6 +442,29 @@ function eme_new_blog($blog_id, $user_id, $domain, $path, $site_id, $meta ) {
       _eme_install();
       switch_to_blog($old_blog);
    }
+}
+
+function eme_create_tables() {
+   global $wpdb;
+   // Creates the events table if necessary
+   require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+   $charset="";
+   $collate="";
+   if ( $wpdb->has_cap('collation') ) {
+      if ( ! empty($wpdb->charset) )
+         $charset = "DEFAULT CHARACTER SET $wpdb->charset";
+      if ( ! empty($wpdb->collate) )
+         $collate = "COLLATE $wpdb->collate";
+   }
+   eme_create_events_table($charset,$collate);
+   eme_create_recurrence_table($charset,$collate);
+   eme_create_locations_table($charset,$collate);
+   eme_create_bookings_table($charset,$collate);
+   eme_create_people_table($charset,$collate);
+   eme_create_categories_table($charset,$collate);
+   eme_create_templates_table($charset,$collate);
+   eme_create_formfields_table($charset,$collate);
+   eme_create_answers_table($charset,$collate);
 }
 
 function eme_drop_table($table) {
@@ -536,14 +541,16 @@ function eme_create_events_table($charset,$collate) {
          event_registration_pending_email_body text NULL, 
          event_registration_updated_email_body text NULL, 
          event_registration_form_format text NULL, 
+         event_cancel_form_format text NULL, 
          registration_requires_approval bool DEFAULT 0,
          registration_wp_users_only bool DEFAULT 0,
          event_image_url text NULL,
          event_image_id mediumint(9) DEFAULT 0 NOT NULL,
+         event_external_ref text NULL, 
          UNIQUE KEY (event_id)
          ) $charset $collate;";
       
-      dbDelta($sql);
+      maybe_create_table($table_name,$sql);
       //--------------  DEBUG CODE to insert a few events n the new table
       // get the current timestamp into an array
       $timestamp = time();
@@ -610,8 +617,10 @@ function eme_create_events_table($charset,$collate) {
       maybe_add_column($table_name, 'modif_date', "alter table $table_name add modif_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00';"); 
       maybe_add_column($table_name, 'modif_date_gmt', "alter table $table_name add modif_date_gmt datetime NOT NULL DEFAULT '0000-00-00 00:00:00';"); 
       maybe_add_column($table_name, 'event_registration_form_format', "alter table $table_name add event_registration_form_format text NULL;"); 
+      maybe_add_column($table_name, 'event_cancel_form_format', "alter table $table_name add event_cancel_form_format text NULL;"); 
       maybe_add_column($table_name, 'event_image_url', "alter table $table_name add event_image_url text NULL;"); 
       maybe_add_column($table_name, 'event_image_id', "alter table $table_name add event_image_id mediumint(9) DEFAULT 0 NOT NULL;"); 
+      maybe_add_column($table_name, 'event_external_ref', "alter table $table_name add event_external_ref text NULL;"); 
       if ($db_version<3) {
          $wpdb->query("ALTER TABLE $table_name MODIFY event_name text;");
          $wpdb->query("ALTER TABLE $table_name MODIFY event_notes longtext;");
@@ -667,7 +676,7 @@ function eme_create_recurrence_table($charset,$collate) {
          recurrence_specific_days text NULL,
          UNIQUE KEY (recurrence_id)
          ) $charset $collate;";
-      dbDelta($sql);
+      maybe_create_table($table_name,$sql);
    } else {
       maybe_add_column($table_name, 'creation_date', "alter table $table_name add creation_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00';"); 
       maybe_add_column($table_name, 'creation_date_gmt', "alter table $table_name add creation_date_gmt datetime NOT NULL DEFAULT '0000-00-00 00:00:00';"); 
@@ -712,9 +721,11 @@ function eme_create_locations_table($charset,$collate) {
          location_image_url text NULL,
          location_image_id mediumint(9) DEFAULT 0 NOT NULL,
          location_attributes text NULL, 
+         location_properties text NULL, 
+         location_external_ref text NULL, 
          UNIQUE KEY (location_id)
          ) $charset $collate;";
-      dbDelta($sql);
+      maybe_create_table($table_name,$sql);
       
       $wpdb->query("INSERT INTO ".$table_name." (location_name, location_address, location_town, location_latitude, location_longitude)
                VALUES ('Arts Millenium Building', 'Newcastle Road','Galway', 53.275, -9.06532)");
@@ -734,6 +745,8 @@ function eme_create_locations_table($charset,$collate) {
       maybe_add_column($table_name, 'location_image_url', "alter table $table_name add location_image_url text NULL;"); 
       maybe_add_column($table_name, 'location_image_id', "alter table $table_name add location_image_id mediumint(9) DEFAULT 0 NOT NULL;"); 
       maybe_add_column($table_name, 'location_attributes', "alter table $table_name add location_attributes text NULL;"); 
+      maybe_add_column($table_name, 'location_properties', "alter table $table_name add location_properties text NULL;"); 
+      maybe_add_column($table_name, 'location_external_ref', "alter table $table_name add location_external_ref text NULL;");    
       if ($db_version<3) {
          $wpdb->query("ALTER TABLE $table_name MODIFY location_name text NOT NULL ;");
       }
@@ -766,9 +779,10 @@ function eme_create_bookings_table($charset,$collate) {
          booking_payed bool DEFAULT 0,
          transfer_nbr_be97 varchar(20),
          wp_id bigint(20) unsigned DEFAULT NULL,
+         lang varchar(10) DEFAULT '',
          UNIQUE KEY  (booking_id)
          ) $charset $collate;";
-      dbDelta($sql);
+      maybe_create_table($table_name,$sql);
    } else {
       maybe_add_column($table_name, 'booking_comment', "ALTER TABLE $table_name add booking_comment text DEFAULT NULL;"); 
       maybe_add_column($table_name, 'booking_approved', "ALTER TABLE $table_name add booking_approved bool DEFAULT 0;"); 
@@ -781,6 +795,7 @@ function eme_create_bookings_table($charset,$collate) {
       maybe_add_column($table_name, 'booking_seats_mp', "alter table $table_name add booking_seats_mp varchar(250);"); 
       maybe_add_column($table_name, 'booking_price', "alter table $table_name add booking_price text DEFAULT NULL;"); 
       maybe_add_column($table_name, 'wp_id', "ALTER TABLE $table_name add wp_id bigint(20) unsigned DEFAULT NULL;"); 
+      maybe_add_column($table_name, 'lang', "ALTER TABLE $table_name add lang varchar(10) DEFAULT '';"); 
       if ($db_version<3) {
          $wpdb->query("ALTER TABLE $table_name MODIFY event_id mediumint(9) NOT NULL;");
          $wpdb->query("ALTER TABLE $table_name MODIFY person_id mediumint(9) NOT NULL;");
@@ -805,11 +820,13 @@ function eme_create_people_table($charset,$collate) {
          person_email tinytext NOT NULL,
          person_phone tinytext DEFAULT NULL,
          wp_id bigint(20) unsigned DEFAULT NULL,
+         lang varchar(10) DEFAULT '',
          UNIQUE KEY (person_id)
          ) $charset $collate;";
-      dbDelta($sql);
+      maybe_create_table($table_name,$sql);
    } else {
       maybe_add_column($table_name, 'wp_id', "ALTER TABLE $table_name add wp_id bigint(20) unsigned DEFAULT NULL;"); 
+      maybe_add_column($table_name, 'lang', "ALTER TABLE $table_name add lang varchar(10) DEFAULT '';"); 
       if ($db_version<10) {
          $wpdb->query("ALTER TABLE $table_name MODIFY person_phone tinytext DEFAULT 0;");
       }
@@ -827,7 +844,7 @@ function eme_create_categories_table($charset,$collate) {
          category_name tinytext NOT NULL,
          UNIQUE KEY  (category_id)
          ) $charset $collate;";
-      dbDelta($sql);
+      maybe_create_table($table_name,$sql);
    }
 }
 
@@ -843,7 +860,7 @@ function eme_create_templates_table($charset,$collate) {
          format text NOT NULL,
          UNIQUE KEY  (id)
          ) $charset $collate;";
-      dbDelta($sql);
+      maybe_create_table($table_name,$sql);
    } else {
       if ($db_version<41) {
          $wpdb->query("ALTER TABLE $table_name MODIFY format text NOT NULL;");
@@ -862,9 +879,15 @@ function eme_create_formfields_table($charset,$collate) {
          field_type mediumint(9) NOT NULL,
          field_name tinytext NOT NULL,
          field_info text NOT NULL,
+         field_tags text,
          UNIQUE KEY  (field_id)
          ) $charset $collate;";
-      dbDelta($sql);
+      maybe_create_table($table_name,$sql);
+   } else {
+      if ($db_version<54) {
+         maybe_add_column($table_name, 'field_tags', "ALTER TABLE $table_name add field_tags text;"); 
+         $wpdb->query("UPDATE ".$table_name." SET field_tags=field_info");
+      }
    }
 
    $table_name = $wpdb->prefix.FIELDTYPES_TBNAME;
@@ -872,16 +895,17 @@ function eme_create_formfields_table($charset,$collate) {
       $sql = "CREATE TABLE ".$table_name." (
          type_id int(11) NOT NULL,
          type_info tinytext NOT NULL,
+         is_multi int(1) DEFAULT 0,
          UNIQUE KEY  (type_id)
          ) $charset $collate;";
-      dbDelta($sql);
-      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info) VALUES (1,'Text')");
-      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info) VALUES (2,'DropDown')");
-      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info) VALUES (3,'TextArea')");
-      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info) VALUES (4,'RadioBox')");
-      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info) VALUES (5,'RadioBox (Vertical)')");
-      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info) VALUES (6,'CheckBox')");
-      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info) VALUES (7,'CheckBox (Vertical)')");
+      maybe_create_table($table_name,$sql);
+      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (1,'Text',0)");
+      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (2,'DropDown',1)");
+      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (3,'TextArea',0)");
+      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (4,'RadioBox',1)");
+      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (5,'RadioBox (Vertical)',1)");
+      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (6,'CheckBox',1)");
+      $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (7,'CheckBox (Vertical)',1)");
    } else {
       if ($db_version<43) {
          $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info) VALUES (4,'RadioBox')");
@@ -890,6 +914,17 @@ function eme_create_formfields_table($charset,$collate) {
          $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info) VALUES (5,'RadioBox (Vertical)')");
 	 $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info) VALUES (6,'CheckBox')");
 	 $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info) VALUES (7,'CheckBox (Vertical)')");
+      }
+      if ($db_version<54) {
+         maybe_add_column($table_name, 'is_multi', "ALTER TABLE $table_name add is_multi int(1) DEFAULT 0;"); 
+         $wpdb->query("DELETE FROM ".$table_name);
+         $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (1,'Text',0)");
+         $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (2,'DropDown',1)");
+         $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (3,'TextArea',0)");
+         $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (4,'RadioBox',1)");
+         $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (5,'RadioBox (Vertical)',1)");
+         $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (6,'CheckBox',1)");
+         $wpdb->query("INSERT INTO ".$table_name." (type_id,type_info,is_multi) VALUES (7,'CheckBox (Vertical)',1)");
       }
    }
 }
@@ -906,7 +941,7 @@ function eme_create_answers_table($charset,$collate) {
          answer text NOT NULL,
          KEY  (booking_id)
          ) $charset $collate;";
-      dbDelta($sql);
+      maybe_create_table($table_name,$sql);
    } else {
       if ($db_version==23) {
          $wpdb->query("ALTER TABLE ".$table_name." DROP PRIMARY KEY");
@@ -937,11 +972,6 @@ function eme_delete_events_page() {
 // Create the Manage Events and the Options submenus 
 add_action('admin_menu','eme_create_events_submenu');
 function eme_create_events_submenu () {
-   // let's check if deactivation is needed
-   $db_version = get_option('eme_version');
-   if ($db_version && $db_version < EME_DB_VERSION)
-      add_action('admin_notices', "eme_explain_deactivation_needed");
-
    $events_page_id = get_option('eme_events_page');
    if (!$events_page_id || !get_page($events_page_id))
       add_action('admin_notices', "eme_explain_events_page_missing");
@@ -980,12 +1010,13 @@ function eme_create_events_submenu () {
       }
       $plugin_page = add_submenu_page('events-manager', __('Cleanup', 'eme'), __('Cleanup', 'eme'), get_option('eme_cap_cleanup'), 'eme-cleanup', "eme_cleanup_page");
       add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' );
+
       # just in case: make sure the Settings page can be reached if something is not correct with the security settings
-      if (get_option('eme_cap_settings') =='') {
-         $plugin_page = add_submenu_page('events-manager', __('Events Made Easy Settings','eme'),__('Settings','eme'), DEFAULT_CAP_SETTINGS, "eme-options", 'eme_options_page');
-      } else {
-         $plugin_page = add_submenu_page('events-manager', __('Events Made Easy Settings','eme'),__('Settings','eme'), get_option('eme_cap_settings'), "eme-options", 'eme_options_page');
-      }
+      if (get_option('eme_cap_settings') =='')
+         $cap_settings=DEFAULT_CAP_SETTINGS;
+      else
+         $cap_settings=get_option('eme_cap_settings');
+      $plugin_page = add_submenu_page('events-manager', __('Events Made Easy Settings','eme'),__('Settings','eme'), $cap_settings, "eme-options", 'eme_options_page');
       add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' );
       // do some option checking after the options have been updated
       // add_action( 'load-'. $plugin_page, 'eme_admin_options_save');
@@ -1006,29 +1037,34 @@ function eme_replace_notes_placeholders($format, $event="", $target="html") {
          $field = "event_".ltrim(strtolower($result), "#_");
          // to catch every alternative (we just need to know if it is an excerpt or not)
          if ($field != "event_excerpt")
-            $field = "event_notes";
+            $show_excerpt=0;
+         else
+            $show_excerpt=1;
 
          // when on the single event page, never show just the excerpt
-         if ($field == "event_excerpt" && eme_is_single_event_page()) {
-            $field = "event_notes";
+         if (eme_is_single_event_page() && $target == "html") {
+            $show_excerpt=0;
          }
 
-         //If excerpt, we use more link text
-         if ($field == "event_excerpt") {
+         // If excerpt, we use more link text
+         if ($show_excerpt) {
             if (isset($event['event_notes'])) {
                $matches = explode('<!--more-->', $event['event_notes']);
                $replacement = $matches[0];
             }
-         } elseif (isset($event[$field])) {
-            $replacement = $event[$field];
+         } elseif (isset($event['event_notes'])) {
+            // remove the more-part
+            $replacement = str_replace('<!--more-->', '' ,$event['event_notes'] );
          }
          $replacement = eme_translate($replacement);
          if ($target == "html") {
             $replacement = apply_filters('eme_notes', $replacement);
          } else {
             if ($target == "rss") {
-               $replacement = apply_filters('eme_notes_rss', $replacement);
-               $replacement = apply_filters('the_content_rss', $replacement);
+               if ($show_excerpt)
+                  $replacement = apply_filters('eme_excerpt_rss', $replacement);
+               else
+                  $replacement = apply_filters('eme_general_rss', $replacement);
             } else {
                $replacement = apply_filters('eme_text', $replacement);
             }
@@ -1043,7 +1079,7 @@ function eme_replace_notes_placeholders($format, $event="", $target="html") {
    return $format;
 }
 
-function eme_replace_placeholders($format, $event="", $target="html", $do_shortcode=1) {
+function eme_replace_placeholders($format, $event="", $target="html", $do_shortcode=1, $lang='') {
    global $wp_query;
    global $eme_need_gmap_js, $booking_id_done;
 
@@ -1094,10 +1130,30 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
    }
 
    // and now all the other placeholders
-   preg_match_all("/#(ESC|URL)?@?_?[A-Za-z0-9_]+(\[.*\])?(\[.*\])?/", $format, $placeholders);
+   $legacy=get_option('eme_legacy');
+   $deprecated=get_option('eme_deprecated');
+
+   if ($legacy)
+      preg_match_all("/#(ESC|URL)?@?_?[A-Za-z0-9_]+(\[.*\])?(\[.*\])?/", $format, $placeholders);
+   else
+      preg_match_all("/#(ESC|URL)?@?_?[A-Za-z0-9_]+(\{.*?\})?(\{.*?\})?/", $format, $placeholders);
+
    // make sure we set the largest matched placeholders first, otherwise if you found e.g.
    // #_LOCATION, part of #_LOCATIONPAGEURL would get replaced as well ...
    usort($placeholders[0],'sort_stringlenth');
+
+   // if the add and remove booking form appear on the same page, we need to decide which form shows the "message" upon booking
+   // the first one wins
+   $a1=strpos($format,"ADDBOOKINGFORM");
+   $a2=strpos($format,"REMOVEBOOKINGFORM");
+   $show_message_on_add=1;
+   $show_message_on_remove=1;
+   if ($a1!==false && $a2!==false) {
+      if ($a1<$a2)
+         $show_message_on_remove=0;
+      else
+         $show_message_on_add=0;
+   }
 
    foreach($placeholders[0] as $result) {
       $need_escape = 0;
@@ -1140,11 +1196,23 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
             $replacement="eme-past-event";
          }
 
-      } elseif ($event && preg_match('/#_12HSTARTTIME/', $result)) {
+      } elseif ($event && preg_match('/#_12HSTARTTIME$/', $result)) {
          $replacement = date("h:i A", strtotime($event['event_start_time']));
 
-      } elseif ($event && preg_match('/#_12HENDTIME/', $result)) {
+      } elseif ($event && preg_match('/#_12HENDTIME$/', $result)) {
          $replacement = date("h:i A", strtotime($event['event_end_time']));
+
+      } elseif ($event && preg_match('/#_12HSTARTTIME_NOLEADINGZERO/', $result)) {
+         $replacement = date("g:i A", strtotime($event['event_start_time']));
+         if (get_option('eme_time_remove_leading_zeros')) {
+            $replacement = str_replace(":0",":",$replacement);
+         }
+
+      } elseif ($event && preg_match('/#_12HENDTIME_NOLEADINGZERO/', $result)) {
+         $replacement = date("g:i A", strtotime($event['event_end_time']));
+         if (get_option('eme_time_remove_leading_zeros')) {
+            $replacement = str_replace(":0",":",$replacement);
+         }
 
       } elseif ($event && preg_match('/#_MAP/', $result)) {
          if ($target == "rss" || $target == "text") {
@@ -1174,7 +1242,7 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
             if ($booking_id_done && eme_event_needs_payment($event))
                $replacement = eme_payment_form($event,$booking_id_done);
             else
-               $replacement = eme_add_booking_form($event['event_id']);
+               $replacement = eme_add_booking_form($event['event_id'],$show_message_on_add);
          }
 
       } elseif ($event && preg_match('/#_ADDBOOKINGFORM_IF_NOT_REGISTERED/', $result)) {
@@ -1185,7 +1253,7 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
             if ($booking_id_done && eme_event_needs_payment($event))
                $replacement = eme_payment_form($event,$booking_id_done);
             elseif (!eme_get_booking_ids_by_wp_id($current_userid,$event['event_id']))
-               $replacement = eme_add_booking_form($event['event_id']);
+               $replacement = eme_add_booking_form($event['event_id'],$show_message_on_add);
          }
 
       } elseif ($event && preg_match('/#_REMOVEBOOKINGFORM$/', $result)) {
@@ -1196,7 +1264,7 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
             if ($booking_id_done && eme_event_needs_payment($event))
                $replacement = "";
             else
-               $replacement = eme_delete_booking_form($event['event_id']);
+               $replacement = eme_delete_booking_form($event['event_id'],$show_message_on_remove);
          }
 
       } elseif ($event && preg_match('/#_REMOVEBOOKINGFORM_IF_REGISTERED/', $result)) {
@@ -1207,13 +1275,14 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
             if ($booking_id_done && eme_event_needs_payment($event))
                $replacement = "";
             elseif (eme_get_booking_ids_by_wp_id($current_userid,$event['event_id']))
-               $replacement = eme_delete_booking_form($event['event_id']);
+               $replacement = eme_delete_booking_form($event['event_id'],$show_message_on_remove);
          }
 
       } elseif ($event && preg_match('/#_(AVAILABLESPACES|AVAILABLESEATS)$/', $result)) {
          $replacement = eme_get_available_seats($event['event_id']);
 
-      } elseif (preg_match('/#_(AVAILABLESPACES|AVAILABLESEATS)(\d+)/', $result, $matches)) {
+      } elseif (($deprecated && preg_match('/#_(AVAILABLESPACES|AVAILABLESEATS)(\d+)/', $result, $matches)) ||
+                preg_match('/#_(AVAILABLESPACES|AVAILABLESEATS)\{(\d+)\}/', $result, $matches)) {
          $field_id = intval($matches[2])-1;
          if (eme_is_multi($event['event_seats'])) {
             $seats=eme_get_available_multiseats($event['event_id']);
@@ -1224,7 +1293,8 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
       } elseif ($event && preg_match('/#_(TOTALSPACES|TOTALSEATS)$/', $result)) {
          $replacement = $event['event_seats'];
 
-      } elseif (preg_match('/#_(TOTALSPACES|TOTALSEATS)(\d+)/', $result, $matches)) {
+      } elseif (($deprecated && preg_match('/#_(TOTALSPACES|TOTALSEATS)(\d+)/', $result, $matches)) ||
+                preg_match('/#_(TOTALSPACES|TOTALSEATS)\{(\d+)\}/', $result, $matches)) {
          $field_id = intval($matches[2])-1;
          if (eme_is_multi($event['event_seats'])) {
             $seats = eme_convert_multi2array($event['event_seats']);
@@ -1235,7 +1305,8 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
       } elseif ($event && preg_match('/#_(RESERVEDSPACES|BOOKEDSEATS)$/', $result)) {
          $replacement = eme_get_booked_seats($event['event_id']);
 
-      } elseif (preg_match('/#_(RESERVEDSPACES|BOOKEDSEATS)(\d+)/', $result, $matches)) {
+      } elseif (($deprecated && preg_match('/#_(RESERVEDSPACES|BOOKEDSEATS)(\d+)/', $result, $matches)) ||
+                preg_match('/#_(RESERVEDSPACES|BOOKEDSEATS)\{(\d+)\}/', $result, $matches)) {
          $field_id = intval($matches[2])-1;
          if (eme_is_multi($event['event_seats'])) {
             $seats=eme_get_booked_multiseats($event['event_id']);
@@ -1249,8 +1320,8 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
          }
 
       } elseif ($event && preg_match('/#_LINKEDNAME/', $result)) {
-         $event_link = eme_event_url($event);
-         $replacement="<a href='$event_link' title='".eme_trans_sanitize_html($event['event_name'])."'>".eme_trans_sanitize_html($event['event_name'])."</a>";
+         $event_link = eme_event_url($event,$lang);
+         $replacement="<a href='$event_link' title='".eme_trans_sanitize_html($event['event_name'],$lang)."'>".eme_trans_sanitize_html($event['event_name'],$lang)."</a>";
          if ($target == "html") {
             $replacement = apply_filters('eme_general', $replacement); 
          } elseif ($target == "rss")  {
@@ -1277,7 +1348,7 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
          if (!empty($event['event_image_id']))
             $event['event_image_url'] = wp_get_attachment_url($event['event_image_id']);
          if($event['event_image_url'] != '') {
-            $replacement = "<img src='".$event['event_image_url']."' alt='".eme_trans_sanitize_html($event['event_name'])."'/>";
+            $replacement = "<img src='".$event['event_image_url']."' alt='".eme_trans_sanitize_html($event['event_name'],$lang)."'/>";
             if ($target == "html") {
                $replacement = apply_filters('eme_general', $replacement); 
             } elseif ($target == "rss")  {
@@ -1300,7 +1371,7 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
             $thumb_url = $thumb_array[0];
             $thumb_width = $thumb_array[1];
             $thumb_height = $thumb_array[2];
-            $replacement = "<img width='$thumb_width' height='$thumb_height' src='".$thumb_url."' alt='".eme_trans_sanitize_html($event['event_name'])."'/>";
+            $replacement = "<img width='$thumb_width' height='$thumb_height' src='".$thumb_url."' alt='".eme_trans_sanitize_html($event['event_name'],$lang)."'/>";
             if ($target == "html") {
                $replacement = apply_filters('eme_general', $replacement); 
             } elseif ($target == "rss")  {
@@ -1317,13 +1388,13 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
             $replacement = $thumb_url;
          }
 
-      } elseif ($event && preg_match('/#_EVENTIMAGETHUMB\[(.+)\]/', $result, $matches)) {
+      } elseif ($event && preg_match('/#_EVENTIMAGETHUMB\{(.+)\}/', $result, $matches)) {
          if (!empty($event['event_image_id'])) {
             $thumb_array = image_downsize( $event['event_image_id'], $matches[1]);
             $thumb_url = $thumb_array[0];
             $thumb_width = $thumb_array[1];
             $thumb_height = $thumb_array[2];
-            $replacement = "<img width='$thumb_width' height='$thumb_height' src='".$thumb_url."' alt='".eme_trans_sanitize_html($event['event_name'])."'/>";
+            $replacement = "<img width='$thumb_width' height='$thumb_height' src='".$thumb_url."' alt='".eme_trans_sanitize_html($event['event_name'],$lang)."'/>";
             if ($target == "html") {
                $replacement = apply_filters('eme_general', $replacement); 
             } elseif ($target == "rss")  {
@@ -1333,31 +1404,62 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
             }
          }
 
-      } elseif ($event && preg_match('/#_EVENTIMAGETHUMBURL\[(.+)\]/', $result, $matches)) {
+      } elseif ($legacy && $event && preg_match('/#_EVENTIMAGETHUMB\[(.+)\]/', $result, $matches)) {
+         if (!empty($event['event_image_id'])) {
+            $thumb_array = image_downsize( $event['event_image_id'], $matches[1]);
+            $thumb_url = $thumb_array[0];
+            $thumb_width = $thumb_array[1];
+            $thumb_height = $thumb_array[2];
+            $replacement = "<img width='$thumb_width' height='$thumb_height' src='".$thumb_url."' alt='".eme_trans_sanitize_html($event['event_name'],$lang)."'/>";
+            if ($target == "html") {
+               $replacement = apply_filters('eme_general', $replacement); 
+            } elseif ($target == "rss")  {
+               $replacement = apply_filters('eme_general_rss', $replacement);
+            } else {
+               $replacement = apply_filters('eme_text', $replacement);
+            }
+         }
+
+      } elseif ($event && preg_match('/#_EVENTIMAGETHUMBURL\{(.+)\}/', $result, $matches)) {
          if (!empty($event['event_image_id'])) {
             $thumb_array = image_downsize( $event['event_image_id'], $matches[1]);
             $thumb_url = $thumb_array[0];
             $replacement = $thumb_url;
          }
 
-      } elseif ($event && preg_match('/#_EVENTPAGEURL\[(.+)\]/', $result, $matches)) {
+      } elseif ($legacy && $event && preg_match('/#_EVENTIMAGETHUMBURL\[(.+)\]/', $result, $matches)) {
+         if (!empty($event['event_image_id'])) {
+            $thumb_array = image_downsize( $event['event_image_id'], $matches[1]);
+            $thumb_url = $thumb_array[0];
+            $replacement = $thumb_url;
+         }
+
+      } elseif ($event && preg_match('/#_EVENTPAGEURL\{(.+)\}/', $result, $matches)) {
          $events_page_link = eme_get_events_page(true, false);
          $replacement = add_query_arg(array('event_id'=>intval($matches[1])),$events_page_link);
+         if (!empty($lang))
+            $replacement = add_query_arg(array('lang'=>$lang),$replacement);
+
+      } elseif ($legacy && $event && preg_match('/#_EVENTPAGEURL\[(.+)\]/', $result, $matches)) {
+         $events_page_link = eme_get_events_page(true, false);
+         $replacement = add_query_arg(array('event_id'=>intval($matches[1])),$events_page_link);
+         if (!empty($lang))
+            $replacement = add_query_arg(array('lang'=>$lang),$replacement);
 
       } elseif ($event && preg_match('/#_EVENTPAGEURL$/', $result)) {
-         $replacement = eme_event_url($event);
+         $replacement = eme_event_url($event,$lang);
 
       } elseif ($event && preg_match('/#_(NAME|EVENTNAME)$/', $result)) {
          $field = "event_name";
          if (isset($event[$field]))  $replacement = $event[$field];
          if ($target == "html") {
-            $replacement = eme_trans_sanitize_html($replacement);
+            $replacement = eme_trans_sanitize_html($replacement,$lang);
             $replacement = apply_filters('eme_general', $replacement); 
          } elseif ($target == "rss")  {
-            $replacement = eme_translate($replacement);
+            $replacement = eme_translate($replacement,$lang);
             $replacement = apply_filters('eme_general_rss', $replacement);
          } else {
-            $replacement = eme_translate($replacement);
+            $replacement = eme_translate($replacement,$lang);
             $replacement = apply_filters('eme_text', $replacement);
          }
 
@@ -1392,7 +1494,8 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
             $replacement = apply_filters('eme_text', $replacement);
          }
 
-      } elseif ($event && preg_match('/#_(EVENT)?PRICE(\d+)/', $result, $matches)) {
+      } elseif (($deprecated && $event && preg_match('/#_(EVENT)?PRICE(\d+)/', $result, $matches)) ||
+                ($event && preg_match('/#_(EVENT)?PRICE\{(\d+)\}/', $result, $matches))) {
          $field_id = intval($matches[2]-1);
          if ($event["price"] && eme_is_multi($event["price"])) {
             $prices = eme_convert_multi2array($event["price"]);
@@ -1407,6 +1510,7 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
                }
             }
          }
+
       } elseif ($event && preg_match('/#_CURRENCY/', $result)) {
          $field = "currency";
          // currency is only important if the price is not empty as well
@@ -1444,7 +1548,7 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
          $contact = eme_get_contact($event);
          if ($contact)
             $replacement = $contact->display_name;
-         $replacement = eme_trans_sanitize_html($replacement);
+         $replacement = eme_trans_sanitize_html($replacement,$lang);
          if ($target == "html") {
             $replacement = apply_filters('eme_general', $replacement); 
          } elseif ($target == "rss")  {
@@ -1500,26 +1604,26 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
       } elseif ($event && preg_match('/#_EVENTCATEGORYIDS$/', $result) && get_option('eme_categories_enabled')) {
          $categories = $event['event_category_ids'];
          if ($target == "html") {
-            $replacement = eme_trans_sanitize_html($categories);
+            $replacement = eme_trans_sanitize_html($categories,$lang);
             $replacement = apply_filters('eme_general', $replacement); 
          } elseif ($target == "rss")  {
-            $replacement = eme_trans_sanitize_html($categories);
+            $replacement = eme_trans_sanitize_html($categories,$lang);
             $replacement = apply_filters('eme_general_rss', $replacement);
          } else {
-            $replacement = eme_trans_sanitize_html($categories);
+            $replacement = eme_trans_sanitize_html($categories,$lang);
             $replacement = apply_filters('eme_text', $replacement);
          }
 
       } elseif ($event && preg_match('/#_(EVENT)?CATEGORIES$/', $result) && get_option('eme_categories_enabled')) {
          $categories = eme_get_event_categories($event['event_id']);
          if ($target == "html") {
-            $replacement = eme_trans_sanitize_html(join(", ",$categories));
+            $replacement = eme_trans_sanitize_html(join(", ",$categories),$lang);
             $replacement = apply_filters('eme_general', $replacement); 
          } elseif ($target == "rss")  {
-            $replacement = eme_translate(join(", ",$categories));
+            $replacement = eme_translate(join(", ",$categories),$lang);
             $replacement = apply_filters('eme_general_rss', $replacement);
          } else {
-            $replacement = eme_translate(join(", ",$categories));
+            $replacement = eme_translate(join(", ",$categories),$lang);
             $replacement = apply_filters('eme_text', $replacement);
          }
 
@@ -1529,22 +1633,22 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
          foreach ($categories as $category) {
             $cat_link=eme_event_category_url($category);
             if ($target == "html")
-               array_push($cat_links,"<a href='$cat_link' title='".eme_trans_sanitize_html($category)."'>".eme_trans_sanitize_html($category)."</a>");
+               array_push($cat_links,"<a href='$cat_link' title='".eme_trans_sanitize_html($category,$lang)."'>".eme_trans_sanitize_html($category,$lang)."</a>");
             else
-               array_push($cat_links,"<a href='$cat_link' title='".eme_translate($category)."'>".eme_translate($category)."</a>");
+               array_push($cat_links,"<a href='$cat_link' title='".eme_translate($category,$lang)."'>".eme_translate($category,$lang)."</a>");
          }
          $replacement = join(", ",$cat_links);
          if ($target == "html") {
             $replacement = apply_filters('eme_general', $replacement); 
          } elseif ($target == "rss")  {
-            $replacement = eme_translate(join(", ",$cat_links));
+            $replacement = eme_translate(join(", ",$cat_links),$lang);
             $replacement = apply_filters('eme_general_rss', $replacement);
          } else {
-            $replacement = eme_translate(join(", ",$cat_links));
+            $replacement = eme_translate(join(", ",$cat_links),$lang);
             $replacement = apply_filters('eme_text', $replacement);
          }
 
-      } elseif ($event && preg_match('/^#_(EVENT)?CATEGORIES\[(.*?)\]\[(.*?)\]/', $result, $matches) && get_option('eme_categories_enabled')) {
+      } elseif ($event && preg_match('/^#_(EVENT)?CATEGORIES\{(.*?)\}\{(.*?)\}/', $result, $matches) && get_option('eme_categories_enabled')) {
          $include_cats=$matches[2];
          $exclude_cats=$matches[3];
          $extra_conditions_arr = array();
@@ -1555,13 +1659,63 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
          $extra_conditions = join(" AND ",$extra_conditions_arr);
          $categories = eme_get_event_categories($event['event_id'],$extra_conditions);
          if ($target == "html") {
-            $replacement = eme_trans_sanitize_html(join(", ",$categories));
+            $replacement = eme_trans_sanitize_html(join(", ",$categories),$lang);
             $replacement = apply_filters('eme_general', $replacement); 
          } elseif ($target == "rss")  {
-            $replacement = eme_translate(join(", ",$categories));
+            $replacement = eme_translate(join(", ",$categories),$lang);
             $replacement = apply_filters('eme_general_rss', $replacement);
          } else {
-            $replacement = eme_translate(join(", ",$categories));
+            $replacement = eme_translate(join(", ",$categories),$lang);
+            $replacement = apply_filters('eme_text', $replacement);
+         }
+
+      } elseif ($legacy && $event && preg_match('/^#_(EVENT)?CATEGORIES\[(.*?)\]\[(.*?)\]/', $result, $matches) && get_option('eme_categories_enabled')) {
+         $include_cats=$matches[2];
+         $exclude_cats=$matches[3];
+         $extra_conditions_arr = array();
+         if (!empty($include_cats))
+            array_push($extra_conditions_arr, "category_id IN ($include_cats)");
+         if (!empty($exclude_cats))
+            array_push($extra_conditions_arr, "category_id NOT IN ($exclude_cats)");
+         $extra_conditions = join(" AND ",$extra_conditions_arr);
+         $categories = eme_get_event_categories($event['event_id'],$extra_conditions);
+         if ($target == "html") {
+            $replacement = eme_trans_sanitize_html(join(", ",$categories),$lang);
+            $replacement = apply_filters('eme_general', $replacement); 
+         } elseif ($target == "rss")  {
+            $replacement = eme_translate(join(", ",$categories),$lang);
+            $replacement = apply_filters('eme_general_rss', $replacement);
+         } else {
+            $replacement = eme_translate(join(", ",$categories),$lang);
+            $replacement = apply_filters('eme_text', $replacement);
+         }
+
+      } elseif ($event && preg_match('/#_LINKED(EVENT)?CATEGORIES\{(.*?)\}\{(.*?)\}/', $result, $matches) && get_option('eme_categories_enabled')) {
+         $include_cats=$matches[2];
+         $exclude_cats=$matches[3];
+         $extra_conditions_arr = array();
+         if (!empty($include_cats))
+            array_push($extra_conditions_arr, "category_id IN ($include_cats)");
+         if (!empty($exclude_cats))
+            array_push($extra_conditions_arr, "category_id NOT IN ($exclude_cats)");
+         $extra_conditions = join(" AND ",$extra_conditions_arr);
+         $categories = eme_get_event_categories($event['event_id'],$extra_conditions);
+         $cat_links = array();
+         foreach ($categories as $category) {
+            $cat_link=eme_event_category_url($category);
+            if ($target == "html")
+               array_push($cat_links,"<a href='$cat_link' title='".eme_trans_sanitize_html($category,$lang)."'>".eme_trans_sanitize_html($category,$lang)."</a>");
+            else
+               array_push($cat_links,"<a href='$cat_link' title='".eme_translate($category,$lang)."'>".eme_translate($category,$lang)."</a>");
+         }
+         $replacement = join(", ",$cat_links);
+         if ($target == "html") {
+            $replacement = apply_filters('eme_general', $replacement); 
+         } elseif ($target == "rss")  {
+            $replacement = eme_translate(join(", ",$cat_links),$lang);
+            $replacement = apply_filters('eme_general_rss', $replacement);
+         } else {
+            $replacement = eme_translate(join(", ",$cat_links),$lang);
             $replacement = apply_filters('eme_text', $replacement);
          }
 
@@ -1579,18 +1733,18 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
          foreach ($categories as $category) {
             $cat_link=eme_event_category_url($category);
             if ($target == "html")
-               array_push($cat_links,"<a href='$cat_link' title='".eme_trans_sanitize_html($category)."'>".eme_trans_sanitize_html($category)."</a>");
+               array_push($cat_links,"<a href='$cat_link' title='".eme_trans_sanitize_html($category,$lang)."'>".eme_trans_sanitize_html($category,$lang)."</a>");
             else
-               array_push($cat_links,"<a href='$cat_link' title='".eme_translate($category)."'>".eme_translate($category)."</a>");
+               array_push($cat_links,"<a href='$cat_link' title='".eme_translate($category,$lang)."'>".eme_translate($category,$lang)."</a>");
          }
          $replacement = join(", ",$cat_links);
          if ($target == "html") {
             $replacement = apply_filters('eme_general', $replacement); 
          } elseif ($target == "rss")  {
-            $replacement = eme_translate(join(", ",$cat_links));
+            $replacement = eme_translate(join(", ",$cat_links),$lang);
             $replacement = apply_filters('eme_general_rss', $replacement);
          } else {
-            $replacement = eme_translate(join(", ",$cat_links));
+            $replacement = eme_translate(join(", ",$cat_links),$lang);
             $replacement = apply_filters('eme_text', $replacement);
          }
 
@@ -1732,7 +1886,7 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
    # but the eme_replace_locations_placeholders can't do "do_shortcode" at the end, because
    # this would cause [eme_if] tags to be replaced here already, while some placeholders of the
    # event haven't been replaced yet (like time placeholders, and event details)
-   $format = eme_replace_locations_placeholders ( $format, $location, $target, 0 );
+   $format = eme_replace_locations_placeholders ( $format, $location, $target, 0, $lang );
 
   // for extra date formatting, eg. #_{d/m/Y}
    preg_match_all("/#(ESC|URL)?@?_\{.*?\}/", $format, $results);
@@ -1777,7 +1931,7 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
       $format = eme_replace_notes_placeholders ( $format, $event, $target );
  
    // now, replace any language tags found in the format itself
-   $format = eme_translate($format);
+   $format = eme_translate($format,$lang);
 
    if ($do_shortcode)
       return do_shortcode($format);
@@ -1795,20 +1949,19 @@ function sort_stringlenth($a,$b){
    return strlen($b)-strlen($a);
 }
 
-function eme_trans_sanitize_html( $value, $do_convert=1 ) {
-   $value = eme_translate( $value);
-   if ($do_convert) {
-      return eme_sanitize_html($value);
+function eme_trans_sanitize_html( $value, $lang='') {
+   return eme_sanitize_html(eme_translate( $value,$lang));
+}
+
+function eme_translate ( $value, $lang='') {
+   if (function_exists('qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage')) {
+      if (empty($lang))
+         return qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($value);
+      else
+         return qtrans_use($lang,$value);
    } else {
       return $value;
    }
-}
-
-function eme_translate ( $value) {
-   if (function_exists('qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage'))
-      return qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($value);
-   else
-      return $value;
 }
 
 function eme_sanitize_rss( $value ) {
@@ -1837,32 +1990,31 @@ function eme_strip_tags ( $value ) {
 }
 
 function admin_show_warnings() {
-   $db_version = get_option('eme_version');
    global $plugin_page;
 
-   if ($db_version && $db_version < EME_DB_VERSION) {
-      // the warning is already given via admin_notice, we just want
-      // to prevent people to do anything in EME without deactivation/activation first
-      // But we allow access to the settings page ...
-      if ($plugin_page != 'eme-options')
-         exit(1);
-   } else {
-      // the normal warnings
-      $donation_done = get_option('eme_donation_done' );
-      if ($donation_done == 0)
-         eme_explain_donation ();
+   $donation_done = get_option('eme_donation_done');
+   if (!$donation_done)
+      eme_explain_donation ();
 
-      // now the normal warnings
-      $say_hello = get_option('eme_hello_to_user' );
-      if ($say_hello == 1)
-         eme_hello_to_new_user ();
-   }
+   $say_hello = get_option('eme_hello_to_user');
+   if ($say_hello)
+      eme_hello_to_new_user ();
+
+   $show_legacy_warning = get_option('eme_legacy_warning');
+   if ($show_legacy_warning)
+      eme_show_legacy_warning();
+
+   if (get_option('eme_legacy'))
+      eme_show_legacy_message();
+   if (get_option('eme_deprecated'))
+      eme_show_deprecated_message();
 }
 
-function eme_explain_deactivation_needed() {
-   $advice = __("It seems you upgraded Events Made Eeasy but your events database hasn't been updated accordingly yet. Please deactivate/activate the plugin for this to happen.",'eme')."<br />".__("<strong>Warning:</strong> make sure the option 'Delete all EME data when upgrading or deactivating' is not activated if you don't want to lose all existing event data!",'eme');
+
+function eme_explain_dbupdate_done() {
+   $advice = sprintf(__("It seems you upgraded Events Made Eeasy, the events database has been updated accordingly. Click <a href='%s'>here</a> to dismiss this message.",'eme'),add_query_arg(array("disable_update_message"=>"true")));
    ?>
-<div id="message" class="error"><p> <?php echo $advice; ?> </p></div>
+<div id="message" class="update-nag"><p> <?php echo $advice; ?> </p></div>
 <?php
 }
 
@@ -1914,5 +2066,43 @@ function eme_hello_to_new_user() {
    </div>
 <?php
 }
+
+function eme_show_legacy_warning() {
+   $advice = sprintf ( __ ( "<p><strong>Events Made Easy placeholders warning</strong></p>
+   <p>The legacy placeholders of Events Made Easy have been disabled. More info can be found in <a href=\"%s\" title=\"Legacy doc\">the documention</a></p>
+   <p>What? Tired of seeing this advice? I hear you, <a href=\"%s\" title=\"Don't show this advice again\">click here</a> and you won't see this again!</p>", 'eme' ), 'http://www.e-dynamics.be/wordpress/?p=51559', add_query_arg (array("disable_legacy_warning"=>"true")) );
+   ?>
+<div id="message" class="updated">
+      <?php
+   echo $advice;
+   ?>
+   </div>
+<?php
+}
+
+function eme_show_legacy_message() {
+   $advice = sprintf ( __ ( "<p><strong>Events Made Easy placeholders warning</strong></p>
+   <p>You have activated the use of legacy placeholder syntax. Please note that, although it works just fine, you should switch to the new syntax to avoid issues with regular wordpress shortcodes. More info can be found in <a href=\"%s\" title=\"Legacy doc\">the documention</a>. This message will go away when the use of legacy placeholder syntax has been disabled.</p>", 'eme' ), 'http://www.e-dynamics.be/wordpress/?p=51559');
+   ?>
+<div id="message" class="error">
+      <?php
+   echo $advice;
+   ?>
+   </div>
+<?php
+}
+
+function eme_show_deprecated_message() {
+   $advice = sprintf ( __ ( "<p><strong>Events Made Easy placeholders warning</strong></p>
+   <p>The use of deprecated placeholders is still allowed. Please note that, although these work just fine, you should switch to the new syntax because these might go away at some time in the future. More info can be found in <a href=\"%s\" title=\"Deprecated doc\">the documention</a>. This message will go away when the use of deprecated placeholders has been disabled.</p>", 'eme' ), 'http://www.e-dynamics.be/wordpress/?p=51559');
+   ?>
+<div id="message" class="updated">
+      <?php
+   echo $advice;
+   ?>
+   </div>
+<?php
+}
+
 
 ?>
