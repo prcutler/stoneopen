@@ -61,7 +61,7 @@ function eme_locations_page() {
          $message = __('You have no right to add a location!','eme');
          eme_locations_table_layout($message);
       }
-   } elseif (isset($_POST['eme_admin_action']) && $_POST['eme_admin_action'] == "deletelocation") { 
+   } elseif (isset($_POST['eme_admin_action']) && $_POST['eme_admin_action'] == "deletelocation" && isset($_POST['locations'])) { 
       $locations = $_POST['locations'];
       foreach($locations as $location_id) {
          $location = eme_get_location(intval($location_id));
@@ -70,7 +70,8 @@ function eme_locations_page() {
             eme_delete_location(intval($location_id));
          }
       }
-      eme_locations_table_layout();
+      $message = __('Successfully deleted the selected locations.','eme');
+      eme_locations_table_layout($message);
    } elseif (isset($_POST['eme_admin_action']) && ($_POST['eme_admin_action'] == "do_editlocation" || $_POST['eme_admin_action'] == "do_addlocation")) { 
       $action = $_POST['eme_admin_action'];
       if ($action == "do_editlocation")
@@ -198,7 +199,7 @@ function eme_locations_edit_layout($location, $message = "") {
          <input type="hidden" name="eme_admin_action" value="do_addlocation" />
          <?php } else { ?>
          <input type="hidden" name="eme_admin_action" value="do_editlocation" />
-         <input type="hidden" name="location_ID" value="<?php echo $location['location_id'] ?>"/>
+         <input type="hidden" name="location_ID" value="<?php echo $location['location_id'] ?>" />
          <?php } ?>
          
          <!-- we need titlediv and title for qtranslate as ID -->
@@ -208,7 +209,6 @@ function eme_locations_edit_layout($location, $message = "") {
             </h3>
             <div class="inside">
            <input name="location_name" id="title" type="text" value="<?php echo eme_sanitize_html($location['location_name']); ?>" size="40" />
-           <input type="hidden" name="translated_location_name" value="<?php echo eme_trans_sanitize_html($location['location_name']); ?>" />
            <?php if ($action=="edit") {
                     _e ('Permalink: ', 'eme' );
                     echo trailingslashit(home_url()).eme_permalink_convert(get_option ( 'eme_permalink_locations_prefix')).$location['location_id']."/";
@@ -226,7 +226,7 @@ function eme_locations_edit_layout($location, $message = "") {
                <?php _e('Location address', 'eme') ?>
             </h3>
             <div class="inside">
-            <input id="location_address" name="location_address" type="text" value="<?php echo eme_sanitize_html($location['location_address']); ?>" size="40"  />
+            <input id="location_address" name="location_address" type="text" value="<?php echo eme_trans_sanitize_html($location['location_address']); ?>" size="40" />
             </div>
          </div>
  
@@ -235,7 +235,7 @@ function eme_locations_edit_layout($location, $message = "") {
                <?php _e('Location town', 'eme') ?>
             </h3>
             <div class="inside">
-            <input name="location_town" id="location_town" type="text" value="<?php echo eme_sanitize_html($location['location_town']); ?>" size="40"  />
+            <input name="location_town" id="location_town" type="text" value="<?php echo eme_trans_sanitize_html($location['location_town']); ?>" size="40" />
             </div>
          </div>
                         
@@ -246,11 +246,11 @@ function eme_locations_edit_layout($location, $message = "") {
             <div class="inside">
             <table><tr>
             <td><label for="location_latitude"><?php _e('Latitude', 'eme') ?></label></td>
-            <td><input id="location_latitude" name="location_latitude" type="text" value="<?php echo eme_sanitize_html($location['location_latitude']); ?>" size="40"  /></td>
+            <td><input id="location_latitude" name="location_latitude" type="text" value="<?php echo eme_sanitize_html($location['location_latitude']); ?>" size="40" /></td>
             </tr>
             <tr>
             <td><label for="location_longitude"><?php _e('Longitude', 'eme') ?></label></td>
-            <td><input id="location_longitude" name="location_longitude" type="text" value="<?php echo eme_sanitize_html($location['location_longitude']); ?>" size="40"  /></td>
+            <td><input id="location_longitude" name="location_longitude" type="text" value="<?php echo eme_sanitize_html($location['location_longitude']); ?>" size="40" /></td>
             </tr></table>
             </div>
          </div>
@@ -287,23 +287,26 @@ jQuery(document).ready(function($){
         $('#eme_location_image_example' ).attr("src",'');
   });
   $('#location_image_button').click(function(e) {
-    var button = $(this);
-    var _orig_send_attachment = wp.media.editor.send.attachment;
-    var eme_custom_media = true;
+    e.preventDefault();
 
-    wp.media.editor.send.attachment = function(props, attachment){
-      if ( eme_custom_media ) {
-        $('#location_image_url').val(attachment.url);
-        $('#location_image_id').val(attachment.id);
-        $('#eme_location_image_example' ).attr("src",attachment.url);
-      } else {
-        return _orig_send_attachment.apply( this, [props, attachment] );
-      };
-      eme_custom_media = false;
-    }
-
-    wp.media.editor.open(button);
-    return false;
+    var custom_uploader = wp.media({
+        title: '<?php _e ( 'Select the image to be used as featured image', 'eme' )?>',
+        button: {
+            text: '<?php _e ( 'Set featured image', 'eme' )?>'
+        },
+        // Tell the modal to show only images.
+        library: {
+                type: 'image'
+        },  
+        multiple: false  // Set this to true to allow multiple files to be selected
+    })
+    .on('select', function() {
+        var attachment = custom_uploader.state().get('selection').first().toJSON();
+        $('#event_image_url').val(attachment.url);
+        $('#event_image_id').val(attachment.id);
+        $('#eme_event_image_example' ).attr("src",attachment.url);
+    })
+    .open();
   });
 });
 </script>
@@ -371,7 +374,7 @@ jQuery(document).ready(function($){
                <?php _e ( 'External link', 'eme' ); ?>
             </h3>
             <div class="inside">
-            <input name="location_url" id="location_url" type="text" value="<?php echo eme_sanitize_html($location['location_url']); ?>" size="40"  />
+            <input name="location_url" id="location_url" type="text" value="<?php echo eme_sanitize_html($location['location_url']); ?>" size="40" />
             <p><?php _e ( 'If this is filled in, the single location URL will point to this url instead of the standard location page.', 'eme' )?></p>
             </div>
          </div>
@@ -402,8 +405,8 @@ function eme_locations_table_layout($message = "") {
          <?php } ?>
          <div class="wrap">
          <form id="locations-filter" method="post" action="<?php echo admin_url("admin.php?page=eme-locations"); ?>">
-            <input type="hidden" name="eme_admin_action" value="addlocation"/>
-            <input type="submit" class="button-primary" name="submit" value="<?php _e('Add location', 'eme');?>">
+            <input type="hidden" name="eme_admin_action" value="addlocation" />
+            <input type="submit" class="button-primary" name="submit" value="<?php _e('Add location', 'eme');?>" />
          </form>
          </div>
 
@@ -411,12 +414,12 @@ function eme_locations_table_layout($message = "") {
          <div id="col-container">
              <div class="col-wrap">
                 <form id="locations-filter" method="post" action="<?php echo admin_url("admin.php?page=eme-locations"); ?>">
-                  <input type="hidden" name="eme_admin_action" value="deletelocation"/>
+                  <input type="hidden" name="eme_admin_action" value="deletelocation" />
                   <?php if (count($locations)>0) : ?>
                   <table class="widefat">
                      <thead>
                         <tr>
-                           <th class="manage-column column-cb check-column" scope="col"><input type="checkbox" class="select-all" value="1"/></th>
+                           <th class="manage-column column-cb check-column" scope="col"><input type="checkbox" class="select-all" value="1" /></th>
                            <th><?php _e('ID', 'eme') ?></th>
                            <th><?php _e('Name', 'eme') ?></th>
                            <th><?php _e('Address', 'eme') ?></th>
@@ -426,7 +429,7 @@ function eme_locations_table_layout($message = "") {
                      </thead>
                      <tfoot>
                         <tr>
-                           <th class="manage-column column-cb check-column" scope="col"><input type="checkbox" class="select-all" value="1"/></th>
+                           <th class="manage-column column-cb check-column" scope="col"><input type="checkbox" class="select-all" value="1" /></th>
                            <th><?php _e('ID', 'eme') ?></th>
                            <th><?php _e('Name', 'eme') ?></th>
                            <th><?php _e('Address', 'eme') ?></th>
@@ -437,7 +440,7 @@ function eme_locations_table_layout($message = "") {
                      <tbody>
                         <?php foreach ($locations as $this_location) : ?>  
                         <tr>
-                           <td><input type="checkbox" class ="row-selector" value="<?php echo $this_location['location_id']; ?>" name="locations[]"/></td>
+                           <td><input type="checkbox" class ="row-selector" value="<?php echo $this_location['location_id']; ?>" name="locations[]" /></td>
                            <td><?php echo $this_location['location_id']; ?></td>
                            <td><a href="<?php echo admin_url("admin.php?page=eme-locations&amp;eme_admin_action=editlocation&amp;location_ID=".$this_location['location_id']); ?>"><?php echo eme_trans_sanitize_html($this_location['location_name']); ?></a></td>
                            <td><?php echo eme_trans_sanitize_html($this_location['location_address']); ?></td>
@@ -451,7 +454,7 @@ function eme_locations_table_layout($message = "") {
 
                   <div class="tablenav">
                      <div class="alignleft actions">
-                     <input class="button-primary action" type="submit" name="doaction" value="Delete"/>
+                     <input class="button-primary action" type="submit" name="doaction" value="Delete" onclick="return areyousure('<?php _e("Are you sure you want to delete these locations?","eme"); ?>');" />
                      <br class="clear"/> 
                      </div>
                      <br class="clear"/>
@@ -483,21 +486,12 @@ function eme_get_locations($eventful = false, $scope="all", $category = '', $off
       if ($events) {
          foreach ($events as $event) {
             $location_id=$event['location_id'];
-            if ($location_id && $event['location_name'] != "") {
-               $this_location = eme_new_location();
-               $this_location['location_id'] = $location_id;
-               $this_location['location_name'] = $event['location_name'];
-               $this_location['location_address'] = $event['location_address'];
-               $this_location['location_town'] = $event['location_town'];
-               $this_location['location_latitude'] = $event['location_latitude'];
-               $this_location['location_longitude'] = $event['location_longitude'];
-               $this_location['location_description'] = $event['location_description'];
-               $this_location['location_category_ids'] = $event['location_category_ids'];
-               $this_location['location_url'] = $event['location_url'];
-               $this_location['location_slug'] = $event['location_slug'];
+            if ($location_id) {
+               $this_location = eme_get_location($location_id);
                // the key is based on the location name first and the location id (if different locations have the same name)
                // using this method we can then sort on the name
-               $locations[$this_location['location_name'].$location_id]=$this_location;
+               if ($this_location['location_name']!='')
+                  $locations[$this_location['location_name'].$location_id]=$this_location;
             }
          }
          // sort on the key (name/id pair)
@@ -741,12 +735,18 @@ function eme_insert_location($location) {
    }
 }
 
-function eme_delete_location($location) {
+function eme_delete_location($location_id) {
    global $wpdb;  
+
    $table_name = $wpdb->prefix.LOCATIONS_TBNAME;
-   $sql = "DELETE FROM $table_name WHERE location_id = '$location';";
+   $sql = $wpdb->prepare("DELETE FROM $table_name where location_id=%d",$location_id);
+   $wpdb->query( $sql );
+
+   $events_table = $wpdb->prefix.EVENTS_TBNAME;
+   $sql = $wpdb->prepare("UPDATE $events_table SET location_id=0 WHERE location_id = %d",$location_id);
    $wpdb->query($sql);
-   $image_basename= IMAGE_UPLOAD_DIR."/location-".$location['location_id'];
+
+   $image_basename= IMAGE_UPLOAD_DIR."/location-".$location_id;
    eme_delete_image_files($image_basename);
 }
 
@@ -796,7 +796,7 @@ function eme_global_map($atts) {
       $next_text = "";
       $scope_offset=0;
       // for browsing: if paging=1 and only for this_week,this_month or today
-      if ($paging==1) {
+      if ($eventful && $paging==1) {
          if (isset($_GET['eme_offset']))
             $scope_offset=$_GET['eme_offset'];
          $prev_offset=$scope_offset-1;
@@ -811,8 +811,8 @@ function eme_global_map($atts) {
             $scope_text = date_i18n (get_option('date_format'),$start_day+$scope_offset*7*86400)."--".date_i18n (get_option('date_format'),$end_day+$scope_offset*7*86400);
             $prev_text = __('Previous week','eme');
             $next_text = __('Next week','eme');
-         }
-         elseif ($scope=="this_month") {
+
+         } elseif ($scope=="this_month") {
             // "first day of this month, last day of this month" works for newer versions of php (5.3+), but for compatibility:
             // the year/month should be based on the first of the month, so if we are the 13th, we substract 12 days to get to day 1
             // Reason: monthly offsets needs to be calculated based on the first day of the current month, not the current day,
@@ -829,8 +829,8 @@ function eme_global_map($atts) {
             $scope_text = date_i18n (get_option('eme_show_period_monthly_dateformat'), strtotime("$scope_offset month")-$day_offset*86400);
             $prev_text = __('Previous month','eme');
             $next_text = __('Next month','eme');
-         }
-         elseif ($scope=="this_year") {
+
+         } elseif ($scope=="this_year") {
             $year=date('Y', strtotime("$scope_offset year")-$day_offset*86400);
             $limit_start = "$year-01-01";
             $limit_end   = "$year-12-31";
@@ -838,18 +838,16 @@ function eme_global_map($atts) {
             $scope_text = date_i18n (get_option('eme_show_period_yearly_dateformat'), strtotime("$scope_offset year")-$day_offset*86400);
             $prev_text = __('Previous year','eme');
             $next_text = __('Next year','eme');
-         }
-         elseif ($scope=="today") {
+
+         } elseif ($scope=="today") {
             $scope = date('Y-m-d',strtotime("$scope_offset days"));
             $limit_start = $scope;
             $limit_end   = $scope;
-            //$prev_text = date_i18n (get_option('date_format'), strtotime("$prev_offset days"));
-            //$next_text = date_i18n (get_option('date_format'), strtotime("$next_offset days"));
             $scope_text = date_i18n (get_option('date_format'), strtotime("$scope_offset days"));
             $prev_text = __('Previous day','eme');
             $next_text = __('Next day','eme');
-         }
-         elseif ($scope=="tomorrow") {
+
+         } elseif ($scope=="tomorrow") {
             $scope_offset++;
             $scope = date('Y-m-d',strtotime("$scope_offset days"));
             $limit_start = $scope;
@@ -861,13 +859,16 @@ function eme_global_map($atts) {
 
          // to prevent going on indefinitely and thus allowing search bots to go on for ever,
          // we stop providing links if there are no more events left
-         if (eme_count_events_older_than($limit_start) == 0)
+         $older_events=eme_get_events ( 1, "--".$limit_start, "ASC", 0, $location['location_id'], $category);
+         $newer_events=eme_get_events ( 1, "++".$limit_end, "ASC", 0, $location['location_id'], $category);
+         if (count($older_events) == 0)
             $prev_text = "";
-         if (eme_count_events_newer_than($limit_end) == 0)
+         if (count($newer_events) == 0)
             $next_text = "";
       }
 
-      $result = "<div id='eme_global_map' style='width: {$width}px; height: {$height}px'>map</div>";
+      $id_base = preg_replace("/\D/","_",microtime(1));
+      $result = "<div id='eme_global_map_$id_base' class='eme_global_map' style='width: {$width}px; height: {$height}px'>map</div>";
       // get the paging output ready
       if ($paging==1) {
          $pagination_top = "<div id='locations-pagination-top'> ";
@@ -884,38 +885,40 @@ function eme_global_map($atts) {
          $result = $pagination_top.$result.$pagination_bottom;
       }
 
+      $eventful_string="eventful_".$id_base;
+      $scope_string="scope_".$id_base;
+      $category_string="category_".$id_base;
       $result .= "<script type='text/javascript'>
          <!--// 
-      eventful = '$eventful';
-      scope = '$scope';
-      category = '$category';
+      $eventful_string = '$eventful';
+      $scope_string = '$scope';
+      $category_string = '$category';
       events_page_link = '$events_page_link';
          //-->
          </script>";
-      //$result .= "<script src='".EME_PLUGIN_URL."eme_global_map.js' type='text/javascript'></script>";
 
       // we add the list if wanted (only for "before" or "after")
-      $locations = eme_get_locations((bool)$eventful,$scope,$category,0);
-      $loc_list = "<div id='eme_div_locations_list'><ol id='eme_locations_list'>"; 
+      $locations = eme_get_locations((bool)$eventful,$scope,$category,$scope_offset);
+      $loc_list = "<div id='eme_div_locations_list_$id_base' class='eme_div_locations_list'><ol id='eme_locations_list_$id_base' class='eme_locations_list'>"; 
       $firstletter="A";
       foreach($locations as $location) {
          if ($show_locations) {
-            $loc_list.="<li id='location-". $location['location_id'].
+            $loc_list.="<li id='location-". $location['location_id']."_$id_base".
                            "' style='list-style-type: upper-alpha'><a>".
-                           $location['location_name']."</a></li>";
+                           eme_trans_sanitize_html($location['location_name'])."</a></li>";
          }
          if ($show_events) {
             $events = eme_get_events(0,$scope,"ASC",$scope_offset,$location['location_id'], $category);
             $loc_list .= "<ol id='eme_events_list'>"; 
             foreach ($events as $event) {
                if ($show_locations)
-                  $loc_list.="<li id='location-". $location['location_id'].
+                  $loc_list.="<li id='location-". $location['location_id']."_$id_base".
                            "' style='list-style-type: none'>- <a>".
-                           $event['event_name']."</a></li>";
+                           eme_trans_sanitize_html($event['event_name'])."</a></li>";
                else
-                  $loc_list.="<li id='location-". $location['location_id'].
+                  $loc_list.="<li id='location-". $location['location_id']."_$id_base".
                            "' style='list-style-type: none'>$firstletter. <a>".
-                           $event['event_name']."</a></li>";
+                           eme_trans_sanitize_html($event['event_name'])."</a></li>";
             }
             $loc_list.= "</ol>"; 
          }
@@ -947,7 +950,7 @@ function eme_display_single_location($location_id,$template_id=0) {
    if ($template_id) {
       $single_location_format= eme_get_template_format($template_id);
    } else {
-      $single_location_format = get_option('eme_location_list_format_item');
+      $single_location_format = get_option('eme_single_location_format');
    }
    $page_body = eme_replace_locations_placeholders ($single_location_format, $location);
    return $page_body;
@@ -1384,7 +1387,8 @@ function eme_single_location_map($location,$width=0,$height=0) {
 
    $gmap_is_active = get_option('eme_gmap_is_active'); 
    $map_text = addslashes(eme_replace_locations_placeholders(get_option('eme_location_baloon_format'), $location));
-   $map_text = preg_replace("/\r\n|\n\r|\n/","<br />",$map_text);
+   # no newlines allowed, otherwise no map is shown
+   $map_text = preg_replace("/\r\n?|\n\r?/","<br />",$map_text);
    // if gmap is not active: we don't show the map
    // if the location name is empty: we don't show the map. But that can never happen since it's checked when creating the location
    if ($gmap_is_active) {
@@ -1444,81 +1448,4 @@ function eme_events_in_location_list($location, $scope = "") {
       $list = get_option('eme_location_no_events_message');
    }
    return $list;
-}
-
-function eme_locations_autocomplete() {
-   $use_select_for_locations = get_option('eme_use_select_for_locations');
-   // qtranslate there? Then we need the select
-   if (function_exists('qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage') || defined('ICL_LANGUAGE_CODE')) {
-      $use_select_for_locations=1;
-   }
-
-   if ((isset($_REQUEST['eme_admin_action']) && ($_REQUEST['eme_admin_action'] == 'edit_event' || $_REQUEST['eme_admin_action'] == 'duplicate_event' || $_REQUEST['eme_admin_action'] == 'edit_recurrence')) || (isset($_GET['page']) && $_GET['page'] == 'eme-new_event')) {
-      ?>
-      <link rel="stylesheet" href="<?php echo EME_PLUGIN_URL; ?>js/jquery-autocomplete/jquery.autocomplete.css" type="text/css"/>
-
-      <script src="<?php echo EME_PLUGIN_URL; ?>js/jquery-autocomplete/lib/jquery.bgiframe.min.js" type="text/javascript"></script>
-      <script src="<?php echo EME_PLUGIN_URL; ?>js/jquery-autocomplete/lib/jquery.ajaxQueue.js" type="text/javascript"></script> 
-      <script src="<?php echo EME_PLUGIN_URL; ?>js/jquery-autocomplete/jquery.autocomplete.min.js" type="text/javascript"></script>
-
-      <script type="text/javascript">
-      //<![CDATA[
-
-      jQuery(document).ready(function() {
-         function htmlDecode(value){ 
-            return jQuery('<div/>').html(value).text(); 
-         }
-
-         var gmap_enabled = <?php echo get_option('eme_gmap_is_active'); ?>; 
-
-         <?php if (!$use_select_for_locations) { ?>
-         jQuery("input#location_name").autocomplete("<?php echo EME_PLUGIN_URL; ?>locations-search.php", {
-            width: 260,
-            selectFirst: false,
-            formatItem: function(row) {
-               item = eval("(" + row + ")");
-               return htmlDecode(item.name)+'<br /><small>'+htmlDecode(item.address)+' - '+htmlDecode(item.town)+ '</small>';
-            },
-            formatResult: function(row) {
-               item = eval("(" + row + ")");
-               return htmlDecode(item.name);
-            } 
-         });
-         jQuery('input#location_name').result(function(event,data,formatted) {
-            item = eval("(" + data + ")"); 
-            jQuery('input#location_address').val(item.address);
-            jQuery('input#location_town').val(item.town);
-            jQuery('input#location_latitude').val(item.latitude);
-            jQuery('input#location_longitude').val(item.longitude);
-            if(gmap_enabled) {
-               loadMapLatLong(item.name, item.town, item.address, item.latitude,item.longitude);
-            } 
-         });
-         <?php } else { ?>
-         jQuery('#location-select-id').change(function() {
-            jQuery.getJSON("<?php echo EME_PLUGIN_URL; ?>locations-search.php",{id: jQuery(this).val()}, function(data){
-               eventLocation = data.name;
-               eventAddress = data.address;
-               eventTown = data.town;
-               eventLat = data.latitude;
-               eventLong = data.longitude;
-               jQuery("input[name='location-select-name']").val(eventLocation);
-               jQuery("input[name='location-select-address']").val(eventAddress); 
-               jQuery("input[name='location-select-town']").val(eventTown); 
-               jQuery("input[name='location-select-latitude']").val(eventLat); 
-               jQuery("input[name='location-select-longitude']").val(eventLong); 
-               if(gmap_enabled) {
-                  loadMapLatLong(eventLocation, eventTown, eventAddress, eventLat, eventLong);
-               }
-            })
-         });
-          <?php } ?>
-      });   
-      //]]> 
-
-      </script>
-
-      <?php
-
-   }
 }

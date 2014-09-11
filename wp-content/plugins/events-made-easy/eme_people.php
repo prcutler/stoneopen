@@ -39,7 +39,7 @@ function eme_people_page() {
                      $res=eme_delete_all_bookings_for_person_id($person_id);
                      if ($res) {
                         $message.=__("Deleted all bookings made by '".$person['person_name']."'", 'eme');
-                        $message.="<br>";
+                        $message.="<br />";
                      }
                   } elseif (isset($_POST['delete_option']) && $_POST['delete_option'] == 'transfer_assoc_bookings') {
                      $to_person_id=intval($_POST['to_person_id']);
@@ -47,13 +47,13 @@ function eme_people_page() {
                      $res=eme_transfer_all_bookings($person_id,$to_person_id);
                      if ($res) {
                         $message.=__("Transferred all bookings made by '".$person['person_name']."' to '".$to_person['person_name']."'", 'eme');
-                        $message.="<br>";
+                        $message.="<br />";
                      }
                   }
                   $res=eme_delete_person($person_id);
                   if ($res) {
                      $message.=__("Deleted '".$person['person_name']."'", 'eme');
-                     $message.="<br>";
+                     $message.="<br />";
                   }
                }
             }
@@ -95,7 +95,7 @@ function eme_people_edit_layout($message = "") {
 
       <form name='editperson' id='editperson' method='post' action='".admin_url("admin.php?page=eme-people")."' class='validate'>
       <input type='hidden' name='eme_admin_action' value='confirm_editperson' />
-      <input type='hidden' name='person_id' value='".$person_id."'/>";
+      <input type='hidden' name='person_id' value='".$person_id."' />";
 
    $layout .= "
       <table class='form-table'>
@@ -161,7 +161,7 @@ function eme_people_delete_layout($message = "") {
       </li>
       </ul></fieldset>
       <input type="hidden" name="eme_admin_action" value="confirm_delete_people" />
-      <p class="submit"><input type="submit" name="submit" id="submit" class="button" value="Confirm Deletion"  /></p></div>
+      <p class="submit"><input type="submit" name="submit" id="submit" class="button" value="Confirm Deletion" /></p></div>
       </form>
       <script>
       jQuery(document).ready( function($) {
@@ -178,7 +178,7 @@ function eme_people_delete_layout($message = "") {
    <?php
 }
 
-function eme_global_map_json($eventful = false, $scope = "all", $category = '', $offset = 0) {
+function eme_global_map_json($eventful = false, $scope = "all", $category = '', $map_id, $offset = 0) {
    $eventful = ($eventful==="true" || $eventful==="1") ? true : $eventful;
    $eventful = ($eventful==="false" || $eventful==="0") ? false : $eventful;
 
@@ -190,7 +190,7 @@ function eme_global_map_json($eventful = false, $scope = "all", $category = '', 
       # first we set the balloon info
       $tmp_loc=eme_replace_locations_placeholders(get_option('eme_location_baloon_format'), $location);
       # no newlines allowed, otherwise no map is shown
-      $tmp_loc=preg_replace("/\r\n|\n\r|\n/","<br />",$tmp_loc);
+      $tmp_loc=preg_replace("/\r\n?|\n\r?/","<br />",$tmp_loc);
       $json_location[] = '"location_balloon":"'.eme_trans_sanitize_html($tmp_loc).'"';
 
       # second, we fill in the rest of the info
@@ -198,7 +198,7 @@ function eme_global_map_json($eventful = false, $scope = "all", $category = '', 
          # we skip some keys, since json is limited in size we only return what's needed in the javascript
          if (preg_match('/location_balloon|location_id|location_latitude|location_longitude/', $key)) {
             # no newlines allowed, otherwise no map is shown
-            $value=preg_replace("/\r\n|\n\r|\n/","<br />",$value);
+            $value=preg_replace("/\r\n?|\n\r/","<br />",$value);
             $json_location[] = '"'.$key.'":"'.eme_trans_sanitize_html($value).'"';
          }
       }
@@ -217,6 +217,8 @@ function eme_global_map_json($eventful = false, $scope = "all", $category = '', 
    $json .= $zoom_factor;
    $json .= '","maptype":"' ;
    $json .= $maptype;
+   $json .= '","map_id":"' ;
+   $json .= $map_id;
    $json .= '"}' ;
    echo $json;
 }
@@ -255,6 +257,7 @@ function eme_csv_booking_report($event_id) {
    $answer_columns = eme_get_answercolumns(eme_get_bookingids_for($event_id));
    $out = fopen('php://output', 'w');
    $line=array();
+   $line[]=__('ID', 'eme');
    $line[]=__('Name', 'eme');
    $line[]=__('E-mail', 'eme');
    $line[]=__('Phone number', 'eme');
@@ -263,18 +266,24 @@ function eme_csv_booking_report($event_id) {
    else
       $line[]=__('Seats', 'eme');
    $line[]=__('Paid', 'eme');
+   $line[]=__('Booking date','eme');
+   $line[]=__('Total price','eme');
+   $line[]=__('Unique nbr','eme');
    $line[]=__('Comment', 'eme');
    foreach($answer_columns as $col) {
       $line[]=$col['field_name'];
    }
    fputcsv2($out,$line);
    foreach($bookings as $booking) {
+      $localised_booking_date = eme_localised_date($booking['creation_date']);
+      $localised_booking_time = eme_localised_time($booking['creation_date']);
       $person = eme_get_person ($booking['person_id']);
       $line=array();
       $pending_string="";
       if (eme_event_needs_approval($event_id) && !$booking['booking_approved']) {
          $pending_string=__('(pending)','eme');
       }
+      $line[]=$booking['booking_id'];
       $line[]=$person['person_name'];
       $line[]=$person['person_email'];
       $line[]=$person['person_phone'];
@@ -287,6 +296,9 @@ function eme_csv_booking_report($event_id) {
          $line[]=$booking['booking_seats']." ".$pending_string;
       }
       $line[]=$booking['booking_payed']? __('Yes'): __('No');
+      $line[]=$localised_booking_date." ".$localised_booking_time;
+      $line[]=eme_get_total_booking_price($event,$booking);
+      $line[]=$booking['transfer_nbr_be97'];
       $line[]=$booking['booking_comment'];
       $answers = eme_get_answers($booking['booking_id']);
       foreach($answer_columns as $col) {
@@ -361,14 +373,18 @@ function eme_printable_booking_report($event_id) {
          <h2><?php _e('Bookings data', 'eme');?></h2>
          <table id="eme_printable_table">
             <tr>
+               <th scope='col' class='eme_print_name'><?php _e('ID', 'eme')?></th>
                <th scope='col' class='eme_print_name'><?php _e('Name', 'eme')?></th>
                <th scope='col' class='eme_print_email'><?php _e('E-mail', 'eme')?></th>
                <th scope='col' class='eme_print_phone'><?php _e('Phone number', 'eme')?></th> 
                <th scope='col' class='eme_print_seats'><?php if ($is_multiprice) _e('Seats (Multiprice)', 'eme'); else _e('Seats', 'eme'); ?></th>
                <th scope='col' class='eme_print_paid'><?php _e('Paid', 'eme')?></th>
+               <th scope='col' class='eme_print_booking_date'><?php _e('Booking date', 'eme')?></th>
+               <th scope='col' class='eme_print_total_price'><?php _e('Total price', 'eme')?></th>
+               <th scope='col' class='eme_print_unique_nbr'><?php _e('Unique nbr', 'eme')?></th>
                <th scope='col' class='eme_print_comment'><?php _e('Comment', 'eme')?></th> 
             <?php
-            $nbr_columns=6;
+            $nbr_columns=10;
             foreach($answer_columns as $col) {
                $class="eme_print_formfield".$formfield[$col['field_name']];
                print "<th scope='col' class='$class'>".$col['field_name']."</th>";
@@ -378,6 +394,8 @@ function eme_printable_booking_report($event_id) {
             </tr>
             <?php
             foreach($bookings as $booking) {
+               $localised_booking_date = eme_localised_date($booking['creation_date']);
+               $localised_booking_time = eme_localised_time($booking['creation_date']);
                $person = eme_get_person ($booking['person_id']);
                $pending_string="";
                if (eme_event_needs_approval($event_id) && !$booking['booking_approved']) {
@@ -385,6 +403,7 @@ function eme_printable_booking_report($event_id) {
                }
                 ?>
             <tr>
+               <td class='eme_print_id'><?php echo $booking['booking_id']?></td> 
                <td class='eme_print_name'><?php echo $person['person_name']?></td> 
                <td class='eme_print_email'><?php echo $person['person_email']?></td>
                <td class='eme_print_phone'><?php echo $person['person_phone']?></td>
@@ -400,6 +419,9 @@ function eme_printable_booking_report($event_id) {
                ?>
                </td>
                <td class='eme_print_paid'><?php if ($booking['booking_payed']) _e('Yes'); else _e('No'); ?></td>
+               <td class='eme_print_booking_date'><?php echo $localised_booking_date." ".$localised_booking_time; ?></td>
+               <td class='eme_print_total_price'><?php echo eme_get_total_booking_price($event,$booking); ?></td>
+               <td class='eme_print_unique_nbr'><?php echo $booking['transfer_nbr_be97']; ?></td>
                <td class='eme_print_comment'><?=$booking['booking_comment'] ?></td> 
                <?php
                   $answers = eme_get_answers($booking['booking_id']);
@@ -500,7 +522,7 @@ function eme_people_table($message="") {
       $search_dest=admin_url("admin.php?page=eme-registration-seats");
       foreach ($persons as $person) {
          $search_url=add_query_arg(array('search'=>$person['person_id']),$search_dest);
-         print "<tr><td><input type='checkbox' class ='row-selector' value='".$person['person_id']."' name='persons[]'/></td>
+         print "<tr><td><input type='checkbox' class ='row-selector' value='".$person['person_id']."' name='persons[]' /></td>
                   <td>[person_id=".$person['person_id']."]</td>
                   <td><a href='".admin_url("admin.php?page=eme-people&amp;eme_admin_action=editperson&amp;person_id=".$person['person_id'])."' title='". __('Click the ID in order to edit the person.','eme')."'>".$person['person_id']."</a></td>
                   <td>".eme_sanitize_html($person['person_name'])."</td>
@@ -536,7 +558,7 @@ function eme_people_table($message="") {
                   // So we give the 2 options
                ?> 
                "stateLoadParams": function (settings, data) {
-                  data.oSearch.sSearch = "<?php echo $search; ?>";
+                  data.search.search = "<?php echo $search; ?>";
                },
                "search": {
                   "search":  "<?php echo $search; ?>"

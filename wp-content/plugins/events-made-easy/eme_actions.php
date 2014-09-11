@@ -75,9 +75,10 @@ function eme_actions_init() {
 
    if (isset($_GET['query']) && $_GET['query'] == 'GlobalMapData') {
       $eventful = isset($_GET['eventful'])?$_GET['eventful']:false;
+      $map_id = isset($_GET['map_id'])?$_GET['map_id']:0;
       $eventful = ($eventful==="true" || $eventful==="1") ? true : $eventful;
       $eventful = ($eventful==="false" || $eventful==="0") ? false : $eventful;
-      eme_global_map_json((bool)$eventful,$_GET['scope'],$_GET['category']);
+      eme_global_map_json((bool)$eventful,$_GET['scope'],$_GET['category'],$map_id);
       exit();
    }
 
@@ -93,7 +94,7 @@ function eme_actions_init() {
       eme_webmoney_notification();
       exit();
    }
-   if (isset($_POST['eme_eventAction']) && $_POST['eme_eventAction']=="fdgg_ipn") {
+   if (isset($_POST['eme_eventAction']) && ($_POST['eme_eventAction']=="fdgg_notification" || $_POST['eme_eventAction']=="fdgg_ipn")) {
       eme_fdgg_notification();
       exit();
    }
@@ -101,7 +102,6 @@ function eme_actions_init() {
 add_action('init','eme_actions_init');
 
 function eme_actions_admin_init() {
-   eme_enqueue_js();
    eme_options_register();
 
    // let the admin know the DB has been updated
@@ -119,6 +119,8 @@ function eme_actions_admin_init() {
    eme_handle_get();
 }
 add_action('admin_init','eme_actions_admin_init');
+
+add_action('admin_enqueue_scripts','eme_admin_enqueue_js');
 
 function eme_actions_widgets_init() {
    register_widget( 'WP_Widget_eme_list' );
@@ -150,7 +152,6 @@ add_action('template_redirect', 'eme_template_redir' );
 add_action('template_redirect', 'eme_change_canonical_url' );
 add_action('wp_enqueue_scripts','eme_general_css');
 add_action('admin_notices', 'eme_alert_events_page' );
-add_action('admin_head', 'eme_locations_autocomplete');
 
 // when editing other profiles then your own
 add_action('edit_user_profile', 'eme_user_profile') ;

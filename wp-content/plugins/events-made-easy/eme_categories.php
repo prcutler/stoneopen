@@ -30,13 +30,13 @@ function eme_categories_page() {
          $category = array();
          $category['category_name'] = trim(stripslashes($_POST['category_name']));
          $validation_result = $wpdb->insert($categories_table, $category);
-      } elseif ($_POST['eme_admin_action'] == "delete" ) {
+      } elseif ($_POST['eme_admin_action'] == "delete" && isset($_POST['categories'])) {
          // Delete category or multiple
          $categories = $_POST['categories'];
          if (is_array($categories)) {
             //Run the query if we have an array of category ids
-            if (count($cats > 0)) {
-               $validation_result = $wpdb->query( "DELETE FROM $categories_table WHERE category_id IN ( ". implode(",", $cats) .")" );
+            if (count($categories > 0)) {
+               $validation_result = $wpdb->query( "DELETE FROM $categories_table WHERE category_id IN ( ". implode(",", $categories) .")" );
                if ($validation_result !== false)
                   $message = __("Successfully deleted the selected categories.","eme");
             } else {
@@ -81,19 +81,19 @@ function eme_categories_table_layout($message = "") {
             <div id='col-right'>
              <div class='col-wrap'>
                 <form id='bookings-filter' method='post' action='".$destination."'>
-                  <input type='hidden' name='eme_admin_action' value='delete'/>";
+                  <input type='hidden' name='eme_admin_action' value='delete' />";
                   if (count($categories)>0) {
                      $table .= "<table class='widefat'>
                         <thead>
                            <tr>
-                              <th class='manage-column column-cb check-column' scope='col'><input type='checkbox' class='select-all' value='1'/></th>
+                              <th class='manage-column column-cb check-column' scope='col'><input type='checkbox' class='select-all' value='1' /></th>
                               <th>".__('ID', 'eme')."</th>
                               <th>".__('Name', 'eme')."</th>
                            </tr>
                         </thead>
                         <tfoot>
                            <tr>
-                              <th class='manage-column column-cb check-column' scope='col'><input type='checkbox' class='select-all' value='1'/></th>
+                              <th class='manage-column column-cb check-column' scope='col'><input type='checkbox' class='select-all' value='1' /></th>
                               <th>".__('ID', 'eme')."</th>
                               <th>".__('Name', 'eme')."</th>
                            </tr>
@@ -102,23 +102,25 @@ function eme_categories_table_layout($message = "") {
                      foreach ($categories as $this_category) {
                         $table .= "    
                            <tr>
-                           <td><input type='checkbox' class ='row-selector' value='".$this_category['category_id']."' name='categories[]'/></td>
+                           <td><input type='checkbox' class ='row-selector' value='".$this_category['category_id']."' name='categories[]' /></td>
                            <td><a href='".admin_url("admin.php?page=eme-categories&amp;eme_admin_action=editcat&amp;category_ID=".$this_category['category_id'])."'>".$this_category['category_id']."</a></td>
                            <td><a href='".admin_url("admin.php?page=eme-categories&amp;eme_admin_action=editcat&amp;category_ID=".$this_category['category_id'])."'>".$this_category['category_name']."</a></td>
                            </tr>
                         ";
                      }
-                     $table .= "
+                     $delete_text=__("Are you sure you want to delete these categories?","eme");
+                     $table .= <<<EOT
                         </tbody>
                      </table>
    
                      <div class='tablenav'>
                         <div class='alignleft actions'>
-                        <input class='button-primary action' type='submit' name='doaction2' value='Delete'/>
+                        <input class='button-primary action' type='submit' name='doaction' value='Delete' onclick="return areyousure('$delete_text');" />
                         <br class='clear'/>
                         </div>
                         <br class='clear'/>
-                     </div>";
+                     </div>
+EOT;
                   } else {
                         $table .= "<p>".__('No categories have been inserted yet!', 'eme');
                   }
@@ -174,13 +176,13 @@ function eme_categories_edit_layout($message = "") {
 
       <form name='editcat' id='editcat' method='post' action='".admin_url("admin.php?page=eme-categories")."' class='validate'>
       <input type='hidden' name='eme_admin_action' value='edit' />
-      <input type='hidden' name='category_ID' value='".$category['category_id']."'/>";
+      <input type='hidden' name='category_ID' value='".$category['category_id']."' />";
       
       $layout .= "
          <table class='form-table'>
             <tr class='form-field form-required'>
                <th scope='row' valign='top'><label for='category_name'>".__('Category name', 'eme')."</label></th>
-               <td><input name='category_name' id='category_name' type='text' value='".eme_sanitize_html($category['category_name'])."' size='40'  /><br />
+               <td><input name='category_name' id='category_name' type='text' value='".eme_sanitize_html($category['category_name'])."' size='40' /><br />
                  ".__('The name of the category', 'eme')."</td>
             </tr>
          </table>

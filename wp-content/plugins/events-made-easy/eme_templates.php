@@ -31,7 +31,7 @@ function eme_templates_page() {
          $template['format'] = trim(stripslashes($_POST['format']));
          $template['description'] = trim(stripslashes($_POST['description']));
          $validation_result = $wpdb->insert($templates_table, $template);
-      } elseif ($_POST['eme_admin_action'] == "delete" ) {
+      } elseif ($_POST['eme_admin_action'] == "delete" && isset($_POST['templates'])) {
          // Delete template or multiple
          $templates = $_POST['templates'];
          if (is_array($templates)) {
@@ -82,19 +82,19 @@ function eme_templates_table_layout($message = "") {
             <div id='col-right'>
              <div class='col-wrap'>
                 <form id='bookings-filter' method='post' action='".$destination."'>
-                  <input type='hidden' name='eme_admin_action' value='delete'/>";
+                  <input type='hidden' name='eme_admin_action' value='delete' />";
                   if (count($templates)>0) {
                      $table .= "<table class='widefat'>
                         <thead>
                            <tr>
-                              <th class='manage-column column-cb check-column' scope='col'><input type='checkbox' class='select-all' value='1'/></th>
+                              <th class='manage-column column-cb check-column' scope='col'><input type='checkbox' class='select-all' value='1' /></th>
                               <th>".__('ID', 'eme')."</th>
                               <th>".__('Format description', 'eme')."</th>
                            </tr>
                         </thead>
                         <tfoot>
                            <tr>
-                              <th class='manage-column column-cb check-column' scope='col'><input type='checkbox' class='select-all' value='1'/></th>
+                              <th class='manage-column column-cb check-column' scope='col'><input type='checkbox' class='select-all' value='1' /></th>
                               <th>".__('ID', 'eme')."</th>
                               <th>".__('Format description', 'eme')."</th>
                            </tr>
@@ -103,23 +103,26 @@ function eme_templates_table_layout($message = "") {
                      foreach ($templates as $this_template) {
                         $table .= "    
                            <tr>
-                           <td><input type='checkbox' class ='row-selector' value='".$this_template['id']."' name='templates[]'/></td>
+                           <td><input type='checkbox' class ='row-selector' value='".$this_template['id']."' name='templates[]' /></td>
                            <td><a href='".admin_url("admin.php?page=eme-templates&amp;eme_admin_action=edittemplate&amp;template_ID=".$this_template['id'])."'>".$this_template['id']."</a></td>
                            <td><a href='".admin_url("admin.php?page=eme-templates&amp;eme_admin_action=edittemplate&amp;template_ID=".$this_template['id'])."'>".$this_template['description']."</a></td>
                            </tr>
                         ";
                      }
-                     $table .= "
+                     $delete_text=__("Are you sure you want to delete these templates?","eme");
+                     $table .= <<<EOT
                         </tbody>
-                     </table>
-   
-                     <div class='tablenav'>
+                        </table>
+
+                        <div class='tablenav'>
                         <div class='alignleft actions'>
-                        <input class='button-primary action' type='submit' name='doaction2' value='Delete'/>
+                        <input class='button-primary action' type='submit' name='doaction' value='Delete' onclick="return areyousure('$delete_text');" />
                         <br class='clear'/>
                         </div>
                         <br class='clear'/>
-                     </div>";
+                        </div>
+EOT;
+
                   } else {
                         $table .= "<p>".__('No templates have been inserted yet!', 'eme');
                   }
@@ -177,13 +180,13 @@ function eme_templates_edit_layout($message = "") {
 
       <form name='edittemplate' id='edittemplate' method='post' action='".admin_url("admin.php?page=eme-templates")."' class='validate'>
       <input type='hidden' name='eme_admin_action' value='edit' />
-      <input type='hidden' name='template_ID' value='".$template['id']."'/>";
+      <input type='hidden' name='template_ID' value='".$template['id']."' />";
       
       $layout .= "
          <table class='form-table'>
             <tr class='form-field form-required'>
                <th scope='row' valign='top'><label for='description'>".__('Template description', 'eme')."</label></th>
-               <td><input type='text' name='description' id='description' value='".eme_sanitize_html($template['description'])."' size='40'  /><br />
+               <td><input type='text' name='description' id='description' value='".eme_sanitize_html($template['description'])."' size='40' /><br />
                  ".__('The description of the template', 'eme')."</td>
             </tr>
             <tr class='form-field form-required'>
@@ -202,7 +205,7 @@ function eme_templates_edit_layout($message = "") {
 function eme_get_templates() {
    global $wpdb;
    $templates_table = $wpdb->prefix.TEMPLATES_TBNAME;
-   return $wpdb->get_results("SELECT * FROM $templates_table", ARRAY_A);
+   return $wpdb->get_results("SELECT * FROM $templates_table ORDER BY description", ARRAY_A);
 }
 
 function eme_get_templates_array_by_id() {

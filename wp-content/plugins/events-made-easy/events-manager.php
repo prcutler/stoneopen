@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Events Made Easy
-Version: 1.4.4
+Version: 1.5.3
 Plugin URI: http://www.e-dynamics.be/wordpress
-Description: Description: Manage and display events. Includes recurring events; locations; widgets; Google maps; RSVP; ICAL and RSS feeds; Paypal, 2Checkout and Google Checkout. <a href="admin.php?page=eme-options">Settings</a> | <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=SMGDS4GLCYWNG&lc=BE&item_name=To%20support%20development%20of%20EME&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted">Donate</a>
+Description: Manage and display events. Includes recurring events; locations; widgets; Google maps; RSVP; ICAL and RSS feeds; Paypal, 2Checkout and Google Checkout. <a href="admin.php?page=eme-options">Settings</a> | <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=SMGDS4GLCYWNG&lc=BE&item_name=To%20support%20development%20of%20EME&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted">Donate</a>
 Author: Franky Van Liedekerke
 Author URI: http://www.e-dynamics.be/
 */
@@ -103,7 +103,7 @@ function eme_client_clock_callback() {
 }
 
 // Setting constants
-define('EME_DB_VERSION', 58);
+define('EME_DB_VERSION', 64);
 define('EME_PLUGIN_URL', plugins_url('',plugin_basename(__FILE__)).'/'); //PLUGIN URL
 define('EME_PLUGIN_DIR', ABSPATH.PLUGINDIR.'/'.str_replace(basename( __FILE__),"",plugin_basename(__FILE__))); //PLUGIN DIRECTORY
 define('EVENTS_TBNAME','eme_events');
@@ -116,7 +116,7 @@ define('TEMPLATES_TBNAME', 'eme_templates');
 define('FORMFIELDS_TBNAME', 'eme_formfields');
 define('FIELDTYPES_TBNAME', 'eme_fieldtypes');
 define('ANSWERS_TBNAME', 'eme_answers');
-define('DEFAULT_EVENT_PAGE_NAME', 'Events');
+define('PAYMENTS_TBNAME', 'eme_payments');
 define('MIN_CAPABILITY', 'edit_posts');   // Minimum user level to edit own events
 define('AUTHOR_CAPABILITY', 'publish_posts');   // Minimum user level to put an event in public/private state
 define('EDIT_CAPABILITY', 'edit_others_posts'); // Minimum user level to edit any event
@@ -139,23 +139,23 @@ define('DEFAULT_CAP_CLEANUP','activate_plugins');
 define('DEFAULT_CAP_SETTINGS','activate_plugins');
 define('DEFAULT_CAP_SEND_MAILS','edit_posts');
 define('DEFAULT_CAP_SEND_OTHER_MAILS','edit_others_posts');
-define('DEFAULT_EVENT_LIST_ITEM_FORMAT', '<li>#j #M #Y - #H:#i<br /> #_LINKEDNAME<br />#_TOWN </li>');
-define('DEFAULT_SINGLE_EVENT_FORMAT', '<p>#j #M #Y - #H:#i</p><p>#_TOWN</p><p>#_NOTES</p><p>#_ADDBOOKINGFORM</p><p>#_MAP</p>'); 
+define('DEFAULT_EVENT_LIST_ITEM_FORMAT', '<li>#_STARTDATE - #_STARTTIME<br /> #_LINKEDNAME<br />#_TOWN </li>');
+define('DEFAULT_SINGLE_EVENT_FORMAT', '<p>#_STARTDATE - #_STARTTIME</p><p>#_TOWN</p><p>#_NOTES</p><p>#_ADDBOOKINGFORM</p><p>#_MAP</p>'); 
 define('DEFAULT_EVENTS_PAGE_TITLE',__('Events','eme') ) ;
 define('DEFAULT_EVENT_PAGE_TITLE_FORMAT', '#_EVENTNAME'); 
 define('DEFAULT_EVENT_HTML_TITLE_FORMAT', '#_EVENTNAME'); 
 define('DEFAULT_ICAL_DESCRIPTION_FORMAT',"#_NOTES");
-define('DEFAULT_RSS_DESCRIPTION_FORMAT',"#j #M #y - #H:#i <br /> #_NOTES <br />#_LOCATIONNAME <br />#_ADDRESS <br />#_TOWN");
+define('DEFAULT_RSS_DESCRIPTION_FORMAT',"#_STARTDATE - #_STARTTIME <br /> #_NOTES <br />#_LOCATIONNAME <br />#_ADDRESS <br />#_TOWN");
 define('DEFAULT_RSS_TITLE_FORMAT',"#_EVENTNAME");
 define('DEFAULT_ICAL_TITLE_FORMAT',"#_EVENTNAME");
 define('DEFAULT_MAP_TEXT_FORMAT', '<strong>#_LOCATIONNAME</strong><p>#_ADDRESS</p><p>#_TOWN</p>');
-define('DEFAULT_WIDGET_EVENT_LIST_ITEM_FORMAT','<li>#_LINKEDNAME<ul><li>#j #M #y</li><li>#_TOWN</li></ul></li>');
+define('DEFAULT_WIDGET_EVENT_LIST_ITEM_FORMAT','<li>#_LINKEDNAME<ul><li>#_STARTDATE</li><li>#_TOWN</li></ul></li>');
 define('DEFAULT_NO_EVENTS_MESSAGE', __('No events', 'eme'));
 define('DEFAULT_SINGLE_LOCATION_FORMAT', '<p>#_ADDRESS</p><p>#_TOWN</p>#_DESCRIPTION #_MAP'); 
 define('DEFAULT_LOCATION_PAGE_TITLE_FORMAT', '#_LOCATIONNAME'); 
 define('DEFAULT_LOCATION_HTML_TITLE_FORMAT', '#_LOCATIONNAME'); 
 define('DEFAULT_LOCATION_BALLOON_FORMAT', "<strong>#_LOCATIONNAME</strong><br />#_ADDRESS - #_TOWN<br /><a href='#_LOCATIONPAGEURL'>Details</a>");
-define('DEFAULT_LOCATION_EVENT_LIST_ITEM_FORMAT', "<li>#_EVENTNAME - #j #M #Y - #H:#i</li>");
+define('DEFAULT_LOCATION_EVENT_LIST_ITEM_FORMAT', "<li>#_EVENTNAME - #_STARTDATE - #_STARTTIME</li>");
 define('DEFAULT_LOCATION_NO_EVENTS_MESSAGE', __('<li>No events in this location</li>', 'eme'));
 define('DEFAULT_FULL_CALENDAR_EVENT_FORMAT', '<li>#_LINKEDNAME</li>');
 define('DEFAULT_SMALL_CALENDAR_EVENT_TITLE_FORMAT', "#_EVENTNAME" );
@@ -298,7 +298,7 @@ add_filter('query_vars','eme_insertMyRewriteQueryVars');
 // (like eg. the load_textdomain). Some includes do stuff based on _GET
 // so they need the correct info before doing stuff
 include("captcha_check.php");
-include("eme_settings.php");
+include("eme_options.php");
 include("eme_functions.php");
 include("eme_filters.php");
 include("eme_events.php");
@@ -317,6 +317,7 @@ include("eme_cleanup.php");
 include("eme_formfields.php");
 include("eme_shortcodes.php");
 include("eme_actions.php");
+include("eme_payments.php");
 
 require_once("phpmailer/eme_phpmailer.php") ;
 //require_once("phpmailer/language/phpmailer.lang-en.php") ;
@@ -424,6 +425,7 @@ function _eme_uninstall($force_drop=0) {
       eme_drop_table(FORMFIELDS_TBNAME);
       eme_drop_table(FIELDTYPES_TBNAME);
       eme_drop_table(ANSWERS_TBNAME);
+      eme_drop_table(PAYMENTS_TBNAME);
       eme_delete_events_page();
       eme_options_delete();
       eme_metabox_options_delete();
@@ -465,6 +467,7 @@ function eme_create_tables() {
    eme_create_templates_table($charset,$collate);
    eme_create_formfields_table($charset,$collate);
    eme_create_answers_table($charset,$collate);
+   eme_create_payments_table($charset,$collate);
 }
 
 function eme_drop_table($table) {
@@ -950,13 +953,31 @@ function eme_create_answers_table($charset,$collate) {
    }
 }
 
+function eme_create_payments_table($charset,$collate) {
+   global $wpdb;
+   $db_version = get_option('eme_version');
+   $table_name = $wpdb->prefix.PAYMENTS_TBNAME;
+
+   if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+      $sql = "CREATE TABLE ".$table_name." (
+         id int(11) NOT NULL auto_increment,
+         creation_date_gmt datetime NOT NULL DEFAULT '0000-00-00 00:00:00', 
+         booking_ids text NOT NULL,
+         UNIQUE KEY  (id)
+         ) $charset $collate;";
+      maybe_create_table($table_name,$sql);
+   }
+}
+
 function eme_create_events_page() {
    global $wpdb;
    $postarr = array(
-      'post_status'=> 'publish',
-      'post_title' => DEFAULT_EVENT_PAGE_NAME,
-      'post_name'  => wp_strip_all_tags(__('events','eme')),
-      'post_type'  => 'page',
+      'post_title'     => wp_strip_all_tags(__('Events','eme')),
+      'post_content'   => __("This page is used by Events Made Easy. Don't change it, don't use it in your menu's, don't delete it. Just make sure the EME setting called 'Events page' points to this page. EME uses this page to render any and all events, locations, bookings, maps, ... anything. If you do want to delete this page, create a new one EME can use and update the EME setting 'Events page' accordingly.",'eme'),
+      'post_type'      => 'page',
+      'post_status'    => 'publish',
+      'comment_status' => 'closed',
+      'ping_status'    => 'closed'
    );
    if ($int_post_id = wp_insert_post($postarr)) {
       update_option('eme_events_page', $int_post_id);
@@ -981,35 +1002,26 @@ function eme_create_events_submenu () {
       // Add a submenu to the custom top-level menu: 
       // edit event also needs just "add" as capability, otherwise you will not be able to edit own created events
       $plugin_page = add_submenu_page('events-manager', __('Edit'),__('Edit'),get_option('eme_cap_list_events'),'events-manager','eme_events_page');
-      add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' );
-      add_action( 'admin_head-'. $plugin_page, 'eme_admin_event_boxes' );
+      //add_action( 'admin_head-'. $plugin_page, 'eme_admin_events_script' );
+      //add_action( 'admin_head-'. $plugin_page, 'eme_admin_event_boxes' );
       $plugin_page = add_submenu_page('events-manager', __('Add new', 'eme'), __('Add new','eme'), get_option('eme_cap_add_event'), 'eme-new_event', "eme_new_event_page");
-      add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' ); 
-      add_action( 'admin_head-'. $plugin_page, 'eme_admin_event_boxes' );
+      //add_action( 'admin_head-'. $plugin_page, 'eme_admin_events_script' ); 
+      //add_action( 'admin_head-'. $plugin_page, 'eme_admin_event_boxes' );
       $plugin_page = add_submenu_page('events-manager', __('Locations', 'eme'), __('Locations', 'eme'), get_option('eme_cap_add_locations'), 'eme-locations', "eme_locations_page");
-      add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' );
       if (get_option('eme_categories_enabled')) {
          $plugin_page = add_submenu_page('events-manager', __('Event Categories','eme'),__('Categories','eme'), get_option('eme_cap_categories'), "eme-categories", 'eme_categories_page');
-         add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' );
       }
       $plugin_page = add_submenu_page('events-manager', __('Templates','eme'),__('Templates','eme'), get_option('eme_cap_templates'), "eme-templates", 'eme_templates_page');
-      add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' );
       if (get_option('eme_rsvp_enabled')) {
          $plugin_page = add_submenu_page('events-manager', __('People', 'eme'), __('People', 'eme'), get_option('eme_cap_people'), 'eme-people', "eme_people_page");
-         add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' ); 
          $plugin_page = add_submenu_page('events-manager', __('Pending Approvals', 'eme'), __('Pending Approvals', 'eme'), get_option('eme_cap_approve'), 'eme-registration-approval', "eme_registration_approval_page");
-         add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' ); 
          $plugin_page = add_submenu_page('events-manager', __('Change Registration', 'eme'), __('Change Registration', 'eme'), get_option('eme_cap_registrations'), 'eme-registration-seats', "eme_registration_seats_page");
-         add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' ); 
          if (get_option('eme_rsvp_mail_notify_is_active')) {
             $plugin_page = add_submenu_page('events-manager', __('Send Mails', 'eme'), __('Send Mails', 'eme'), get_option('eme_cap_send_mails'), 'eme-send-mails', "eme_send_mails_page");
-            add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' ); 
          }
          $plugin_page = add_submenu_page('events-manager', __('Form Fields','eme'),__('Form Fields','eme'), get_option('eme_cap_forms'), "eme-formfields", 'eme_formfields_page');
-         add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' );
       }
       $plugin_page = add_submenu_page('events-manager', __('Cleanup', 'eme'), __('Cleanup', 'eme'), get_option('eme_cap_cleanup'), 'eme-cleanup', "eme_cleanup_page");
-      add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' );
 
       # just in case: make sure the Settings page can be reached if something is not correct with the security settings
       if (get_option('eme_cap_settings') =='')
@@ -1017,7 +1029,7 @@ function eme_create_events_submenu () {
       else
          $cap_settings=get_option('eme_cap_settings');
       $plugin_page = add_submenu_page('events-manager', __('Events Made Easy Settings','eme'),__('Settings','eme'), $cap_settings, "eme-options", 'eme_options_page');
-      add_action( 'admin_head-'. $plugin_page, 'eme_admin_general_script' );
+      //add_action( 'admin_head-'. $plugin_page, 'eme_admin_options_script' );
       // do some option checking after the options have been updated
       // add_action( 'load-'. $plugin_page, 'eme_admin_options_save');
    }
@@ -1181,11 +1193,35 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
             $replacement = admin_url("admin.php?page=events-manager&amp;eme_admin_action=edit_event&amp;event_id=".$event['event_id']);
          }
 
-      } elseif ($event && preg_match('/#_24HSTARTTIME/', $result)) { 
-         $replacement = $event['event_start_time'];
+      } elseif ($event && preg_match('/#_EVENTPRINTBOOKINGSLINK/', $result)) { 
+         if (current_user_can( get_option('eme_cap_edit_events')) || current_user_can( get_option('eme_cap_list_events')) ||
+             (current_user_can( get_option('eme_cap_author_event')) && ($event['event_author']==$current_userid || $event['event_contactperson_id']==$current_userid))) {
+            $replacement = "<a href=' ".admin_url("admin.php?page=events-manager&amp;eme_admin_action=edit_event&amp;event_id=".$event['event_id'])."'>".__('Printable view of bookings','eme')."</a>";
+         }
 
-      } elseif ($event && preg_match('/#_24HENDTIME/', $result)) { 
-         $replacement = $event['event_end_time'];
+      } elseif ($event && preg_match('/#_EVENTPRINTBOOKINGSURL/', $result)) { 
+         if (current_user_can( get_option('eme_cap_edit_events')) || current_user_can( get_option('eme_cap_list_events')) ||
+             (current_user_can( get_option('eme_cap_author_event')) && ($event['event_author']==$current_userid || $event['event_contactperson_id']==$current_userid))) {
+            $replacement = admin_url("admin.php?page=eme-people&amp;eme_admin_action=booking_printable&amp;event_id=".$event['event_id']);
+         }
+
+      } elseif ($event && preg_match('/#_STARTDATE/', $result)) { 
+         $replacement = eme_localised_date($event['event_start_date']);
+
+      } elseif ($event && preg_match('/#_STARTTIME/', $result)) { 
+         $replacement = eme_localised_time($event['event_start_time']);
+
+      } elseif ($event && preg_match('/#_ENDDATE/', $result)) { 
+         $replacement = eme_localised_date($event['event_end_date']);
+
+      } elseif ($event && preg_match('/#_ENDTIME/', $result)) { 
+         $replacement = eme_localised_time($event['event_end_time']);
+
+      } elseif ($event && preg_match('/#_24HSTARTTIME/', $result)) { 
+         $replacement = substr($event['event_start_time'], 0,5);
+
+      } elseif ($event && preg_match('/#_24HENDTIME$/', $result)) {
+         $replacement = substr($event['event_end_time'], 0,5);
 
       } elseif ($event && preg_match('/#_PAST_FUTURE_CLASS/', $result)) { 
          if (strtotime($event['event_start_date']." ".$event['event_start_time']) > time()) {
@@ -1314,6 +1350,17 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
                $replacement = $seats[$field_id];
          }
 
+      } elseif ($event && preg_match('/#_(PENDINGSPACES|PENDINGSEATS)$/', $result)) {
+         $replacement = eme_get_pending_seats($event['event_id']);
+
+      } elseif (preg_match('/#_(PENDINGSPACES|PENDINGSEATS)\{(\d+)\}/', $result, $matches)) {
+         $field_id = intval($matches[2])-1;
+         if (eme_is_multi($event['event_seats'])) {
+            $seats=eme_get_pending_multiseats($event['event_id']);
+            if (array_key_exists($field_id,$seats))
+               $replacement = $seats[$field_id];
+         }
+
       } elseif ($event && preg_match('/#_USER_(RESERVEDSPACES|BOOKEDSEATS)$/', $result)) {
          if (is_user_logged_in()) {
             $replacement = eme_get_booked_seats_by_wp_event_id($current_userid,$event['event_id']);
@@ -1434,6 +1481,13 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
             $replacement = $thumb_url;
          }
 
+      } elseif ($event && preg_match('/#_EVENTATT\{(.+)\}\{(.+)\}/', $result, $matches)) {
+         $tmp_event_id=intval($matches[1]);
+         $tmp_event_attkey=$matches[2];
+         $tmp_event = eme_get_event($tmp_event_id);
+         if (isset($tmp_event['event_attributes'][$tmp_event_attkey]))
+            $replacement = $tmp_event['event_attributes'][$tmp_event_attkey];
+
       } elseif ($event && preg_match('/#_EVENTPAGEURL\{(.+)\}/', $result, $matches)) {
          $events_page_link = eme_get_events_page(true, false);
          $replacement = add_query_arg(array('event_id'=>intval($matches[1])),$events_page_link);
@@ -1481,6 +1535,14 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
       } elseif ($event && preg_match('/#_DAYS_TILL_END/', $result)) {
          $now = date("Y-m-d");
          $replacement = eme_daydifference($now,$event['event_end_date']);
+
+      } elseif ($event && preg_match('/#_HOURS_TILL_START/', $result)) {
+         $now = date("Y-m-d H:i");
+         $replacement = eme_hourdifference($now,$event['event_start_date']." ".$event['event_start_time']);
+
+      } elseif ($event && preg_match('/#_HOURS_TILL_END/', $result)) {
+         $now = date("Y-m-d H:i");
+         $replacement = eme_hourdifference($now,$event['event_end_date']." ".$event['event_end_time']);
 
       } elseif ($event && preg_match('/#_EVENTPRICE$|#_PRICE$/', $result)) {
          $field = "price";
@@ -1784,7 +1846,8 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
       } elseif (preg_match('/#_IS_RSVP_ENDED/', $result)) {
          if (eme_is_event_rsvp($event)) {
             $event_start_datetime = strtotime($event['event_start_date']." ".$event['event_start_time']);
-            if (time()+$event['rsvp_number_days']*60*60*24+$event['rsvp_number_hours']*60*60 > $event_start_datetime )
+            $rsvp_end_datetime = $event_start_datetime - $event['rsvp_number_days']*60*60*24 - $event['rsvp_number_hours']*60*60;
+            if ($rsvp_end_datetime<time())
                $replacement = 1;
             else
                $replacement = 0;
@@ -1969,17 +2032,15 @@ function eme_sanitize_rss( $value ) {
    return "<![CDATA[".$value."]]>";
 }
 
-
-
 function eme_htmlspecialchars(&$value) {
   //$value = htmlspecialchars($value, ENT_QUOTES');
-  $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+  $value = htmlspecialchars($value, ENT_QUOTES,'UTF-8');
 }
 
 function eme_sanitize_html( $value ) {
    //return htmlentities($value,ENT_QUOTES,get_option('blog_charset'));
    if (!is_array($value))
-      $value=htmlspecialchars($value,ENT_QUOTES);
+      $value=htmlspecialchars($value,ENT_QUOTES,'UTF-8');
    else
       array_walk_recursive($value, "eme_htmlspecialchars");
    return $value;
@@ -2012,7 +2073,7 @@ function admin_show_warnings() {
 
 
 function eme_explain_dbupdate_done() {
-   $advice = sprintf(__("It seems you upgraded Events Made Eeasy, the events database has been updated accordingly. Click <a href='%s'>here</a> to dismiss this message.",'eme'),add_query_arg(array("disable_update_message"=>"true")));
+   $advice = sprintf(__("It seems you upgraded Events Made Easy, the events database has been updated accordingly. Click <a href='%s'>here</a> to dismiss this message.",'eme'),add_query_arg(array("disable_update_message"=>"true")));
    ?>
 <div id="message" class="update-nag"><p> <?php echo $advice; ?> </p></div>
 <?php
@@ -2035,10 +2096,10 @@ _e('If you find this plugin useful to you, please consider making a small donati
 ?>
   <br /><br />
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="cmd" value="_s-xclick" />
 <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
-">
-<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+" />
+<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" />
 <?php
 echo sprintf ( __ ( "<a href=\"%s\" title=\"I already donated\">I already donated.</a>", 'eme' ), add_query_arg (array("disable_donate_message"=>"true")));
 ?>

@@ -216,14 +216,14 @@ function eme_calendar_day_url($day) {
    return $the_link;
 }
 
-function eme_payment_url($booking_id) {
+function eme_payment_url($payment_id) {
    global $wp_rewrite;
 
    $url_mode=1;
    $language = eme_detect_lang();
    if (isset($wp_rewrite) && $wp_rewrite->using_permalinks() && get_option('eme_seo_permalink')) {
       $events_prefix=eme_permalink_convert(get_option ( 'eme_permalink_events_prefix'));
-      $name=$events_prefix."p$booking_id";
+      $name=$events_prefix."p$payment_id";
       $the_link = home_url();
       // some plugins add the lang info to the home_url, remove it so we don't get into trouble or add it twice
       $the_link = trailingslashit(remove_query_arg('lang',$the_link));
@@ -241,7 +241,7 @@ function eme_payment_url($booking_id) {
       $the_link = eme_get_events_page(true, false);
       // some plugins add the lang info to the home_url, remove it so we don't get into trouble or add it twice
       $the_link = remove_query_arg('lang',$the_link);
-      $the_link = add_query_arg( array( 'eme_pmt_id' => $booking_id ), $the_link );
+      $the_link = add_query_arg( array( 'eme_pmt_id' => $payment_id ), $the_link );
       if (!empty($language))
          $the_link = add_query_arg( array( 'lang' => $language ), $the_link );
    }
@@ -280,7 +280,7 @@ function eme_event_category_url($cat_name) {
    return $the_link;
 }
 
-function eme_payment_return_url($event,$booking_id,$resultcode) {
+function eme_payment_return_url($event,$payment_id,$resultcode) {
    $the_link=eme_event_url($event);
    if (get_option('eme_payment_show_custom_return_page')) {
       if ($resultcode==1) {
@@ -292,7 +292,7 @@ function eme_payment_return_url($event,$booking_id,$resultcode) {
       $event_id=$event['event_id'];
       $the_link = add_query_arg( array( 'event_id' => $event_id ), $the_link );
       if (get_option('eme_payment_add_bookingid_to_return')) {
-         $the_link = add_query_arg( array( 'eme_pmt_id' => $booking_id ), $the_link );
+         $the_link = add_query_arg( array( 'eme_pmt_id' => $payment_id ), $the_link );
       }
    }
    return $the_link;
@@ -370,6 +370,13 @@ function eme_daydifference($date1,$date2) {
    $ConvertToTimeStamp_Date2 = strtotime($date2);
    $DateDifference = intval($ConvertToTimeStamp_Date2) - intval($ConvertToTimeStamp_Date1);
    return round($DateDifference/86400);
+}
+
+function eme_hourdifference($date1,$date2) {
+   $ConvertToTimeStamp_Date1 = strtotime($date1);
+   $ConvertToTimeStamp_Date2 = strtotime($date2);
+   $DateDifference = intval($ConvertToTimeStamp_Date2) - intval($ConvertToTimeStamp_Date1);
+   return round($DateDifference/3600);
 }
 
 function eme_delete_image_files($image_basename) {
