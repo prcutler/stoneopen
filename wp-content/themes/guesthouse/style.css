@@ -4,7 +4,7 @@ Theme URI: http://preview.ait-themes.com/guesthouse/
 Author: AIT-Themes.com
 Author URI: http://ait-themes.com
 Description: Follow us on <a href="http://themeforest.net/user/ait/follow">Themeforest</a> or <a href="http://twitter.com/AitThemes">Twitter</a>
-Version: 2.44
+Version: 2.47
 License: GNU General Public License
 License URI: http://www.gnu.org/licenses/gpl.html
 */
@@ -2399,6 +2399,7 @@ a, .toolbar, .widget_calendar tfoot a, .hentry h2.entry-title a, .sc-page h3 a, 
   text-align:right;
 }
 .no-thumbnail .info-box { margin:0 0 20px 20px; }
+.info-box a img.share { width:initial; }
 .info-box a .share, .info-box a:hover .share {
   background:#e24225;
   position:absolute;

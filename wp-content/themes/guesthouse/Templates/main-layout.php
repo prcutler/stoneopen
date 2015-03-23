@@ -24,7 +24,7 @@
 
   	{if $post}
 	<!-- facebook open graph -->
-	<meta property="og:description" content="{$post->excerpt}" />
+	<meta property="og:description" content="{!$post->excerpt}" />
 	<meta property="og:image" content="{$post->thumbnailSrc}" />
 	{/if}
 
@@ -247,20 +247,16 @@
 	</footer><!-- end of footer -->
 </div><!-- end of mainpage -->
 
-{ifset $themeOptions->general->displayThemebox}
-	{include "$themeboxDir/ThemeBoxTemplate.php"}
-{/ifset}
-
 {footer}
 
-{if $themeOptions->fonts->fancyFont->type == 'cufon' or $themeOptions->general->displayThemebox}
+{if $themeOptions->fonts->fancyFont->type == 'cufon'}
 	{cufon
 		fonts,
 		fancyFont,
 		"$themeUrl/design/js/libs/cufon.js",
 		THEME_FONTS_URL . "/{$themeOptions->fonts->fancyFont->file}",
 		$themeOptions->fonts->fancyFont->font,
-		$themeOptions->general->displayThemebox
+		false
 	}
 {/if}
 

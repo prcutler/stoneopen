@@ -16,7 +16,7 @@ require_once AIT_FRAMEWORK_DIR . '/WpLatte/WpLatte.php';
 else
 	require_once AIT_FRAMEWORK_DIR . '/Libs/WPAlchemy/MetaBox.php';
 
-@include AIT_FRAMEWORK_DIR . '/Libs/ChromePhp/ChromePhp.php';
+// @include AIT_FRAMEWORK_DIR . '/Libs/ChromePhp/ChromePhp.php';
 
 require_once AIT_FRAMEWORK_DIR . '/Libs/AitImageResizer.inc';
 

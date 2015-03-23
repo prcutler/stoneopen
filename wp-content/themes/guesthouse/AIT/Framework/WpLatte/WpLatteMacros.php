@@ -248,6 +248,8 @@ class WpLatteMacros extends NMacroSet
 		$me->addMacro('googleAnalyticsCode',  'echo ' . __CLASS__ . '::googleAnalyticsCode(%node.word);');
 
 		$me->addMacro('includePart', array($me, 'macroIncludePart'));
+
+		$me->addMacro('date', 'echo WpLatteFunctions::getTranslatedDate(%node.args)');
 	}
 
 

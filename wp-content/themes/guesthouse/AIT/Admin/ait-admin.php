@@ -35,6 +35,10 @@ function aitAdminStylesAndScripts()
 
 	wp_enqueue_script('my-upload');
 
+	// WP 3.5 media uploader
+	wp_enqueue_media();
+	wp_enqueue_script('custom-header');
+
 }
 add_action('admin_enqueue_scripts', 'aitAdminStylesAndScripts');
 
@@ -1064,7 +1068,7 @@ function aitCreateNewSkin($page, $tab)
 											$val['value'] = $path;
 											$options[$section][$key][] = $val;
 										}else{
-											$options[$section][$key] = $path;
+											$options[$section][$key] = THEME_URL.'/'.$path;
 										}
 										$dest = THEME_DIR . "/$path";
 										$wp_filesystem->copy($src, $dest, $overwrite);
@@ -1079,7 +1083,7 @@ function aitCreateNewSkin($page, $tab)
 												$val['value'] = $path;
 												$options[$section][$key][] = $val;
 											}else{
-												$options[$section][$key] = $path;
+												$options[$section][$key] = THEME_URL.'/'.$path;
 											}
 											$dest = THEME_DIR . "/$path";
 											$wp_filesystem->copy($src, $dest, $overwrite);
