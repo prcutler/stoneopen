@@ -43,8 +43,11 @@
 
                 // Sets the plupload url with necessary parameters in the QS
                 window.set_plupload_url = function(gallery_id, gallery_name) {
-                    var qs = "?action=upload_image&gallery_id="+urlencode(gallery_id);
+                    var qs = "&action=upload_image&gallery_id="+urlencode(gallery_id);
                     qs += "&gallery_name="+urlencode(gallery_name);
+	                <?php foreach ($sec_token->get_request_list() as $name=>$value): ?>
+	                qs += "&<?php echo $name?>=<?php echo $value?>";
+	                <?php endforeach ?>
                     return photocrati_ajax.url + qs;
                 };
 
@@ -69,6 +72,21 @@
                     var $gallery_name = $('#gallery_name').show();
                     var $gallery_selection = $('#gallery_selection').detach();
                     window.uploaded_image_ids = [];
+
+                    plupload.addFileFilter('xss_protection', function(enabled, file, cb){
+                        var retval = true;
+                        if (enabled) {
+                           if (file.name.match(/\<|\>/)) {
+                               retval = false;
+                               this.trigger("Error", {
+                                  code: plupload.SECURITY_ERROR,
+                                  message: plupload.translate('XSS attempt detected'),
+                                  file: file
+                               });
+                           }
+                        }
+                        cb(retval);
+                    });
 
                     // Override some final plupload options
                     plupload_options.url = photocrati_ajax.url;
@@ -212,7 +230,7 @@
 									var option = $('<option/>').attr('value', response.gallery_id).html(response.gallery_name);
 									$gallery_id.append(option);
 									$gallery_id.val(response.gallery_id);
-									option.attr('selected', 'selected');
+									option.prop('selected', true);
 								}
 
 								// our Frame-Event-Publisher hooks onto the jQuery ajaxComplete action which plupload

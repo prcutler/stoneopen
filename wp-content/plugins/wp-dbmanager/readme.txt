@@ -3,8 +3,8 @@ Contributors: GamerZ
 Donate link: http://lesterchan.net/site/donation/  
 Tags: database, manage, wp-dbmanager, manager, table, optimize, backup, queries, query, drop, empty, tables, table, run, repair, cron, schedule, scheduling, automatic  
 Requires at least: 3.9  
-Tested up to: 4.0  
-Stable tag: 2.71  
+Tested up to: 4.1  
+Stable tag: 2.75  
 
 Manages your WordPress database.
 
@@ -26,7 +26,30 @@ Allows you to optimize database, repair database, backup database, restore datab
 = Donations =
 * I spent most of my free time creating, updating, maintaining and supporting these plugins, if you really love my plugins and could spare me a couple of bucks, I will really appericiate it. If not feel free to use it without any obligations.
 
+= Disclaimer =
+* Note that this plugin passes your datababase password via --password in the command line of mysqldump. This is convenient but as a trade off, it is insecure.
+* On some systems, your password becomes visible to system status programs such as ps that may be invoked by other users to display command lines. MySQL clients typically overwrite the command-line password argument with zeros during their initialization sequence. However, there is still a brief interval during which the value is visible. Also, on some systems this overwriting strategy is ineffective and the password remains visible to ps. Source: [End-User Guidelines for Password Security](http://dev.mysql.com/doc/refman/5.5/en/password-security-user.html)
+* If this is a concern to you, I recommend another database backup plugin called [WP-DB-Backup](https://wordpress.org/plugins/wp-db-backup/)
+* To know about the difference between WP-DBManager and WP-DB-backup, checkout __What is the difference between WP-DBManager and WP-DB-Backup?__ in the [FAQ section](https://wordpress.org/plugins/wp-dbmanager/faq/).
+
 == Changelog ==
+= Version 2.75 =
+* FIXED: When activating the plugin, copy index.php to the backup folder
+* FIXED: If you are on Apache, .htaccess will be copied to the backup folder, if you are on IIS, Web.config will be copied to the backup folder
+* FIXED: When choosing 1 Month(s) for Backup/Optimize/Repair, the next date calculation is wrong
+
+= Version 2.74 =
+* FIXED: escapeshellarg() already escape $, no need to double escape it
+
+= Version 2.73 =
+* FIXED: Unable to backup/restore database if user database password has certain special characters in them
+
+= Version 2.72 =
+* FIXED: Use escapeshellcmd() to escape shell commands. Props Larry W. Cashdollari.
+* FIXED: Do not allow LOAD_FILE to be run. Props Larry W. Cashdollari.
+* FIXED: Uses dbmanager_is_valid_path() to check for mysql and mysqldump path. Fixes arbitrary command injection using backup path. Props Larry W. Cashdollari.
+* FIXED: Uses realpath() to check for backup path. Fixes arbitrary command injection using backup path. Props Larry W. Cashdollari.
+
 = Version 2.71 =
 * NEW: Bump to 4.0
 
@@ -51,7 +74,7 @@ Allows you to optimize database, repair database, backup database, restore datab
 * NEW: Added nonce To All Forms For Added Security
 
 = Version 2.61 (30-04-2011) =
-* FIXED: Checks File Extension And Sanitise File Name That Is Pass Through The URL When Downloading Database File. Props to [Joakim Jardenberg](http://jardenberg.se "Joakim Jardenberg"), [Jonas Nordstram](http://jonasnordstrom.se "Jonas Nordstr�m"), [Andreas Viklund](http://andreasviklund.com/ "Andreas Viklund")
+* FIXED: Checks File Extension And Sanitise File Name That Is Pass Through The URL When Downloading Database File. Props to [Joakim Jardenberg](http://jardenberg.se "Joakim Jardenberg"), [Jonas Nordstram](http://jonasnordstrom.se "Jonas Nordstram"), [Andreas Viklund](http://andreasviklund.com/ "Andreas Viklund")
 
 = Version 2.60 (01-12-2009) =
 * FIXED: Bug In Cron Backup On Windows Server
@@ -143,10 +166,12 @@ Allows you to optimize database, repair database, backup database, restore datab
 2. Put: `Folder: wp-dbmanager`
 3. Activate `WP-DBManager` Plugin
 4. Rename `htaccess.txt` to `.htaccess` file in `Folder: wp-content/plugins/wp-dbmanager`
-5. The script will automatically create a folder called `backup-db` in the wp-content folder if that folder is writable. If it is not created, please create it and CHMOD it to 777
+5. The script will automatically create a folder called `backup-db` in the wp-content folder if that folder is writable. If it is not created, please create the folder and ensure that the folder is writable
 6. Open `Folder: wp-content/backup-db`
-7. Move the `.htaccess` file from `Folder: wp-content/plugins/wp-dbmanager` to `Folder: wp-content/backup-db`
-8. Go to `WP-Admin -> Database -> DB Options` to configure the database options.
+7. If you are on Apache, move the `htaccess.txt` file from `Folder: wp-content/plugins/wp-dbmanager` to `Folder: wp-content/backup-db/.htaccess` if it is not there already
+8. If you are on IIS, move the `Web.config.txt` file from `Folder: wp-content/plugins/wp-dbmanager` to `Folder: wp-content/backup-db/Web.config` if it is not there already
+9. Move `index.php` file from `Folder: wp-content/plugins/wp-dbmanager` to `Folder: wp-content/backup-db/index.php` if it is not there already
+10. Go to `WP-Admin -> Database -> DB Options` to configure the database options
 
 == Upgrading ==
 
@@ -177,14 +202,13 @@ N/A
 = My database is not backed up / My backup file is 0Kb =
 * Ensure that your host allows you to access mysqldump. You can try to narrow the problem by Debugging via SSH:
 1. In `wp-dbmanager.php`
-2. Find `check_backup_files();` on line 243
+2. Find `check_backup_files();` on line 210
 3. Add below it `echo $command;`
 4. Go to `WP-Admin -> Database -> Backup`
 5. Click `Backup`
 6. It should print some debugging statements
 7. Copy that line than run it in SSH
 8. If you need help on SSH contact your host or google for more info
-
 
 = What is the difference between WP-DBManager and WP-DB-Backup? =
 * WP-DBManager uses `mysqldump` application to generate the backup and `mysql` application to restore them via shell.

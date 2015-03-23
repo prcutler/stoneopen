@@ -51,11 +51,15 @@ class WP_Widget_eme_list extends WP_Widget {
    }
 
    public function update( $new_instance, $old_instance ) {
-      // before the merge, let's set the values of those elements that are checkboxes (not returned in the POST if not selected)
+      // before the merge, let's set the values of those elements that are checkboxes or multiselects (not returned in the POST if not selected)
       if (!isset($new_instance['recurrence_only_once']))
          $new_instance['recurrence_only_once']=false;
       if (!isset($new_instance['show_ongoing']))
          $new_instance['show_ongoing']=false;
+      if (!isset($new_instance['category']))
+         $new_instance['category']="";
+      if (!isset($new_instance['notcategory']))
+         $new_instance['notcategory']="";
 
       $instance = array_merge($old_instance,$new_instance);
       $instance['title'] = strip_tags($instance['title']);
@@ -88,6 +92,7 @@ class WP_Widget_eme_list extends WP_Widget {
       $recurrence_only_once = empty( $instance['recurrence_only_once'] ) ? '' : eme_sanitize_html($instance['recurrence_only_once']);
       $authorid = empty( $instance['authorid'] ) ? '' : eme_sanitize_html($instance['authorid']);
       $categories = eme_get_categories();
+      $option_categories=array();
       foreach ($categories as $cat) {
          $id=$cat['category_id'];
          $option_categories[$id]=$cat['category_name'];
@@ -228,9 +233,13 @@ class WP_Widget_eme_calendar extends WP_Widget {
    }
    
    public function update( $new_instance, $old_instance ) {
-      // before the merge, let's set the values of those elements that are checkboxes (not returned in the POST if not selected)
+      // before the merge, let's set the values of those elements that are checkboxes or multiselects (not returned in the POST if not selected)
       if (!isset($new_instance['long_events']))
          $new_instance['long_events']=false;
+      if (!isset($new_instance['category']))
+         $new_instance['category']="";
+      if (!isset($new_instance['notcategory']))
+         $new_instance['notcategory']="";
       $instance = array_merge($old_instance,$new_instance);
       $instance['title'] = strip_tags($instance['title']);
       return $instance;
@@ -245,6 +254,7 @@ class WP_Widget_eme_calendar extends WP_Widget {
       $long_events = isset( $instance['long_events'] ) ? eme_sanitize_html($instance['long_events']) : false;
       $authorid = isset( $instance['authorid'] ) ? eme_sanitize_html($instance['authorid']) : '';
       $categories = eme_get_categories();
+      $option_categories=array();
       foreach ($categories as $cat) {
          $id=$cat['category_id'];
          $option_categories[$id]=$cat['category_name'];

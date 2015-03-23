@@ -32,9 +32,8 @@ function eme_get_recurrence_days($recurrence){
    $monthcounter=0;
    $start_monthday = date("j", $start_date);
    $cycle_date = $start_date;
-   $aDay = 86400;  // a day in seconds
 
-   while (date("d-M-Y", $cycle_date) != date('d-M-Y', $end_date + $aDay)) {
+   while ($cycle_date <= $end_date) {
     //echo (date("d-M-Y", $cycle_date));
       $style = "";
       $monthweek =  floor(((date("d", $cycle_date)-1)/7))+1;
@@ -59,8 +58,8 @@ function eme_get_recurrence_days($recurrence){
       if($recurrence['recurrence_freq'] == 'monthly') { 
          $monthday = date("j", $cycle_date); 
          $month = date("n", $cycle_date);
-         // if recurrence_byweekno=none ==> means to use the startday as repeating day
-         if ( $recurrence['recurrence_byweekno'] == 'none') {
+         // if recurrence_byweekno=0 ==> means to use the startday as repeating day
+         if ( $recurrence['recurrence_byweekno'] == 0) {
             if ($monthday == $start_monthday) {
                if ($monthcounter % $recurrence['recurrence_interval'] == 0)
                   array_push($matching_days, $cycle_date);
@@ -77,7 +76,7 @@ function eme_get_recurrence_days($recurrence){
             $counter++;
          }
       }
-      $cycle_date = $cycle_date + $aDay;         //adding a day
+      $cycle_date = eme_unixdate_calc("+1 day",$cycle_date);  //adding a day
       $daycounter++;
       if ($daycounter%7==0) {
          $weekcounter++;
@@ -211,7 +210,7 @@ function eme_update_events_for_recurrence($event,$recurrence) {
          $event['event_end_date'] = date("Y-m-d", strtotime($event['event_start_date'] ." + $duration_days_event days")); 
          eme_db_update_event($event, $existing_event['event_id'], 1); 
       } else {
-         eme_db_delete_event($existing_event);
+         eme_db_delete_event($existing_event,1);
       }
    }
    // Doing step 2
@@ -231,15 +230,16 @@ function eme_update_events_for_recurrence($event,$recurrence) {
    return 1;
 }
 
-function eme_remove_recurrence($recurrence_id) {
+function eme_db_delete_recurrence($event, $recurrence) {
    global $wpdb;
    $recurrence_table = $wpdb->prefix.RECURRENCE_TBNAME;
-   $sql = "DELETE FROM $recurrence_table WHERE recurrence_id = '$recurrence_id';";
+   $recurrence_id=$recurrence['recurrence_id'];
    $sql = $wpdb->prepare("DELETE FROM $recurrence_table WHERE recurrence_id = %d",$recurrence_id);
    $wpdb->query($sql);
    eme_remove_events_for_recurrence_id($recurrence_id);
    $image_basename= IMAGE_UPLOAD_DIR."/recurrence-".$recurrence_id;
    eme_delete_image_files($image_basename);
+   if (has_action('eme_delete_recurrence_action')) do_action('eme_delete_recurrence_action',$event,$recurrence);
 }
 
 function eme_remove_events_for_recurrence_id($recurrence_id) {
@@ -249,10 +249,15 @@ function eme_remove_events_for_recurrence_id($recurrence_id) {
    $wpdb->query($sql);
 }
 
-function eme_get_recurrence_eventids($recurrence_id) {
+function eme_get_recurrence_eventids($recurrence_id,$future_only=0) {
    global $wpdb;
    $events_table = $wpdb->prefix.EVENTS_TBNAME;
-   $sql = $wpdb->prepare("SELECT event_id FROM $events_table WHERE recurrence_id = %d",$recurrence_id);
+   if ($future_only) {
+      $today = date("Y-m-d");
+      $sql = $wpdb->prepare("SELECT event_id FROM $events_table WHERE recurrence_id = %d AND event_start_date > %s ORDER BY event_start_date ASC, event_start_time ASC",$recurrence_id,$today);
+   } else {
+      $sql = $wpdb->prepare("SELECT event_id FROM $events_table WHERE recurrence_id = %d ORDER BY event_start_date ASC, event_start_time ASC",$recurrence_id);
+   }
    return $wpdb->get_col($sql);
 }
 
@@ -265,7 +270,7 @@ function eme_get_recurrence($recurrence_id) {
 
    // now add the info that has no column in the recurrence table
    // for that, we take the info from the first occurence
-   $sql = $wpdb->prepare("SELECT event_id FROM $events_table WHERE recurrence_id = %d ORDER BY event_start_date ASC LIMIT 1",$recurrence_id);
+   $sql = $wpdb->prepare("SELECT event_id FROM $events_table WHERE recurrence_id = %d ORDER BY event_start_date ASC, event_start_time ASC LIMIT 1",$recurrence_id);
    $event_id = $wpdb->get_var($sql);
    $event = eme_get_event($event_id);
    foreach ($event as $key=>$val) {
@@ -300,9 +305,8 @@ function eme_get_recurrence_desc($recurrence_id) {
    elseif ($recurrence['recurrence_freq'] == 'weekly')  {
       if (!$recurrence['recurrence_byday']) {
          # no weekdays given for the recurrence, so we use the
-         # so we use the day of the week of the startdate as
-         # reference
-         $recurrence['recurrence_byday']=date_i18n('w',strtotime($recurrence['recurrence_start_date']));
+         # day of the week of the startdate as reference
+         $recurrence['recurrence_byday']= eme_localised_date($recurrence['recurrence_start_date'],'w');
          # Sunday is 7, not 0
          if ($recurrence['recurrence_byday']==0)
             $recurrence['recurrence_byday']=7; 
@@ -321,9 +325,8 @@ function eme_get_recurrence_desc($recurrence_id) {
    elseif ($recurrence['recurrence_freq'] == 'monthly')  {
       if (!$recurrence['recurrence_byday']) {
          # no monthday given for the recurrence, so we use the
-         # so we use the day of the month of the startdate as
-         # reference
-         $recurrence['recurrence_byday']=date_i18n('e',strtotime($recurrence['recurrence_start_date']));
+         # day of the month of the startdate as reference
+         $recurrence['recurrence_byday']= eme_localised_date($recurrence['recurrence_start_date'],'e');
       }
       $weekday_array = explode(",", $recurrence['recurrence_byday']);
       $natural_days = array();
