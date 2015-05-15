@@ -1389,11 +1389,7 @@ class wpdb {
 			while ( mysqli_more_results( $this->dbh ) ) {
 				mysqli_next_result( $this->dbh );
 			}
-<<<<<<< HEAD
 		} elseif ( is_resource( $this->result ) ) {
-=======
-		} else if ( is_resource( $this->result ) ) {
->>>>>>> FETCH_HEAD
 			mysql_free_result( $this->result );
 		}
 	}
@@ -1609,10 +1605,7 @@ class wpdb {
 	 */
 	public function query( $query ) {
 		if ( ! $this->ready ) {
-<<<<<<< HEAD
 			$this->check_current_query = true;
-=======
->>>>>>> FETCH_HEAD
 			return false;
 		}
 
@@ -1712,11 +1705,7 @@ class wpdb {
 					$this->last_result[$num_rows] = $row;
 					$num_rows++;
 				}
-<<<<<<< HEAD
 			} elseif ( is_resource( $this->result ) ) {
-=======
-			} else if ( is_resource( $this->result ) ) {
->>>>>>> FETCH_HEAD
 				while ( $row = @mysql_fetch_object( $this->result ) ) {
 					$this->last_result[$num_rows] = $row;
 					$num_rows++;
@@ -2046,7 +2035,6 @@ class wpdb {
 		return $data;
 	}
 
-<<<<<<< HEAD
 	/**
 	 * For string fields, record the maximum string length that field can safely save.
 	 *
@@ -2077,8 +2065,6 @@ class wpdb {
 		return $data;
 	}
 
-=======
->>>>>>> FETCH_HEAD
 	/**
 	 * Retrieve one variable from the database.
 	 *
@@ -2096,13 +2082,10 @@ class wpdb {
 	public function get_var( $query = null, $x = 0, $y = 0 ) {
 		$this->func_call = "\$db->get_var(\"$query\", $x, $y)";
 
-<<<<<<< HEAD
 		if ( $this->check_safe_collation( $query ) ) {
 			$this->check_current_query = false;
 		}
 
-=======
->>>>>>> FETCH_HEAD
 		if ( $query ) {
 			$this->query( $query );
 		}
@@ -2131,14 +2114,11 @@ class wpdb {
 	 */
 	public function get_row( $query = null, $output = OBJECT, $y = 0 ) {
 		$this->func_call = "\$db->get_row(\"$query\",$output,$y)";
-<<<<<<< HEAD
 
 		if ( $this->check_safe_collation( $query ) ) {
 			$this->check_current_query = false;
 		}
 
-=======
->>>>>>> FETCH_HEAD
 		if ( $query ) {
 			$this->query( $query );
 		} else {
@@ -2176,13 +2156,10 @@ class wpdb {
 	 * @return array Database query result. Array indexed from 0 by SQL result row number.
 	 */
 	public function get_col( $query = null , $x = 0 ) {
-<<<<<<< HEAD
 		if ( $this->check_safe_collation( $query ) ) {
 			$this->check_current_query = false;
 		}
 
-=======
->>>>>>> FETCH_HEAD
 		if ( $query ) {
 			$this->query( $query );
 		}
@@ -2211,13 +2188,10 @@ class wpdb {
 	public function get_results( $query = null, $output = OBJECT ) {
 		$this->func_call = "\$db->get_results(\"$query\", $output)";
 
-<<<<<<< HEAD
 		if ( $this->check_safe_collation( $query ) ) {
 			$this->check_current_query = false;
 		}
 
-=======
->>>>>>> FETCH_HEAD
 		if ( $query ) {
 			$this->query( $query );
 		} else {
@@ -3075,7 +3049,6 @@ class wpdb {
 			case 'set_charset' :
 				return version_compare( $version, '5.0.7', '>=' );
 			case 'utf8mb4' :      // @since 4.1.0
-<<<<<<< HEAD
 				if ( version_compare( $version, '5.5.3', '<' ) ) {
 					return false;
 				}
@@ -3095,9 +3068,6 @@ class wpdb {
 				} else {
 					return version_compare( $client_version, '5.5.3', '>=' );
 				}
-=======
-				return version_compare( $version, '5.5.3', '>=' );
->>>>>>> FETCH_HEAD
 		}
 
 		return false;

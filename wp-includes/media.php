@@ -409,7 +409,6 @@ function wp_constrain_dimensions( $current_width, $current_height, $max_width = 
 		$h = $max_height; // Round it up
 	}
 
-<<<<<<< HEAD
 	/**
 	 * Filter dimensions to constrain down-sampled images to.
 	 *
@@ -421,8 +420,6 @@ function wp_constrain_dimensions( $current_width, $current_height, $max_width = 
 	 * @param int 	$max_width      The maximum width permitted.
 	 * @param int 	$max_height     The maximum height permitted.
 	 */
-=======
->>>>>>> FETCH_HEAD
 	return apply_filters( 'wp_constrain_dimensions', array( $w, $h ), $current_width, $current_height, $max_width, $max_height );
 }
 
@@ -720,20 +717,11 @@ function wp_get_attachment_image_src( $attachment_id, $size = 'thumbnail', $icon
  *
  * @since 2.5.0
  *
-<<<<<<< HEAD
  * @param int          $attachment_id Image attachment ID.
  * @param string|array $size          Optional. Registered image size or flat array of height and width
  *                                    dimensions. Default 'thumbnail'.
  * @param bool         $icon          Optional. Whether the image should be treated as an icon. Default false.
  * @param string|array $attr          Optional. Attributes for the image markup. Default empty.
-=======
- * @see add_image_size()
- *
- * @param int          $attachment_id Image attachment ID.
- * @param string|array $size          Optional. Default 'thumbnail'.
- * @param bool         $icon          Optional. Whether it is an icon. Default false.
- * @param string|array $attr          Optional. Attributes for the image markup. Default empty string.
->>>>>>> FETCH_HEAD
  * @return string HTML img element or empty string on failure.
  */
 function wp_get_attachment_image($attachment_id, $size = 'thumbnail', $icon = false, $attr = '') {
@@ -1639,11 +1627,7 @@ function wp_audio_shortcode( $attr, $content = '' ) {
 	 */
 	$html_atts = array(
 		'class'    => apply_filters( 'wp_audio_shortcode_class', 'wp-audio-shortcode' ),
-<<<<<<< HEAD
 		'id'       => sprintf( 'audio-%d-%d', $post_id, $instance ),
-=======
-		'id'       => sprintf( 'audio-%d-%d', $post_id, $instances ),
->>>>>>> FETCH_HEAD
 		'loop'     => wp_validate_boolean( $atts['loop'] ),
 		'autoplay' => wp_validate_boolean( $atts['autoplay'] ),
 		'preload'  => $atts['preload'],
@@ -2085,10 +2069,6 @@ function get_attachment_taxonomies( $attachment ) {
  * Handles mime-type-specific taxonomies such as attachment:image and attachment:video.
  *
  * @since 3.5.0
-<<<<<<< HEAD
-=======
- * @see get_attachment_taxonomies()
->>>>>>> FETCH_HEAD
  *
  * @see get_taxonomies()
  *
@@ -2120,15 +2100,9 @@ function get_taxonomies_for_attachments( $output = 'names' ) {
  *
  * @since 2.9.0
  *
-<<<<<<< HEAD
  * @param int $width  Image width in pixels.
  * @param int $height Image height in pixels..
  * @return resource The GD image resource.
-=======
- * @param int $width Image width
- * @param int $height Image height
- * @return resource resource
->>>>>>> FETCH_HEAD
  */
 function wp_imagecreatetruecolor($width, $height) {
 	$img = imagecreatetruecolor($width, $height);
@@ -2148,19 +2122,11 @@ function wp_imagecreatetruecolor($width, $height) {
  *
  * @see WP_Embed::register_handler()
  *
-<<<<<<< HEAD
  * @param string   $id       An internal ID/name for the handler. Needs to be unique.
  * @param string   $regex    The regex that will be used to see if this handler should be used for a URL.
  * @param callback $callback The callback function that will be called if the regex is matched.
  * @param int      $priority Optional. Used to specify the order in which the registered handlers will
  *                           be tested. Default 10.
-=======
- * @global WP_Embed $wp_embed
- * @param string   $id
- * @param string   $regex
- * @param callable $callback
- * @param int      $priority
->>>>>>> FETCH_HEAD
  */
 function wp_embed_register_handler( $id, $regex, $callback, $priority = 10 ) {
 	global $wp_embed;
@@ -2174,14 +2140,8 @@ function wp_embed_register_handler( $id, $regex, $callback, $priority = 10 ) {
  *
  * @see WP_Embed::unregister_handler()
  *
-<<<<<<< HEAD
  * @param string $id       The handler ID that should be removed.
  * @param int    $priority Optional. The priority of the handler to be removed. Default 10.
-=======
- * @global WP_Embed $wp_embed
- * @param string $id
- * @param int    $priority
->>>>>>> FETCH_HEAD
  */
 function wp_embed_unregister_handler( $id, $priority = 10 ) {
 	global $wp_embed;
@@ -2252,16 +2212,11 @@ function wp_expand_dimensions( $example_width, $example_height, $max_width, $max
  *
  * @since 2.9.0
  *
-<<<<<<< HEAD
  * @see WP_oEmbed
  *
  * @param string $url  The URL that should be embedded.
  * @param array  $args Optional. Additional arguments and parameters for retrieving embed HTML.
  *                     Default empty.
-=======
- * @param string $url The URL that should be embedded.
- * @param array $args Additional arguments and parameters.
->>>>>>> FETCH_HEAD
  * @return false|string False on failure or the embed HTML on success.
  */
 function wp_oembed_get( $url, $args = '' ) {
@@ -2275,18 +2230,12 @@ function wp_oembed_get( $url, $args = '' ) {
  *
  * @since 2.9.0
  *
-<<<<<<< HEAD
  * @see WP_oEmbed
  *
  * @param string  $format   The format of URL that this provider can handle. You can use asterisks
  *                          as wildcards.
  * @param string  $provider The URL to the oEmbed provider.
  * @param boolean $regex    Optional. Whether the `$format` parameter is in a RegEx format. Default false.
-=======
- * @param string $format The format of URL that this provider can handle. You can use asterisks as wildcards.
- * @param string $provider The URL to the oEmbed provider.
- * @param boolean $regex Whether the $format parameter is in a regex format.
->>>>>>> FETCH_HEAD
  */
 function wp_oembed_add_provider( $format, $provider, $regex = false ) {
 	require_once( ABSPATH . WPINC . '/class-oembed.php' );
@@ -2304,11 +2253,8 @@ function wp_oembed_add_provider( $format, $provider, $regex = false ) {
  *
  * @since 3.5.0
  *
-<<<<<<< HEAD
  * @see WP_oEmbed
  *
-=======
->>>>>>> FETCH_HEAD
  * @param string $format The URL format for the oEmbed provider to remove.
  * @return bool Was the provider removed successfully?
  */
@@ -3477,11 +3423,7 @@ function attachment_url_to_postid( $url ) {
 }
 
 /**
-<<<<<<< HEAD
  * Returns the URLs for CSS files used in an iframe-sandbox'd TinyMCE media view.
-=======
- * Return the URLs for CSS files used in an iframe-sandbox'd TinyMCE media view.
->>>>>>> FETCH_HEAD
  *
  * @since 4.0.0
  *

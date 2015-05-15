@@ -58,13 +58,8 @@ function wp_get_db_schema( $scope = 'all', $blog_id = null ) {
  slug varchar(200) NOT NULL default '',
  term_group bigint(10) NOT NULL default 0,
  PRIMARY KEY  (term_id),
-<<<<<<< HEAD
  KEY slug (slug($max_index_length)),
  KEY name (name($max_index_length))
-=======
- KEY slug (slug),
- KEY name (name)
->>>>>>> FETCH_HEAD
 ) $charset_collate;
 CREATE TABLE $wpdb->term_taxonomy (
  term_taxonomy_id bigint(20) unsigned NOT NULL auto_increment,

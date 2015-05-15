@@ -160,11 +160,7 @@ div.mce-toolbar-grp {
 }
 
 div.mce-inline-toolbar-grp {
-<<<<<<< HEAD
 	border: 1px solid #a0a5aa;
-=======
-	border: 1px solid #aaa;
->>>>>>> FETCH_HEAD
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
 	-webkit-box-shadow: 0 1px 3px rgba( 0, 0, 0, 0.15 );
@@ -174,10 +170,6 @@ div.mce-inline-toolbar-grp {
 	box-sizing: border-box;
 	margin-bottom: 8px;
 	position: absolute;
-<<<<<<< HEAD
-=======
-	visibility: hidden;
->>>>>>> FETCH_HEAD
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
@@ -185,11 +177,7 @@ div.mce-inline-toolbar-grp {
 	z-index: 100100; /* Same as the other TinyMCE "panels" */
 }
 
-<<<<<<< HEAD
 div.mce-inline-toolbar-grp > div.mce-stack-layout {
-=======
-div.mce-wp-image-toolbar > div.mce-stack-layout {
->>>>>>> FETCH_HEAD
 	padding: 1px;
 }
 
@@ -212,22 +200,14 @@ div.mce-inline-toolbar-grp:after {
 
 div.mce-inline-toolbar-grp.mce-arrow-up:before {
 	top: -18px;
-<<<<<<< HEAD
 	border-bottom-color: #a0a5aa;
-=======
-	border-bottom-color: #aaa;
->>>>>>> FETCH_HEAD
 	border-width: 9px;
 	margin-left: -9px;
 }
 
 div.mce-inline-toolbar-grp.mce-arrow-down:before {
 	bottom: -18px;
-<<<<<<< HEAD
 	border-top-color: #a0a5aa;
-=======
-	border-top-color: #aaa;
->>>>>>> FETCH_HEAD
 	border-width: 9px;
 	margin-left: -9px;
 }
@@ -281,13 +261,6 @@ div.mce-inline-toolbar-grp.mce-arrow-full > div {
 	overflow-x: auto;
 }
 
-<<<<<<< HEAD
-=======
-div.mce-inline-toolbar-grp-active {
-	visibility: visible;
-}
-
->>>>>>> FETCH_HEAD
 div.mce-toolbar-grp > div {
 	padding: 3px;
 }
@@ -758,10 +731,7 @@ i.mce-i-wp-media-library,
 i.mce-i-ltr,
 i.mce-i-wp_page,
 i.mce-i-hr,
-<<<<<<< HEAD
 i.mce-i-wp_code,
-=======
->>>>>>> FETCH_HEAD
 i.mce-i-dashicon,
 .mce-close {
 	font: normal 20px/1 'dashicons';
@@ -1003,11 +973,7 @@ i.mce-i-wp_code:before {
 		0 0 0 1px #5b9dd9,
 		0 0 2px 1px rgba(30, 140, 190, .8);
 	outline: none;
-<<<<<<< HEAD
 	color: #23282d;
-=======
-	color: #222;
->>>>>>> FETCH_HEAD
 }
 
 .wp-switch-editor:active,

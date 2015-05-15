@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 /* globals _wpCustomizeHeader, _wpCustomizeBackground, _wpMediaViewsL10n, MediaElementPlayer */
-=======
-/* globals _wpCustomizeHeader, _wpCustomizeBackground, _wpMediaViewsL10n */
->>>>>>> FETCH_HEAD
 (function( exports, $ ){
 	var Container, focus, api = wp.customize;
 
@@ -1150,703 +1146,6 @@
 	});
 
 	/**
-<<<<<<< HEAD
-	 * A Customizer Control.
-	 *
-	 * A control provides a UI element that allows a user to modify a Customizer Setting.
-	 *
-	 * @see PHP class WP_Customize_Control.
-=======
-	 * Utility function namespace
-	 */
-	api.utils = {};
-
-	/**
-	 * Watch all changes to Value properties, and bubble changes to parent Values instance
-	 *
-	 * @since 4.1.0
-	 *
-	 * @param {wp.customize.Class} instance
-	 * @param {Array}              properties  The names of the Value instances to watch.
-	 */
-	api.utils.bubbleChildValueChanges = function ( instance, properties ) {
-		$.each( properties, function ( i, key ) {
-			instance[ key ].bind( function ( to, from ) {
-				if ( instance.parent && to !== from ) {
-					instance.parent.trigger( 'change', instance );
-				}
-			} );
-		} );
-	};
-
-	/**
-	 * Expand a panel, section, or control and focus on the first focusable element.
-	 *
-	 * @since 4.1.0
-	 *
-	 * @param {Object}   [params]
-	 * @param {Callback} [params.completeCallback]
-	 */
-	focus = function ( params ) {
-		var construct, completeCallback, focus;
-		construct = this;
-		params = params || {};
-		focus = function () {
-			construct.container.find( ':focusable:first' ).focus();
-			construct.container[0].scrollIntoView( true );
-		};
-		if ( params.completeCallback ) {
-			completeCallback = params.completeCallback;
-			params.completeCallback = function () {
-				focus();
-				completeCallback();
-			};
-		} else {
-			params.completeCallback = focus;
-		}
-		if ( construct.expand ) {
-			construct.expand( params );
-		} else {
-			params.completeCallback();
-		}
-	};
-
-	/**
-	 * Stable sort for Panels, Sections, and Controls.
-	 *
-	 * If a.priority() === b.priority(), then sort by their respective params.instanceNumber.
-	 *
-	 * @since 4.1.0
-	 *
-	 * @param {(wp.customize.Panel|wp.customize.Section|wp.customize.Control)} a
-	 * @param {(wp.customize.Panel|wp.customize.Section|wp.customize.Control)} b
-	 * @returns {Number}
-	 */
-	api.utils.prioritySort = function ( a, b ) {
-		if ( a.priority() === b.priority() && typeof a.params.instanceNumber === 'number' && typeof b.params.instanceNumber === 'number' ) {
-			return a.params.instanceNumber - b.params.instanceNumber;
-		} else {
-			return a.priority() - b.priority();
-		}
-	};
-
-	/**
-	 * Return whether the supplied Event object is for a keydown event but not the Enter key.
-	 *
-	 * @since 4.1.0
-	 *
-	 * @param {jQuery.Event} event
-	 * @returns {boolean}
-	 */
-	api.utils.isKeydownButNotEnterEvent = function ( event ) {
-		return ( 'keydown' === event.type && 13 !== event.which );
-	};
-
-	/**
-	 * Return whether the two lists of elements are the same and are in the same order.
-	 *
-	 * @since 4.1.0
-	 *
-	 * @param {Array|jQuery} listA
-	 * @param {Array|jQuery} listB
-	 * @returns {boolean}
-	 */
-	api.utils.areElementListsEqual = function ( listA, listB ) {
-		var equal = (
-			listA.length === listB.length && // if lists are different lengths, then naturally they are not equal
-			-1 === _.indexOf( _.map( // are there any false values in the list returned by map?
-				_.zip( listA, listB ), // pair up each element between the two lists
-				function ( pair ) {
-					return $( pair[0] ).is( pair[1] ); // compare to see if each pair are equal
-				}
-			), false ) // check for presence of false in map's return value
-		);
-		return equal;
-	};
-
-	/**
-	 * Base class for Panel and Section.
-	 *
-	 * @since 4.1.0
->>>>>>> FETCH_HEAD
-	 *
-	 * @class
-	 * @augments wp.customize.Class
-	 *
-	 * @param {string} id                            Unique identifier for the control instance.
-	 * @param {object} options                       Options hash for the control instance.
-	 * @param {object} options.params
-	 * @param {object} options.params.type           Type of control (e.g. text, radio, dropdown-pages, etc.)
-	 * @param {string} options.params.content        The HTML content for the control.
-	 * @param {string} options.params.priority       Order of priority to show the control within the section.
-	 * @param {string} options.params.active
-	 * @param {string} options.params.section
-	 * @param {string} options.params.label
-	 * @param {string} options.params.description
-	 * @param {string} options.params.instanceNumber Order in which this instance was created in relation to other instances.
-	 */
-	Container = api.Class.extend({
-		defaultActiveArguments: { duration: 'fast', completeCallback: $.noop },
-		defaultExpandedArguments: { duration: 'fast', completeCallback: $.noop },
-
-		/**
-		 * @since 4.1.0
-		 *
-		 * @param {String} id
-		 * @param {Object} options
-		 */
-		initialize: function ( id, options ) {
-			var container = this;
-			container.id = id;
-			container.params = {};
-			$.extend( container, options || {} );
-			container.container = $( container.params.content );
-
-			container.deferred = {
-				embedded: new $.Deferred()
-			};
-			container.priority = new api.Value();
-			container.active = new api.Value();
-			container.activeArgumentsQueue = [];
-			container.expanded = new api.Value();
-			container.expandedArgumentsQueue = [];
-
-			container.active.bind( function ( active ) {
-				var args = container.activeArgumentsQueue.shift();
-				args = $.extend( {}, container.defaultActiveArguments, args );
-				active = ( active && container.isContextuallyActive() );
-				container.onChangeActive( active, args );
-			});
-			container.expanded.bind( function ( expanded ) {
-				var args = container.expandedArgumentsQueue.shift();
-				args = $.extend( {}, container.defaultExpandedArguments, args );
-				container.onChangeExpanded( expanded, args );
-			});
-
-			container.attachEvents();
-
-			api.utils.bubbleChildValueChanges( container, [ 'priority', 'active' ] );
-
-			container.priority.set( isNaN( container.params.priority ) ? 100 : container.params.priority );
-			container.active.set( container.params.active );
-			container.expanded.set( false );
-		},
-
-		/**
-		 * @since 4.1.0
-		 *
-		 * @abstract
-		 */
-		ready: function() {},
-
-		/**
-		 * Get the child models associated with this parent, sorting them by their priority Value.
-		 *
-		 * @since 4.1.0
-		 *
-		 * @param {String} parentType
-		 * @param {String} childType
-		 * @returns {Array}
-		 */
-		_children: function ( parentType, childType ) {
-			var parent = this,
-				children = [];
-			api[ childType ].each( function ( child ) {
-				if ( child[ parentType ].get() === parent.id ) {
-					children.push( child );
-				}
-			} );
-			children.sort( api.utils.prioritySort );
-			return children;
-		},
-
-		/**
-		 * To override by subclass, to return whether the container has active children.
-		 *
-		 * @since 4.1.0
-		 *
-		 * @abstract
-		 */
-		isContextuallyActive: function () {
-			throw new Error( 'Container.isContextuallyActive() must be overridden in a subclass.' );
-		},
-
-		/**
-		 * Handle changes to the active state.
-		 *
-		 * This does not change the active state, it merely handles the behavior
-		 * for when it does change.
-		 *
-		 * To override by subclass, update the container's UI to reflect the provided active state.
-		 *
-		 * @since 4.1.0
-		 *
-		 * @param {Boolean} active
-		 * @param {Object}  args
-		 * @param {Object}  args.duration
-		 * @param {Object}  args.completeCallback
-		 */
-		onChangeActive: function ( active, args ) {
-			var duration = ( 'resolved' === api.previewer.deferred.active.state() ? args.duration : 0 );
-			if ( ! $.contains( document, this.container ) ) {
-				// jQuery.fn.slideUp is not hiding an element if it is not in the DOM
-				this.container.toggle( active );
-				if ( args.completeCallback ) {
-					args.completeCallback();
-				}
-			} else if ( active ) {
-				this.container.stop( true, true ).slideDown( duration, args.completeCallback );
-			} else {
-				this.container.stop( true, true ).slideUp( duration, args.completeCallback );
-			}
-		},
-
-		/**
-		 * @since 4.1.0
-		 *
-		 * @params {Boolean} active
-		 * @param {Object}   [params]
-		 * @returns {Boolean} false if state already applied
-		 */
-		_toggleActive: function ( active, params ) {
-			var self = this;
-			params = params || {};
-			if ( ( active && this.active.get() ) || ( ! active && ! this.active.get() ) ) {
-				params.unchanged = true;
-				self.onChangeActive( self.active.get(), params );
-				return false;
-			} else {
-				params.unchanged = false;
-				this.activeArgumentsQueue.push( params );
-				this.active.set( active );
-				return true;
-			}
-		},
-
-		/**
-		 * @param {Object} [params]
-		 * @returns {Boolean} false if already active
-		 */
-		activate: function ( params ) {
-			return this._toggleActive( true, params );
-		},
-
-		/**
-		 * @param {Object} [params]
-		 * @returns {Boolean} false if already inactive
-		 */
-		deactivate: function ( params ) {
-			return this._toggleActive( false, params );
-		},
-
-		/**
-		 * To override by subclass, update the container's UI to reflect the provided active state.
-		 * @abstract
-		 */
-		onChangeExpanded: function () {
-			throw new Error( 'Must override with subclass.' );
-		},
-
-		/**
-		 * @param {Boolean} expanded
-		 * @param {Object} [params]
-		 * @returns {Boolean} false if state already applied
-		 */
-		_toggleExpanded: function ( expanded, params ) {
-			var self = this;
-			params = params || {};
-			if ( ( expanded && this.expanded.get() ) || ( ! expanded && ! this.expanded.get() ) ) {
-				params.unchanged = true;
-				self.onChangeExpanded( self.expanded.get(), params );
-				return false;
-			} else {
-				params.unchanged = false;
-				this.expandedArgumentsQueue.push( params );
-				this.expanded.set( expanded );
-				return true;
-			}
-		},
-
-		/**
-		 * @param {Object} [params]
-		 * @returns {Boolean} false if already expanded
-		 */
-		expand: function ( params ) {
-			return this._toggleExpanded( true, params );
-		},
-
-		/**
-		 * @param {Object} [params]
-		 * @returns {Boolean} false if already collapsed
-		 */
-		collapse: function ( params ) {
-			return this._toggleExpanded( false, params );
-		},
-
-		/**
-		 * Bring the container into view and then expand this and bring it into view
-		 * @param {Object} [params]
-		 */
-		focus: focus
-	});
-
-	/**
-	 * @since 4.1.0
-	 *
-	 * @class
-	 * @augments wp.customize.Class
-	 */
-	api.Section = Container.extend({
-
-		/**
-		 * @since 4.1.0
-		 *
-		 * @param {String} id
-		 * @param {Array}  options
-		 */
-		initialize: function ( id, options ) {
-			var section = this;
-			Container.prototype.initialize.call( section, id, options );
-
-			section.id = id;
-			section.panel = new api.Value();
-			section.panel.bind( function ( id ) {
-				$( section.container ).toggleClass( 'control-subsection', !! id );
-			});
-			section.panel.set( section.params.panel || '' );
-			api.utils.bubbleChildValueChanges( section, [ 'panel' ] );
-
-			section.embed();
-			section.deferred.embedded.done( function () {
-				section.ready();
-			});
-		},
-
-		/**
-		 * Embed the container in the DOM when any parent panel is ready.
-		 *
-		 * @since 4.1.0
-		 */
-		embed: function () {
-			var section = this, inject;
-
-			// Watch for changes to the panel state
-			inject = function ( panelId ) {
-				var parentContainer;
-				if ( panelId ) {
-					// The panel has been supplied, so wait until the panel object is registered
-					api.panel( panelId, function ( panel ) {
-						// The panel has been registered, wait for it to become ready/initialized
-						panel.deferred.embedded.done( function () {
-							parentContainer = panel.container.find( 'ul:first' );
-							if ( ! section.container.parent().is( parentContainer ) ) {
-								parentContainer.append( section.container );
-							}
-							section.deferred.embedded.resolve();
-						});
-					} );
-				} else {
-					// There is no panel, so embed the section in the root of the customizer
-					parentContainer = $( '#customize-theme-controls' ).children( 'ul' ); // @todo This should be defined elsewhere, and to be configurable
-					if ( ! section.container.parent().is( parentContainer ) ) {
-						parentContainer.append( section.container );
-					}
-					section.deferred.embedded.resolve();
-				}
-			};
-			section.panel.bind( inject );
-			inject( section.panel.get() ); // Since a section may never get a panel, assume that it won't ever get one
-		},
-
-		/**
-		 * Add behaviors for the accordion section.
-		 *
-		 * @since 4.1.0
-		 */
-		attachEvents: function () {
-			var section = this;
-
-			// Expand/Collapse accordion sections on click.
-			section.container.find( '.accordion-section-title' ).on( 'click keydown', function( event ) {
-				if ( api.utils.isKeydownButNotEnterEvent( event ) ) {
-					return;
-				}
-				event.preventDefault(); // Keep this AFTER the key filter above
-
-				if ( section.expanded() ) {
-					section.collapse();
-				} else {
-					section.expand();
-				}
-			});
-		},
-
-		/**
-		 * Return whether this section has any active controls.
-		 *
-		 * @since 4.1.0
-		 *
-		 * @returns {Boolean}
-		 */
-		isContextuallyActive: function () {
-			var section = this,
-				controls = section.controls(),
-				activeCount = 0;
-			_( controls ).each( function ( control ) {
-				if ( control.active() ) {
-					activeCount += 1;
-				}
-			} );
-			return ( activeCount !== 0 );
-		},
-
-		/**
-		 * Get the controls that are associated with this section, sorted by their priority Value.
-		 *
-		 * @since 4.1.0
-		 *
-		 * @returns {Array}
-		 */
-		controls: function () {
-			return this._children( 'section', 'control' );
-		},
-
-		/**
-		 * Update UI to reflect expanded state.
-		 *
-		 * @since 4.1.0
-		 *
-		 * @param {Boolean} expanded
-		 * @param {Object}  args
-		 */
-		onChangeExpanded: function ( expanded, args ) {
-			var section = this,
-				content = section.container.find( '.accordion-section-content' ),
-				expand;
-
-			if ( expanded ) {
-
-				if ( args.unchanged ) {
-					expand = args.completeCallback;
-				} else {
-					expand = function () {
-						content.stop().slideDown( args.duration, args.completeCallback );
-						section.container.addClass( 'open' );
-					};
-				}
-
-				if ( ! args.allowMultiple ) {
-					api.section.each( function ( otherSection ) {
-						if ( otherSection !== section ) {
-							otherSection.collapse( { duration: args.duration } );
-						}
-					});
-				}
-
-				if ( section.panel() ) {
-					api.panel( section.panel() ).expand({
-						duration: args.duration,
-						completeCallback: expand
-					});
-				} else {
-					expand();
-				}
-
-			} else {
-				section.container.removeClass( 'open' );
-				content.slideUp( args.duration, args.completeCallback );
-			}
-		}
-	});
-
-	/**
-	 * @since 4.1.0
-	 *
-	 * @class
-	 * @augments wp.customize.Class
-	 */
-	api.Panel = Container.extend({
-		/**
-		 * @since 4.1.0
-		 *
-		 * @param  {String} id
-		 * @param  {Object} options
-		 */
-		initialize: function ( id, options ) {
-			var panel = this;
-			Container.prototype.initialize.call( panel, id, options );
-			panel.embed();
-			panel.deferred.embedded.done( function () {
-				panel.ready();
-			});
-		},
-
-		/**
-		 * Embed the container in the DOM when any parent panel is ready.
-		 *
-		 * @since 4.1.0
-		 */
-		embed: function () {
-			var panel = this,
-				parentContainer = $( '#customize-theme-controls > ul' ); // @todo This should be defined elsewhere, and to be configurable
-
-			if ( ! panel.container.parent().is( parentContainer ) ) {
-				parentContainer.append( panel.container );
-			}
-			panel.deferred.embedded.resolve();
-		},
-
-		/**
-		 * @since 4.1.0
-		 */
-		attachEvents: function () {
-			var meta, panel = this;
-
-			// Expand/Collapse accordion sections on click.
-			panel.container.find( '.accordion-section-title' ).on( 'click keydown', function( event ) {
-				if ( api.utils.isKeydownButNotEnterEvent( event ) ) {
-					return;
-				}
-				event.preventDefault(); // Keep this AFTER the key filter above
-
-				if ( ! panel.expanded() ) {
-					panel.expand();
-				}
-			});
-
-			meta = panel.container.find( '.panel-meta:first' );
-
-			meta.find( '> .accordion-section-title' ).on( 'click keydown', function( event ) {
-				if ( api.utils.isKeydownButNotEnterEvent( event ) ) {
-					return;
-				}
-				event.preventDefault(); // Keep this AFTER the key filter above
-
-				if ( meta.hasClass( 'cannot-expand' ) ) {
-					return;
-				}
-
-				var content = meta.find( '.accordion-section-content:first' );
-				if ( meta.hasClass( 'open' ) ) {
-					meta.toggleClass( 'open' );
-					content.slideUp( panel.defaultExpandedArguments.duration );
-				} else {
-					content.slideDown( panel.defaultExpandedArguments.duration );
-					meta.toggleClass( 'open' );
-				}
-			});
-
-		},
-
-		/**
-		 * Get the sections that are associated with this panel, sorted by their priority Value.
-		 *
-		 * @since 4.1.0
-		 *
-		 * @returns {Array}
-		 */
-		sections: function () {
-			return this._children( 'panel', 'section' );
-		},
-
-		/**
-		 * Return whether this panel has any active sections.
-		 *
-		 * @since 4.1.0
-		 *
-		 * @returns {boolean}
-		 */
-		isContextuallyActive: function () {
-			var panel = this,
-				sections = panel.sections(),
-				activeCount = 0;
-			_( sections ).each( function ( section ) {
-				if ( section.active() && section.isContextuallyActive() ) {
-					activeCount += 1;
-				}
-			} );
-			return ( activeCount !== 0 );
-		},
-
-		/**
-		 * Update UI to reflect expanded state
-		 *
-		 * @since 4.1.0
-		 *
-		 * @param {Boolean}  expanded
-		 * @param {Object}   args
-		 * @param {Boolean}  args.unchanged
-		 * @param {Callback} args.completeCallback
-		 */
-		onChangeExpanded: function ( expanded, args ) {
-
-			// Immediately call the complete callback if there were no changes
-			if ( args.unchanged ) {
-				if ( args.completeCallback ) {
-					args.completeCallback();
-				}
-				return;
-			}
-
-			// Note: there is a second argument 'args' passed
-			var position, scroll,
-				panel = this,
-				section = panel.container.closest( '.accordion-section' ),
-				overlay = section.closest( '.wp-full-overlay' ),
-				container = section.closest( '.accordion-container' ),
-				siblings = container.find( '.open' ),
-				topPanel = overlay.find( '#customize-theme-controls > ul > .accordion-section > .accordion-section-title' ).add( '#customize-info > .accordion-section-title' ),
-				backBtn = overlay.find( '.control-panel-back' ),
-				panelTitle = section.find( '.accordion-section-title' ).first(),
-				content = section.find( '.control-panel-content' );
-
-			if ( expanded ) {
-
-				// Collapse any sibling sections/panels
-				api.section.each( function ( section ) {
-					if ( ! section.panel() ) {
-						section.collapse( { duration: 0 } );
-					}
-				});
-				api.panel.each( function ( otherPanel ) {
-					if ( panel !== otherPanel ) {
-						otherPanel.collapse( { duration: 0 } );
-					}
-				});
-
-				content.show( 0, function() {
-					position = content.offset().top;
-					scroll = container.scrollTop();
-					content.css( 'margin-top', ( 45 - position - scroll ) );
-					section.addClass( 'current-panel' );
-					overlay.addClass( 'in-sub-panel' );
-					container.scrollTop( 0 );
-					if ( args.completeCallback ) {
-						args.completeCallback();
-					}
-				} );
-				topPanel.attr( 'tabindex', '-1' );
-				backBtn.attr( 'tabindex', '0' );
-				backBtn.focus();
-			} else {
-				siblings.removeClass( 'open' );
-				section.removeClass( 'current-panel' );
-				overlay.removeClass( 'in-sub-panel' );
-				content.delay( 180 ).hide( 0, function() {
-					content.css( 'margin-top', 'inherit' ); // Reset
-					if ( args.completeCallback ) {
-						args.completeCallback();
-					}
-				} );
-				topPanel.attr( 'tabindex', '0' );
-				backBtn.attr( 'tabindex', '-1' );
-				panelTitle.focus();
-				container.scrollTop( 0 );
-			}
-		}
-	});
-
-	/**
 	 * A Customizer Control.
 	 *
 	 * A control provides a UI element that allows a user to modify a Customizer Setting.
@@ -1881,31 +1180,6 @@
 			control.selector = '#customize-control-' + id.replace( /\]/g, '' ).replace( /\[/g, '-' );
 			control.templateSelector = 'customize-control-' + control.params.type + '-content';
 			control.container = control.params.content ? $( control.params.content ) : $( control.selector );
-<<<<<<< HEAD
-
-			control.deferred = {
-				embedded: new $.Deferred()
-			};
-			control.section = new api.Value();
-			control.priority = new api.Value();
-			control.active = new api.Value();
-			control.activeArgumentsQueue = [];
-
-			control.elements = [];
-
-			nodes  = control.container.find('[data-customize-setting-link]');
-			radios = {};
-
-			nodes.each( function() {
-				var node = $( this ),
-					name;
-
-				if ( node.is( ':radio' ) ) {
-					name = node.prop( 'name' );
-					if ( radios[ name ] ) {
-						return;
-					}
-=======
 
 			control.deferred = {
 				embedded: new $.Deferred()
@@ -1982,64 +1256,6 @@
 		embed: function () {
 			var control = this,
 				inject;
->>>>>>> FETCH_HEAD
-
-			// Watch for changes to the section state
-			inject = function ( sectionId ) {
-				var parentContainer;
-				if ( ! sectionId ) { // @todo allow a control to be embedded without a section, for instance a control embedded in the frontend
-					return;
-				}
-<<<<<<< HEAD
-
-				api( node.data( 'customizeSettingLink' ), function( setting ) {
-					var element = new api.Element( node );
-					control.elements.push( element );
-					element.sync( setting );
-					element.set( setting() );
-				});
-			});
-
-			control.active.bind( function ( active ) {
-				var args = control.activeArgumentsQueue.shift();
-				args = $.extend( {}, control.defaultActiveArguments, args );
-				control.onChangeActive( active, args );
-			} );
-
-			control.section.set( control.params.section );
-			control.priority.set( isNaN( control.params.priority ) ? 10 : control.params.priority );
-			control.active.set( control.params.active );
-
-			api.utils.bubbleChildValueChanges( control, [ 'section', 'priority', 'active' ] );
-
-			// Associate this control with its settings when they are created
-			settings = $.map( control.params.settings, function( value ) {
-				return value;
-			});
-			api.apply( api, settings.concat( function () {
-				var key;
-
-				control.settings = {};
-				for ( key in control.params.settings ) {
-					control.settings[ key ] = api( control.params.settings[ key ] );
-				}
-
-				control.setting = control.settings['default'] || null;
-
-				control.embed();
-			}) );
-
-			control.deferred.embedded.done( function () {
-				control.ready();
-			});
-		},
-
-		/**
-		 * Embed the control into the page.
-		 */
-		embed: function () {
-			var control = this,
-				inject;
 
 			// Watch for changes to the section state
 			inject = function ( sectionId ) {
@@ -2059,20 +1275,6 @@
 						control.deferred.embedded.resolve();
 					});
 				});
-=======
-				// Wait for the section to be registered
-				api.section( sectionId, function ( section ) {
-					// Wait for the section to be ready/initialized
-					section.deferred.embedded.done( function () {
-						parentContainer = section.container.find( 'ul:first' );
-						if ( ! control.container.parent().is( parentContainer ) ) {
-							parentContainer.append( control.container );
-							control.renderContent();
-						}
-						control.deferred.embedded.resolve();
-					});
-				});
->>>>>>> FETCH_HEAD
 			};
 			control.section.bind( inject );
 			inject( control.section.get() );
@@ -2247,21 +1449,13 @@
 	});
 
 	/**
-<<<<<<< HEAD
 	 * A control that implements the media modal.
-=======
-	 * An upload control, which utilizes the media modal.
->>>>>>> FETCH_HEAD
 	 *
 	 * @class
 	 * @augments wp.customize.Control
 	 * @augments wp.customize.Class
 	 */
-<<<<<<< HEAD
 	api.MediaControl = api.Control.extend({
-=======
-	api.UploadControl = api.Control.extend({
->>>>>>> FETCH_HEAD
 
 		/**
 		 * When the control's DOM structure is ready,
@@ -2270,7 +1464,6 @@
 		ready: function() {
 			var control = this;
 			// Shortcut so that we don't have to use _.bind every time we add a callback.
-<<<<<<< HEAD
 			_.bindAll( control, 'restoreDefault', 'removeFile', 'openFrame', 'select', 'pausePlayer' );
 
 			// Bind events, with delegation to facilitate re-rendering.
@@ -2303,18 +1496,6 @@
 
 		cleanupPlayer: function () {
 			this.player && wp.media.mixin.removePlayer( this.player );
-=======
-			_.bindAll( control, 'restoreDefault', 'removeFile', 'openFrame', 'select' );
-
-			// Bind events, with delegation to facilitate re-rendering.
-			control.container.on( 'click keydown', '.upload-button', control.openFrame );
-			control.container.on( 'click keydown', '.thumbnail-image img', control.openFrame );
-			control.container.on( 'click keydown', '.default-button', control.restoreDefault );
-			control.container.on( 'click keydown', '.remove-button', control.removeFile );
-
-			// Re-render whenever the control's setting changes.
-			control.setting.bind( function () { control.renderContent(); } );
->>>>>>> FETCH_HEAD
 		},
 
 		/**
@@ -2355,7 +1536,6 @@
 			// When a file is selected, run a callback.
 			this.frame.on( 'select', this.select );
 		},
-<<<<<<< HEAD
 
 		/**
 		 * Callback handler for when an attachment is selected in the media modal.
@@ -2480,85 +1660,6 @@
 	 */
 	api.BackgroundControl = api.UploadControl.extend({
 
-=======
-
-		/**
-		 * Callback handler for when an attachment is selected in the media modal.
-		 * Gets the selected image information, and sets it within the control.
-		 */
-		select: function() {
-			// Get the attachment from the modal frame.
-			var attachment = this.frame.state().get( 'selection' ).first().toJSON();
-
-			this.params.attachment = attachment;
-
-			// Set the Customizer setting; the callback takes care of rendering.
-			this.setting( attachment.url );
-		},
-
-		/**
-		 * Reset the setting to the default value.
-		 */
-		restoreDefault: function( event ) {
-			if ( api.utils.isKeydownButNotEnterEvent( event ) ) {
-				return;
-			}
-			event.preventDefault();
-
-			this.params.attachment = this.params.defaultAttachment;
-			this.setting( this.params.defaultAttachment.url );
- 		},
-
-		/**
-		 * Called when the "Remove" link is clicked. Empties the setting.
-		 *
-		 * @param {object} event jQuery Event object
-		 */
-		removeFile: function( event ) {
-			if ( api.utils.isKeydownButNotEnterEvent( event ) ) {
-				return;
-			}
-			event.preventDefault();
-
-			this.params.attachment = {};
-			this.setting( '' );
-			this.renderContent(); // Not bound to setting change when emptying.
-		},
-
-		// @deprecated
-		success: function() {},
-
-		// @deprecated
-		removerVisibility: function() {}
-	});
-
-	/**
-	 * A control for uploading images.
-	 *
-	 * This control no longer needs to do anything more
-	 * than what the upload control does in JS.
-	 *
-	 * @class
-	 * @augments wp.customize.UploadControl
-	 * @augments wp.customize.Control
-	 * @augments wp.customize.Class
-	 */
-	api.ImageControl = api.UploadControl.extend({
-		// @deprecated
-		thumbnailSrc: function() {}
-	});
-
-	/**
-	 * A control for uploading background images.
-	 *
-	 * @class
-	 * @augments wp.customize.UploadControl
-	 * @augments wp.customize.Control
-	 * @augments wp.customize.Class
-	 */
-	api.BackgroundControl = api.UploadControl.extend({
-
->>>>>>> FETCH_HEAD
 		/**
 		 * When the control's DOM structure is ready,
 		 * set up internal event bindings.
@@ -3013,12 +2114,9 @@
 			this.bind( 'ready', this._ready );
 
 			this.bind( 'ready', function ( data ) {
-<<<<<<< HEAD
 
 				this.container.addClass( 'iframe-ready' );
 
-=======
->>>>>>> FETCH_HEAD
 				if ( ! data ) {
 					return;
 				}
@@ -3182,13 +2280,7 @@
 		tmpl = api.settings.documentTitleTmpl;
 		title = tmpl.replace( '%s', documentTitle );
 		document.title = title;
-<<<<<<< HEAD
 		api.trigger( 'title', title );
-=======
-		if ( window !== window.parent ) {
-			window.parent.document.title = document.title;
-		}
->>>>>>> FETCH_HEAD
 	};
 
 	/**
@@ -3452,7 +2544,6 @@
 	});
 
 	api.controlConstructor = {
-<<<<<<< HEAD
 		color:      api.ColorControl,
 		media:      api.MediaControl,
 		upload:     api.UploadControl,
@@ -3464,16 +2555,7 @@
 	api.panelConstructor = {};
 	api.sectionConstructor = {
 		themes: api.ThemesSection
-=======
-		color:  api.ColorControl,
-		upload: api.UploadControl,
-		image:  api.ImageControl,
-		header: api.HeaderControl,
-		background: api.BackgroundControl
->>>>>>> FETCH_HEAD
 	};
-	api.panelConstructor = {};
-	api.sectionConstructor = {};
 
 	$( function() {
 		api.settings = window._wpCustomizeSettings;
@@ -3602,15 +2684,7 @@
 							value._dirty = false;
 						} );
 
-<<<<<<< HEAD
 						api.trigger( 'saved', response );
-=======
-						// Clear setting dirty states
-						api.each( function ( value ) {
-							value._dirty = false;
-						} );
-						api.trigger( 'saved' );
->>>>>>> FETCH_HEAD
 					} );
 				};
 
@@ -3634,15 +2708,12 @@
 			$.extend( this.nonce, nonce );
 		});
 
-<<<<<<< HEAD
 		// Refresh the nonces if login sends updated nonces over.
 		api.bind( 'nonce-refresh', function( nonce ) {
 			$.extend( api.settings.nonce, nonce );
 			$.extend( api.previewer.nonce, nonce );
 		});
 
-=======
->>>>>>> FETCH_HEAD
 		// Create Settings
 		$.each( api.settings.settings, function( id, data ) {
 			api.create( id, id, data.value, {
@@ -3674,31 +2745,6 @@
 			api.section.add( id, section );
 		});
 
-<<<<<<< HEAD
-=======
-		// Create Panels
-		$.each( api.settings.panels, function ( id, data ) {
-			var constructor = api.panelConstructor[ data.type ] || api.Panel,
-				panel;
-
-			panel = new constructor( id, {
-				params: data
-			} );
-			api.panel.add( id, panel );
-		});
-
-		// Create Sections
-		$.each( api.settings.sections, function ( id, data ) {
-			var constructor = api.sectionConstructor[ data.type ] || api.Section,
-				section;
-
-			section = new constructor( id, {
-				params: data
-			} );
-			api.section.add( id, section );
-		});
-
->>>>>>> FETCH_HEAD
 		// Create Controls
 		$.each( api.settings.controls, function( id, data ) {
 			var constructor = api.controlConstructor[ data.type ] || api.Control,

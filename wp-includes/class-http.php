@@ -744,15 +744,9 @@ class WP_Http {
 		if ( ! empty( $relative_url_parts['scheme'] ) ) {
 			return $maybe_relative_path;
 		}
-<<<<<<< HEAD
 
 		$absolute_path = $url_parts['scheme'] . '://';
 
-=======
-
-		$absolute_path = $url_parts['scheme'] . '://';
-
->>>>>>> FETCH_HEAD
 		// Schemeless URL's will make it this far, so we check for a host in the relative url and convert it to a protocol-url
 		if ( isset( $relative_url_parts['host'] ) ) {
 			$absolute_path .= $relative_url_parts['host'];
@@ -1528,7 +1522,6 @@ class WP_Http_Curl {
 
 		// If an error occurred, or, no response.
 		if ( $curl_error || ( 0 == strlen( $theBody ) && empty( $theHeaders['headers'] ) ) ) {
-<<<<<<< HEAD
 			if ( CURLE_WRITE_ERROR /* 23 */ == $curl_error ) {
 				if ( ! $this->max_body_length || $this->max_body_length != $bytes_written_total ) {
 					if ( $r['stream'] ) {
@@ -1539,12 +1532,6 @@ class WP_Http_Curl {
 						curl_close( $handle );
 						return new WP_Error( 'http_request_failed', curl_error( $handle ) );
 					}
-=======
-			if ( CURLE_WRITE_ERROR /* 23 */ == $curl_error && $r['stream'] ) {
-				if ( ! $this->max_body_length || $this->max_body_length != $bytes_written_total ) {
-					fclose( $this->stream_handle );
-					return new WP_Error( 'http_request_failed', __( 'Failed to write request to temporary file.' ) );
->>>>>>> FETCH_HEAD
 				}
 			} else {
 				if ( $curl_error = curl_error( $handle ) ) {

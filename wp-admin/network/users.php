@@ -41,19 +41,10 @@ function confirm_delete_users( $users ) {
 		if ( $user_id != '' && $user_id != '0' ) {
 			$delete_user = get_userdata( $user_id );
 
-<<<<<<< HEAD
 			if ( ! current_user_can( 'delete_user', $delete_user->ID ) ) {
-=======
-	foreach ( ( $allusers = (array) $_POST['allusers'] ) as $user_id ) {
-		if ( $user_id != '' && $user_id != '0' ) {
-			$delete_user = get_userdata( $user_id );
-
-			if ( ! current_user_can( 'delete_user', $delete_user->ID ) )
->>>>>>> FETCH_HEAD
 				wp_die( sprintf( __( 'Warning! User %s cannot be deleted.' ), $delete_user->user_login ) );
 			}
 
-<<<<<<< HEAD
 			if ( in_array( $delete_user->user_login, $site_admins ) ) {
 				wp_die( sprintf( __( 'Warning! User cannot be deleted. The user %s is a network administrator.' ), '<em>' . $delete_user->user_login . '</em>' ) );
 			}
@@ -65,15 +56,6 @@ function confirm_delete_users( $users ) {
 			<?php $blogs = get_blogs_of_user( $user_id, true );
 
 			if ( ! empty( $blogs ) ) {
-=======
-			if ( in_array( $delete_user->user_login, $site_admins ) )
-				wp_die( sprintf( __( 'Warning! User cannot be deleted. The user %s is a network administrator.' ), $delete_user->user_login ) );
-
-			echo "<input type='hidden' name='user[]' value='{$user_id}'/>\n";
-			$blogs = get_blogs_of_user( $user_id, true );
-
-			if ( !empty( $blogs ) ) {
->>>>>>> FETCH_HEAD
 				?>
 				<td><fieldset><p><legend><?php printf(
 					/* translators: user login */
@@ -85,12 +67,8 @@ function confirm_delete_users( $users ) {
 					$blog_users = get_users( array( 'blog_id' => $details->userblog_id, 'fields' => array( 'ID', 'user_login' ) ) );
 					if ( is_array( $blog_users ) && !empty( $blog_users ) ) {
 						$user_site = "<a href='" . esc_url( get_home_url( $details->userblog_id ) ) . "'>{$details->blogname}</a>";
-<<<<<<< HEAD
 						$user_dropdown = '<label for="reassign_user" class="screen-reader-text">' . __( 'Select a user' ) . '</label>';
 						$user_dropdown .= "<select name='blog[$user_id][$key]' id='reassign_user'>";
-=======
-						$user_dropdown = "<select name='blog[$user_id][$key]'>";
->>>>>>> FETCH_HEAD
 						$user_list = '';
 						foreach ( $blog_users as $user ) {
 							if ( ! in_array( $user->ID, $allusers ) ) {

@@ -79,11 +79,7 @@ class WP_Media_List_Table extends WP_List_Table {
 			if ( !empty( $_GET['attachment-filter'] ) && strpos( $_GET['attachment-filter'], 'post_mime_type:' ) === 0 && wp_match_mime_types( $mime_type, str_replace( 'post_mime_type:', '', $_GET['attachment-filter'] ) ) )
 				$selected = ' selected="selected"';
 			if ( !empty( $num_posts[$mime_type] ) )
-<<<<<<< HEAD
 				$type_links[$mime_type] = '<option value="post_mime_type:' . esc_attr( $mime_type ) . '"' . $selected . '>' . sprintf( translate_nooped_plural( $label[2], $num_posts[$mime_type] ), number_format_i18n( $num_posts[$mime_type] )) . '</option>';
-=======
-				$type_links[$mime_type] = '<option value="post_mime_type:' . sanitize_mime_type( $mime_type ) . '"' . $selected . '>' . sprintf( translate_nooped_plural( $label[2], $num_posts[$mime_type] ), number_format_i18n( $num_posts[$mime_type] )) . '</option>';
->>>>>>> FETCH_HEAD
 		}
 		$type_links['detached'] = '<option value="detached"' . ( $this->detached ? ' selected="selected"' : '' ) . '>' . sprintf( _nx( 'Unattached (%s)', 'Unattached (%s)', $total_orphans, 'detached files' ), number_format_i18n( $total_orphans ) ) . '</option>';
 
@@ -160,16 +156,6 @@ class WP_Media_List_Table extends WP_List_Table {
 		_e( 'No media attachments found.' );
 	}
 
-<<<<<<< HEAD
-=======
-	/**
-	 * @param string $which
-	 */
-	protected function pagination( $which ) {
-		parent::pagination( $which );
-	}
-
->>>>>>> FETCH_HEAD
 	/**
 	 * Override parent views so we can use the filter bar display.
 	 */
@@ -182,12 +168,8 @@ class WP_Media_List_Table extends WP_List_Table {
 	<div class="filter-items">
 		<?php $this->view_switcher( $mode ); ?>
 
-<<<<<<< HEAD
 		<label for="attachment-filter" class="screen-reader-text"><?php _e( 'Filter by type' ); ?></label>
 		<select class="attachment-filters" name="attachment-filter" id="attachment-filter">
-=======
-		<select class="attachment-filters" name="attachment-filter">
->>>>>>> FETCH_HEAD
 			<?php
 			if ( ! empty( $views ) ) {
 				foreach ( $views as $class => $view ) {

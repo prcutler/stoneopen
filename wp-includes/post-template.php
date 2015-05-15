@@ -1655,10 +1655,7 @@ function get_the_password_form( $post = 0 ) {
  * and then the check will be specific to that template.
  *
  * @since 2.5.0
-<<<<<<< HEAD
  * @since 4.2.0 The `$template` parameter was changed to also accept an array of page templates.
-=======
->>>>>>> FETCH_HEAD
  *
  * @param string|array $template The specific template name or array of templates to match.
  * @return bool True on success, false on failure.

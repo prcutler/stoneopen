@@ -1285,22 +1285,8 @@ table.links-table {
 	transition-timing-function: ease-in-out;
 }
 
-<<<<<<< HEAD
 .focus-on #adminmenuback,
 .focus-on #adminmenuwrap {
-=======
-/* @noflip */
-.focus-on #adminmenuback,
-.focus-on #adminmenuwrap {
-	-webkit-transform: translateX( -100% );
-	-ms-transform: translateX( -100% );
-	transform: translateX( -100% );
-}
-
-/* @noflip */
-.rtl.focus-on #adminmenuback,
-.rtl.focus-on #adminmenuwrap {
->>>>>>> FETCH_HEAD
 	-webkit-transform: translateX( 100% );
 	-ms-transform: translateX( 100% );
 	transform: translateX( 100% );

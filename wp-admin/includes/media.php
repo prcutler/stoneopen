@@ -335,11 +335,7 @@ function media_handle_upload($file_id, $post_id, $post_data = array(), $override
 
 	// Use image exif/iptc data for title and caption defaults if possible.
 	} elseif ( 0 === strpos( $type, 'image/' ) && $image_meta = @wp_read_image_metadata( $file ) ) {
-<<<<<<< HEAD
 		if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) ) {
-=======
-		if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) )
->>>>>>> FETCH_HEAD
 			$title = $image_meta['title'];
 		}
 

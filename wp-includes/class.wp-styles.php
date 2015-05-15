@@ -116,15 +116,10 @@ class WP_Styles extends WP_Dependencies {
 		if ( $this->do_concat ) {
 			$this->print_html .= $conditional_pre;
 			$this->print_html .= $tag;
-<<<<<<< HEAD
 			if ( $inline_style = $this->print_inline_style( $handle, false ) ) {
 				$this->print_html .= sprintf( "<style id='%s-inline-css' type='text/css'>\n%s\n</style>\n", esc_attr( $handle ), $inline_style );
 			}
 			$this->print_html .= $conditional_post;
-=======
-			if ( $inline_style = $this->print_inline_style( $handle, false ) )
-				$this->print_html .= sprintf( "<style id='%s-inline-css' type='text/css'>\n%s\n</style>\n", esc_attr( $handle ), $inline_style );
->>>>>>> FETCH_HEAD
 		} else {
 			echo $conditional_pre;
 			echo $tag;

@@ -683,8 +683,6 @@ function wp_admin_bar_appearance_menu( $wp_admin_bar ) {
 		}
 	}
 
-	$current_url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-	$customize_url = add_query_arg( 'url', urlencode( $current_url ), wp_customize_url() );
 	if ( current_user_can( 'customize' ) ) {
 		$wp_admin_bar->add_menu( array(
 			'parent' => 'appearance',

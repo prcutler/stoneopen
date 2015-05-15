@@ -13,7 +13,6 @@ tinymce.PluginManager.add( 'wpview', function( editor ) {
 		firstFocus = true,
 		_noop = function() { return false; },
 		isios = /iPad|iPod|iPhone/.test( navigator.userAgent ),
-<<<<<<< HEAD
 		cursorInterval,
 		lastKeyDownNode,
 		setViewCursorTries,
@@ -21,9 +20,6 @@ tinymce.PluginManager.add( 'wpview', function( editor ) {
 		execCommandView,
 		execCommandBefore,
 		toolbar;
-=======
-		cursorInterval, lastKeyDownNode, setViewCursorTries, focus, execCommandView, execCommandBefore;
->>>>>>> FETCH_HEAD
 
 	function getView( node ) {
 		return getParent( node, 'wpview-wrap' );
@@ -94,15 +90,6 @@ tinymce.PluginManager.add( 'wpview', function( editor ) {
 			dom = editor.dom;
 
 		if ( ! viewNode ) {
-<<<<<<< HEAD
-=======
-			return;
-		}
-
-		// Adjust the toolbar position and bail if node is already selected.
-		if ( viewNode === selected ) {
-			adjustToolbarPosition( viewNode );
->>>>>>> FETCH_HEAD
 			return;
 		}
 
@@ -112,16 +99,9 @@ tinymce.PluginManager.add( 'wpview', function( editor ) {
 			// without focus, the selection will not work properly.
 			editor.getBody().focus();
 
-<<<<<<< HEAD
 			deselect();
 			selected = viewNode;
 			dom.setAttrib( viewNode, 'data-mce-selected', 1 );
-=======
-		deselect();
-		selected = viewNode;
-		dom.setAttrib( viewNode, 'data-mce-selected', 1 );
-		adjustToolbarPosition( viewNode );
->>>>>>> FETCH_HEAD
 
 			clipboard = dom.create( 'div', {
 				'class': 'wpview-clipboard',
@@ -144,24 +124,6 @@ tinymce.PluginManager.add( 'wpview', function( editor ) {
 
 		editor.nodeChanged();
 		editor.fire( 'wpview-selected', viewNode );
-	}
-
-	function adjustToolbarPosition( viewNode ) {
-		var delta = 0,
-			toolbar = editor.$( viewNode ).find( '.toolbar' ),
-			editorToolbar = tinymce.$( editor.editorContainer ).find( '.mce-toolbar-grp' )[0],
-			editorToolbarBottom = ( editorToolbar && editorToolbar.getBoundingClientRect().bottom ) || 0;
-		
-		if ( toolbar.length && editor.iframeElement ) {
-			// 48 = 43 for the toolbar + 5 buffer
-			delta = viewNode.getBoundingClientRect().top + editor.iframeElement.getBoundingClientRect().top - editorToolbarBottom - 48;
-		}
-
-		if ( delta < 0 ) {
-			toolbar.removeClass( 'mce-arrow-down' ).css({ top: ( -43 + delta * -1 ) });
-		} else if ( delta > 0 && ! toolbar.hasClass( 'mce-arrow-down' ) ) {
-			toolbar.addClass( 'mce-arrow-down' ).css({ top: '' });
-		}
 	}
 
 	/**

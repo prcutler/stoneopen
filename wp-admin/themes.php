@@ -140,11 +140,7 @@ if ( ! validate_current_theme() || isset( $_GET['broken'] ) ) : ?>
 <div id="message2" class="updated notice is-dismissible"><p><?php printf( __( 'New theme activated. <a href="%s">Visit site</a>' ), home_url( '/' ) ); ?></p></div><?php
 		}
 	elseif ( isset($_GET['deleted']) ) : ?>
-<<<<<<< HEAD
 <div id="message3" class="updated notice is-dismissible"><p><?php _e('Theme deleted.') ?></p></div>
-=======
-<div id="message3" class="updated"><p><?php _e('Theme deleted.') ?></p></div>
->>>>>>> FETCH_HEAD
 <?php elseif ( isset( $_GET['delete-active-child'] ) ) : ?>
 	<div id="message4" class="error"><p><?php _e( 'You cannot delete a theme while it has an active child theme.' ); ?></p></div>
 <?php

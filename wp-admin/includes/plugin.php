@@ -22,11 +22,7 @@
  *     Author URI: Link to the author's web site
  *     Version: Must be set in the plugin for WordPress 2.3+
  *     Text Domain: Optional. Unique identifier, should be same as the one used in
-<<<<<<< HEAD
  *    		load_plugin_textdomain()
-=======
- *    		plugin_text_domain()
->>>>>>> FETCH_HEAD
  *     Domain Path: Optional. Only useful if the translations are located in a
  *    		folder above the plugin's base path. For example, if .mo files are
  *    		located in the locale folder then Domain Path will be "/locale/" and
@@ -809,12 +805,6 @@ function delete_plugins( $plugins, $deprecated = '' ) {
 
 	$plugins_dir = trailingslashit( $plugins_dir );
 
-<<<<<<< HEAD
-=======
-	$translations_dir = $wp_filesystem->wp_lang_dir();
-	$translations_dir = trailingslashit( $translations_dir );
-
->>>>>>> FETCH_HEAD
 	$plugin_translations = wp_get_installed_translations( 'plugins' );
 
 	$errors = array();

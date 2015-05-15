@@ -497,10 +497,6 @@ class WP_User_Query {
 	 * @since 3.1.0
 	 *
 	 * @param null|string|array $args Optional. The query variables.
-<<<<<<< HEAD
-=======
-	 * @return WP_User_Query
->>>>>>> FETCH_HEAD
 	 */
 	public function __construct( $query = null ) {
 		if ( ! empty( $query ) ) {
@@ -513,11 +509,8 @@ class WP_User_Query {
 	 * Prepare the query variables.
 	 *
 	 * @since 3.1.0
-<<<<<<< HEAD
 	 * @since 4.2.0 Added 'meta_value_num' support for `$orderby` parameter. Added multi-dimensional array syntax
 	 *              for `$orderby` parameter.
-=======
->>>>>>> FETCH_HEAD
 	 * @access public
 	 *
 	 * @param string|array $query {
@@ -538,7 +531,6 @@ class WP_User_Query {
 	 *                                         column to search in based on search string. Default empty.
 	 *     @type array        $search_columns  Array of column names to be searched. Accepts 'ID', 'login',
 	 *                                         'nicename', 'email', 'url'. Default empty array.
-<<<<<<< HEAD
 	 *     @type string|array $orderby         Field(s) to sort the retrieved users by. May be a single value,
 	 *                                         an array of values, or a multi-dimensional array with fields as keys
 	 *                                         and orders ('ASC' or 'DESC') as values. Accepted values are'ID',
@@ -552,14 +544,6 @@ class WP_User_Query {
 	 *     @type string       $order           Designates ascending or descending order of users. Order values
 	 *                                         passed as part of an `$orderby` array take precedence over this
 	 *                                         parameter. Accepts 'ASC', 'DESC'. Default 'ASC'.
-=======
-	 *     @type string       $orderby         Field to sort the retrieved users by. Accepts 'ID', 'display_name',
-	 *                                         'login', 'nicename', 'email', 'url', 'registered', 'post_count', or
-	 *                                         'meta_value'. To use 'meta_value', `$meta_key` must be also be defined.
-	 *                                         Default 'user_login'.
-	 *     @type string       $order           Designates ascending or descending order of users. Accepts 'ASC',
-	 *                                         'DESC'. Default 'ASC'.
->>>>>>> FETCH_HEAD
 	 *     @type int          $offset          Number of users to offset in retrieved results. Can be used in
 	 *                                         conjunction with pagination. Default 0.
 	 *     @type int          $number          Number of users to limit the query for. Can be used in conjunction
@@ -642,7 +626,6 @@ class WP_User_Query {
 			$include = false;
 		}
 
-<<<<<<< HEAD
 		$blog_id = 0;
 		if ( isset( $qv['blog_id'] ) ) {
 			$blog_id = absint( $qv['blog_id'] );
@@ -720,35 +703,6 @@ class WP_User_Query {
 				// Integer key means this is a flat array of 'orderby' fields.
 				$_orderby = $_value;
 				$_order = $order;
-=======
-		// sorting
-		if ( isset( $qv['orderby'] ) ) {
-			if ( in_array( $qv['orderby'], array('nicename', 'email', 'url', 'registered') ) ) {
-				$orderby = 'user_' . $qv['orderby'];
-			} elseif ( in_array( $qv['orderby'], array('user_nicename', 'user_email', 'user_url', 'user_registered') ) ) {
-				$orderby = $qv['orderby'];
-			} elseif ( 'name' == $qv['orderby'] || 'display_name' == $qv['orderby'] ) {
-				$orderby = 'display_name';
-			} elseif ( 'post_count' == $qv['orderby'] ) {
-				// todo: avoid the JOIN
-				$where = get_posts_by_author_sql('post');
-				$this->query_from .= " LEFT OUTER JOIN (
-					SELECT post_author, COUNT(*) as post_count
-					FROM $wpdb->posts
-					$where
-					GROUP BY post_author
-				) p ON ({$wpdb->users}.ID = p.post_author)
-				";
-				$orderby = 'post_count';
-			} elseif ( 'ID' == $qv['orderby'] || 'id' == $qv['orderby'] ) {
-				$orderby = 'ID';
-			} elseif ( 'meta_value' == $qv['orderby'] ) {
-				$orderby = "$wpdb->usermeta.meta_value";
-			} else if ( 'include' === $qv['orderby'] && ! empty( $include ) ) {
-				// Sanitized earlier.
-				$include_sql = implode( ',', $include );
-				$orderby = "FIELD( $wpdb->users.ID, $include_sql )";
->>>>>>> FETCH_HEAD
 			} else {
 				// Non-integer key means this the key is the field and the value is ASC/DESC.
 				$_orderby = $_key;
@@ -828,58 +782,6 @@ class WP_User_Query {
 			$this->query_where .= $this->get_search_sql( $search, $search_columns, $wild );
 		}
 
-<<<<<<< HEAD
-=======
-		$blog_id = 0;
-		if ( isset( $qv['blog_id'] ) )
-			$blog_id = absint( $qv['blog_id'] );
-
-		if ( isset( $qv['who'] ) && 'authors' == $qv['who'] && $blog_id ) {
-			$qv['meta_key'] = $wpdb->get_blog_prefix( $blog_id ) . 'user_level';
-			$qv['meta_value'] = 0;
-			$qv['meta_compare'] = '!=';
-			$qv['blog_id'] = $blog_id = 0; // Prevent extra meta query
-		}
-
-		$meta_query = new WP_Meta_Query();
-		$meta_query->parse_query_vars( $qv );
-
-		$role = '';
-		if ( isset( $qv['role'] ) )
-			$role = trim( $qv['role'] );
-
-		if ( $blog_id && ( $role || is_multisite() ) ) {
-			$cap_meta_query = array();
-			$cap_meta_query['key'] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
-
-			if ( $role ) {
-				$cap_meta_query['value'] = '"' . $role . '"';
-				$cap_meta_query['compare'] = 'like';
-			}
-
-			if ( empty( $meta_query->queries ) ) {
-				$meta_query->queries = array( $cap_meta_query );
-			} elseif ( ! in_array( $cap_meta_query, $meta_query->queries, true ) ) {
-				// Append the cap query to the original queries and reparse the query.
-				$meta_query->queries = array(
-					'relation' => 'AND',
-					array( $meta_query->queries, $cap_meta_query ),
-				);
-			}
-
-			$meta_query->parse_query_vars( $meta_query->queries );
-		}
-
-		if ( !empty( $meta_query->queries ) ) {
-			$clauses = $meta_query->get_sql( 'user', $wpdb->users, 'ID', $this );
-			$this->query_from .= $clauses['join'];
-			$this->query_where .= $clauses['where'];
-
-			if ( 'OR' == $meta_query->relation )
-				$this->query_fields = 'DISTINCT ' . $this->query_fields;
-		}
-
->>>>>>> FETCH_HEAD
 		if ( ! empty( $include ) ) {
 			// Sanitized earlier.
 			$ids = implode( ',', $include );
@@ -1347,11 +1249,7 @@ function is_user_member_of_blog( $user_id = 0, $blog_id = 0 ) {
  * Post meta data is called "Custom Fields" on the Administration Screens.
  *
  * @since 3.0.0
-<<<<<<< HEAD
  * @link https://codex.wordpress.org/Function_Reference/add_user_meta
-=======
- * @link http://codex.wordpress.org/Function_Reference/add_user_meta
->>>>>>> FETCH_HEAD
  *
  * @param int $user_id User ID.
  * @param string $meta_key Metadata name.
@@ -1371,11 +1269,7 @@ function add_user_meta($user_id, $meta_key, $meta_value, $unique = false) {
  * allows removing all metadata matching key, if needed.
  *
  * @since 3.0.0
-<<<<<<< HEAD
  * @link https://codex.wordpress.org/Function_Reference/delete_user_meta
-=======
- * @link http://codex.wordpress.org/Function_Reference/delete_user_meta
->>>>>>> FETCH_HEAD
  *
  * @param int $user_id user ID
  * @param string $meta_key Metadata name.
@@ -1390,11 +1284,7 @@ function delete_user_meta($user_id, $meta_key, $meta_value = '') {
  * Retrieve user meta field for a user.
  *
  * @since 3.0.0
-<<<<<<< HEAD
  * @link https://codex.wordpress.org/Function_Reference/get_user_meta
-=======
- * @link http://codex.wordpress.org/Function_Reference/get_user_meta
->>>>>>> FETCH_HEAD
  *
  * @param int $user_id User ID.
  * @param string $key Optional. The meta key to retrieve. By default, returns data for all keys.
@@ -1415,11 +1305,7 @@ function get_user_meta($user_id, $key = '', $single = false) {
  * If the meta field for the user does not exist, it will be added.
  *
  * @since 3.0.0
-<<<<<<< HEAD
  * @link https://codex.wordpress.org/Function_Reference/update_user_meta
-=======
- * @link http://codex.wordpress.org/Function_Reference/update_user_meta
->>>>>>> FETCH_HEAD
  *
  * @param int $user_id User ID.
  * @param string $meta_key Metadata key.

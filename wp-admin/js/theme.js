@@ -829,14 +829,10 @@ themes.view.Themes = wp.Backbone.View.extend({
 	index: 0,
 
 	// The theme count element
-<<<<<<< HEAD
 	count: $( '.wp-core-ui .theme-count' ),
 
 	// The live themes count
 	liveThemeCount: 0,
-=======
-	count: $( '.wp-filter .theme-count' ),
->>>>>>> FETCH_HEAD
 
 	initialize: function( options ) {
 		var self = this;
@@ -1328,11 +1324,7 @@ themes.view.InstallerSearch =  themes.view.Search.extend({
 
 		// Set route
 		themes.router.navigate( themes.router.baseUrl( themes.router.searchPath + value ), { replace: true } );
-<<<<<<< HEAD
 	}, 500 )
-=======
-	}, 300 )
->>>>>>> FETCH_HEAD
 });
 
 themes.view.Installer = themes.view.Appearance.extend({

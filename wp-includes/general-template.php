@@ -730,15 +730,9 @@ function get_bloginfo( $show = '', $filter = 'raw' ) {
 /**
  * Display title tag with contents.
  *
-<<<<<<< HEAD
  * @ignore
  * @since 4.1.0
  * @access private
-=======
- * @since 4.1.0
- * @access private
- * @internal
->>>>>>> FETCH_HEAD
  *
  * @see wp_title()
  */
@@ -3163,18 +3157,3 @@ function wp_heartbeat_settings( $settings ) {
 
 	return $settings;
 }
-
-/**
- * Temporary function to add a missing style rule to the themes page.
- * This avoids the need to ship an entirely rebuilt wp-admin.css in partial builds.
- *
- * @since 4.1.1
- * @ignore
- */
-function _wp_add_themesphp_notice_styling() {
-	global $pagenow;
-	if ( 'themes.php' == $pagenow ) {
-		echo "<style type='text/css'>.themes-php div.notice { margin: 0 0 20px 0; clear: both; }</style>\n";
-	}
-}
-add_action( 'admin_head', '_wp_add_themesphp_notice_styling' );

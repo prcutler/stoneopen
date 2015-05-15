@@ -128,10 +128,7 @@ if ( ! empty( $messages ) ) {
 				<th scope="row"><?php _e( 'Domain' ) ?></th>
 				<td><code><?php echo $parsed['scheme'] . '://' . esc_attr( $details->domain ) ?></code></td>
 			<?php } else { ?>
-<<<<<<< HEAD
 				<th scope="row"><label for="domain"><?php _e( 'Domain' ) ?></label></th>
-=======
->>>>>>> FETCH_HEAD
 				<td><?php echo $parsed['scheme'] . '://'; ?><input name="blog[domain]" type="text" id="domain" value="<?php echo esc_attr( $details->domain ) ?>" /></td>
 			<?php } ?>
 		</tr>
@@ -143,35 +140,21 @@ if ( ! empty( $messages ) ) {
 			} else {
 				switch_to_blog( $id );
 			?>
-<<<<<<< HEAD
 			<th scope="row"><label for="path"><?php _e( 'Path' ) ?></label></th>
 			<td>
 				<input name="blog[path]" type="text" id="path" value="<?php echo esc_attr( $details->path ) ?>" /><br />
 				<input type="checkbox" name="update_home_url" id="update_home_url" value="update" <?php if ( get_option( 'siteurl' ) == untrailingslashit( get_blogaddress_by_id ($id ) ) || get_option( 'home' ) == untrailingslashit( get_blogaddress_by_id( $id ) ) ) echo 'checked="checked"'; ?> /> <label for="update_home_url"><?php _e( 'Update <code>siteurl</code> and <code>home</code> as well.' ); ?></label>
-=======
-			<td>
-				<input name="blog[path]" type="text" id="path" value="<?php echo esc_attr( $details->path ) ?>" /><br />
-				<label><input type="checkbox" name="update_home_url" value="update" <?php if ( get_option( 'siteurl' ) == untrailingslashit( get_blogaddress_by_id ($id ) ) || get_option( 'home' ) == untrailingslashit( get_blogaddress_by_id( $id ) ) ) echo 'checked="checked"'; ?> /> <?php _e( 'Update <code>siteurl</code> and <code>home</code> as well.' ); ?></label>
->>>>>>> FETCH_HEAD
 			</td>
 			<?php
 				restore_current_blog();
 			} ?>
 		</tr>
 		<tr class="form-field">
-<<<<<<< HEAD
 			<th scope="row"><label for="blog_registered"><?php _ex( 'Registered', 'site' ) ?></label></th>
 			<td><input name="blog[registered]" type="text" id="blog_registered" value="<?php echo esc_attr( $details->registered ) ?>" /></td>
 		</tr>
 		<tr class="form-field">
 			<th scope="row"><label for="blog_last_updated"><?php _e( 'Last Updated' ); ?></label></th>
-=======
-			<th scope="row"><?php _ex( 'Registered', 'site' ) ?></th>
-			<td><input name="blog[registered]" type="text" id="blog_registered" value="<?php echo esc_attr( $details->registered ) ?>" /></td>
-		</tr>
-		<tr class="form-field">
-			<th scope="row"><?php _e( 'Last Updated' ); ?></th>
->>>>>>> FETCH_HEAD
 			<td><input name="blog[last_updated]" type="text" id="blog_last_updated" value="<?php echo esc_attr( $details->last_updated ) ?>" /></td>
 		</tr>
 		<?php

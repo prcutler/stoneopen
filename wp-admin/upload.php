@@ -70,11 +70,7 @@ if ( 'grid' === $mode ) {
 
 	require_once( ABSPATH . 'wp-admin/admin-header.php' );
 	?>
-<<<<<<< HEAD
 	<div class="wrap" id="wp-media-grid" data-search="<?php _admin_search_query() ?>">
-=======
-	<div class="wrap" id="wp-media-grid">
->>>>>>> FETCH_HEAD
 		<h2>
 		<?php
 		echo esc_html( $title );

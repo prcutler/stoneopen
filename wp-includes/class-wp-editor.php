@@ -485,15 +485,6 @@ final class _WP_Editors {
 						],
 						strikethrough: {inline: 'del'}
 					}",
-					'block_formats' =>
-						'Paragraph=p;' .
-						'Pre=pre;' .
-						'Heading 1=h1;' .
-						'Heading 2=h2;' .
-						'Heading 3=h3;' .
-						'Heading 4=h4;' .
-						'Heading 5=h5;' .
-						'Heading 6=h6',
 					'relative_urls' => false,
 					'remove_script_host' => false,
 					'convert_urls' => false,
@@ -579,15 +570,12 @@ final class _WP_Editors {
 				 * @param string $editor_id Unique editor identifier, e.g. 'content'.
 				 */
 				$mce_buttons = apply_filters( 'mce_buttons', $mce_buttons, $editor_id );
-<<<<<<< HEAD
 
 				$mce_buttons_2 = array( 'formatselect', 'underline', 'alignjustify', 'forecolor', 'pastetext', 'removeformat', 'charmap', 'outdent', 'indent', 'undo', 'redo' );
 
 				if ( ! wp_is_mobile() ) {
 					$mce_buttons_2[] = 'wp_help';
 				}
-=======
->>>>>>> FETCH_HEAD
 
 				/**
 				 * Filter the second-row list of TinyMCE buttons (Visual tab).

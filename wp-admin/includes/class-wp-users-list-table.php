@@ -332,12 +332,7 @@ class WP_Users_List_Table extends WP_List_Table {
 	 * @global WP_Roles $wp_roles User roles object.
 	 *
 	 * @param object $user_object The current user object.
-<<<<<<< HEAD
 	 * @param string $style       Deprecated. Not used.
-=======
-	 * @param string $style       Optional. Style attributes added to the `<tr>` element.
-	 *                            Must be sanitized. Default empty.
->>>>>>> FETCH_HEAD
 	 * @param string $role        Optional. Key for the $wp_roles array. Default empty.
 	 * @param int    $numposts    Optional. Post count to display for this user. Defaults
 	 *                            to zero, as in, a new user has made zero posts.

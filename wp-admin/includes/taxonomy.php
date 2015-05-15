@@ -217,12 +217,8 @@ function wp_create_tag($tag_name) {
  *
  * @since 2.3.0
  *
-<<<<<<< HEAD
  * @param int    $post_id
  * @param string $taxonomy Optional. The taxonomy for which to retrieve terms. Default 'post_tag'.
-=======
- * @param int $post_id
->>>>>>> FETCH_HEAD
  * @return string|bool|WP_Error
  */
 function get_tags_to_edit( $post_id, $taxonomy = 'post_tag' ) {
@@ -234,12 +230,8 @@ function get_tags_to_edit( $post_id, $taxonomy = 'post_tag' ) {
  *
  * @since 2.8.0
  *
-<<<<<<< HEAD
  * @param int    $post_id
  * @param string $taxonomy Optional. The taxonomy for which to retrieve terms. Default 'post_tag'.
-=======
- * @param int $post_id
->>>>>>> FETCH_HEAD
  * @return string|bool|WP_Error
  */
 function get_terms_to_edit( $post_id, $taxonomy = 'post_tag' ) {
@@ -287,10 +279,7 @@ function get_terms_to_edit( $post_id, $taxonomy = 'post_tag' ) {
  * @since 2.8.0
  *
  * @param int|string $tag_name
-<<<<<<< HEAD
  * @param string $taxonomy Optional. The taxonomy for which to retrieve terms. Default 'post_tag'.
-=======
->>>>>>> FETCH_HEAD
  * @return array|WP_Error
  */
 function wp_create_term($tag_name, $taxonomy = 'post_tag') {

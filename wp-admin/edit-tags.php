@@ -19,12 +19,9 @@ if ( ! $tax )
 
 if ( ! current_user_can( $tax->cap->manage_terms ) )
 	wp_die( __( 'Cheatin&#8217; uh?' ), 403 );
-<<<<<<< HEAD
 
 // $post_type is set when the WP_Terms_List_Table instance is created
 global $post_type;
-=======
->>>>>>> FETCH_HEAD
 
 $wp_list_table = _get_list_table('WP_Terms_List_Table');
 $pagenum = $wp_list_table->get_pagenum();
@@ -43,8 +40,6 @@ if ( 'post' != $post_type ) {
 }
 
 add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'edit_' . $tax->name . '_per_page' ) );
-
-$location = false;
 
 $location = false;
 
@@ -70,11 +65,7 @@ case 'add-tag':
 	if ( $ret && !is_wp_error( $ret ) )
 		$location = add_query_arg( 'message', 1, $location );
 	else
-<<<<<<< HEAD
 		$location = add_query_arg( array( 'error' => true, 'message' => 4 ), $location );
-=======
-		$location = add_query_arg( 'message', 4, $location );
->>>>>>> FETCH_HEAD
 
 	break;
 
@@ -165,11 +156,7 @@ case 'editedtag':
 	if ( $ret && !is_wp_error( $ret ) )
 		$location = add_query_arg( 'message', 3, $location );
 	else
-<<<<<<< HEAD
 		$location = add_query_arg( array( 'error' => true, 'message' => 5 ), $location );
-=======
-		$location = add_query_arg( 'message', 5, $location );
->>>>>>> FETCH_HEAD
 	break;
 }
 

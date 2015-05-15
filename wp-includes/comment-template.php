@@ -1167,11 +1167,7 @@ function comments_template( $file = '/comments.php', $separate_comments = false 
 
 	if ( $user_ID ) {
 		$comment_args['include_unapproved'] = array( $user_ID );
-<<<<<<< HEAD
 	} elseif ( ! empty( $comment_author_email ) ) {
-=======
-	} else if ( ! empty( $comment_author_email ) ) {
->>>>>>> FETCH_HEAD
 		$comment_args['include_unapproved'] = array( $comment_author_email );
 	}
 
@@ -1505,11 +1501,7 @@ function get_post_reply_link($args = array(), $post = null) {
 	}
 
 	if ( get_option('comment_registration') && ! is_user_logged_in() ) {
-<<<<<<< HEAD
 		$link = sprintf( '<a rel="nofollow" class="comment-reply-login" href="%s">%s</a>',
-=======
-		$link = sprintf( '<a rel="nofollow" href="%s">%s</a>',
->>>>>>> FETCH_HEAD
 			wp_login_url( get_permalink() ),
 			$args['login_text']
 		);
@@ -2212,11 +2204,7 @@ function comment_form( $args = array(), $post_id = null ) {
 		'author' => '<p class="comment-form-author">' . '<label for="author">' . __( 'Name' ) . ( $req ? ' <span class="required">*</span>' : '' ) . '</label> ' .
 		            '<input id="author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) . '" size="30"' . $aria_req . $html_req . ' /></p>',
 		'email'  => '<p class="comment-form-email"><label for="email">' . __( 'Email' ) . ( $req ? ' <span class="required">*</span>' : '' ) . '</label> ' .
-<<<<<<< HEAD
 		            '<input id="email" name="email" ' . ( $html5 ? 'type="email"' : 'type="text"' ) . ' value="' . esc_attr(  $commenter['comment_author_email'] ) . '" size="30" aria-describedby="email-notes"' . $aria_req . $html_req  . ' /></p>',
-=======
-		            '<input id="email" name="email" ' . ( $html5 ? 'type="email"' : 'type="text"' ) . ' value="' . esc_attr(  $commenter['comment_author_email'] ) . '" size="30" aria-describedby="email-notes"' . $aria_req . ' /></p>',
->>>>>>> FETCH_HEAD
 		'url'    => '<p class="comment-form-url"><label for="url">' . __( 'Website' ) . '</label> ' .
 		            '<input id="url" name="url" ' . ( $html5 ? 'type="url"' : 'type="text"' ) . ' value="' . esc_attr( $commenter['comment_author_url'] ) . '" size="30" /></p>',
 	);
@@ -2233,11 +2221,7 @@ function comment_form( $args = array(), $post_id = null ) {
 	$fields = apply_filters( 'comment_form_default_fields', $fields );
 	$defaults = array(
 		'fields'               => $fields,
-<<<<<<< HEAD
 		'comment_field'        => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label> <textarea id="comment" name="comment" cols="45" rows="8" aria-describedby="form-allowed-tags" aria-required="true" required="required"></textarea></p>',
-=======
-		'comment_field'        => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label> <textarea id="comment" name="comment" cols="45" rows="8" aria-describedby="form-allowed-tags" aria-required="true"></textarea></p>',
->>>>>>> FETCH_HEAD
 		/** This filter is documented in wp-includes/link-template.php */
 		'must_log_in'          => '<p class="must-log-in">' . sprintf( __( 'You must be <a href="%s">logged in</a> to post a comment.' ), wp_login_url( apply_filters( 'the_permalink', get_permalink( $post_id ) ) ) ) . '</p>',
 		/** This filter is documented in wp-includes/link-template.php */
@@ -2368,14 +2352,7 @@ function comment_form( $args = array(), $post_id = null ) {
 						echo apply_filters( 'comment_form_field_comment', $args['comment_field'] );
 						?>
 						<?php echo $args['comment_notes_after']; ?>
-<<<<<<< HEAD
 
-=======
-						<p class="form-submit">
-							<input name="<?php echo esc_attr( $args['name_submit'] ); ?>" type="submit" id="<?php echo esc_attr( $args['id_submit'] ); ?>" class="<?php echo esc_attr( $args['class_submit'] ); ?>" value="<?php echo esc_attr( $args['label_submit'] ); ?>" />
-							<?php comment_id_fields( $post_id ); ?>
-						</p>
->>>>>>> FETCH_HEAD
 						<?php
 						$submit_button = sprintf(
 							$args['submit_button'],

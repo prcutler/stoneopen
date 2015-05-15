@@ -296,11 +296,7 @@ class WP_Customize_Control {
 	 *
 	 * @return string Contents of the control.
 	 */
-<<<<<<< HEAD
 	final public function get_content() {
-=======
-	public final function get_content() {
->>>>>>> FETCH_HEAD
 		ob_start();
 		$this->maybe_render();
 		$template = trim( ob_get_contents() );
@@ -525,19 +521,11 @@ class WP_Customize_Control {
 	 * @since 4.1.0
 	 */
 	final public function print_template() {
-<<<<<<< HEAD
 		?>
 		<script type="text/html" id="tmpl-customize-control-<?php echo $this->type; ?>-content">
 			<?php $this->content_template(); ?>
 		</script>
 		<?php
-=======
-	        ?>
-	        <script type="text/html" id="tmpl-customize-control-<?php echo $this->type; ?>-content">
-	                <?php $this->content_template(); ?>
-	        </script>
-	        <?php
->>>>>>> FETCH_HEAD
 	}
 
 	/**
@@ -656,39 +644,7 @@ class WP_Customize_Color_Control extends WP_Customize_Control {
  *
  * @see WP_Customize_Control
  */
-<<<<<<< HEAD
 class WP_Customize_Media_Control extends WP_Customize_Control {
-=======
-class WP_Customize_Upload_Control extends WP_Customize_Control {
-	public $type          = 'upload';
-	public $mime_type     = '';
-	public $button_labels = array();
-	public $removed = ''; // unused
-	public $context; // unused
-	public $extensions = array(); // unused
-
-	/**
-	 * Constructor.
-	 *
-	 * @since 4.1.0
-	 *
-	 * @param WP_Customize_Manager $manager {@see WP_Customize_Manager} instance.
-	 */
-	public function __construct( $manager, $id, $args = array() ) {
-		parent::__construct( $manager, $id, $args );
-
-		$this->button_labels = array(
-			'select'       => __( 'Select File' ),
-			'change'       => __( 'Change File' ),
-			'default'      => __( 'Default' ),
-			'remove'       => __( 'Remove' ),
-			'placeholder'  => __( 'No file selected' ),
-			'frame_title'  => __( 'Select File' ),
-			'frame_button' => __( 'Choose File' ),
-		);
-	}
-
->>>>>>> FETCH_HEAD
 	/**
 	 * Control type.
 	 *
@@ -696,13 +652,7 @@ class WP_Customize_Upload_Control extends WP_Customize_Control {
 	 * @access public
 	 * @var string
 	 */
-<<<<<<< HEAD
 	public $type = 'media';
-=======
-	public function enqueue() {
-		wp_enqueue_media();
-	}
->>>>>>> FETCH_HEAD
 
 	/**
 	 * Media control mime type.
@@ -711,7 +661,6 @@ class WP_Customize_Upload_Control extends WP_Customize_Control {
 	 * @access public
 	 * @var string
 	 */
-<<<<<<< HEAD
 	public $mime_type = '';
 
 	/**
@@ -722,138 +671,6 @@ class WP_Customize_Upload_Control extends WP_Customize_Control {
 	 * @var array
 	 */
 	public $button_labels = array();
-=======
-	public function to_json() {
-		parent::to_json();
-		$this->json['mime_type'] = $this->mime_type;
-		$this->json['button_labels'] = $this->button_labels;
-
-		$value = $this->value();
-
-		if ( is_object( $this->setting ) ) {
-			if ( $this->setting->default ) {
-				// Fake an attachment model - needs all fields used by template.
-				$type = in_array( substr( $this->setting->default, -3 ), array( 'jpg', 'png', 'gif', 'bmp' ) ) ? 'image' : 'document';
-				$default_attachment = array(
-					'id' => 1,
-					'url' => $this->setting->default,
-					'type' => $type,
-					'icon' => wp_mime_type_icon( $type ),
-					'title' => basename( $this->setting->default ),
-				);
-
-				if ( 'image' === $type ) {
-					$default_attachment['sizes'] = array(
-						'full' => array( 'url' => $this->setting->default ),
-					);
-				}
-
-				$this->json['defaultAttachment'] = $default_attachment;
-			}
-
-			if ( $value && $this->setting->default && $value === $this->setting->default ) {
-				// Set the default as the attachment.
-				$this->json['attachment'] = $this->json['defaultAttachment'];
-			} elseif ( $value ) {
-				// Get the attachment model for the existing file.
-				$attachment_id = attachment_url_to_postid( $value );
-				if ( $attachment_id ) {
-					$this->json['attachment'] = wp_prepare_attachment_for_js( $attachment_id );
-				}
-			}
-		}
-	}
-
-	/**
-	 * Don't render any content for this control from PHP.
-	 *
-	 * @see WP_Customize_Upload_Control::content_template()
-	 * @since 3.4.0
-	 */
-	public function render_content() {}
-
-	/**
-	 * Render a JS template for the content of the upload control.
-	 *
-	 * @since 4.1.0
-	 */
-	public function content_template() {
-		?>
-		<label for="{{ data.settings['default'] }}-button">
-			<# if ( data.label ) { #>
-				<span class="customize-control-title">{{ data.label }}</span>
-			<# } #>
-			<# if ( data.description ) { #>
-				<span class="description customize-control-description">{{{ data.description }}}</span>
-			<# } #>
-		</label>
-
-		<# if ( data.attachment && data.attachment.id ) { #>
-			<div class="current">
-				<div class="container">
-					<div class="attachment-media-view attachment-media-view-{{ data.attachment.type }} {{ data.attachment.orientation }}">
-						<div class="thumbnail thumbnail-{{ data.attachment.type }}">
-							<# if ( 'image' === data.attachment.type && data.attachment.sizes && data.attachment.sizes.medium ) { #>
-								<img class="attachment-thumb" src="{{ data.attachment.sizes.medium.url }}" draggable="false" />
-							<# } else if ( 'image' === data.attachment.type && data.attachment.sizes && data.attachment.sizes.full ) { #>
-								<img class="attachment-thumb" src="{{ data.attachment.sizes.full.url }}" draggable="false" />
-							<# } else if ( 'audio' === data.attachment.type ) { #>
-								<img class="attachment-thumb type-icon" src="{{ data.attachment.icon }}" class="icon" draggable="false" />
-								<p class="attachment-meta attachment-meta-title">&#8220;{{ data.attachment.title }}&#8221;</p>
-								<# if ( data.attachment.album || data.attachment.meta.album ) { #>
-								<p class="attachment-meta"><em>{{ data.attachment.album || data.attachment.meta.album }}</em></p>
-								<# } #>
-								<# if ( data.attachment.artist || data.attachment.meta.artist ) { #>
-								<p class="attachment-meta">{{ data.attachment.artist || data.attachment.meta.artist }}</p>
-								<# } #>
-							<# } else { #>
-								<img class="attachment-thumb type-icon" src="{{ data.attachment.icon }}" class="icon" draggable="false" />
-								<p class="attachment-title">{{ data.attachment.title }}</p>
-							<# } #>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="actions">
-				<button type="button" class="button remove-button"><?php echo $this->button_labels['remove']; ?></button>
-				<button type="button" class="button upload-button" id="{{ data.settings['default'] }}-button"><?php echo $this->button_labels['change']; ?></button>
-				<div style="clear:both"></div>
-			</div>
-		<# } else { #>
-			<div class="current">
-				<div class="container">
-					<div class="placeholder">
-						<div class="inner">
-							<span>
-								<?php echo $this->button_labels['placeholder']; ?>
-							</span>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="actions">
-				<# if ( data.defaultAttachment ) { #>
-					<button type="button" class="button default-button"><?php echo $this->button_labels['default']; ?></button>
-				<# } #>
-				<button type="button" class="button upload-button" id="{{ data.settings['default'] }}-button"><?php echo $this->button_labels['select']; ?></button>
-				<div style="clear:both"></div>
-			</div>
-		<# } #>
-		<?php
-	}
-}
-
-/**
- * Customize Image Control Class
- *
- * @package WordPress
- * @subpackage Customize
- * @since 3.4.0
- */
-class WP_Customize_Image_Control extends WP_Customize_Upload_Control {
-	public $type = 'image';
-	public $mime_type = 'image';
->>>>>>> FETCH_HEAD
 
 	/**
 	 * Constructor.
@@ -861,19 +678,12 @@ class WP_Customize_Image_Control extends WP_Customize_Upload_Control {
 	 * @since 4.1.0
 	 * @since 4.2.0 Moved from WP_Customize_Upload_Control.
 	 *
-<<<<<<< HEAD
 	 * @param WP_Customize_Manager $manager {@see WP_Customize_Manager} instance.
-=======
-	 * @param WP_Customize_Manager $manager
-	 * @param string $id
-	 * @param array  $args
->>>>>>> FETCH_HEAD
 	 */
 	public function __construct( $manager, $id, $args = array() ) {
 		parent::__construct( $manager, $id, $args );
 
 		$this->button_labels = array(
-<<<<<<< HEAD
 			'select'       => __( 'Select File' ),
 			'change'       => __( 'Change File' ),
 			'default'      => __( 'Default' ),
@@ -881,20 +691,10 @@ class WP_Customize_Image_Control extends WP_Customize_Upload_Control {
 			'placeholder'  => __( 'No file selected' ),
 			'frame_title'  => __( 'Select File' ),
 			'frame_button' => __( 'Choose File' ),
-=======
-			'select'       => __( 'Select Image' ),
-			'change'       => __( 'Change Image' ),
-			'remove'       => __( 'Remove' ),
-			'default'      => __( 'Default' ),
-			'placeholder'  => __( 'No image selected' ),
-			'frame_title'  => __( 'Select Image' ),
-			'frame_button' => __( 'Choose Image' ),
->>>>>>> FETCH_HEAD
 		);
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Enqueue control related scripts/styles.
 	 *
 	 * @since 3.4.0
@@ -1064,20 +864,10 @@ class WP_Customize_Upload_Control extends WP_Customize_Media_Control {
 	/**
 	 * Refresh the parameters passed to the JavaScript via JSON.
 	 *
-=======
-	 * @since 3.4.2
-	 * @deprecated 4.1.0
-	 */
-	public function prepare_control() {}
-
-	/**
->>>>>>> FETCH_HEAD
 	 * @since 3.4.0
-	 * @deprecated 4.1.0
 	 *
 	 * @uses WP_Customize_Media_Control::to_json()
 	 */
-<<<<<<< HEAD
 	public function to_json() {
 		parent::to_json();
 
@@ -1108,19 +898,11 @@ class WP_Customize_Image_Control extends WP_Customize_Upload_Control {
 	 *
 	 * @since 3.4.0
 	 * @uses WP_Customize_Upload_Control::__construct()
-=======
-	public function add_tab( $id, $label, $callback ) {}
-
-	/**
-	 * @since 3.4.0
-	 * @deprecated 4.1.0
->>>>>>> FETCH_HEAD
 	 *
 	 * @param WP_Customize_Manager $manager
 	 * @param string $id
 	 * @param array  $args
 	 */
-<<<<<<< HEAD
 	public function __construct( $manager, $id, $args = array() ) {
 		parent::__construct( $manager, $id, $args );
 
@@ -1157,8 +939,6 @@ class WP_Customize_Image_Control extends WP_Customize_Upload_Control {
 	 *
 	 * @param string $id
 	 */
-=======
->>>>>>> FETCH_HEAD
 	public function remove_tab( $id ) {}
 
 	/**
@@ -1512,11 +1292,7 @@ class WP_Customize_Theme_Control extends WP_Customize_Control {
  *
  * @since 3.9.0
  *
-<<<<<<< HEAD
  * @see WP_Customize_Control
-=======
- * @since 3.9.0
->>>>>>> FETCH_HEAD
  */
 class WP_Widget_Area_Customize_Control extends WP_Customize_Control {
 	public $type = 'sidebar_widgets';
@@ -1546,17 +1322,11 @@ class WP_Widget_Area_Customize_Control extends WP_Customize_Control {
 }
 
 /**
-<<<<<<< HEAD
  * Widget Form Customize Control class.
  *
  * @since 3.9.0
  *
  * @see WP_Customize_Control
-=======
- * Widget Form Customize Control Class
- *
- * @since 3.9.0
->>>>>>> FETCH_HEAD
  */
 class WP_Widget_Form_Customize_Control extends WP_Customize_Control {
 	public $type = 'widget_form';

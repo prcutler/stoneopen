@@ -227,10 +227,7 @@ body.modal-open {
 
 body.mobile.modal-open #wpwrap {
 	overflow: hidden;
-<<<<<<< HEAD
 	position: fixed;
-=======
->>>>>>> FETCH_HEAD
 	height: 100%;
 }
 
@@ -1293,7 +1290,6 @@ div.error p,
 	padding: 2px;
 }
 
-<<<<<<< HEAD
 .wp-core-ui .notice.is-dismissible {
 	padding-right: 38px;
 	position: relative;
@@ -1342,32 +1338,15 @@ div.updated {
 
 .notice-warning {
 	border-color: #ffba00;
-=======
-.notice-success,
-div.updated {
-     border-color: #7ad03a;
-}
-
-.notice-warning {
-    border-color: #ffba00;
->>>>>>> FETCH_HEAD
 }
 
 .notice-error,
 div.error {
-<<<<<<< HEAD
 	border-color: #dd3d36;
 }
 
 .notice-info {
 	border-color: #00a0d2;
-=======
-    border-color: #dd3d36;
-}
-
-.notice-info {
-    border-color: #2ea2cc;
->>>>>>> FETCH_HEAD
 }
 
 .wrap .notice,
@@ -2946,17 +2925,10 @@ img {
 }
 
 /*!
-<<<<<<< HEAD
  * jQuery UI Draggable/Sortable 1.11.4
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
-=======
- * jQuery UI Draggable/Sortable 1.11.2
- * http://jqueryui.com
- *
- * Copyright 2014 jQuery Foundation and other contributors
->>>>>>> FETCH_HEAD
  * Released under the MIT license.
  * http://jquery.org/license
  */

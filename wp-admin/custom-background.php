@@ -37,11 +37,6 @@ class Custom_Background {
 	private $updated;
 
 	/**
-	 * @var bool
-	 */
-	private $updated;
-
-	/**
 	 * Constructor - Register administration header callback.
 	 *
 	 * @since 3.0.0
@@ -53,42 +48,6 @@ class Custom_Background {
 		$this->admin_image_div_callback = $admin_image_div_callback;
 
 		add_action( 'admin_menu', array( $this, 'init' ) );
-<<<<<<< HEAD
-=======
-
-		add_action( 'wp_ajax_custom-background-add', array( $this, 'ajax_background_add' ) );
-
-		// Unused since 3.5.0.
-		add_action( 'wp_ajax_set-background-image', array( $this, 'wp_set_background_image' ) );
-	}
-
-	/**
-	 * Make private properties readable for backwards compatibility.
-	 *
-	 * @since 4.0.0
-	 * @access public
-	 *
-	 * @param string $name Property name.
-	 * @return mixed Property.
-	 */
-	public function __get( $name ) {
-		return $this->$name;
-	}
-
-	/**
-	 * Make private properties settable for backwards compatibility.
-	 *
-	 * @since 4.0.0
-	 * @access public
-	 *
-	 * @param string $name  Property to set.
-	 * @param mixed  $value Property value.
-	 * @return mixed Newly-set property.
-	 */
-	public function __set( $name, $value ) {
-		return $this->$name = $value;
-	}
->>>>>>> FETCH_HEAD
 
 		add_action( 'wp_ajax_custom-background-add', array( $this, 'ajax_background_add' ) );
 

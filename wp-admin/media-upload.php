@@ -31,7 +31,6 @@ $ID = isset($ID) ? (int) $ID : 0;
 $post_id = isset($post_id)? (int) $post_id : 0;
 
 // Require an ID for the edit screen.
-<<<<<<< HEAD
 if ( isset($action) && $action == 'edit' && !$ID ) {
 	wp_die( __( 'Cheatin&#8217; uh?' ), 403 );
 }
@@ -39,13 +38,6 @@ if ( isset($action) && $action == 'edit' && !$ID ) {
 if ( ! empty( $_REQUEST['post_id'] ) && ! current_user_can( 'edit_post' , $_REQUEST['post_id'] ) ) {
 	wp_die( __( 'Cheatin&#8217; uh?' ), 403 );
 }
-=======
-if ( isset($action) && $action == 'edit' && !$ID )
-	wp_die( __( 'Cheatin&#8217; uh?' ), 403 );
-
-	if ( ! empty( $_REQUEST['post_id'] ) && ! current_user_can( 'edit_post' , $_REQUEST['post_id'] ) )
-		wp_die( __( 'Cheatin&#8217; uh?' ), 403 );
->>>>>>> FETCH_HEAD
 
 // Upload type: image, video, file, ..?
 if ( isset($_GET['type']) ) {
@@ -109,36 +101,3 @@ if ( $tab == 'type' || $tab == 'type_url' || ! array_key_exists( $tab , media_up
 	do_action( "media_upload_$tab" );
 }
 
-<<<<<<< HEAD
-=======
-	// Let the action code decide how to handle the request.
-	if ( $tab == 'type' || $tab == 'type_url' || ! array_key_exists( $tab , media_upload_tabs() ) ) {
-		/**
-		 * Fires inside specific upload-type views in the legacy (pre-3.5.0)
-		 * media popup based on the current tab.
-		 *
-		 * The dynamic portion of the hook name, `$type`, refers to the specific
-		 * media upload type. Possible values include 'image', 'audio', 'video',
-		 * 'file', etc.
-		 *
-		 * The hook only fires if the current `$tab` is 'type' (From Computer),
-		 * 'type_url' (From URL), or, if the tab does not exist (i.e., has not
-		 * been registered via the {@see 'media_upload_tabs'} filter.
-		 *
-		 * @since 2.5.0
-		 */
-		do_action( "media_upload_$type" );
-	} else {
-		/**
-		 * Fires inside limited and specific upload-tab views in the legacy
-		 * (pre-3.5.0) media popup.
-		 *
-		 * The dynamic portion of the hook name, `$tab`, refers to the specific
-		 * media upload tab. Possible values include 'library' (Media Library),
-		 * or any custom tab registered via the {@see 'media_upload_tabs'} filter.
-		 *
-		 * @since 2.5.0
-		 */
-		do_action( "media_upload_$tab" );
-	}
->>>>>>> FETCH_HEAD

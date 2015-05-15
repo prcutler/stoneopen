@@ -100,14 +100,7 @@ header('Content-Type: text/html; charset=' . get_bloginfo('charset'));
 		<tr><th>a</th><td><?php _e('Select all'); ?></td><th>x</th><td><?php _e('Cut'); ?></td></tr>
 		<tr><th>z</th><td><?php _e('Undo'); ?></td><th>y</th><td><?php _e('Redo'); ?></td></tr>
 		<tr><th>b</th><td><?php _e('Bold'); ?></td><th>i</th><td><?php _e('Italic'); ?></td></tr>
-<<<<<<< HEAD
 		<tr><th>u</th><td><?php _e('Underline'); ?></td><th>k</th><td><?php _e('Insert/edit link'); ?></td></tr>
-=======
-		<tr><th>u</th><td><?php _e('Underline'); ?></td><th>1</th><td><?php _e('Heading 1'); ?></td></tr>
-		<tr><th>2</th><td><?php _e('Heading 2'); ?></td><th>3</th><td><?php _e('Heading 3'); ?></td></tr>
-		<tr><th>4</th><td><?php _e('Heading 4'); ?></td><th>5</th><td><?php _e('Heading 5'); ?></td></tr>
-		<tr><th>6</th><td><?php _e('Heading 6'); ?></td><th>k</th><td><?php _e('Insert/edit link'); ?></td></tr>
->>>>>>> FETCH_HEAD
 	</table>
 
 	<p>

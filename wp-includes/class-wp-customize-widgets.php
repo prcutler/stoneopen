@@ -126,64 +126,17 @@ final class WP_Customize_Widgets {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Inspect the incoming customized data for any widget settings, and dynamically add them up-front so widgets will be initialized properly.
-=======
-	 * Set up widget addition previews.
-	 *
-	 * Since the widgets get registered on 'widgets_init' before the Customizer
-	 * settings are set up on 'customize_register', we have to filter the options
-	 * similarly to how the setting previewer will filter the options later.
-	 *
-	 * @since 3.9.0
->>>>>>> FETCH_HEAD
 	 *
 	 * @since 4.2.0
 	 * @access public
 	 */
-<<<<<<< HEAD
 	public function register_settings() {
 		$widget_setting_ids = array();
 		$incoming_setting_ids = array_keys( $this->manager->unsanitized_post_values() );
 		foreach ( $incoming_setting_ids as $setting_id ) {
 			if ( ! is_null( $this->get_setting_type( $setting_id ) ) ) {
 				$widget_setting_ids[] = $setting_id;
-=======
-	public function setup_widget_addition_previews() {
-		$is_customize_preview = false;
-
-		if ( ! empty( $this->manager ) && ! is_admin() && 'on' === $this->get_post_value( 'wp_customize' ) ) {
-			$is_customize_preview = check_ajax_referer( 'preview-customize_' . $this->manager->get_stylesheet(), 'nonce', false );
-		}
-
-		$is_ajax_widget_update = false;
-		if ( $this->manager->doing_ajax() && 'update-widget' === $this->get_post_value( 'action' ) ) {
-			$is_ajax_widget_update = check_ajax_referer( 'update-widget', 'nonce', false );
-		}
-
-		$is_ajax_customize_save = false;
-		if ( $this->manager->doing_ajax() && 'customize_save' === $this->get_post_value( 'action' ) ) {
-			$is_ajax_customize_save = check_ajax_referer( 'save-customize_' . $this->manager->get_stylesheet(), 'nonce', false );
-		}
-
-		$is_valid_request = ( $is_ajax_widget_update || $is_customize_preview || $is_ajax_customize_save );
-		if ( ! $is_valid_request ) {
-			return;
-		}
-
-		// Input from Customizer preview.
-		if ( isset( $_POST['customized'] ) ) {
-			$this->_customized = json_decode( $this->get_post_value( 'customized' ), true );
-		} else { // Input from ajax widget update request.
-			$this->_customized = array();
-			$id_base = $this->get_post_value( 'id_base' );
-			$widget_number = $this->get_post_value( 'widget_number', false );
-			$option_name = 'widget_' . $id_base;
-			$this->_customized[ $option_name ] = array();
-			if ( preg_match( '/^[0-9]+$/', $widget_number ) ) {
-				$option_name .= '[' . $widget_number . ']';
-				$this->_customized[ $option_name ][ $widget_number ] = array();
->>>>>>> FETCH_HEAD
 			}
 		}
 		if ( $this->manager->doing_ajax( 'update-widget' ) && isset( $_REQUEST['widget-id'] ) ) {
@@ -207,15 +160,7 @@ final class WP_Customize_Widgets {
 	/**
 	 * Determine the arguments for a dynamically-created setting.
 	 *
-<<<<<<< HEAD
 	 * @since 4.2.0
-=======
-	 * This is necessary because the Customizer's setting preview filters
-	 * are added after the widgets_init action, which is too late for the
-	 * widgets to be set up properly.
-	 *
-	 * @since 3.9.0
->>>>>>> FETCH_HEAD
 	 * @access public
 	 *
 	 * @param false|array $setting_args The arguments to the WP_Customize_Setting constructor.
@@ -230,16 +175,7 @@ final class WP_Customize_Widgets {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Get an unslashed post value or return a default.
-=======
-	 * Ensure newly-added widgets have empty instances so they
-	 * will be recognized.
-	 *
-	 * This is necessary because the Customizer's setting preview
-	 * filters are added after the widgets_init action, which is
-	 * too late for the widgets to be set up properly.
->>>>>>> FETCH_HEAD
 	 *
 	 * @since 3.9.0
 	 *

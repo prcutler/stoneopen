@@ -220,61 +220,6 @@ class WP_Customize_Panel {
 	}
 
 	/**
-	 * Check whether panel is active to current Customizer preview.
-	 *
-	 * @since 4.1.0
-	 * @access public
-	 *
-	 * @return bool Whether the panel is active to the current preview.
-	 */
-	public final function active() {
-		$panel = $this;
-		$active = call_user_func( $this->active_callback, $this );
-
-		/**
-		 * Filter response of WP_Customize_Panel::active().
-		 *
-		 * @since 4.1.0
-		 *
-		 * @param bool               $active  Whether the Customizer panel is active.
-		 * @param WP_Customize_Panel $panel   {@see WP_Customize_Panel} instance.
-		 */
-		$active = apply_filters( 'customize_panel_active', $active, $panel );
-
-		return $active;
-	}
-
-	/**
-	 * Default callback used when invoking {@see WP_Customize_Panel::active()}.
-	 *
-	 * Subclasses can override this with their specific logic, or they may
-	 * provide an 'active_callback' argument to the constructor.
-	 *
-	 * @since 4.1.0
-	 * @access public
-	 *
-	 * @return bool Always true.
-	 */
-	public function active_callback() {
-		return true;
-	}
-
-	/**
-	 * Gather the parameters passed to client JavaScript via JSON.
-	 *
-	 * @since 4.1.0
-	 *
-	 * @return array The array to be exported to the client as JSON.
-	 */
-	public function json() {
-		$array = wp_array_slice_assoc( (array) $this, array( 'title', 'description', 'priority', 'type' ) );
-		$array['content'] = $this->get_content();
-		$array['active'] = $this->active();
-		$array['instanceNumber'] = $this->instance_number;
-		return $array;
-	}
-
-	/**
 	 * Checks required user capabilities and whether the theme has the
 	 * feature support required by the panel.
 	 *
@@ -301,11 +246,7 @@ class WP_Customize_Panel {
 	 *
 	 * @return string Content for the panel.
 	 */
-<<<<<<< HEAD
 	final public function get_content() {
-=======
-	public final function get_content() {
->>>>>>> FETCH_HEAD
 		ob_start();
 		$this->maybe_render();
 		$template = trim( ob_get_contents() );

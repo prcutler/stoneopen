@@ -1603,11 +1603,7 @@ function _post_type_meta_capabilities( $capabilities = null ) {
  * - singular_name - name for one object of this post type. Default is Post/Page
  * - add_new - Default is Add New for both hierarchical and non-hierarchical types.
  *             When internationalizing this string, please use a gettext context
-<<<<<<< HEAD
  *             {@link https://codex.wordpress.org/I18n_for_WordPress_Developers#Disambiguation_by_context}
-=======
- *             {@link http://codex.wordpress.org/I18n_for_WordPress_Developers#Disambiguation_by_context}
->>>>>>> FETCH_HEAD
  *             matching your post type. Example: `_x( 'Add New', 'product' );`.
  * - add_new_item - Default is Add New Post/Add New Page.
  * - edit_item - Default is Edit Post/Edit Page.
@@ -4873,11 +4869,7 @@ function wp_delete_attachment( $post_id, $force_delete = false ) {
 	if ( isset( $meta['sizes'] ) && is_array( $meta['sizes'] ) ) {
 		foreach ( $meta['sizes'] as $size => $sizeinfo ) {
 			$intermediate_file = str_replace( basename( $file ), $sizeinfo['file'], $file );
-<<<<<<< HEAD
 			/** This filter is documented in wp-includes/functions.php */
-=======
-			/** This filter is documented in wp-admin/custom-header.php */
->>>>>>> FETCH_HEAD
 			$intermediate_file = apply_filters( 'wp_delete_file', $intermediate_file );
 			@ unlink( path_join( $uploadpath['basedir'], $intermediate_file ) );
 		}

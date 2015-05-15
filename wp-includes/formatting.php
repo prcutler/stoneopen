@@ -235,11 +235,7 @@ function wptexturize($text, $reset = false) {
 		.     '(?(?=!--)'        // Is this a comment?
 		.         $comment_regex // Find end of comment.
 		.     '|'
-<<<<<<< HEAD
 		.         '[^>]*>'       // Find end of element.
-=======
-		.         '[^>]+>'       // Find end of element.
->>>>>>> FETCH_HEAD
 		.     ')'
 		. '|'
 		.     $shortcode_regex   // Find shortcodes.
@@ -1375,13 +1371,8 @@ function sanitize_title_with_dashes( $title, $raw_title = '', $context = 'displa
  *
  * @since 2.5.1
  *
-<<<<<<< HEAD
  * @param string $orderby Order by clause to be validated.
  * @return string|bool Returns $orderby if valid, false otherwise.
-=======
- * @param string $orderby Order by string to be checked.
- * @return false|string Returns the order by clause if it is a match, false otherwise.
->>>>>>> FETCH_HEAD
  */
 function sanitize_sql_orderby( $orderby ) {
 	if ( preg_match( '/^\s*(([a-z0-9_]+|`[a-z0-9_]+`)(\s+(ASC|DESC))?\s*(,\s*(?=[a-z0-9_`])|$))+$/i', $orderby ) || preg_match( '/^\s*RAND\(\s*\)\s*$/i', $orderby ) ) {

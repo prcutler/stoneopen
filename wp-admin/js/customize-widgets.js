@@ -687,17 +687,10 @@
 
 					if ( isMoveUp ) {
 						self.moveUp();
-<<<<<<< HEAD
 						wp.a11y.speak( l10n.widgetMovedUp );
 					} else {
 						self.moveDown();
 						wp.a11y.speak( l10n.widgetMovedDown );
-=======
-						$( '#screen-reader-messages' ).text( l10n.widgetMovedUp );
-					} else {
-						self.moveDown();
-						$( '#screen-reader-messages' ).text( l10n.widgetMovedDown );
->>>>>>> FETCH_HEAD
 					}
 
 					$( this ).focus(); // re-focus after the container was moved
@@ -1693,7 +1686,6 @@
 			});
 
 			if ( ! widgetControls.length ) {
-<<<<<<< HEAD
 				this.container.find( '.reorder-toggle' ).hide();
 				return;
 			} else {
@@ -1707,18 +1699,6 @@
 					.find( '.move-widget-down, .move-widget-up' ).prop( 'tabIndex', 0 );
 			});
 
-=======
-				return;
-			}
-
-			$( widgetControls ).each( function () {
-				$( this.container )
-					.removeClass( 'first-widget' )
-					.removeClass( 'last-widget' )
-					.find( '.move-widget-down, .move-widget-up' ).prop( 'tabIndex', 0 );
-			});
-
->>>>>>> FETCH_HEAD
 			_.first( widgetControls ).container
 				.addClass( 'first-widget' )
 				.find( '.move-widget-up' ).prop( 'tabIndex', -1 );
@@ -1901,10 +1881,6 @@
 
 			controlContainer.slideDown( function() {
 				if ( isExistingWidget ) {
-<<<<<<< HEAD
-=======
-					widgetFormControl.expand();
->>>>>>> FETCH_HEAD
 					widgetFormControl.updateWidget( {
 						instance: widgetFormControl.setting()
 					} );
