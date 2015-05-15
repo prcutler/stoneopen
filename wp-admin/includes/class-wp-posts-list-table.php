@@ -471,7 +471,11 @@ class WP_Posts_List_Table extends WP_List_Table {
 	 * @param array $pages
 	 * @param int $pagenum
 	 * @param int $per_page
+<<<<<<< HEAD
 	 * @return false|null
+=======
+	 * @return bool|null
+>>>>>>> FETCH_HEAD
 	 */
 	private function _display_rows_hierarchical( $pages, $pagenum = 1, $per_page = 20 ) {
 		global $wpdb;
@@ -629,6 +633,10 @@ class WP_Posts_List_Table extends WP_List_Table {
 
 	/**
 	 * @global string $mode
+<<<<<<< HEAD
+=======
+	 * @staticvar string $alternate
+>>>>>>> FETCH_HEAD
 	 * @param WP_Post $post
 	 * @param int $level
 	 */
@@ -755,7 +763,11 @@ class WP_Posts_List_Table extends WP_List_Table {
 
 				$actions = array();
 				if ( $can_edit_post && 'trash' != $post->post_status ) {
+<<<<<<< HEAD
 					$actions['edit'] = '<a href="' . get_edit_post_link( $post->ID ) . '" title="' . esc_attr__( 'Edit this item' ) . '">' . __( 'Edit' ) . '</a>';
+=======
+					$actions['edit'] = '<a href="' . get_edit_post_link( $post->ID, true ) . '" title="' . esc_attr__( 'Edit this item' ) . '">' . __( 'Edit' ) . '</a>';
+>>>>>>> FETCH_HEAD
 					$actions['inline hide-if-no-js'] = '<a href="#" class="editinline" title="' . esc_attr__( 'Edit this item inline' ) . '">' . __( 'Quick&nbsp;Edit' ) . '</a>';
 				}
 				if ( current_user_can( 'delete_post', $post->ID ) ) {

@@ -61,6 +61,18 @@ final class WP_Customize_Manager {
 
 	/**
 	 * Controls that may be rendered from JS templates.
+<<<<<<< HEAD
+	 *
+	 * @since 4.1.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $registered_control_types = array();
+
+	/**
+	 * Unsanitized values for Customize Settings parsed from $_POST['customized'].
+=======
+>>>>>>> FETCH_HEAD
 	 *
 	 * @since 4.1.0
 	 * @access protected
@@ -71,7 +83,7 @@ final class WP_Customize_Manager {
 	/**
 	 * Unsanitized values for Customize Settings parsed from $_POST['customized'].
 	 *
-	 * @var array
+	 * @var array|false
 	 */
 	private $_post_values;
 
@@ -449,8 +461,13 @@ final class WP_Customize_Manager {
 			if ( isset( $_POST['customized'] ) ) {
 				$this->_post_values = json_decode( wp_unslash( $_POST['customized'] ), true );
 			}
+<<<<<<< HEAD
 			if ( empty( $this->_post_values ) ) { // if not isset or if JSON error
 				$this->_post_values = array();
+=======
+			if ( empty( $this->_post_values ) ) { // if not isset or of JSON error
+				$this->_post_values = false;
+>>>>>>> FETCH_HEAD
 			}
 		}
 		if ( empty( $this->_post_values ) ) {
@@ -480,6 +497,7 @@ final class WP_Customize_Manager {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Override a setting's (unsanitized) value as found in any incoming $_POST['customized'].
 	 *
 	 * @since 4.2.0
@@ -494,6 +512,8 @@ final class WP_Customize_Manager {
 	}
 
 	/**
+=======
+>>>>>>> FETCH_HEAD
 	 * Print JavaScript settings.
 	 *
 	 * @since 3.4.0
@@ -568,6 +588,7 @@ final class WP_Customize_Manager {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Print CSS for loading indicators for the Customizer preview.
 	 *
 	 * @since 4.2.0
@@ -588,6 +609,8 @@ final class WP_Customize_Manager {
 	}
 
 	/**
+=======
+>>>>>>> FETCH_HEAD
 	 * Print JavaScript settings for preview frame.
 	 *
 	 * @since 3.4.0
@@ -1078,11 +1101,19 @@ final class WP_Customize_Manager {
 	 *
 	 * @since 3.4.0
 	 *
+<<<<<<< HEAD
 	 * @param WP_Customize_Panel|WP_Customize_Section|WP_Customize_Control $a Object A.
 	 * @param WP_Customize_Panel|WP_Customize_Section|WP_Customize_Control $b Object B.
 	 * @return int
 	 */
 	protected function _cmp_priority( $a, $b ) {
+=======
+	 * @param {WP_Customize_Panel|WP_Customize_Section|WP_Customize_Control} $a Object A.
+	 * @param {WP_Customize_Panel|WP_Customize_Section|WP_Customize_Control} $b Object B.
+	 * @return int
+	 */
+	protected final function _cmp_priority( $a, $b ) {
+>>>>>>> FETCH_HEAD
 		if ( $a->priority === $b->priority ) {
 			return $a->instance_number - $a->instance_number;
 		} else {
@@ -1176,6 +1207,7 @@ final class WP_Customize_Manager {
 
 		/* Control Types (custom control classes) */
 		$this->register_control_type( 'WP_Customize_Color_Control' );
+<<<<<<< HEAD
 		$this->register_control_type( 'WP_Customize_Media_Control' );
 		$this->register_control_type( 'WP_Customize_Upload_Control' );
 		$this->register_control_type( 'WP_Customize_Image_Control' );
@@ -1225,6 +1257,11 @@ final class WP_Customize_Manager {
 				'settings' => 'active_theme',
 			) ) );
 		}
+=======
+		$this->register_control_type( 'WP_Customize_Upload_Control' );
+		$this->register_control_type( 'WP_Customize_Image_Control' );
+		$this->register_control_type( 'WP_Customize_Background_Image_Control' );
+>>>>>>> FETCH_HEAD
 
 		/* Site Title & Tagline */
 

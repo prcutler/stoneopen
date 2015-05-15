@@ -181,7 +181,11 @@ function has_shortcode( $content, $tag ) {
  *
  * @since 2.5.0
  *
+<<<<<<< HEAD
  * @global array $shortcode_tags List of shortcode tags and their callback hooks.
+=======
+ * @uses $shortcode_tags
+>>>>>>> FETCH_HEAD
  *
  * @param string $content Content to search for shortcodes.
  * @return string Content with shortcodes filtered out.

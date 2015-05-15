@@ -35,7 +35,9 @@ function eme_add_options($reset=0) {
             </table>
             #_SUBMIT
             ";
-   
+   $eme_payment_button_label_localizable = __('Pay via %s','eme');
+   $eme_payment_button_above_localizable = "<br />".__("You can pay for this event via %s. If you wish to do so, click the button below.",'eme');
+
    $eme_options = array('eme_event_list_item_format' => DEFAULT_EVENT_LIST_ITEM_FORMAT,
    'eme_display_calendar_in_events_page' => 0,
    'eme_single_event_format' => DEFAULT_SINGLE_EVENT_FORMAT,
@@ -73,6 +75,8 @@ function eme_add_options($reset=0) {
    'eme_default_contact_person' => -1,
    'eme_captcha_for_booking' => 0 ,
    'eme_rsvp_mail_notify_is_active' => 1 ,
+   'eme_rsvp_end_target' => 'start',
+   'eme_rsvp_check_required_fields' => 1,
    'eme_contactperson_email_subject' => $contact_person_email_subject_localizable,
    'eme_contactperson_email_body' => preg_replace("/<br ?\/?>/", "\n", $contact_person_email_body_localizable),
    'eme_contactperson_cancelled_email_subject' => $contactperson_cancelled_email_subject_localizable,
@@ -96,6 +100,8 @@ function eme_add_options($reset=0) {
    'eme_smtp_host' => 'localhost',
    'eme_smtp_port' => 25,
    'eme_mail_sender_name' => '',
+   'eme_mail_sender_address' => '',
+   'eme_mail_bcc_address' => '',
    'eme_rsvp_mail_send_method' => 'smtp',
    'eme_rsvp_send_html' => 0,
    'eme_rsvp_mail_SMTPAuth' => 0,
@@ -149,6 +155,8 @@ function eme_add_options($reset=0) {
    'eme_cap_settings' => DEFAULT_CAP_SETTINGS,
    'eme_cap_send_mails' => DEFAULT_CAP_SEND_MAILS,
    'eme_cap_send_other_mails' => DEFAULT_CAP_SEND_OTHER_MAILS,
+   'eme_html_header' => '',
+   'eme_html_footer' => '',
    'eme_event_html_headers_format' => '',
    'eme_location_html_headers_format' => '',
    'eme_paypal_url' => PAYPAL_LIVE_URL,
@@ -159,22 +167,45 @@ function eme_add_options($reset=0) {
    'eme_paypal_s_paypalcert' => '',
    'eme_paypal_s_certid' => '',
    'eme_paypal_cost' => 0,
-   'eme_google_checkout_type' => GOOGLE_LIVE,
-   'eme_google_merchant_id' => '',
-   'eme_google_merchant_key' => '',
-   'eme_google_cost' => 0,
+   'eme_paypal_cost2' => 0,
+   'eme_paypal_button_label' => sprintf($eme_payment_button_label_localizable,"Paypal"),
+   'eme_paypal_button_img_url' => '',
+   'eme_paypal_button_above' => sprintf($eme_payment_button_above_localizable,"Paypal"),
+   'eme_paypal_button_below' => '',
    'eme_2co_demo' => 0,
    'eme_2co_business' => '',
    'eme_2co_secret' => '',
    'eme_2co_cost' => 0,
+   'eme_2co_cost2' => 0,
+   'eme_2co_button_label' => sprintf($eme_payment_button_label_localizable,"2Checkout"),
+   'eme_2co_button_img_url' => '',
+   'eme_2co_button_above' => sprintf($eme_payment_button_above_localizable,"2Checkout"),
+   'eme_2co_button_below' => '',
    'eme_webmoney_demo' => 0,
    'eme_webmoney_purse' => '',
    'eme_webmoney_secret' => '',
    'eme_webmoney_cost' => 0,
+   'eme_webmoney_cost2' => 0,
+   'eme_webmoney_button_label' => sprintf($eme_payment_button_label_localizable,"Webmoney"),
+   'eme_webmoney_button_img_url' => '',
+   'eme_webmoney_button_above' => sprintf($eme_payment_button_above_localizable,"Webmoney"),
+   'eme_webmoney_button_below' => '',
    'eme_fdgg_url' => FDGG_LIVE_URL,
    'eme_fdgg_store_name' => '',
    'eme_fdgg_shared_secret' => '',
    'eme_fdgg_cost' => 0,
+   'eme_fdgg_cost2' => 0,
+   'eme_fdgg_button_label' => sprintf($eme_payment_button_label_localizable,"First Data"),
+   'eme_fdgg_button_img_url' => '',
+   'eme_fdgg_button_above' => sprintf($eme_payment_button_above_localizable,"First Data"),
+   'eme_fdgg_button_below' => '',
+   'eme_mollie_api_key' => '',
+   'eme_mollie_cost' => 0,
+   'eme_mollie_cost2' => 0,
+   'eme_mollie_button_label' => sprintf($eme_payment_button_label_localizable,"Mollie"),
+   'eme_mollie_button_img_url' => '',
+   'eme_mollie_button_above' => sprintf($eme_payment_button_above_localizable,"Mollie"),
+   'eme_mollie_button_below' => __('Using Mollie, you can pay using one of the following methods:','eme')."<br />",
    'eme_event_initial_state' => STATUS_DRAFT,
    'eme_default_currency' => 'EUR',
    'eme_default_price' => '0',
@@ -184,6 +215,8 @@ function eme_add_options($reset=0) {
    'eme_fb_app_id' => '',
    'eme_payment_form_header_format' => '',
    'eme_payment_form_footer_format' => '',
+   'eme_multipayment_form_header_format' => '',
+   'eme_multipayment_form_footer_format' => '',
    'eme_payment_show_custom_return_page' => 0,
    'eme_payment_succes_format' => '',
    'eme_payment_fail_format' => '',
@@ -192,7 +225,8 @@ function eme_add_options($reset=0) {
    'eme_enable_notes_placeholders' => 0,
    'eme_deprecated' => 1,
    'eme_legacy' => 0,
-   'eme_legacy_warning' => 1
+   'eme_legacy_warning' => 1,
+   'eme_csv_separator' => EME_DEFAULT_CSV_SEPARATOR
    );
    
    foreach($eme_options as $key => $value){
@@ -217,9 +251,10 @@ function eme_add_option($key, $value, $reset) {
 // WP options registration/deletion
 ////////////////////////////////////
 function eme_options_delete() {
-   $options = array ('eme_version', 'eme_events_page', 'eme_display_calendar_in_events_page', 'eme_event_list_item_format_header', 'eme_event_list_item_format', 'eme_event_list_item_format_footer', 'eme_event_page_title_format', 'eme_event_html_title_format', 'eme_single_event_format', 'eme_list_events_page', 'eme_events_page_title', 'eme_no_events_message', 'eme_location_page_title_format','eme_location_html_title_format', 'eme_location_baloon_format', 'eme_single_location_format', 'eme_location_event_list_item_format', 'eme_show_period_monthly_dateformat','eme_show_period_yearly_dateformat', 'eme_location_no_events_message', 'eme_gmap_is_active', 'eme_gmap_zooming', 'eme_seo_permalink', 'eme_rss_main_title', 'eme_rss_main_description', 'eme_rss_title_format', 'eme_rss_description_format', 'eme_rss_show_pubdate', 'eme_rss_pubdate_startdate', 'eme_rsvp_mail_notify_is_active', 'eme_contactperson_email_body', 'eme_contactperson_cancelled_email_body', 'eme_contactperson_pending_email_body', 'eme_respondent_email_subject', 'eme_respondent_email_body', 'eme_registration_recorded_ok_html', 'eme_mail_sender_name', 'eme_smtp_username', 'eme_smtp_password', 'eme_default_contact_person','eme_captcha_for_booking', 'eme_mail_sender_address', 'eme_mail_receiver_address', 'eme_smtp_host', 'eme_rsvp_mail_send_method', 'eme_smtp_port', 'eme_rsvp_send_html', 'eme_rsvp_mail_SMTPAuth', 'eme_rsvp_registered_users_only', 'eme_rsvp_reg_for_new_events', 'eme_rsvp_require_approval', 'eme_rsvp_default_number_spaces', 'eme_rsvp_addbooking_submit_string', 'eme_rsvp_delbooking_submit_string', 'eme_image_max_width', 'eme_image_max_height', 'eme_image_max_size', 'eme_full_calendar_event_format', 'eme_use_select_for_locations', 'eme_attributes_enabled', 'eme_recurrence_enabled','eme_rsvp_enabled','eme_categories_enabled','eme_small_calendar_event_title_format','eme_small_calendar_event_title_separator','eme_cal_hide_past_events','eme_registration_pending_email_subject','eme_registration_pending_email_body','eme_registration_denied_email_subject','eme_registration_denied_email_body','eme_registration_updated_email_subject','eme_registration_updated_email_body','eme_registration_cancelled_email_subject','eme_registration_cancelled_email_body','eme_attendees_list_format','eme_attendees_list_ignore_pending','eme_bookings_list_format','eme_bookings_list_ignore_pending','eme_bookings_list_header_format','eme_bookings_list_footer_format','eme_uninstall_drop_tables','eme_uninstall_drop_data','eme_time_remove_leading_zeros','eme_rsvp_hide_full_events','eme_rsvp_hide_rsvp_ended_events','eme_rsvp_show_form_after_booking','eme_donation_done','eme_hello_to_user','eme_filter_form_format','eme_rsvp_addbooking_min_spaces','eme_rsvp_addbooking_max_spaces','eme_shortcodes_in_widgets','eme_load_js_in_header','eme_use_client_clock','eme_event_list_number_items', 'eme_cap_add_event', 'eme_cap_author_event', 'eme_cap_publish_event', 'eme_cap_edit_events', 'eme_cap_list_events', 'eme_cap_add_locations', 'eme_cap_edit_locations', 'eme_cap_author_locations', 'eme_cap_categories','eme_cap_templates', 'eme_cap_people', 'eme_cap_approve', 'eme_cap_registrations', 'eme_cap_forms', 'eme_cap_cleanup', 'eme_cap_settings', 'eme_cap_send_mails', 'eme_cap_send_other_mails', 'eme_event_html_headers_format', 'eme_location_html_headers_format','eme_permalink_events_prefix','eme_permalink_locations_prefix','eme_paypal_url','eme_paypal_business', 'eme_paypal_cost', 'eme_2co_business', 'eme_2co_secret', 'eme_2co_demo', 'eme_2co_cost', 'eme_webmoney_purse', 'eme_webmoney_secret', 'eme_webmoney_demo', 'eme_webmoney_cost', 'eme_google_checkout_type', 'eme_google_merchant_id', 'eme_google_merchant_key', 'eme_google_cost', 'eme_location_list_format_header', 'eme_location_list_format_item', 'eme_location_list_format_footer','eme_event_initial_state', 'eme_registration_form_format', 'eme_cancel_form_format', 'eme_smtp_debug','eme_default_currency','eme_default_price', 'eme_rsvp_number_days', 'eme_rsvp_number_hours', 'eme_paypal_s_encrypt', 'eme_paypal_s_pubcert', 'eme_paypal_s_privkey', 'eme_paypal_s_paypalcert', 'eme_paypal_s_certid', 'eme_thumbnail_size','eme_fdgg_url','eme_fdgg_store_name','eme_fdgg_shared_secret','eme_fdgg_cost','eme_fb_app_id', 'eme_loop_protection','eme_ical_title_format','eme_ical_description_format','eme_global_zoom_factor','eme_indiv_zoom_factor','eme_global_maptype','eme_indiv_maptype','eme_payment_form_header_format','eme_payment_form_footer_format','eme_enable_notes_placeholders','eme_payment_succes_format','eme_payment_fail_format','eme_payment_add_bookingid_to_return','eme_payment_show_custom_return_page','eme_deny_mail_event_edit','eme_legacy','eme_legacy_warning','eme_deprecated','eme_contactperson_email_subject', 'eme_contactperson_cancelled_email_subject', 'eme_contactperson_pending_email_subject');
-   foreach ( $options as $opt ) {
-      delete_option ( $opt );
+   $all_options = wp_load_alloptions();
+   foreach( $all_options as $name => $value ) {
+      if (preg_match('/^eme_/',$name))
+         delete_option($name);
    }
 }
 
@@ -270,16 +305,16 @@ function eme_options_register() {
                  $options = array ('eme_rss_main_title','eme_rss_main_description','eme_rss_title_format','eme_rss_description_format','eme_rss_show_pubdate','eme_rss_pubdate_startdate','eme_ical_description_format','eme_ical_title_format');
 	         break;
 	      case 'rsvp' :
-                 $options = array ('eme_default_contact_person','eme_rsvp_registered_users_only','eme_rsvp_reg_for_new_events','eme_rsvp_require_approval','eme_rsvp_default_number_spaces','eme_rsvp_addbooking_min_spaces','eme_rsvp_addbooking_max_spaces','eme_captcha_for_booking','eme_rsvp_hide_full_events','eme_rsvp_hide_rsvp_ended_events','eme_rsvp_show_form_after_booking','eme_rsvp_addbooking_submit_string','eme_rsvp_delbooking_submit_string','eme_attendees_list_format','eme_attendees_list_ignore_pending','eme_bookings_list_ignore_pending','eme_bookings_list_header_format','eme_bookings_list_format','eme_bookings_list_footer_format','eme_registration_recorded_ok_html','eme_registration_form_format', 'eme_cancel_form_format', 'eme_rsvp_number_days', 'eme_rsvp_number_hours');
+                 $options = array ('eme_default_contact_person','eme_rsvp_registered_users_only','eme_rsvp_reg_for_new_events','eme_rsvp_require_approval','eme_rsvp_default_number_spaces','eme_rsvp_addbooking_min_spaces','eme_rsvp_addbooking_max_spaces','eme_captcha_for_booking','eme_rsvp_hide_full_events','eme_rsvp_hide_rsvp_ended_events','eme_rsvp_show_form_after_booking','eme_rsvp_addbooking_submit_string','eme_rsvp_delbooking_submit_string','eme_attendees_list_format','eme_attendees_list_ignore_pending','eme_bookings_list_ignore_pending','eme_bookings_list_header_format','eme_bookings_list_format','eme_bookings_list_footer_format','eme_registration_recorded_ok_html','eme_registration_form_format', 'eme_cancel_form_format', 'eme_rsvp_number_days', 'eme_rsvp_number_hours','eme_rsvp_end_target','eme_rsvp_check_required_fields');
 	         break;
 	      case 'mail' :
-                 $options = array ('eme_rsvp_mail_notify_is_active','eme_deny_mail_event_edit','eme_contactperson_email_subject', 'eme_contactperson_cancelled_email_subject', 'eme_contactperson_pending_email_subject','eme_contactperson_email_body','eme_contactperson_cancelled_email_body','eme_contactperson_pending_email_body','eme_respondent_email_subject','eme_respondent_email_body','eme_registration_pending_email_subject','eme_registration_pending_email_body','eme_registration_cancelled_email_subject','eme_registration_cancelled_email_body','eme_registration_denied_email_subject','eme_registration_denied_email_body','eme_registration_updated_email_subject','eme_registration_updated_email_body','eme_mail_sender_name','eme_mail_sender_address','eme_rsvp_mail_send_method','eme_smtp_host','eme_smtp_port','eme_rsvp_mail_SMTPAuth','eme_smtp_username','eme_smtp_password', 'eme_smtp_debug','eme_rsvp_send_html');
+                 $options = array ('eme_rsvp_mail_notify_is_active','eme_deny_mail_event_edit','eme_contactperson_email_subject', 'eme_contactperson_cancelled_email_subject', 'eme_contactperson_pending_email_subject','eme_contactperson_email_body','eme_contactperson_cancelled_email_body','eme_contactperson_pending_email_body','eme_respondent_email_subject','eme_respondent_email_body','eme_registration_pending_email_subject','eme_registration_pending_email_body','eme_registration_cancelled_email_subject','eme_registration_cancelled_email_body','eme_registration_denied_email_subject','eme_registration_denied_email_body','eme_registration_updated_email_subject','eme_registration_updated_email_body','eme_mail_sender_name','eme_mail_sender_address','eme_rsvp_mail_send_method','eme_smtp_host','eme_smtp_port','eme_rsvp_mail_SMTPAuth','eme_smtp_username','eme_smtp_password', 'eme_smtp_debug','eme_rsvp_send_html','eme_mail_bcc_address');
 	         break;
 	      case 'payments' :
-                 $options = array ('eme_payment_form_header_format','eme_payment_form_footer_format','eme_payment_show_custom_return_page','eme_payment_succes_format','eme_payment_fail_format','eme_payment_add_bookingid_to_return','eme_default_currency','eme_default_price','eme_paypal_url','eme_paypal_business','eme_2co_demo','eme_2co_business','eme_2co_secret','eme_google_checkout_type','eme_google_merchant_id','eme_google_merchant_key','eme_webmoney_purse', 'eme_webmoney_secret', 'eme_webmoney_demo', 'eme_paypal_s_encrypt', 'eme_paypal_s_pubcert', 'eme_paypal_s_privkey', 'eme_paypal_s_paypalcert', 'eme_paypal_s_certid','eme_fdgg_url','eme_fdgg_store_name','eme_fdgg_shared_secret','eme_2co_cost','eme_google_cost','eme_paypal_cost','eme_fdgg_cost','eme_webmoney_cost');
+                 $options = array ('eme_payment_form_header_format','eme_payment_form_footer_format','eme_multipayment_form_header_format','eme_multipayment_form_footer_format','eme_payment_show_custom_return_page','eme_payment_succes_format','eme_payment_fail_format','eme_payment_add_bookingid_to_return','eme_default_currency','eme_default_price','eme_paypal_url','eme_paypal_business','eme_2co_demo','eme_2co_business','eme_2co_secret','eme_webmoney_purse', 'eme_webmoney_secret', 'eme_webmoney_demo', 'eme_paypal_s_encrypt', 'eme_paypal_s_pubcert', 'eme_paypal_s_privkey', 'eme_paypal_s_paypalcert', 'eme_paypal_s_certid','eme_fdgg_url','eme_fdgg_store_name','eme_fdgg_shared_secret','eme_2co_cost','eme_paypal_cost','eme_fdgg_cost','eme_webmoney_cost','eme_2co_cost2','eme_paypal_cost2','eme_fdgg_cost2','eme_webmoney_cost2','eme_mollie_api_key','eme_mollie_cost','eme_mollie_cost2','eme_paypal_button_label','eme_paypal_button_above','eme_paypal_button_below','eme_2co_button_label','eme_2co_button_above','eme_2co_button_below','eme_fdgg_button_label','eme_fdgg_button_above','eme_fdgg_button_below','eme_webmoney_button_label','eme_webmoney_button_above','eme_webmoney_button_below','eme_mollie_button_label','eme_mollie_button_above','eme_mollie_button_below','eme_paypal_button_img_url','eme_2co_button_img_url','eme_fdgg_button_img_url','eme_webmoney_button_img_url','eme_mollie_button_img_url');
 	         break;
 	      case 'other' :
-                 $options = array ('eme_thumbnail_size','eme_image_max_width','eme_image_max_height','eme_image_max_size','eme_event_html_headers_format','eme_location_html_headers_format','eme_fb_app_id','eme_global_zoom_factor','eme_indiv_zoom_factor','eme_global_maptype','eme_indiv_maptype');
+                 $options = array ('eme_thumbnail_size','eme_image_max_width','eme_image_max_height','eme_image_max_size','eme_html_header','eme_html_footer','eme_event_html_headers_format','eme_location_html_headers_format','eme_fb_app_id','eme_global_zoom_factor','eme_indiv_zoom_factor','eme_global_maptype','eme_indiv_maptype','eme_csv_separator');
 	         break;
    }
 
@@ -464,12 +499,11 @@ function eme_options_page() {
 <table class="form-table">
    <?php
    eme_options_radio_binary ( __ ( 'Remove leading zeros from minutes?', 'eme' ), 'eme_time_remove_leading_zeros', __ ( 'PHP date/time functions have no notation to show minutes without leading zeros. Checking this option will return e.g. 9 for 09 and empty for 00.', 'eme' ) ); 
-   eme_options_textarea ( __ ( 'Default event list format header', 'eme' ), 'eme_event_list_item_format_header', __( 'This content will appear just above your code for the default event list format. If you leave this empty, the value <code>&lt;ul class=\'eme_events_list\'&gt;</code> will be used.', 'eme' ) );
+   eme_options_textarea ( __ ( 'Default event list format header', 'eme' ), 'eme_event_list_item_format_header', sprintf(__('This content will appear just above your code for the default event list format. If you leave this empty, the value <code>%s</code> will be used.','eme'),eme_sanitize_html(DEFAULT_EVENT_LIST_HEADER_FORMAT)));
    eme_options_textarea ( __ ( 'Default event list format', 'eme' ), 'eme_event_list_item_format', __ ( 'The format of any events in a list.<br/>Insert one or more of the following placeholders: <code>#_EVENTNAME</code>, <code>#_LOCATIONNAME</code>, <code>#_ADDRESS</code>, <code>#_TOWN</code>, <code>#_NOTES</code>.<br/> Use <code>#_EXCERPT</code> to show <code>#_NOTES</code> until you place a <code>&lt;!&ndash;&ndash;more&ndash;&ndash;&gt;</code> marker.<br/> Use <code>#_LINKEDNAME</code> for the event name with a link to the given event page.<br/> Use <code>#_EVENTPAGEURL</code> to print the event page URL and make your own customised links.<br/> Use <code>#_LOCATIONPAGEURL</code> to print the location page URL and make your own customised links.<br/>Use <code>#_EDITEVENTLINK</code> to add a link to edit page for the event, which will appear only when a user is logged in.<br/>To insert date and time values, use <a href="http://www.php.net/manual/en/function.date.php">PHP time format characters</a>  with a <code>#</code> symbol before them, i.e. <code>#m</code>, <code>#M</code>, <code>#j</code>, etc.<br/> For the end time, put <code>#@</code> in front of the character, e.g. <code>#@h</code>, <code>#@i</code>, etc.<br/> You can also create a date format without prepending <code>#</code> by wrapping it in #_{} or #@_{} (e.g. <code>#_{d/m/Y}</code>). If there is no end date, the value is not shown.<br/>Use <code>#_12HSTARTTIME</code> and <code>#_12HENDTIME</code> for AM/PM start-time/end-time notation, idem <code>#_24HSTARTTIME</code> and <code>#_24HENDTIME</code>.<br/>Feel free to use HTML tags as <code>li</code>, <code>br</code> and so on.<br/>For custom attributes, you use <code>#_ATT{key}{alternative text}</code>, the second braces are optional and will appear if the attribute is not defined or left blank for that event. This key will appear as an option when adding attributes to your event.', 'eme' )."<br />".__('Use <code>#_PAST_FUTURE_CLASS</code> to return a class name indicating this event is future or past (<code>eme-future-event</code> or <code>eme-past-event</code>), use the returned value in e.g. the li-statement for each event in the list of events','eme') .'<br />'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=25'>".__('the documentation', 'eme').'</a>' );
-   eme_options_textarea ( __ ( 'Default event list format footer', 'eme' ), 'eme_event_list_item_format_footer', __ ( 'This content will appear just below your code for the default event list format. If you leave this empty, the value <code>&lt;/ul&gt;</code> will be used.', 'eme' ) );
-
+   eme_options_textarea ( __ ( 'Default event list format footer', 'eme' ), 'eme_event_list_item_format_footer', sprintf(__('This content will appear just below your code for the default event list format. If you leave this empty, the value <code>%s</code> will be used.','eme'),eme_sanitize_html(DEFAULT_EVENT_LIST_FOOTER_FORMAT)));
    eme_options_input_text ( __ ( 'Single event page title format', 'eme' ), 'eme_event_page_title_format', __ ( 'The format of a single event page title. Follow the previous formatting instructions.', 'eme' ) );
-   eme_options_input_text ( __ ( 'Single event html title format', 'eme' ), 'eme_event_html_title_format', __ ( 'The format of a single event html page title. Follow the previous formatting instructions.', 'eme' ). __( ' The default is: ','eme'). DEFAULT_EVENT_HTML_TITLE_FORMAT);
+   eme_options_input_text ( __ ( 'Single event html title format', 'eme' ), 'eme_event_html_title_format', __ ( 'The format of a single event html page title. Follow the previous formatting instructions.', 'eme' ). __( ' The default is: ','eme'). eme_sanitize_html(DEFAULT_EVENT_HTML_TITLE_FORMAT));
    eme_options_textarea ( __ ( 'Default single event format', 'eme' ), 'eme_single_event_format', __ ( 'The format of a single event page.<br/>Follow the previous formatting instructions. <br/>Use <code>#_MAP</code> to insert a map.<br/>Use <code>#_CONTACTNAME</code>, <code>#_CONTACTEMAIL</code>, <code>#_CONTACTPHONE</code> to insert respectively the name, e-mail address and phone number of the designated contact person. <br/>Use <code>#_ADDBOOKINGFORM</code> to insert a form to allow the user to respond to your events reserving one or more places (RSVP).<br/> Use <code>#_REMOVEBOOKINGFORM</code> to insert a form where users, inserting their name and e-mail address, can remove their bookings.', 'eme' ).__('<br/>Use <code>#_ADDBOOKINGFORM_IF_NOT_REGISTERED</code> to insert the booking form only if the user has not registered yet. Similar use <code>#_REMOVEBOOKINGFORM_IF_REGISTERED</code> to insert the booking removal form only if the user has already registered before. These two codes only work for WP users.','eme').__('<br/> Use <code>#_DIRECTIONS</code> to insert a form so people can ask directions to the event.','eme').__('<br/> Use <code>#_CATEGORIES</code> to insert a comma-seperated list of categories an event is in.','eme').__('<br/> Use <code>#_ATTENDEES</code> to get a list of the names attending the event.','eme') .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=25'>".__('the documentation', 'eme').'</a>' );
    eme_options_input_text ( __ ( 'Monthly period date format', 'eme' ), 'eme_show_period_monthly_dateformat', __ ( 'The format of the date-string used when you use showperiod=monthly as an option to &#91;the eme_events] shortcode, also used for monthly pagination. Use php date() compatible settings.', 'eme') . __( ' The default is: ','eme'). DEFAULT_SHOW_PERIOD_MONTHLY_DATEFORMAT );
    eme_options_input_text ( __ ( 'Yearly period date format', 'eme' ), 'eme_show_period_yearly_dateformat', __ ( 'The format of the date-string used when you use showperiod=yearly as an option to &#91;the eme_events] shortcode, also used for yearly pagination. Use php date() compatible settings.', 'eme') . __( ' The default is: ','eme'). DEFAULT_SHOW_PERIOD_YEARLY_DATEFORMAT );
@@ -512,9 +546,9 @@ function eme_options_page() {
 <h3><?php _e ( 'Locations format', 'eme' ); ?></h3>
 <table class="form-table">
    <?php
-   eme_options_textarea ( __ ( 'Default location list format header', 'eme' ), 'eme_location_list_format_header', __( 'This content will appear just above your code for the default location list format. If you leave this empty, the value <code>&lt;ul class=\'eme_locations_list\'&gt;</code> will be used.<br/>Used by the shortcode <code>[eme_locations]</code>', 'eme' ) );
-   eme_options_textarea ( __ ( 'Default location list item format', 'eme' ), 'eme_location_list_format_item', __ ( 'The format of a location in a location list. If you leave this empty, the value <code>&lt;li class=\"location-#_LOCATIONID\"&gt;#_LOCATIONNAME&lt;/li&gt;</code> will be used.<br/>See the documentation for a list of available placeholders for locations.<br/>Used by the shortcode <code>[eme_locations]</code>', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=26'>".__('the documentation', 'eme').'</a>' );
-   eme_options_textarea ( __ ( 'Default location list format footer', 'eme' ), 'eme_location_list_format_footer', __ ( 'This content will appear just below your code for the default location list format. If you leave this empty, the value <code>&lt;/ul&gt;</code> will be used.<br/>Used by the shortcode <code>[eme_locations]</code>', 'eme' ) );
+   eme_options_textarea ( __ ( 'Default location list format header', 'eme' ), 'eme_location_list_format_header', sprintf(__( 'This content will appear just above your code for the default location list format. If you leave this empty, the value <code>%s</code> will be used.<br/>Used by the shortcode <code>[eme_locations]</code>', 'eme'),eme_sanitize_html(DEFAULT_LOCATION_LIST_HEADER_FORMAT)));
+   eme_options_textarea ( __ ( 'Default location list item format', 'eme' ), 'eme_location_list_format_item', sprintf(__ ( 'The format of a location in a location list. If you leave this empty, the value <code>%s</code> will be used.<br/>See the documentation for a list of available placeholders for locations.<br/>Used by the shortcode <code>[eme_locations]</code>', 'eme' ),eme_sanitize_html(DEFAULT_LOCATION_EVENT_LIST_ITEM_FORMAT)) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=26'>".__('the documentation', 'eme').'</a>' );
+   eme_options_textarea ( __ ( 'Default location list format footer', 'eme' ), 'eme_location_list_format_footer', sprintf(__( 'This content will appear just below your code for the default location list format. If you leave this empty, the value <code>%s</code> will be used.<br/>Used by the shortcode <code>[eme_locations]</code>', 'eme'),eme_sanitize_html(DEFAULT_LOCATION_LIST_FOOTER_FORMAT)));
 
    eme_options_input_text ( __ ( 'Single location page title format', 'eme' ), 'eme_location_page_title_format', __ ( 'The format of a single location page title.<br/>Follow the previous formatting instructions.', 'eme' ) );
    eme_options_input_text ( __ ( 'Single location html title format', 'eme' ), 'eme_location_html_title_format', __ ( 'The format of a single location html page title.<br/>Follow the previous formatting instructions.', 'eme' ). __( ' The default is: ','eme'). DEFAULT_LOCATION_HTML_TITLE_FORMAT);
@@ -558,11 +592,27 @@ function eme_options_page() {
    eme_options_radio_binary ( __ ( 'By default enable registrations for new events?', 'eme' ), 'eme_rsvp_reg_for_new_events', __ ( 'Check this option if you want to enable registrations by default for new events.', 'eme' ) );
    eme_options_radio_binary ( __ ( 'By default require approval for registrations?', 'eme' ), 'eme_rsvp_require_approval', __ ( 'Check this option if you want by default that new registrations require approval.', 'eme' ) );
    eme_options_radio_binary ( __ ( 'By default require WP membership to be able to register?', 'eme' ), 'eme_rsvp_registered_users_only', __ ( 'Check this option if you want by default that only WP registered users can book for an event.', 'eme' ) );
+   eme_options_radio_binary ( __ ( 'Check required fields upon submit?', 'eme' ), 'eme_rsvp_check_required_fields', __ ( 'Check this option if you want to check on the server-side if all required fields have been completed upon RSVP form submit. Consider using a captcha if disabling this.', 'eme' ) );
    eme_options_input_text ( __ ( 'Default number of spaces', 'eme' ), 'eme_rsvp_default_number_spaces', __ ( 'The default number of spaces an event has.', 'eme' ) );
    eme_options_input_text ( __ ( 'Min number of spaces to book', 'eme' ), 'eme_rsvp_addbooking_min_spaces', __ ( 'The minimum number of spaces a person can book in one go (it can be 0, for e.g. just an attendee list).', 'eme' ) );
    eme_options_input_text ( __ ( 'Max number of spaces to book', 'eme' ), 'eme_rsvp_addbooking_max_spaces', __ ( 'The maximum number of spaces a person can book in one go.', 'eme' ) );
-   eme_options_input_text ( __ ( 'By default allow RSVP until this many days before the event starts', 'eme' ), 'eme_rsvp_number_days', __ ( 'By default allow RSVP until this many days before the event starts.', 'eme' ) );
-   eme_options_input_text ( __ ( 'By default allow RSVP until this many hours before the event starts', 'eme' ), 'eme_rsvp_number_hours', __ ( 'By default allow RSVP until this many hours before the event starts.', 'eme' ) );
+   $eme_rsvp_number_days=get_option('eme_rsvp_number_days');
+   $eme_rsvp_number_hours=get_option('eme_rsvp_number_hours');
+   $eme_rsvp_end_target=get_option('eme_rsvp_end_target');
+   ?>
+   <tr valign="top" id='eme_rsvp_number_row'>
+      <th scope="row"><?php _e('By default allow RSVP until this many', 'eme') ?></th>
+      <td>
+      <input name="eme_rsvp_number_days" type="text" id="eme_rsvp_number_days" value="<?php echo eme_sanitize_html($eme_rsvp_number_days); ?>" size="4" /> <?php _e('days', 'eme') ?>
+      <input name="eme_rsvp_number_hours" type="text" id="eme_rsvp_number_hours" value="<?php echo eme_sanitize_html($eme_rsvp_number_hours); ?>" size="4" /> <?php _e('hours', 'eme') ?>
+      <?php
+      $eme_rsvp_end_target_list = array('start'=>__('starts','eme'),'end'=>__('ends','eme'));
+      _e ( 'before the event ','eme' );
+      echo eme_ui_select($eme_rsvp_end_target,'eme_rsvp_end_target',$eme_rsvp_end_target_list);
+      ?>
+      </td>
+   </tr>
+   <?php
    eme_options_radio_binary ( __ ( 'Use captcha for booking form?', 'eme' ), 'eme_captcha_for_booking', __ ( 'Check this option if you want to use a captcha on the booking form, to thwart spammers a bit.', 'eme' ) );
    eme_options_radio_binary ( __ ( 'Hide fully booked events?', 'eme' ), 'eme_rsvp_hide_full_events', __ ( 'Check this option if you want to hide events that are fully booked from the calendar and events listing in the front.', 'eme' ) );
    eme_options_radio_binary ( __ ( 'Hide RSVP ended events?', 'eme' ), 'eme_rsvp_hide_rsvp_ended_events', __ ( 'Check this option if you want to hide events which RSVP registration period has already ended.', 'eme' ) );
@@ -572,8 +622,8 @@ function eme_options_page() {
    eme_options_radio_binary ( __ ( 'Attendees list ignore pending', 'eme' ), 'eme_attendees_list_ignore_pending', __ ( "Whether or not to ignore pending bookings when using the <code>#_ATTENDEES</code> placeholder.", 'eme' ));
    eme_options_input_text ( __ ( 'Bookings list header format', 'eme' ), 'eme_bookings_list_header_format', __ ( "The header format for the bookings list when using the <code>#_BOOKINGS</code> placeholder.", 'eme' ). sprintf(__(" The default is '%s'",'eme'),eme_sanitize_html(DEFAULT_BOOKINGS_LIST_HEADER_FORMAT)));
    eme_options_input_text ( __ ( 'Bookings list format', 'eme' ), 'eme_bookings_list_format', __ ( "The format for the bookings list when using the <code>#_BOOKINGS</code> placeholder.", 'eme' ). __('For all placeholders you can use here, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=45'>".__('the documentation', 'eme').'</a>' .__('For more information about form fields, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=44'>".__('the documentation', 'eme').'</a>' );
-   eme_options_radio_binary ( __ ( 'Bookings list ignore pending', 'eme' ), 'eme_bookings_list_ignore_pending', __ ( "Whether or not to ignore pending bookings when using the <code>#_BOOKINGS</code> placeholder.", 'eme' ));
    eme_options_input_text ( __ ( 'Bookings list footer format', 'eme' ), 'eme_bookings_list_footer_format', __ ( "The footer format for the bookings list when using the <code>#_BOOKINGS</code> placeholder.", 'eme' ). sprintf(__(" The default is '%s'",'eme'),eme_sanitize_html(DEFAULT_BOOKINGS_LIST_FOOTER_FORMAT)));
+   eme_options_radio_binary ( __ ( 'Bookings list ignore pending', 'eme' ), 'eme_bookings_list_ignore_pending', __ ( "Whether or not to ignore pending bookings when using the <code>#_BOOKINGS</code> placeholder.", 'eme' ));
    eme_options_textarea ( __ ( 'Booking recorded message', 'eme' ), 'eme_registration_recorded_ok_html', __ ( "The text (html allowed) shown to the user when the booking has been made successfully.", 'eme' ) );
    eme_options_radio_binary ( __ ( 'Show RSVP form again after booking?', 'eme' ), 'eme_rsvp_show_form_after_booking', __ ( "Uncheck this option if you don't want to show the RSVP booking form again after a successful booking.", 'eme' ) );
    ?>
@@ -620,7 +670,8 @@ function eme_options_page() {
    eme_options_input_text ( __ ( 'Registration updated email subject format', 'eme' ), 'eme_registration_updated_email_subject', __ ( 'The format of the email subject which will be sent to the respondent when the admin updates the registration request.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
    eme_options_textarea ( __ ( 'Registration updated email format', 'eme' ), 'eme_registration_updated_email_body', __ ( 'The format of the email which will be sent to the respondent when the admin updates the registration request.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
    eme_options_input_text ( __ ( 'Notification sender name', 'eme' ), 'eme_mail_sender_name', __ ( "Insert the display name of the notification sender.", 'eme' ) );
-   eme_options_input_text ( __ ( 'Notification sender address', 'eme' ), 'eme_mail_sender_address', __ ( "Insert the address of the notification sender. It must correspond with your Gmail account user", 'eme' ) );
+   eme_options_input_text ( __ ( 'Notification sender address', 'eme' ), 'eme_mail_sender_address', __ ( "Insert the address of the notification sender. It must correspond with your Gmail account user if you use Gmail to send mails.", 'eme' ), "email" );
+   eme_options_input_text ( __ ( 'Notification BCC address', 'eme' ), 'eme_mail_bcc_address', __ ( "Insert an address that will be added in Bcc to all outgoing mails. Can be left empty.", 'eme' ), "email" );
    eme_options_select ( __ ( 'Mail sending method', 'eme' ), 'eme_rsvp_mail_send_method', array ('smtp' => 'SMTP', 'mail' => __ ( 'PHP mail function', 'eme' ), 'sendmail' => 'Sendmail', 'qmail' => 'Qmail', 'wp_mail' => 'WP Mail' ), __ ( 'Select the method to send email notification.', 'eme' ) );
    eme_options_input_text ( 'SMTP host', 'eme_smtp_host', __ ( "The SMTP host. Usually it corresponds to 'localhost'. If you use Gmail, set this value to 'ssl://smtp.gmail.com:465'.", 'eme' ) );
    eme_options_input_text ( 'Mail sending port', 'eme_smtp_port', __ ( "The port through which you e-mail notifications will be sent. Make sure the firewall doesn't block this port", 'eme' ) );
@@ -645,6 +696,8 @@ function eme_options_page() {
    eme_options_input_text ( __ ( 'Default price', 'eme' ), 'eme_default_price', __ ( 'The default price for an event.', 'eme' ) );
    eme_options_textarea ( __ ( 'Payment form header format', 'eme' ), 'eme_payment_form_header_format', __ ( 'The format of the text shown above the payment buttons. If left empty, a standard text will be shown.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
    eme_options_textarea ( __ ( 'Payment form footer format', 'eme' ), 'eme_payment_form_footer_format', __ ( 'The format of the text shown below the payment buttons. Default: empty.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=27'>".__('the documentation', 'eme').'</a>' );
+   eme_options_textarea ( __ ( 'Multibooking payment form header format', 'eme' ), 'eme_multipayment_form_header_format', __ ( 'The format of the text shown above the payment buttons in the multibooking form. If left empty, a standard text will be shown.', 'eme' ).'<br/>'.__('Although the same placeholders as for the regular payment form header format can be used, it is advised to only use multibooking related placeholders.', 'eme') );
+   eme_options_textarea ( __ ( 'Multibooking payment form footer format', 'eme' ), 'eme_multipayment_form_footer_format', __ ( 'The format of the text shown below the payment buttons in the multibooking form. Default: empty.', 'eme' ).'<br/>'.__('Although the same placeholders as for the regular payment form header format can be used, it is advised to only use multibooking related placeholders.', 'eme') );
    eme_options_radio_binary ( __ ( 'Show custom payment return page', 'eme' ), 'eme_payment_show_custom_return_page', __ ( 'Check this option if you want to define a custom page format for the sucess or failure of the payment.', 'eme' ) );
    eme_options_textarea ( __ ( 'Payment succes return page format', 'eme' ), 'eme_payment_succes_format', __ ( 'The format of the return page when the payment is succesfull.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=25'>".__('the documentation', 'eme').'</a>' );
    eme_options_textarea ( __ ( 'Payment failure return page format', 'eme' ), 'eme_payment_fail_format', __ ( 'The format of the return page when the payment failed or has been canceled.', 'eme' ) .'<br/>'.__('For all possible placeholders, see ', 'eme')."<a target='_blank' href='http://www.e-dynamics.be/wordpress/?cat=25'>".__('the documentation', 'eme').'</a>' );
@@ -655,6 +708,7 @@ function eme_options_page() {
 <h3><?php _e ( 'RSVP: paypal options', 'eme' ); ?></h3>
 <table class='form-table'>
    <?php
+      $notification_link = add_query_arg(array('eme_eventAction'=>'paypal_notification'),$events_page_link);
       eme_options_select ( __('PayPal live or test','eme'), 'eme_paypal_url', array (PAYPAL_SANDBOX_URL => __('Paypal Sandbox (for testing)','eme'), PAYPAL_LIVE_URL => __ ( 'Paypal Live', 'eme' )), __('Choose wether you want to test paypal in a paypal sandbox or go live and really use paypal.','eme') );
       eme_options_input_text (__('PayPal business info','eme'),'eme_paypal_business', __("Paypal business ID or email.",'eme'));
       eme_options_radio_binary ( __ ( 'Use paypal encryption?' ), 'eme_paypal_s_encrypt', __ ( 'Select yes to encrypt the paypal button using certificates.','eme' ) );
@@ -663,6 +717,12 @@ function eme_options_page() {
       eme_options_input_text (__('Own private key','eme'),'eme_paypal_s_privkey', __("Path to own private key file.",'eme'));
       eme_options_input_text (__('Certificate ID','eme'),'eme_paypal_s_certid', __("Certificate ID of your cert at paypal.",'eme'));
       eme_options_input_text (__('Extra charge','eme'),'eme_paypal_cost', __("Extra charge added when paying for an event. Can either be an absolute number or a percentage. E.g. 2 or 5%",'eme'));
+      eme_options_input_text (__('Extra charge 2','eme'),'eme_paypal_cost2', __("Second extra charge added when paying for an event. Can either be an absolute number or a percentage. E.g. 2 or 5%",'eme'));
+      eme_options_input_text (__('Payment button label','eme'),'eme_paypal_button_label', __('The text shown inside the payment button','eme'));
+      eme_options_input_text (__('Payment button image','eme'),'eme_paypal_button_img_url', __('The url to an image for the payment button that replaces the standard submit button with the label mentioned above.','eme'));
+      eme_options_input_text (__('Text above payment button','eme'),'eme_paypal_button_above', __('The text shown just above the payment button, you can use #_EXTRACHARGE and #_CURRENCY to indicate the extra charge calculated if wanted','eme'));
+      eme_options_input_text (__('Text below payment button','eme'),'eme_paypal_button_below', __('The text shown just below the payment button, you can use #_EXTRACHARGE and #_CURRENCY to indicate the extra charge calculated if wanted','eme'));
+      echo "<tr><td colspan='2'>".__('Info: the url for payment notifications is: ','eme').$notification_link.'</td></tr>';
    ?>
 </table>
 
@@ -675,7 +735,12 @@ function eme_options_page() {
       eme_options_input_text (__('2Checkout Account number','eme'),'eme_2co_business', __("2Checkout Account number.",'eme'));
       eme_options_input_text (__('2Checkout Secret','eme'),'eme_2co_secret', __("2Checkout secret.",'eme'));
       eme_options_input_text (__('Extra charge','eme'),'eme_2co_cost', __("Extra charge added when paying for an event. Can either be an absolute number or a percentage. E.g. 2 or 5%",'eme'));
-      echo "<tr>".__('Info: the url for payment notifications is: ','eme').$notification_link.'</tr>';
+      eme_options_input_text (__('Extra charge 2','eme'),'eme_2co_cost2', __("Second extra charge added when paying for an event. Can either be an absolute number or a percentage. E.g. 2 or 5%",'eme'));
+      eme_options_input_text (__('Payment button label','eme'),'eme_2co_button_label', __('The text shown inside the payment button','eme'));
+      eme_options_input_text (__('Payment button image','eme'),'eme_2co_button_img_url', __('The url to an image for the payment button that replaces the standard submit button with the label mentioned above.','eme'));
+      eme_options_input_text (__('Text above payment button','eme'),'eme_2co_button_above', __('The text shown just above the payment button, you can use #_EXTRACHARGE and #_CURRENCY to indicate the extra charge calculated if wanted','eme'));
+      eme_options_input_text (__('Text below payment button','eme'),'eme_2co_button_below', __('The text shown just below the payment button, you can use #_EXTRACHARGE and #_CURRENCY to indicate the extra charge calculated if wanted','eme'));
+      echo "<tr><td colspan='2'>".__('Info: the url for payment notifications is: ','eme').$notification_link.'</td></tr>';
    ?>
 </table>
 
@@ -688,17 +753,12 @@ function eme_options_page() {
       eme_options_input_text (__('Webmoney Purse','eme'),'eme_webmoney_purse', __("Webmoney Purse.",'eme'));
       eme_options_input_text (__('Webmoney Secret','eme'),'eme_webmoney_secret', __("Webmoney secret.",'eme'));
       eme_options_input_text (__('Extra charge','eme'),'eme_webmoney_cost', __("Extra charge added when paying for an event. Can either be an absolute number or a percentage. E.g. 2 or 5%",'eme'));
-      echo "<tr>".__('Info: the url for payment notifications is: ','eme').$notification_link.'</tr>';
-   ?>
-</table>
-
-<h3><?php _e ( 'RSVP: Google Checkout options', 'eme' ); ?></h3>
-<table class='form-table'>
-   <?php
-      eme_options_select ( __('Google Checkout live or test','eme'), 'eme_google_checkout_type', array (GOOGLE_SANDBOX => __('Google Checkout Sandbox (for testing)','eme'), GOOGLE_LIVE => __ ( 'Google Checkout Live', 'eme' )), __('Choose wether you want to test Google Checkout in a sandbox or go live and really use Google Checkout.','eme') );
-      eme_options_input_text (__('Google Checkout merchant ID','eme'),'eme_google_merchant_id', __("Google Checkout Merchant ID.",'eme'));
-      eme_options_input_text (__('Google Checkout merchant Key','eme'),'eme_google_merchant_key', __("Google Checkout Merchant Key.",'eme'));
-      eme_options_input_text (__('Extra charge','eme'),'eme_google_cost', __("Extra charge added when paying for an event. Can either be an absolute number or a percentage. E.g. 2 or 5%",'eme'));
+      eme_options_input_text (__('Extra charge 2','eme'),'eme_webmoney_cost2', __("Second extra charge added when paying for an event. Can either be an absolute number or a percentage. E.g. 2 or 5%",'eme'));
+      eme_options_input_text (__('Payment button label','eme'),'eme_webmoney_button_label', __('The text shown inside the payment button','eme'));
+      eme_options_input_text (__('Payment button image','eme'),'eme_webmoney_button_img_url', __('The url to an image for the payment button that replaces the standard submit button with the label mentioned above.','eme'));
+      eme_options_input_text (__('Text above payment button','eme'),'eme_webmoney_button_above', __('The text shown just above the payment button, you can use #_EXTRACHARGE and #_CURRENCY to indicate the extra charge calculated if wanted','eme'));
+      eme_options_input_text (__('Text below payment button','eme'),'eme_webmoney_button_below', __('The text shown just below the payment button, you can use #_EXTRACHARGE and #_CURRENCY to indicate the extra charge calculated if wanted','eme'));
+      echo "<tr><td colspan='2'>".__('Info: the url for payment notifications is: ','eme').$notification_link.'</td></tr>';
    ?>
 </table>
 
@@ -711,7 +771,28 @@ function eme_options_page() {
       eme_options_input_text (__('First Data Store Name','eme'),'eme_fdgg_store_name', __("First Data Store Name.",'eme'));
       eme_options_input_text (__('First Data Shared Secret','eme'),'eme_fdgg_shared_secret', __("First Data Shared Secret.",'eme'));
       eme_options_input_text (__('Extra charge','eme'),'eme_fdgg_cost', __("Extra charge added when paying for an event. Can either be an absolute number or a percentage. E.g. 2 or 5%",'eme'));
-      echo "<tr>".__('Info: the url for payment notifications is: ','eme').$notification_link.'</tr>';
+      eme_options_input_text (__('Extra charge 2','eme'),'eme_fdgg_cost2', __("Second extra charge added when paying for an event. Can either be an absolute number or a percentage. E.g. 2 or 5%",'eme'));
+      eme_options_input_text (__('Payment button label','eme'),'eme_fdgg_button_label', __('The text shown inside the payment button','eme'));
+      eme_options_input_text (__('Payment button image','eme'),'eme_fdgg_button_img_url', __('The url to an image for the payment button that replaces the standard submit button with the label mentioned above.','eme'));
+      eme_options_input_text (__('Text above payment button','eme'),'eme_fdgg_button_above', __('The text shown just above the payment button, you can use #_EXTRACHARGE and #_CURRENCY to indicate the extra charge calculated if wanted','eme'));
+      eme_options_input_text (__('Text below payment button','eme'),'eme_fdgg_button_below', __('The text shown just below the payment button, you can use #_EXTRACHARGE and #_CURRENCY to indicate the extra charge calculated if wanted','eme'));
+      echo "<tr><td colspan='2'>".__('Info: the url for payment notifications is: ','eme').$notification_link.'</td></tr>';
+   ?>
+</table>
+
+<h3><?php _e ( 'RSVP: Mollie options', 'eme' ); ?></h3>
+<table class='form-table'>
+   <?php
+      $notification_link = add_query_arg(array('eme_eventAction'=>'mollie_notification'),$events_page_link);
+
+      eme_options_input_text (__('Mollie API key','eme'),'eme_mollie_api_key', __('Mollie API key','eme'));
+      eme_options_input_text (__('Extra charge','eme'),'eme_mollie_cost', __("Extra charge added when paying for an event. Can either be an absolute number or a percentage. E.g. 2 or 5%",'eme'));
+      eme_options_input_text (__('Extra charge 2','eme'),'eme_mollie_cost2', __("Second extra charge added when paying for an event. Can either be an absolute number or a percentage. E.g. 2 or 5%",'eme'));
+      eme_options_input_text (__('Payment button label','eme'),'eme_mollie_button_label', __('The text shown inside the payment button','eme'));
+      eme_options_input_text (__('Payment button image','eme'),'eme_mollie_button_img_url', __('The url to an image for the payment button that replaces the standard submit button with the label mentioned above.','eme'));
+      eme_options_input_text (__('Text above payment button','eme'),'eme_mollie_button_above', __('The text shown just above the payment button, you can use #_EXTRACHARGE and #_CURRENCY to indicate the extra charge calculated if wanted','eme'));
+      eme_options_input_text (__('Text below payment button','eme'),'eme_mollie_button_below', __('The text shown just below the payment button, you can use #_EXTRACHARGE and #_CURRENCY to indicate the extra charge calculated if wanted','eme'));
+      echo "<tr><td colspan='2'>".__('Info: the url for payment notifications is: ','eme').$notification_link.'</td></tr>';
    ?>
 </table>
 
@@ -719,6 +800,13 @@ function eme_options_page() {
 	      break;
 	      case 'other' :
 ?>
+
+<h3><?php _e ( 'CSV separator', 'eme' ); ?></h3>
+<table class='form-table'>
+   <?php
+   eme_options_input_text ( __('CSV separator','eme'), 'eme_csv_separator', __('Set the separator used in CSV exports.','eme').sprintf(__(" The default is '%s'",'eme'),eme_sanitize_html(EME_DEFAULT_CSV_SEPARATOR)) );
+   ?>
+</table>
 
 <h3><?php _e ( 'Images size', 'eme' ); ?></h3>
 <table class='form-table'>
@@ -740,6 +828,8 @@ function eme_options_page() {
 <h3><?php _e ( 'Extra html headers', 'eme' ); ?></h3>
 <table class="form-table">
    <?php
+   eme_options_textarea ( __ ( 'Extra html header', 'eme' ), 'eme_html_header', __ ( 'Here you can define extra html headers, no placeholders can be used, no html will be stripped. Can be used to add custom javascript, ...', 'eme' ) );
+   eme_options_textarea ( __ ( 'Extra html footer', 'eme' ), 'eme_html_footer', __ ( 'Here you can define extra html footer, no placeholders can be used, no html will be stripped. Can be used to add custom javascript, ...', 'eme' ) );
    eme_options_textarea ( __ ( 'Extra event html headers', 'eme' ), 'eme_event_html_headers_format', __ ( 'Here you can define extra html headers when viewing a single event, typically used to add meta tags for facebook or SEO. All event placeholders can be used, but will be stripped from resulting html.', 'eme' ) );
    eme_options_textarea ( __ ( 'Extra location html headers', 'eme' ), 'eme_location_html_headers_format', __ ( 'Here you can define extra html headers when viewing a single location, typically used to add meta tags for facebook or SEO. All location placeholders can be used, but will be stripped from resulting html.', 'eme' ) );
    ?>

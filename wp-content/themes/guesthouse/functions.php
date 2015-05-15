@@ -177,6 +177,8 @@ function theme_init () {
 		wp_enqueue_script( 'jquery-ui-tabs' );
 		wp_enqueue_script( 'jquery-ui-accordion' );
 		wp_enqueue_script( 'jquery-ui-datepicker' );
+		wp_enqueue_script( 'jquery-effects-core' );
+		wp_enqueue_script( 'jquery-effects-slide' );
 	}
 }
 add_action('init', 'theme_init');

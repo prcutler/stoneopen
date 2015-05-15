@@ -27,6 +27,7 @@ if ( !function_exists('wp_install') ) :
  *
  * @since 2.1.0
  *
+<<<<<<< HEAD
  * @param string $blog_title    Blog title.
  * @param string $user_name     User's username.
  * @param string $user_email    User's email.
@@ -35,6 +36,16 @@ if ( !function_exists('wp_install') ) :
  * @param string $user_password Optional. User's chosen password. Default empty (random password).
  * @param string $language      Optional. Language chosen. Default empty.
  * @return array Array keys 'url', 'user_id', 'password', and 'password_message'.
+=======
+ * @param string $blog_title Blog title.
+ * @param string $user_name User's username.
+ * @param string $user_email User's email.
+ * @param bool $public Whether blog is public.
+ * @param string $deprecated Optional. Not used.
+ * @param string $user_password Optional. User's chosen password. Will default to a random password.
+ * @param string $language Optional. Language chosen.
+ * @return array Array keys 'url', 'user_id', 'password', 'password_message'.
+>>>>>>> FETCH_HEAD
  */
 function wp_install( $blog_title, $user_name, $user_email, $public, $deprecated = '', $user_password = '', $language = '' ) {
 	if ( !empty( $deprecated ) )
@@ -1848,12 +1859,18 @@ function deslash($content) {
  *
  * @since 1.5.0
  *
+<<<<<<< HEAD
  * @param string|array $queries Optional. The query to run. Can be multiple queries
  *                              in an array, or a string of queries separated by
  *                              semicolons. Default empty.
  * @param bool         $execute Optional. Whether or not to execute the query right away.
  *                              Default true.
  * @return array Strings containing the results of the various update queries.
+=======
+ * @param string $queries
+ * @param bool   $execute
+ * @return array
+>>>>>>> FETCH_HEAD
  */
 function dbDelta( $queries = '', $execute = true ) {
 	global $wpdb;
@@ -2148,8 +2165,13 @@ function make_db_current_silent( $tables = 'all' ) {
  *
  * @since 1.5.0
  *
+<<<<<<< HEAD
  * @param string $theme_name The name of the theme.
  * @param string $template   The directory name of the theme.
+=======
+ * @param string $theme_name
+ * @param string $template
+>>>>>>> FETCH_HEAD
  * @return bool
  */
 function make_site_theme_from_oldschool($theme_name, $template) {
@@ -2231,8 +2253,13 @@ function make_site_theme_from_oldschool($theme_name, $template) {
  *
  * @since 1.5.0
  *
+<<<<<<< HEAD
  * @param string $theme_name The name of the theme.
  * @param string $template   The directory name of the theme.
+=======
+ * @param string $theme_name
+ * @param string $template
+>>>>>>> FETCH_HEAD
  * @return null|false
  */
 function make_site_theme_from_default($theme_name, $template) {
@@ -2450,6 +2477,7 @@ function pre_schema_upgrade() {
 		// dbDelta() can recreate but can't drop the index.
 		$wpdb->query( "ALTER TABLE $wpdb->terms DROP INDEX slug" );
 	}
+<<<<<<< HEAD
 
 	// Upgrade versions prior to 4.2.
 	if ( $wp_current_db_version < 31351 ) {
@@ -2462,6 +2490,8 @@ function pre_schema_upgrade() {
 		$wpdb->query( "ALTER TABLE $wpdb->postmeta DROP INDEX meta_key, ADD INDEX meta_key(meta_key(191))" );
 		$wpdb->query( "ALTER TABLE $wpdb->posts DROP INDEX post_name, ADD INDEX post_name(post_name(191))" );
 	}
+=======
+>>>>>>> FETCH_HEAD
 }
 
 /**

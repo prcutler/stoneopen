@@ -94,7 +94,7 @@ function eme_get_calendar($args="") {
    // this comes from global wordpress preferences
    $start_of_week = get_option('start_of_week');
 
-   if (get_option('eme_use_client_clock')) {
+   if (get_option('eme_use_client_clock') && isset($_SESSION['eme_client_mday']) && isset($_SESSION['eme_client_month']) && isset($_SESSION['eme_client_fullyear'])) {
       // these come from client unless their clock is wrong
       $iNowDay= sprintf("%02d",$_SESSION['eme_client_mday']);
       $iNowMonth= sprintf("%02d",$_SESSION['eme_client_month']);
@@ -115,9 +115,9 @@ function eme_get_calendar($args="") {
    list($sMonthName, $iDaysInMonth) = explode('-', date('F-t', $iTimestamp));
    // Get friendly month name
    if ($full) {
-      list($sMonthName, $iDaysInMonth) = explode('-', date_i18n('F-t', $iTimestamp));
+      list($sMonthName, $iDaysInMonth) = explode('-', eme_localised_unixdatetime($iTimestamp,'F-t'));
    } else {
-      list($sMonthName, $iDaysInMonth) = explode('-', date_i18n('M-t', $iTimestamp));
+      list($sMonthName, $iDaysInMonth) = explode('-', eme_localised_unixdatetime($iTimestamp,'M-t'));
    }
    // take into account some locale info: some always best show full month name, some show month after year, some have a year suffix
    $locale_code = substr ( get_locale (), 0, 2 );
@@ -125,9 +125,9 @@ function eme_get_calendar($args="") {
    $yearSuffix="";
    switch($locale_code) { 
       case "hu": $showMonthAfterYear=1;break;
-      case "ja": $showMonthAfterYear=1;$sMonthName = date_i18n('F', $iTimestamp);$yearSuffix="年";break;
-      case "ko": $showMonthAfterYear=1;$sMonthName = date_i18n('F', $iTimestamp);$yearSuffix="년";break;
-      case "zh": $showMonthAfterYear=1;$sMonthName = date_i18n('F', $iTimestamp);$yearSuffix="年";break;
+      case "ja": $showMonthAfterYear=1;$sMonthName = eme_localised_unixdatetime($iTimestamp,'F');$yearSuffix="年";break;
+      case "ko": $showMonthAfterYear=1;$sMonthName = eme_localised_unixdatetime($iTimestamp,'F');$yearSuffix="년";break;
+      case "zh": $showMonthAfterYear=1;$sMonthName = eme_localised_unixdatetime($iTimestamp,'F');$yearSuffix="年";break;
    }
    if ($showMonthAfterYear)
          $cal_datestring="$iSelectedYear$yearSuffix $sMonthName";
@@ -153,7 +153,7 @@ function eme_get_calendar($args="") {
    $iNextMonth = sprintf("%02d",$iNextMonth);
 
    // Get number of days of previous month
-   $iPrevDaysInMonth = (int)date('t', mktime(0, 0, 0, $iPrevMonth, $iNowDay, $iPrevYear));
+   $iPrevDaysInMonth = (int)date('t', mktime(0, 0, 0, $iPrevMonth, 1, $iPrevYear));
 
    // Get numeric representation of the day of the week of the first day of specified (current) month
    // remember: first day of week is a Sunday
@@ -187,15 +187,20 @@ function eme_get_calendar($args="") {
             $event_end_date = strtotime($event['event_end_date']);
             if ($event_end_date < $event_start_date)
                $event_end_date=$event_start_date;
-            while( $event_start_date <= $event_end_date ) {
-               $event_eventful_date = date('Y-m-d', $event_start_date);
+            $event_date=$event_start_date;
+            $day_count=0;
+            while( $event_date <= $event_end_date ) {
+               $day_count++;
+               $event_eventful_date = date('Y-m-d', $event_date);
                //Only show events on the day that they start
                if(isset($eventful_days[$event_eventful_date]) &&  is_array($eventful_days[$event_eventful_date]) ) {
-                  $eventful_days[$event_eventful_date][] = $event; 
+                  $eventful_days[$event_eventful_date][] = $event;
                } else {
                   $eventful_days[$event_eventful_date] = array($event);
                }  
-               $event_start_date += (60*60*24);          
+               //don't add 24 hours, because that doesn't work for days with 23 or 25 hours (daylight saving time)
+               //$event_date += (60*60*24);
+               $event_date = strtotime($event['event_start_date']." + $day_count days");
             }
          } else {
             //Only show events on the day that they start
@@ -440,8 +445,10 @@ function eme_filter_calendar_ajax() {
    (isset($_POST['author'])) ? $author = eme_sanitize_request($_POST['author']) : $author = ''; 
    (isset($_POST['contact_person'])) ? $contact_person = eme_sanitize_request($_POST['contact_person']) : $contact_person = ''; 
    (isset($_POST['location_id'])) ? $location_id = eme_sanitize_request($_POST['location_id']) : $location_id = '';
+   (isset($_POST['template_id'])) ? $template_id = eme_sanitize_request($_POST['template_id']) : $template_id = '';
+   $echo=1;
 
-   eme_get_calendar('echo=1&full='.$full.'&long_events='.$long_events.'&category='.$category.'&month='.$month.'&year='.$year.'&author='.$author.'&contact_person='.$contact_person.'&location_id='.$location_id.'&notcategory='.$notcategory);
+   eme_get_calendar("full={$full}&month={$month}&year={$year}&echo={$echo}&long_events={$long_events}&category={$category}&author={$author}&contact_person={$contact_person}&location_id={$location_id}&notcategory={$notcategory}&template_id={$template_id}");
 }
 
 ?>

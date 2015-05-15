@@ -1071,11 +1071,16 @@ if ( !function_exists('check_admin_referer') ) :
  *
  * @since 1.2.0
  *
+<<<<<<< HEAD
  * @param int|string $action    Action nonce.
  * @param string     $query_arg Optional. Key to check for nonce in `$_REQUEST` (since 2.5).
  *                              Default '_wpnonce'.
  * @return false|int False if the nonce is invalid, 1 if the nonce is valid and generated between
  *                   0-12 hours ago, 2 if the nonce is valid and generated between 12-24 hours ago.
+=======
+ * @param int|string $action    Action nonce
+ * @param string     $query_arg Where to look for nonce in $_REQUEST (since 2.5)
+>>>>>>> FETCH_HEAD
  */
 function check_admin_referer( $action = -1, $query_arg = '_wpnonce' ) {
 	if ( -1 == $action )
@@ -1109,6 +1114,7 @@ if ( !function_exists('check_ajax_referer') ) :
  *
  * @since 2.0.3
  *
+<<<<<<< HEAD
  * @param int|string   $action    Action nonce.
  * @param false|string $query_arg Optional. Key to check for the nonce in `$_REQUEST` (since 2.5). If false,
  *                                `$_REQUEST` values will be evaluated for '_ajax_nonce', and '_wpnonce'
@@ -1117,6 +1123,10 @@ if ( !function_exists('check_ajax_referer') ) :
  *                                Default true.
  * @return false|int False if the nonce is invalid, 1 if the nonce is valid and generated between
  *                   0-12 hours ago, 2 if the nonce is valid and generated between 12-24 hours ago.
+=======
+ * @param int|string $action    Action nonce
+ * @param string     $query_arg Where to look for nonce in $_REQUEST (since 2.5)
+>>>>>>> FETCH_HEAD
  */
 function check_ajax_referer( $action = -1, $query_arg = false, $die = true ) {
 	$nonce = '';
@@ -1208,6 +1218,7 @@ if ( !function_exists('wp_sanitize_redirect') ) :
  * @return string redirect-sanitized URL
  **/
 function wp_sanitize_redirect($location) {
+<<<<<<< HEAD
 	$regex = '/
 		(
 			(?: [\xC2-\xDF][\x80-\xBF]        # double-byte sequences   110xxxxx 10xxxxxx
@@ -1221,6 +1232,8 @@ function wp_sanitize_redirect($location) {
 		){1,40}                              # ...one or more times
 		)/x';
 	$location = preg_replace_callback( $regex, '_wp_sanitize_utf8_in_redirect', $location );
+=======
+>>>>>>> FETCH_HEAD
 	$location = preg_replace('|[^a-z0-9-~+_.?#=&;,/:%!*\[\]()]|i', '', $location);
 	$location = wp_kses_no_null($location);
 
@@ -1424,20 +1437,34 @@ function wp_notify_postauthor( $comment_id, $deprecated = null ) {
 	switch ( $comment->comment_type ) {
 		case 'trackback':
 			$notify_message  = sprintf( __( 'New trackback on your post "%s"' ), $post->post_title ) . "\r\n";
+<<<<<<< HEAD
 			/* translators: 1: website name, 2: website IP, 3: website hostname */
 			$notify_message .= sprintf( __('Website: %1$s (IP: %2$s, %3$s)'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
 			$notify_message .= sprintf( __( 'URL: %s' ), $comment->comment_author_url ) . "\r\n";
 			$notify_message .= sprintf( __( 'Comment: %s' ), "\r\n" . $comment->comment_content ) . "\r\n\r\n";
+=======
+			/* translators: 1: website name, 2: author IP, 3: author domain */
+			$notify_message .= sprintf( __('Website: %1$s (IP: %2$s , %3$s)'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
+			$notify_message .= sprintf( __( 'URL: %s' ), $comment->comment_author_url ) . "\r\n";
+			$notify_message .= sprintf( __( 'Comment: %s' ), $comment->comment_content ) . "\r\n\r\n";
+>>>>>>> FETCH_HEAD
 			$notify_message .= __( 'You can see all trackbacks on this post here:' ) . "\r\n";
 			/* translators: 1: blog name, 2: post title */
 			$subject = sprintf( __('[%1$s] Trackback: "%2$s"'), $blogname, $post->post_title );
 			break;
 		case 'pingback':
 			$notify_message  = sprintf( __( 'New pingback on your post "%s"' ), $post->post_title ) . "\r\n";
+<<<<<<< HEAD
 			/* translators: 1: website name, 2: website IP, 3: website hostname */
 			$notify_message .= sprintf( __('Website: %1$s (IP: %2$s, %3$s)'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
 			$notify_message .= sprintf( __( 'URL: %s' ), $comment->comment_author_url ) . "\r\n";
 			$notify_message .= sprintf( __( 'Comment: %s' ), "\r\n" . $comment->comment_content ) . "\r\n\r\n";
+=======
+			/* translators: 1: comment author, 2: author IP, 3: author domain */
+			$notify_message .= sprintf( __('Website: %1$s (IP: %2$s , %3$s)'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
+			$notify_message .= sprintf( __( 'URL: %s' ), $comment->comment_author_url ) . "\r\n";
+			$notify_message .= sprintf( __( 'Comment: %s' ), $comment->comment_content ) . "\r\n\r\n";
+>>>>>>> FETCH_HEAD
 			$notify_message .= __( 'You can see all pingbacks on this post here:' ) . "\r\n";
 			/* translators: 1: blog name, 2: post title */
 			$subject = sprintf( __('[%1$s] Pingback: "%2$s"'), $blogname, $post->post_title );
@@ -1445,11 +1472,19 @@ function wp_notify_postauthor( $comment_id, $deprecated = null ) {
 		default: // Comments
 			$notify_message  = sprintf( __( 'New comment on your post "%s"' ), $post->post_title ) . "\r\n";
 			/* translators: 1: comment author, 2: author IP, 3: author domain */
+<<<<<<< HEAD
 			$notify_message .= sprintf( __( 'Author: %1$s (IP: %2$s, %3$s)' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
 			$notify_message .= sprintf( __( 'E-mail: %s' ), $comment->comment_author_email ) . "\r\n";
 			$notify_message .= sprintf( __( 'URL: %s' ), $comment->comment_author_url ) . "\r\n";
 			$notify_message .= sprintf( __( 'Whois: %s' ), "http://whois.arin.net/rest/ip/{$comment->comment_author_IP}" ) . "\r\n";
 			$notify_message .= sprintf( __('Comment: %s' ), "\r\n" . $comment->comment_content ) . "\r\n\r\n";
+=======
+			$notify_message .= sprintf( __( 'Author: %1$s (IP: %2$s , %3$s)' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
+			$notify_message .= sprintf( __( 'E-mail: %s' ), $comment->comment_author_email ) . "\r\n";
+			$notify_message .= sprintf( __( 'URL: %s' ), $comment->comment_author_url ) . "\r\n";
+			$notify_message .= sprintf( __( 'Whois: %s' ), "http://whois.arin.net/rest/ip/{$comment->comment_author_IP}" ) . "\r\n";
+			$notify_message .= sprintf( __('Comment: %s' ), $comment->comment_content ) . "\r\n\r\n";
+>>>>>>> FETCH_HEAD
 			$notify_message .= __( 'You can see all comments on this post here:' ) . "\r\n";
 			/* translators: 1: blog name, 2: post title */
 			$subject = sprintf( __('[%1$s] Comment: "%2$s"'), $blogname, $post->post_title );
@@ -2132,6 +2167,7 @@ if ( !function_exists( 'get_avatar' ) ) :
  * Retrieve the avatar `<img>` tag for a user, email address, MD5 hash, comment, or post.
  *
  * @since 2.5.0
+<<<<<<< HEAD
  * @since 4.2.0 Optional `$args` parameter added.
  *
  * @param mixed $id_or_email The Gravatar to retrieve. Accepts a user_id, gravatar md5 hash,
@@ -2177,6 +2213,18 @@ function get_avatar( $id_or_email, $size = 96, $default = '', $alt = '', $args =
 		'force_display' => false,
 		'extra_attr'    => '',
 	);
+=======
+ *
+ * @param int|string|object $id_or_email A user ID,  email address, or comment object
+ * @param int $size Size of the avatar image
+ * @param string $default URL to a default image to use if no avatar is available
+ * @param string $alt Alternative text to use in image tag. Defaults to blank
+ * @return false|string `<img>` tag for the user's avatar.
+*/
+function get_avatar( $id_or_email, $size = '96', $default = '', $alt = false ) {
+	if ( ! get_option('show_avatars') )
+		return false;
+>>>>>>> FETCH_HEAD
 
 	if ( empty( $args ) ) {
 		$args = array();

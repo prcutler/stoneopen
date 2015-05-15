@@ -268,6 +268,10 @@ class WP_Terms_List_Table extends WP_List_Table {
 
 	/**
 	 * @global string $taxonomy
+<<<<<<< HEAD
+=======
+	 * @staticvar string $row_class
+>>>>>>> FETCH_HEAD
 	 * @param object $tag
 	 * @param int $level
 	 */

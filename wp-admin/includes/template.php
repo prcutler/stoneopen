@@ -129,6 +129,7 @@ class Walker_Category_Checklist extends Walker {
 }
 
 /**
+<<<<<<< HEAD
  * Output an unordered list of checkbox input elements labeled with category names.
  *
  * @since 2.5.1
@@ -146,6 +147,23 @@ class Walker_Category_Checklist extends Walker {
  *                                     Default is a Walker_Category_Checklist instance.
  * @param bool   $checked_ontop        Optional. Whether to move checked items out of the hierarchy and to
  *                                     the top of the list. Default true.
+=======
+ * Output an unordered list of checkbox input elements labelled
+ * with category names.
+ *
+ * @since 2.5.1
+ *
+ * @todo Properly document optional arguments as such.
+ *
+ * @see wp_terms_checklist()
+ *
+ * @param int $post_id Mark categories associated with this post as checked. $selected_cats must not be an array.
+ * @param int $descendants_and_self ID of the category to output along with its descendents.
+ * @param bool|array $selected_cats List of categories to mark as checked.
+ * @param bool|array $popular_cats Override the list of categories that receive the "popular-category" class.
+ * @param object $walker Walker object to use to build the output.
+ * @param bool $checked_ontop Move checked items out of the hierarchy and to the top of the list.
+>>>>>>> FETCH_HEAD
  */
 function wp_category_checklist( $post_id = 0, $descendants_and_self = 0, $selected_cats = false, $popular_cats = false, $walker = null, $checked_ontop = true ) {
 	wp_terms_checklist( $post_id, array(
@@ -161,6 +179,7 @@ function wp_category_checklist( $post_id = 0, $descendants_and_self = 0, $select
 /**
  * Output an unordered list of checkbox input elements labelled with term names.
  *
+<<<<<<< HEAD
  * Taxonomy-independent version of wp_category_checklist().
  *
  * @since 3.0.0
@@ -180,6 +199,16 @@ function wp_category_checklist( $post_id = 0, $descendants_and_self = 0, $select
  *     @type bool   $checked_ontop        Whether to move checked items out of the hierarchy and to
  *                                        the top of the list. Default true.
  * }
+=======
+ * Taxonomy independent version of {@see wp_category_checklist()}.
+ *
+ * @since 3.0.0
+ *
+ * @todo Properly document optional default arguments.
+ *
+ * @param int   $post_id Post ID.
+ * @param array $args    Arguments to form the terms checklist.
+>>>>>>> FETCH_HEAD
  */
 function wp_terms_checklist( $post_id = 0, $args = array() ) {
  	$defaults = array(
@@ -364,7 +393,11 @@ function wp_link_category_checklist( $link_id = 0 ) {
  *
  * @since 2.7.0
  *
+<<<<<<< HEAD
  * @param WP_Post $post Post object.
+=======
+ * @param WP_Post $post
+>>>>>>> FETCH_HEAD
  */
 function get_inline_data($post) {
 	$post_type_object = get_post_type_object($post->post_type);
@@ -737,10 +770,17 @@ function meta_form( $post = null ) {
  *
  * @since 0.71
  *
+<<<<<<< HEAD
  * @param int|bool $edit      Accepts 1|true for editing the date, 0|false for adding the date.
  * @param int|bool $for_post  Accepts 1|true for applying the date to a post, 0|false for a comment.
  * @param int      $tab_index The tabindex attribute to add. Default 0.
  * @param int|bool $multi     Optional. Whether the additional fields and buttons should be added.
+=======
+ * @param int $edit      Accepts 1|true for editing the date, 0|false for adding the date.
+ * @param int $for_post  Accepts 1|true for applying the date to a post, 0|false for a comment.
+ * @param int $tab_index The tabindex attribute to add. Default 0.
+ * @param int $multi     Optional. Whether the additional fields and buttons should be added.
+>>>>>>> FETCH_HEAD
  *                            Default 0|false.
  */
 function touch_time( $edit = 1, $for_post = 1, $tab_index = 0, $multi = 0 ) {
@@ -1367,14 +1407,20 @@ function do_settings_fields($page, $section) {
  *
  * @since 3.0.0
  *
+ * @todo Properly document optional arguments as such.
+ *
  * @global array $wp_settings_errors Storage array of errors registered during this pageload
  *
  * @param string $setting Slug title of the setting to which this error applies
  * @param string $code    Slug-name to identify the error. Used as part of 'id' attribute in HTML output.
  * @param string $message The formatted message text to display to the user (will be shown inside styled
  *                        `<div>` and `<p>` tags).
+<<<<<<< HEAD
  * @param string $type    Optional. Message type, controls HTML class. Accepts 'error' or 'updated'.
  *                        Default 'error'.
+=======
+ * @param string $type    The type of message it is, controls HTML class. Use 'error' or 'updated'.
+>>>>>>> FETCH_HEAD
  */
 function add_settings_error( $setting, $code, $message, $type = 'error' ) {
 	global $wp_settings_errors;

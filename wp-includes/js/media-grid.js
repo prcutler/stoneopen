@@ -470,6 +470,7 @@ EditAttachments = MediaFrame.extend({
 		 * Attach a subview to display fields added via the
 		 * `attachment_fields_to_edit` filter.
 		 */
+<<<<<<< HEAD
 		contentRegion.view.views.set( '.attachment-compat', new wp.media.view.AttachmentCompat({
 			controller: this,
 			model:      this.model
@@ -478,6 +479,20 @@ EditAttachments = MediaFrame.extend({
 		// Update browser url when navigating media details
 		if ( this.model ) {
 			this.gridRouter.navigate( this.gridRouter.baseUrl( '?item=' + this.model.id ) );
+=======
+		toggleSelectionHandler: function() {},
+
+		render: function() {
+			media.view.Attachment.Details.prototype.render.apply( this, arguments );
+
+			media.mixin.removeAllPlayers();
+			this.$( 'audio, video' ).each( function (i, elem) {
+				var el = media.view.MediaDetails.prepareSrc( elem );
+				setTimeout( function() {
+					new MediaElementPlayer( el, media.mixin.mejsSettings );
+				}, 0 );
+			} );
+>>>>>>> FETCH_HEAD
 		}
 	},
 
@@ -657,8 +672,15 @@ Manage = MediaFrame.extend({
 			this.uploader.ready();
 			$('body').append( this.uploader.el );
 
+<<<<<<< HEAD
 			this.options.uploader = false;
 		}
+=======
+		events: {
+			'click .left':  'previousMediaItem',
+			'click .right': 'nextMediaItem'
+		},
+>>>>>>> FETCH_HEAD
 
 		this.gridRouter = new wp.media.view.MediaFrame.Manage.Router();
 
@@ -737,8 +759,43 @@ Manage = MediaFrame.extend({
 	bindRegionModeHandlers: function() {
 		this.on( 'content:create:browse', this.browseContent, this );
 
+<<<<<<< HEAD
 		// Handle a frame-level event for editing an attachment.
 		this.on( 'edit:attachment', this.openEditAttachmentModal, this );
+=======
+		/**
+		 * Click handler to switch to the next media item.
+		 */
+		nextMediaItem: function() {
+			if ( ! this.hasNext() ) {
+				this.$( '.right' ).blur();
+				return;
+			}
+			this.model = this.library.at( this.getCurrentIndex() + 1 );
+			this.rerender();
+			this.$( '.right' ).focus();
+		},
+
+		getCurrentIndex: function() {
+			return this.library.indexOf( this.model );
+		},
+
+		hasNext: function() {
+			return ( this.getCurrentIndex() + 1 ) < this.library.length;
+		},
+
+		hasPrevious: function() {
+			return ( this.getCurrentIndex() - 1 ) > -1;
+		},
+		/**
+		 * Respond to the keyboard events: right arrow, left arrow, except when
+		 * focus is in a textarea or input field.
+		 */
+		keyEvent: function( event ) {
+			if ( ( 'INPUT' === event.target.nodeName || 'TEXTAREA' === event.target.nodeName ) && ! ( event.target.readOnly || event.target.disabled ) ) {
+				return;
+			}
+>>>>>>> FETCH_HEAD
 
 		this.on( 'select:activate', this.bindKeydown, this );
 		this.on( 'select:deactivate', this.unbindKeydown, this );
@@ -759,15 +816,63 @@ Manage = MediaFrame.extend({
 		this.$body.off( 'keydown.select' );
 	},
 
+<<<<<<< HEAD
 	fixPosition: function() {
 		var $browser, $toolbar;
 		if ( ! this.isModeActive( 'select' ) ) {
 			return;
 		}
+=======
+			// TODO: the Frame should be doing all of this.
+			if ( this.controller.isModeActive( 'select' ) ) {
+				this.model.set( 'text', l10n.cancelSelection );
+				children.not( '.media-button' ).hide();
+				this.$el.show();
+				toolbar.$( '.delete-selected-button' ).removeClass( 'hidden' );
+			} else {
+				this.model.set( 'text', l10n.bulkSelect );
+				this.controller.content.get().$el.removeClass( 'fixed' );
+				toolbar.$el.css( 'width', '' );
+				toolbar.$( '.delete-selected-button' ).addClass( 'hidden' );
+				children.not( '.spinner, .media-button' ).show();
+				this.controller.state().get( 'selection' ).reset();
+			}
+		}
+	});
+
+	/**
+	 * A button that handles bulk Delete/Trash logic
+	 *
+	 * @constructor
+	 * @augments wp.media.view.Button
+	 * @augments wp.media.View
+	 * @augments wp.Backbone.View
+	 * @augments Backbone.View
+	 */
+	media.view.DeleteSelectedButton = media.view.Button.extend({
+		initialize: function() {
+			media.view.Button.prototype.initialize.apply( this, arguments );
+			if ( this.options.filters ) {
+				this.listenTo( this.options.filters.model, 'change', this.filterChange );
+			}
+			this.listenTo( this.controller, 'selection:toggle', this.toggleDisabled );
+		},
+
+		filterChange: function( model ) {
+			if ( 'trash' === model.get( 'status' ) ) {
+				this.model.set( 'text', l10n.untrashSelected );
+			} else if ( media.view.settings.mediaTrash ) {
+				this.model.set( 'text', l10n.trashSelected );
+			} else {
+				this.model.set( 'text', l10n.deleteSelected );
+			}
+		},
+>>>>>>> FETCH_HEAD
 
 		$browser = this.$('.attachments-browser');
 		$toolbar = $browser.find('.media-toolbar');
 
+<<<<<<< HEAD
 		// Offset doesn't appear to take top margin into account, hence +16
 		if ( ( $browser.offset().top + 16 ) < this.$window.scrollTop() + this.$adminBar.height() ) {
 			$browser.addClass( 'fixed' );
@@ -775,10 +880,22 @@ Manage = MediaFrame.extend({
 		} else {
 			$browser.removeClass( 'fixed' );
 			$toolbar.css('width', '');
+=======
+		render: function() {
+			media.view.Button.prototype.render.apply( this, arguments );
+			if ( this.controller.isModeActive( 'select' ) ) {
+				this.$el.addClass( 'delete-selected-button' );
+			} else {
+				this.$el.addClass( 'delete-selected-button hidden' );
+			}
+			this.toggleDisabled();
+			return this;
+>>>>>>> FETCH_HEAD
 		}
 	},
 
 	/**
+<<<<<<< HEAD
 	 * Click handler for the `Add New` button.
 	 */
 	addNewClickHandler: function( event ) {
@@ -854,6 +971,42 @@ Manage = MediaFrame.extend({
 				root: window._wpMediaGridSettings.adminUrl,
 				pushState: true
 			} );
+=======
+	 * When MEDIA_TRASH is true, a button that handles bulk Delete Permanently logic
+	 *
+	 * @constructor
+	 * @augments wp.media.view.DeleteSelectedButton
+	 * @augments wp.media.view.Button
+	 * @augments wp.media.View
+	 * @augments wp.Backbone.View
+	 * @augments Backbone.View
+	 */
+	media.view.DeleteSelectedPermanentlyButton = media.view.DeleteSelectedButton.extend({
+		initialize: function() {
+			media.view.DeleteSelectedButton.prototype.initialize.apply( this, arguments );
+			this.listenTo( this.controller, 'select:activate', this.selectActivate );
+			this.listenTo( this.controller, 'select:deactivate', this.selectDeactivate );
+		},
+
+		filterChange: function( model ) {
+			this.canShow = ( 'trash' === model.get( 'status' ) );
+		},
+
+		selectActivate: function() {
+			this.toggleDisabled();
+			this.$el.toggleClass( 'hidden', ! this.canShow );
+		},
+
+		selectDeactivate: function() {
+			this.toggleDisabled();
+			this.$el.addClass( 'hidden' );
+		},
+
+		render: function() {
+			media.view.Button.prototype.render.apply( this, arguments );
+			this.selectActivate();
+			return this;
+>>>>>>> FETCH_HEAD
 		}
 	}
 });

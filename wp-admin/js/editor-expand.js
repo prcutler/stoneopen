@@ -15,7 +15,11 @@
 			$visualEditor = $(),
 			$textTop = $( '#ed_toolbar' ),
 			$textEditor = $( '#content' ),
+<<<<<<< HEAD
 			$textEditorClone = $( '<div id="content-textarea-clone" class="wp-exclude-emoji"></div>' ),
+=======
+			$textEditorClone = $( '<div id="content-textarea-clone"></div>' ),
+>>>>>>> FETCH_HEAD
 			$bottom = $( '#post-status-info' ),
 			$menuBar = $(),
 			$statusBar = $(),
@@ -93,6 +97,7 @@
 				textNode = $textEditorClone[0].firstChild,
 				buffer = 10,
 				offset, cursorTop, cursorBottom, editorTop, editorBottom;
+<<<<<<< HEAD
 
 			if ( selStart && selEnd && selStart !== selEnd ) {
 				return;
@@ -115,6 +120,30 @@
 			editorTop = heights.adminBarHeight + heights.toolsHeight + heights.textTopHeight;
 			editorBottom = heights.windowHeight - heights.bottomHeight;
 
+=======
+
+			if ( selStart && selEnd && selStart !== selEnd ) {
+				return;
+			}
+
+			// These are not TinyMCE ranges.
+			try {
+				range.setStart( textNode, selStart );
+				range.setEnd( textNode, selEnd + 1 );
+			} catch ( ex ) {}
+
+			offset = range.getBoundingClientRect();
+
+			if ( ! offset.height ) {
+				return;
+			}
+
+			cursorTop = offset.top - buffer;
+			cursorBottom = cursorTop + offset.height + buffer;
+			editorTop = heights.adminBarHeight + heights.toolsHeight + heights.textTopHeight;
+			editorBottom = heights.windowHeight - heights.bottomHeight;
+
+>>>>>>> FETCH_HEAD
 			if ( cursorTop < editorTop && ( key === VK.UP || key === VK.LEFT || key === VK.BACKSPACE ) ) {
 				window.scrollTo( window.pageXOffset, cursorTop + window.pageYOffset - editorTop );
 			} else if ( cursorBottom > editorBottom ) {
@@ -177,7 +206,11 @@
 				var node = editor.selection.getNode(),
 					range, view, offset;
 
+<<<<<<< HEAD
 				if ( editor.wp && editor.wp.getView && ( view = editor.wp.getView( node ) ) ) {
+=======
+				if ( editor.plugins.wpview && ( view = editor.plugins.wpview.getView( node ) ) ) {
+>>>>>>> FETCH_HEAD
 					offset = view.getBoundingClientRect();
 				} else {
 					range = editor.selection.getRng();
@@ -278,6 +311,7 @@
 			function toggleAdvanced() {
 				advanced = ! advanced;
 			}
+<<<<<<< HEAD
 
 			mceBind = function() {
 				editor.on( 'keyup', mceKeyup );
@@ -353,6 +387,78 @@
 			// TinyMCE still intializing.
 			if ( ! visual && ! $top.length ) {
 				return;
+=======
+
+			mceBind = function() {
+				editor.on( 'keyup', mceKeyup );
+				editor.on( 'show', mceShow );
+				editor.on( 'hide', mceHide );
+				editor.on( 'wp-toolbar-toggle', toggleAdvanced );
+				// Adjust when the editor resizes.
+				editor.on( 'setcontent wp-autoresize wp-toolbar-toggle', adjust );
+				// Don't hide the caret after undo/redo.
+				editor.on( 'undo redo', mceScroll );
+				// Adjust when exiting TinyMCE's fullscreen mode.
+				editor.on( 'FullscreenStateChanged', mceFullscreenToggled );
+
+				$window.off( 'scroll.mce-float-panels' ).on( 'scroll.mce-float-panels', hideFloatPanels );
+			};
+
+			mceUnbind = function() {
+				editor.off( 'keyup', mceKeyup );
+				editor.off( 'show', mceShow );
+				editor.off( 'hide', mceHide );
+				editor.off( 'wp-toolbar-toggle', toggleAdvanced );
+				editor.off( 'setcontent wp-autoresize wp-toolbar-toggle', adjust );
+				editor.off( 'undo redo', mceScroll );
+				editor.off( 'FullscreenStateChanged', mceFullscreenToggled );
+
+				$window.off( 'scroll.mce-float-panels' );
+			};
+
+			if ( $wrap.hasClass( 'wp-editor-expand' ) ) {
+				// Adjust "immediately"
+				mceBind();
+				initialResize( adjust );
+			}
+		} );
+
+		// Adjust the toolbars based on the active editor mode.
+		function adjust( event ) {
+			// Make sure we're not in fullscreen mode.
+			if ( fullscreen && fullscreen.settings.visible ) {
+				return;
+			}
+
+			var windowPos = $window.scrollTop(),
+				type = event && event.type,
+				resize = type !== 'scroll',
+				visual = ( mceEditor && ! mceEditor.isHidden() ),
+				buffer = autoresizeMinHeight,
+				postBodyTop = $postBody.offset().top,
+				borderWidth = 1,
+				contentWrapWidth = $contentWrap.width(),
+				$top, $editor, sidebarTop, footerTop, canPin,
+				topPos, topHeight, editorPos, editorHeight;
+
+			// Refresh the heights
+			if ( resize || ! heights.windowHeight ) {
+				getHeights();
+			}
+
+			if ( ! visual && type === 'resize' ) {
+				textEditorResize();
+			}
+
+			if ( visual ) {
+				$top = $visualTop;
+				$editor = $visualEditor;
+				topHeight = heights.visualTopHeight;
+			} else {
+				$top = $textTop;
+				$editor = $textEditor;
+				topHeight = heights.textTopHeight;
+>>>>>>> FETCH_HEAD
 			}
 
 			topPos = $top.parent().offset().top;
@@ -385,8 +491,12 @@
 						width: contentWrapWidth - ( borderWidth * 2 ) - ( visual ? 0 : ( $top.outerWidth() - $top.width() ) )
 					} );
 
+<<<<<<< HEAD
 					$statusBar.attr( 'style', advanced ? '' : 'visibility: hidden;' );
 					$bottom.attr( 'style', '' );
+=======
+					$statusBar.add( $bottom ).attr( 'style', '' );
+>>>>>>> FETCH_HEAD
 				}
 			} else {
 				// Maybe pin the top.
@@ -495,11 +605,22 @@
 						( windowPos + heights.windowHeight ) > ( editorPos + editorHeight + heights.bottomHeight + heights.statusBarHeight - borderWidth ) ) ) {
 					fixedBottom = false;
 
+<<<<<<< HEAD
 					$statusBar.attr( 'style', advanced ? '' : 'visibility: hidden;' );
 					$bottom.attr( 'style', '' );
 				}
 			}
 
+=======
+					$statusBar.add( $bottom ).attr( 'style', '' );
+
+					if ( ! advanced ) {
+						$statusBar.css( 'visibility', 'hidden' );
+					}
+				}
+			}
+
+>>>>>>> FETCH_HEAD
 			// Sidebar pinning
 			if ( $postboxContainer.width() < 300 && heights.windowWidth > 600 && // sidebar position is changed with @media from CSS, make sure it is on the side
 				$document.height() > ( $sideSortables.height() + postBodyTop + 120 ) && // the sidebar is not the tallest element
@@ -685,6 +806,7 @@
 		}
 
 		function off() {
+<<<<<<< HEAD
 			var height = parseInt( window.getUserSetting( 'ed_size', 300 ), 10 );
 
 			if ( height < 50 ) {
@@ -692,6 +814,9 @@
 			} else if ( height > 5000 ) {
 				height = 5000;
 			}
+=======
+			var height = window.getUserSetting('ed_size');
+>>>>>>> FETCH_HEAD
 
 			// Scroll to the top when triggering this from JS.
 			// Ensures toolbars are reset properly.

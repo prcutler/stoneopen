@@ -17,9 +17,9 @@ function eme_ical_single_event($event, $title_format, $description_format) {
    $html_description = eme_sanitize_ical (eme_replace_placeholders ( $description_format, $event, "html" ),1);
 
    $event_link = eme_event_url($event);
-   $startstring=strtotime($event['event_start_date']." ".$event['event_start_time']);
-   $dtstartdate=date_i18n("Ymd",$startstring);
-   $dtstarthour=date_i18n("His",$startstring);
+   $startstring=$event['event_start_date']." ".$event['event_start_time'];
+   $dtstartdate=eme_localised_date($startstring,"Ymd");
+   $dtstarthour=eme_localised_date($startstring,"His");
    //$dtstart=$dtstartdate."T".$dtstarthour."Z";
    // we'll use localtime, so no "Z"
    $dtstart=$dtstartdate."T".$dtstarthour;
@@ -27,9 +27,9 @@ function eme_ical_single_event($event, $title_format, $description_format) {
       $event['event_end_date'] = $event['event_start_date'];
    if ($event['event_end_time'] == "")
       $event['event_end_time'] = $event['event_start_time'];
-   $endstring=strtotime($event['event_end_date']." ".$event['event_end_time']);
-   $dtenddate=date_i18n("Ymd",$endstring);
-   $dtendhour=date_i18n("His",$endstring);
+   $endstring=$event['event_end_date']." ".$event['event_end_time'];
+   $dtenddate=eme_localised_date($endstring,"Ymd");
+   $dtendhour=eme_localised_date($endstring,"His");
    //$dtend=$dtenddate."T".$dtendhour."Z";
    // we'll use localtime, so no "Z"
    $dtend=$dtenddate."T".$dtendhour;
@@ -44,7 +44,7 @@ function eme_ical_single_event($event, $title_format, $description_format) {
       // an 'all day' event is flagged as starting at the beginning of one day and lasting until the beginning of the next
       // so it is the same as adding "T000000" as time spec to the start/end datestring
       // But since it "ends" at the beginning of the next day, we should add 24 hours, otherwise the event ends one day too soon
-      $dtenddate=date_i18n("Ymd",$endstring+86400);
+      $dtenddate=eme_localised_date(eme_date_calc("+1 day",$endstring),"Ymd");
       $res .= "DTSTART;VALUE=DATE:$dtstartdate\r\n";
       $res .= "DTEND;VALUE=DATE:$dtenddate\r\n";
    } else {
@@ -123,8 +123,8 @@ function eme_ical_link_shortcode($atts) {
 
 function eme_ical_single() {
    echo "BEGIN:VCALENDAR\r\n";
-   echo "METHOD:PUBLISH\r\n";
    echo "VERSION:2.0\r\n";
+   echo "METHOD:PUBLISH\r\n";
    echo "PRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\n";
    $event=eme_get_event(intval($_GET ['event_id']));
    $title_format = get_option('eme_ical_title_format' );
@@ -135,8 +135,8 @@ function eme_ical_single() {
 
 function eme_ical() {
    echo "BEGIN:VCALENDAR\r\n";
-   echo "METHOD:PUBLISH\r\n";
    echo "VERSION:2.0\r\n";
+   echo "METHOD:PUBLISH\r\n";
    echo "PRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\n";
    $title_format = get_option('eme_ical_title_format' );
    $description_format = get_option('eme_ical_description_format');

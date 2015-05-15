@@ -426,8 +426,11 @@ if ( isset( $post_new_file ) && current_user_can( $post_type_object->cap->create
  * @param WP_Post $post Post object.
  */
 do_action( 'post_edit_form_tag', $post );
+<<<<<<< HEAD
 
 $referer = wp_get_referer();
+=======
+>>>>>>> FETCH_HEAD
 ?>>
 <?php wp_nonce_field($nonce_action); ?>
 <input type="hidden" id="user-id" name="user_ID" value="<?php echo (int) $user_ID ?>" />

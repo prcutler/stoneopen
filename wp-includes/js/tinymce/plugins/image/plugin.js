@@ -244,6 +244,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			});
 
 			if (!meta.width && !meta.height) {
+<<<<<<< HEAD
 				srcURL = editor.convertURL(this.value(), 'src');
 
 				// Pattern test the src url and make sure we haven't already prepended the url
@@ -256,6 +257,18 @@ tinymce.PluginManager.add('image', function(editor) {
 				this.value(srcURL);
 
 				getImageSize(editor.documentBaseURI.toAbsolute(this.value()), function(data) {
+=======
+				var srcURL = this.value(),
+				absoluteURLPattern = new RegExp('^(?:[a-z]+:)?//', 'i'),
+				baseURL = editor.settings.document_base_url;
+
+				//Pattern test the src url and make sure we haven't already prepended the url
+				if (baseURL && !absoluteURLPattern.test(srcURL) && srcURL.substring(0, baseURL.length) !== baseURL) {
+					this.value(baseURL + srcURL);
+				}
+
+				getImageSize(this.value(), function(data) {
+>>>>>>> FETCH_HEAD
 					if (data.width && data.height && imageDimensions) {
 						width = data.width;
 						height = data.height;

@@ -2,7 +2,11 @@
 Contributors: matt, ryan, andy, mdawaffe, tellyworth, josephscott, lessbloat, eoigal, cfinke, automattic, jgs
 Tags: akismet, comments, spam
 Requires at least: 3.2
+<<<<<<< HEAD
 Tested up to: 4.2.1
+=======
+Tested up to: 4.1.1
+>>>>>>> FETCH_HEAD
 Stable tag: 3.1.1
 License: GPLv2 or later
 

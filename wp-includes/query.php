@@ -2238,9 +2238,14 @@ class WP_Query {
 
 		$primary_meta_key = '';
 		$primary_meta_query = false;
+<<<<<<< HEAD
 		$meta_clauses = $this->meta_query->get_clauses();
 		if ( ! empty( $meta_clauses ) ) {
 			$primary_meta_query = reset( $meta_clauses );
+=======
+		if ( ! empty( $this->meta_query->queries ) ) {
+			$primary_meta_query = reset( $this->meta_query->queries );
+>>>>>>> FETCH_HEAD
 
 			if ( ! empty( $primary_meta_query['key'] ) ) {
 				$primary_meta_key = $primary_meta_query['key'];
@@ -2275,7 +2280,12 @@ class WP_Query {
 			case $primary_meta_key:
 			case 'meta_value':
 				if ( ! empty( $primary_meta_query['type'] ) ) {
+<<<<<<< HEAD
 					$orderby_clause = "CAST({$primary_meta_query['alias']}.meta_value AS {$primary_meta_query['cast']})";
+=======
+					$sql_type = $this->meta_query->get_cast_for_type( $primary_meta_query['type'] );
+					$orderby = "CAST($wpdb->postmeta.meta_value AS {$sql_type})";
+>>>>>>> FETCH_HEAD
 				} else {
 					$orderby_clause = "{$primary_meta_query['alias']}.meta_value";
 				}
@@ -2827,12 +2837,15 @@ class WP_Query {
 
 		$where .= $search . $whichauthor . $whichmimetype;
 
+<<<<<<< HEAD
 		if ( ! empty( $this->meta_query->queries ) ) {
 			$clauses = $this->meta_query->get_sql( 'post', $wpdb->posts, 'ID', $this );
 			$join   .= $clauses['join'];
 			$where  .= $clauses['where'];
 		}
 
+=======
+>>>>>>> FETCH_HEAD
 		$rand = ( isset( $q['orderby'] ) && 'rand' === $q['orderby'] );
 		if ( ! isset( $q['order'] ) ) {
 			$q['order'] = $rand ? '' : 'DESC';
@@ -3899,6 +3912,7 @@ class WP_Query {
 			} else {
 				// For other tax queries, grab the first term from the first clause.
 				$tax_query_in_and = wp_list_filter( $this->tax_query->queried_terms, array( 'operator' => 'NOT IN' ), 'NOT' );
+<<<<<<< HEAD
 
 				if ( ! empty( $tax_query_in_and ) ) {
 					$queried_taxonomies = array_keys( $tax_query_in_and );
@@ -3911,6 +3925,18 @@ class WP_Query {
 						} else {
 							$term = get_term_by( $query['field'], reset( $query['terms'] ), $matched_taxonomy );
 						}
+=======
+
+				$queried_taxonomies = array_keys( $tax_query_in_and );
+				$matched_taxonomy = reset( $queried_taxonomies );
+				$query = $tax_query_in_and[ $matched_taxonomy ];
+
+				if ( $query['terms'] ) {
+					if ( 'term_id' == $query['field'] ) {
+						$term = get_term( reset( $query['terms'] ), $matched_taxonomy );
+					} else {
+						$term = get_term_by( $query['field'], reset( $query['terms'] ), $matched_taxonomy );
+>>>>>>> FETCH_HEAD
 					}
 				}
 			}
@@ -4592,7 +4618,11 @@ class WP_Query {
 		 */
 		if ( $post->ID === get_queried_object_id() && ( $this->is_page() || $this->is_single() ) ) {
 			$more = 1;
+<<<<<<< HEAD
 		} elseif ( $this->is_feed() ) {
+=======
+		} else if ( $this->is_feed() ) {
+>>>>>>> FETCH_HEAD
 			$more = 1;
 		} else {
 			$more = 0;

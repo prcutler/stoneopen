@@ -470,7 +470,7 @@ class WpLatteFunctions
 	{
 	    if($link == null) return;
 
-	    if(strpos($link, 'http://') !== false){
+	    if( (strpos($link, 'http://') !== false) || (strpos($link, 'https://') !== false) ){
 	        return $link;
 
 		}elseif(strpos($link, '/') === 0){
@@ -650,6 +650,23 @@ class WpLatteFunctions
 	    $stripped = strip_tags($inputText);
 	    return $stripped;
   	}
+
+
+
+  	/**
+	 * Get translated date or time
+	 * @param string $data Date or time
+	 */
+	public static function getTranslatedDate($data = false, $format = 'date')
+	{
+		$time = ($data) ? strtotime($data) : time();
+		if ($format == 'date') {
+			$format = get_option('date_format');
+		} elseif ($format == 'time') {
+			$format = get_option('time_format');
+		}
+		return date_i18n($format, $time);
+	}
 
 }
 

@@ -223,8 +223,13 @@ function twentythirteen_admin_header_image() {
 	?>
 	<div id="headimg" style="background: url(<?php echo esc_url( get_header_image() ); ?>) no-repeat scroll top; background-size: 1600px auto;">
 		<div class="home-link">
+<<<<<<< HEAD
 			<h1 class="displaying-header-text"><a id="name" style="<?php echo esc_attr( $style ); ?>" onclick="return false;" href="#" tabindex="-1"><?php bloginfo( 'name' ); ?></a></h1>
 			<h2 id="desc" class="displaying-header-text" style="<?php echo esc_attr( $style ); ?>"><?php bloginfo( 'description' ); ?></h2>
+=======
+			<h1 class="displaying-header-text"><a id="name"<?php echo $style; ?> onclick="return false;" href="#" tabindex="-1"><?php bloginfo( 'name' ); ?></a></h1>
+			<h2 id="desc" class="displaying-header-text"<?php echo $style; ?>><?php bloginfo( 'description' ); ?></h2>
+>>>>>>> FETCH_HEAD
 		</div>
 	</div>
 <?php }

@@ -1520,7 +1520,11 @@ class wp_xmlrpc_server extends IXR_Server {
 	 *
 	 * @uses get_post()
 	 * @param array $args Method parameters. Contains:
+<<<<<<< HEAD
 	 *  - int     $blog_id (unused)
+=======
+	 *  - int     $blog_id (unset)
+>>>>>>> FETCH_HEAD
 	 *  - string  $username
 	 *  - string  $password
 	 *  - int     $post_id
@@ -3097,7 +3101,11 @@ class wp_xmlrpc_server extends IXR_Server {
 	 *
 	 * @since 2.7.0
 	 *
+<<<<<<< HEAD
 	 * @param array $args Contains:
+=======
+	 * @param array $args. Contains:
+>>>>>>> FETCH_HEAD
 	 *  - blog_id (unused)
 	 *  - username
 	 *  - password
@@ -4446,6 +4454,10 @@ class wp_xmlrpc_server extends IXR_Server {
 					break;
 				default:
 					return new IXR_Error( 401, __( 'Invalid post type' ) );
+<<<<<<< HEAD
+=======
+					break;
+>>>>>>> FETCH_HEAD
 			}
 			$author = get_userdata( $content_struct['wp_author_id'] );
 			if ( ! $author )
@@ -4756,6 +4768,7 @@ class wp_xmlrpc_server extends IXR_Server {
 		$post_author = $postdata['post_author'];
 
 		// Only set the post_author if one is set.
+<<<<<<< HEAD
 		if ( isset( $content_struct['wp_author_id'] ) ) {
 			// Check permissions if attempting to switch author to or from another user.
 			if ( $user->ID != $content_struct['wp_author_id'] || $user->ID != $post_author ) {
@@ -4775,6 +4788,21 @@ class wp_xmlrpc_server extends IXR_Server {
 						break;
 				}
 				$post_author = $content_struct['wp_author_id'];
+=======
+		if ( isset($content_struct['wp_author_id']) && ($user->ID != $content_struct['wp_author_id']) ) {
+			switch ( $post_type ) {
+				case 'post':
+					if ( !current_user_can('edit_others_posts') )
+						return new IXR_Error( 401, __( 'You are not allowed to change the post author as this user.' ) );
+					break;
+				case 'page':
+					if ( !current_user_can('edit_others_pages') )
+						return new IXR_Error( 401, __( 'You are not allowed to change the page author as this user.' ) );
+					break;
+				default:
+					return new IXR_Error( 401, __( 'Invalid post type' ) );
+					break;
+>>>>>>> FETCH_HEAD
 			}
 		}
 

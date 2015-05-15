@@ -361,6 +361,7 @@ $(document).ready( function() {
 			if ( $adminmenu.data( 'wp-responsive' ) ) {
 				return;
 			}
+<<<<<<< HEAD
 
 			$( event.target ).closest( 'li.menu-top' ).removeClass( 'opensub' );
 		}).find( 'li.wp-has-submenu.wp-not-current-submenu' ).on( 'focusin.adminmenu', function() {
@@ -394,6 +395,20 @@ $(document).ready( function() {
 		});
 	});
 
+=======
+
+			$( event.target ).closest( 'li.menu-top' ).removeClass( 'opensub' );
+		}).find( 'li.wp-has-submenu.wp-not-current-submenu' ).on( 'focusin.adminmenu', function() {
+			adjustSubmenu( $( this ) );
+		});
+	}
+
+	// Move .notice, .updated and .error alert boxes. Don't move boxes designed to be inline.
+	$firstHeading = $( 'div.wrap h2:first' );
+	$firstHeading.nextAll( 'div.updated, div.error, div.notice' ).addClass( 'below-h2' );
+	$( 'div.updated, div.error, div.notice' ).not( '.below-h2, .inline' ).insertAfter( $firstHeading );
+
+>>>>>>> FETCH_HEAD
 	// Init screen meta
 	screenMeta.init();
 

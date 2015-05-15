@@ -73,6 +73,7 @@ class WP_List_Table {
 	protected $modes = array();
 
 	/**
+<<<<<<< HEAD
 	 * Stores the value returned by ->get_column_info()
 	 *
 	 * @var array
@@ -87,6 +88,8 @@ class WP_List_Table {
 		'single_row_columns' );
 
 	/**
+=======
+>>>>>>> FETCH_HEAD
 	 * Constructor.
 	 *
 	 * The child class should call this constructor from its own constructor to override

@@ -46,6 +46,11 @@ class Custom_Image_Header {
 	private $updated;
 
 	/**
+	 * @var bool
+	 */
+	private $updated;
+
+	/**
 	 * Constructor - Register administration header callback.
 	 *
 	 * @since 2.1.0

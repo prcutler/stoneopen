@@ -179,7 +179,11 @@
 #adminmenu li.menu-top > a:focus,
 #adminmenu .wp-submenu a:hover,
 #adminmenu .wp-submenu a:focus {
+<<<<<<< HEAD
 	color: #00b9eb;
+=======
+	color: #45bbe6;
+>>>>>>> FETCH_HEAD
 }
 
 #adminmenu li.menu-top {
@@ -381,6 +385,7 @@ div.wp-menu-image:before {
 	color: #fff;
 }
 
+<<<<<<< HEAD
 #adminmenu li:hover div.wp-menu-image:before,
 #adminmenu li a:focus div.wp-menu-image:before,
 #adminmenu li.opensub div.wp-menu-image:before {
@@ -390,6 +395,10 @@ div.wp-menu-image:before {
 /* IE8 doesn't redraw the pseudo elements unless you make a change to the content, this restore the initial color after hover */
 .ie8 #adminmenu li.opensub div.wp-menu-image:before {
 	color: #a0a5aa;
+=======
+#adminmenu li:hover div.wp-menu-image:before {
+	color: #45bbe6;
+>>>>>>> FETCH_HEAD
 }
 
 .folded #adminmenu div.wp-menu-image {
@@ -535,7 +544,11 @@ ul#adminmenu > li.current > a.current:after {
 
 #adminmenu li.current a .awaiting-mod,
 #adminmenu	li a.wp-has-current-submenu .update-plugins {
+<<<<<<< HEAD
 	background-color: #00b9eb;
+=======
+	background-color: #45bbe6;
+>>>>>>> FETCH_HEAD
 	color: #fff;
 }
 
@@ -555,7 +568,11 @@ ul#adminmenu > li.current > a.current:after {
 
 #collapse-menu:hover,
 #collapse-menu:hover #collapse-button div:after {
+<<<<<<< HEAD
 	color: #00b9eb;
+=======
+	color: #45bbe6;
+>>>>>>> FETCH_HEAD
 }
 
 .folded #collapse-menu span {

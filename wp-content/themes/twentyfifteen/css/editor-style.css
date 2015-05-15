@@ -15,7 +15,10 @@ Description: Used to style the TinyMCE editor.
  * 6.0 - Galleries
  * 7.0 - Audio / Video
  * 8.0 - RTL
+<<<<<<< HEAD
  * 9.0 - Media Queries
+=======
+>>>>>>> FETCH_HEAD
  */
 
 
@@ -301,6 +304,13 @@ img {
 	vertical-align: middle;
 }
 
+<<<<<<< HEAD
+=======
+a img {
+	display: block;
+}
+
+>>>>>>> FETCH_HEAD
 figure {
 	margin: 0;
 }
@@ -476,6 +486,7 @@ body.rtl {
 .rtl table caption {
 	text-align: right;
 }
+<<<<<<< HEAD
 
 
 /**
@@ -491,3 +502,5 @@ body.rtl {
 		width: auto !important;
 	}
 }
+=======
+>>>>>>> FETCH_HEAD

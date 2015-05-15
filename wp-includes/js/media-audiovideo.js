@@ -30,9 +30,15 @@ wp.media.mixin = {
 	removePlayer: function(t) {
 		var featureIndex, feature;
 
+<<<<<<< HEAD
 		if ( ! t.options ) {
 			return;
 		}
+=======
+			if ( 'native' !== t.media.pluginType ) {
+				t.$media.remove();
+			}
+>>>>>>> FETCH_HEAD
 
 		// invoke features cleanup
 		for ( featureIndex in t.options.features ) {

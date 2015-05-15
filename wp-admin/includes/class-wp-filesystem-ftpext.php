@@ -84,7 +84,11 @@ class WP_Filesystem_FTPext extends WP_Filesystem_Base {
 
 	/**
 	 * @param string $file
+<<<<<<< HEAD
 	 * @return false|string
+=======
+	 * @return bool|string
+>>>>>>> FETCH_HEAD
 	 */
 	public function get_contents( $file ) {
 		$tempfile = wp_tempnam($file);
@@ -172,6 +176,18 @@ class WP_Filesystem_FTPext extends WP_Filesystem_Base {
 
 	/**
 	 * @param string $file
+<<<<<<< HEAD
+=======
+	 * @param bool $group
+	 * @param bool $recursive
+	 */
+	public function chgrp($file, $group, $recursive = false ) {
+		return false;
+	}
+
+	/**
+	 * @param string $file
+>>>>>>> FETCH_HEAD
 	 * @param int $mode
 	 * @param bool $recursive
 	 * @return bool

@@ -4,12 +4,12 @@
     <div class="service-boxes-container">
       {foreach $boxes as $box}
         <div class="service-box" id="sbox{$iterator->counter}">
-          <div class="service-box-content" style="width: {$box->options->boxWidth}px">
+          <div class="service-box-content" style="width: {$box->options->boxWidth}">
             <div class="service-box-image-mirror">
               {if $box->thumbnailSrc}
-              <div class="service-box-image-container" style="background: url('{!$box->thumbnailSrc}') no-repeat; width: {$box->options->boxWidth}px; height: 120px;">
+              <div class="service-box-image-container" style="background: url('{!$box->thumbnailSrc}') no-repeat; width: {$box->options->boxWidth}; height: 120px;">
               {else}
-              <div class="service-box-image-container" style="background: url('{!$themeUrl}/design/img/servicebox-0.png') no-repeat; width: {$box->options->boxWidth}px; height: 120px;">
+              <div class="service-box-image-container" style="background: url('{!$themeUrl}/design/img/servicebox-0.png') no-repeat; width: {$box->options->boxWidth}; height: 120px;">
               {/if}
                 <div class="service-box-title-container">
                   <h2><a href="{$box->options->boxLink}">{$box->title}</a></h2>

@@ -161,7 +161,11 @@ class WP_Scripts extends WP_Dependencies {
 		if ( ! $src )
 			return true;
 
+<<<<<<< HEAD
 		$tag = "{$cond_before}<script type='text/javascript' src='$src'></script>\n{$cond_after}";
+=======
+		$tag = "<script type='text/javascript' src='$src'></script>\n";
+>>>>>>> FETCH_HEAD
 
 		/** 
 		 * Filter the HTML script tag of an enqueued script.

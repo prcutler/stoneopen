@@ -118,6 +118,11 @@ do_action( 'customize_controls_print_scripts' );
 <body class="<?php echo esc_attr( $body_class ); ?>">
 <div class="wp-full-overlay expanded">
 	<form id="customize-controls" class="wrap wp-full-overlay-sidebar">
+<<<<<<< HEAD
+=======
+		<div id="screen-reader-messages" aria-live="polite" aria-relevant="all" aria-role="status" aria-atomic="true" class="screen-reader-text"></div>
+
+>>>>>>> FETCH_HEAD
 		<div id="customize-header-actions" class="wp-full-overlay-header">
 			<div class="primary-actions">
 				<?php
@@ -141,9 +146,20 @@ do_action( 'customize_controls_print_scripts' );
 			</div>
 		</div>
 
+<<<<<<< HEAD
 		<div id="widgets-right"><!-- For Widget Customizer, many widgets try to look for instances under div#widgets-right, so we have to add that ID to a container div in the Customizer for compat -->
 		<div class="wp-full-overlay-sidebar-content" tabindex="-1">
 			<div id="customize-info" class="accordion-section">
+=======
+		<?php
+			$screenshot = $wp_customize->theme()->get_screenshot();
+			$cannot_expand = ! ( $wp_customize->is_theme_active() || $screenshot || $wp_customize->theme()->get('Description') );
+		?>
+
+		<div id="widgets-right"><!-- For Widget Customizer, many widgets try to look for instances under div#widgets-right, so we have to add that ID to a container div in the Customizer for compat -->
+		<div class="wp-full-overlay-sidebar-content" tabindex="-1">
+			<div id="customize-info" class="accordion-section <?php if ( $cannot_expand ) echo ' cannot-expand'; ?>">
+>>>>>>> FETCH_HEAD
 				<div class="accordion-section-title" aria-label="<?php esc_attr_e( 'Customizer Options' ); ?>" tabindex="0">
 					<span class="preview-notice"><?php
 						echo sprintf( __( 'You are customizing %s' ), '<strong class="theme-name site-title">' . get_bloginfo( 'name' ) . '</strong>' );

@@ -178,6 +178,7 @@ if ( $action ) {
 						foreach ( (array) $themes as $theme ) {
 							echo '<input type="hidden" name="checked[]" value="' . esc_attr($theme) . '" />';
 						}
+<<<<<<< HEAD
 
 						wp_nonce_field( 'bulk-themes' );
 
@@ -186,6 +187,8 @@ if ( $action ) {
 						} else {
 							submit_button( __( 'Yes, Delete these themes' ), 'button', 'submit', false );
 						}
+=======
+>>>>>>> FETCH_HEAD
 					?>
 				</form>
 				<?php

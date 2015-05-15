@@ -218,7 +218,13 @@ function get_comment(&$comment, $output = OBJECT) {
  *
  * @since 2.7.0
  *
+<<<<<<< HEAD
  * @param string|array $args Optional. Array or string of arguments. See {@see WP_Comment_Query::parse_query()}
+=======
+ * @global wpdb $wpdb WordPress database abstraction object.
+ *
+ * @param string|array $args Optional. Array or string of arguments. See {@see WP_Comment_Query::query()}
+>>>>>>> FETCH_HEAD
  *                           for information on accepted arguments. Default empty.
  * @return int|array List of comments or number of found comments if `$count` argument is true.
  */
@@ -230,7 +236,11 @@ function get_comments( $args = '' ) {
 /**
  * WordPress Comment Query class.
  *
+<<<<<<< HEAD
  * See WP_Comment_Query::__construct() for accepted arguments.
+=======
+ * See {@see WP_Comment_Query::query()} for accepted arguments.
+>>>>>>> FETCH_HEAD
  *
  * @since 3.1.0
  */
@@ -263,15 +273,19 @@ class WP_Comment_Query {
 	public $date_query = false;
 
 	/**
+<<<<<<< HEAD
 	 * Query vars set by the user.
 	 *
 	 * @since 3.1.0
 	 * @access public
+=======
+>>>>>>> FETCH_HEAD
 	 * @var array
 	 */
 	public $query_vars;
 
 	/**
+<<<<<<< HEAD
 	 * Default values for query vars.
 	 *
 	 * @since 4.2.0
@@ -285,6 +299,8 @@ class WP_Comment_Query {
 	 *
 	 * @since 4.0.0
 	 * @access public
+=======
+>>>>>>> FETCH_HEAD
 	 * @var array
 	 */
 	public $comments;
@@ -309,6 +325,7 @@ class WP_Comment_Query {
 	/**
 	 * Constructor.
 	 *
+<<<<<<< HEAD
 	 * Sets up the comment query, based on the query vars passed.
 	 *
 	 * @since  4.2.0
@@ -316,6 +333,16 @@ class WP_Comment_Query {
 	 *
 	 * @param string|array $query {
 	 *     Optional. Array or query string of comment query parameters. Default empty.
+=======
+	 * @since 3.1.0
+	 * @since 4.1.0 Introduced 'comment__in', 'comment__not_in', 'post_author__in',
+	 *              'post_author__not_in', 'author__in', 'author__not_in', 'post__in',
+	 *              'post__not_in', 'include_unapproved', 'type__in', and 'type__not_in'
+	 *              arguments to $query_vars.
+	 *
+	 * @param string|array $query_vars {
+	 *     Optional. Array or query string of comment query parameters.
+>>>>>>> FETCH_HEAD
 	 *
 	 *     @type string       $author_email        Comment author email address. Default empty.
 	 *     @type array        $author__in          Array of author IDs to include comments for. Default empty.
@@ -324,7 +351,11 @@ class WP_Comment_Query {
 	 *     @type array        $comment__not_in     Array of comment IDs to exclude. Default empty.
 	 *     @type bool         $count               Whether to return a comment count (true) or array of comment
 	 *                                             objects (false). Default false.
+<<<<<<< HEAD
 	 *     @type array        $date_query          Date query clauses to limit comments by. See WP_Date_Query.
+=======
+	 *     @type array        $date_query          Date query clauses to limit comments by. See {@see WP_Date_Query}.
+>>>>>>> FETCH_HEAD
 	 *                                             Default null.
 	 *     @type string       $fields              Comment fields to return. Accepts 'ids' for comment IDs only or
 	 *                                             empty for all fields. Default empty.
@@ -336,6 +367,7 @@ class WP_Comment_Query {
 	 *     @type string       $meta_value          Include comments with a matching comment meta value. Requires
 	 *                                             `$meta_key` to be set. Default empty.
 	 *     @type array        $meta_query          Meta query clauses to limit retrieved comments by.
+<<<<<<< HEAD
 	 *                                             See WP_Meta_Query. Default empty.
 	 *     @type int          $number              Maximum number of comments to retrieve. Default null (no limit).
 	 *     @type int          $offset              Number of comments to offset the query. Used to build LIMIT clause.
@@ -352,6 +384,20 @@ class WP_Comment_Query {
 	 *                                             array keys of `$meta_query`. Also accepts false, an empty array,
 	 *                                             or 'none' to disable `ORDER BY` clause.
 	 *                                             Default: 'comment_date_gmt'.
+=======
+	 *                                             See {@see WP_Meta_Query}. Default empty.
+	 *     @type int          $number              Maximum number of comments to retrieve. Default null (no limit).
+	 *     @type int          $offset              Number of comments to offset the query. Used to build LIMIT clause.
+	 *                                             Default 0.
+	 *     @type string|array $orderby             Comment status or array of statuses. Accepts 'comment_agent',
+	 *                                             'comment_approved', 'comment_author', 'comment_author_email',
+	 *                                             'comment_author_IP', 'comment_author_url', 'comment_content',
+	 *                                             'comment_date', 'comment_date_gmt', 'comment_ID', 'comment_karma',
+	 *                                             'comment_parent', 'comment_post_ID', 'comment_type', 'user_id',
+	 *                                             'meta_value', 'meta_value_num', or value of $meta_key.
+	 *                                              Also accepts false, empty array, or 'none' to disable `ORDER BY`
+	 *                                             clause. Default: 'comment_date_gmt'.
+>>>>>>> FETCH_HEAD
 	 *     @type string       $order               How to order retrieved comments. Accepts 'ASC', 'DESC'.
 	 *                                             Default: 'DESC'.
 	 *     @type int          $parent              Parent ID of comment to retrieve children of. Default empty.
@@ -377,7 +423,11 @@ class WP_Comment_Query {
 	 *     @type array        $type__not_in        Exclude comments from a given array of comment types. Default empty.
 	 *     @type int          $user_id             Include comments for a specific user ID. Default empty.
 	 * }
+<<<<<<< HEAD
 	 * @return WP_Comment_Query WP_Comment_Query instance.
+=======
+	 * @return int|array Array of comments or number of found comments if `$count` is set to true.
+>>>>>>> FETCH_HEAD
 	 */
 	public function __construct( $query = '' ) {
 		$this->query_var_defaults = array(
@@ -519,6 +569,7 @@ class WP_Comment_Query {
 		$statuses = $this->query_vars['status'];
 		if ( ! is_array( $statuses ) ) {
 			$statuses = preg_split( '/[\s,]+/', $statuses );
+<<<<<<< HEAD
 		}
 
 		// 'any' overrides other statuses.
@@ -580,12 +631,79 @@ class WP_Comment_Query {
 			}
 		}
 
+=======
+		}
+
+		// 'any' overrides other statuses.
+		if ( ! in_array( 'any', $statuses ) ) {
+			foreach ( $statuses as $status ) {
+				switch ( $status ) {
+					case 'hold' :
+						$status_clauses[] = "comment_approved = '0'";
+						break;
+
+					case 'approve' :
+						$status_clauses[] = "comment_approved = '1'";
+						break;
+
+					case 'all' :
+					case '' :
+						$status_clauses[] = "( comment_approved = '0' OR comment_approved = '1' )";
+						break;
+
+					default :
+						$status_clauses[] = $wpdb->prepare( "comment_approved = %s", $status );
+						break;
+				}
+			}
+
+			if ( ! empty( $status_clauses ) ) {
+				$approved_clauses[] = '( ' . implode( ' OR ', $status_clauses ) . ' )';
+			}
+		}
+
+		// User IDs or emails whose unapproved comments are included, regardless of $status.
+		if ( ! empty( $this->query_vars['include_unapproved'] ) ) {
+			$include_unapproved = $this->query_vars['include_unapproved'];
+
+			// Accepts arrays or comma-separated strings.
+			if ( ! is_array( $include_unapproved ) ) {
+				$include_unapproved = preg_split( '/[\s,]+/', $include_unapproved );
+			}
+
+			$unapproved_ids = $unapproved_emails = array();
+			foreach ( $include_unapproved as $unapproved_identifier ) {
+				// Numeric values are assumed to be user ids.
+				if ( is_numeric( $unapproved_identifier ) ) {
+					$approved_clauses[] = $wpdb->prepare( "( user_id = %d AND comment_approved = '0' )", $unapproved_identifier );
+
+				// Otherwise we match against email addresses.
+				} else {
+					$approved_clauses[] = $wpdb->prepare( "( comment_author_email = %s AND comment_approved = '0' )", $unapproved_identifier );
+				}
+			}
+		}
+
+		// Collapse comment_approved clauses into a single OR-separated clause.
+		if ( ! empty( $approved_clauses ) ) {
+			if ( 1 === count( $approved_clauses ) ) {
+				$where[] = $approved_clauses[0];
+			} else {
+				$where[] = '( ' . implode( ' OR ', $approved_clauses ) . ' )';
+			}
+		}
+
+>>>>>>> FETCH_HEAD
 		$order = ( 'ASC' == strtoupper( $this->query_vars['order'] ) ) ? 'ASC' : 'DESC';
 
 		// Disable ORDER BY with 'none', an empty array, or boolean false.
 		if ( in_array( $this->query_vars['orderby'], array( 'none', array(), false ), true ) ) {
 			$orderby = '';
+<<<<<<< HEAD
 		} elseif ( ! empty( $this->query_vars['orderby'] ) ) {
+=======
+		} else if ( ! empty( $this->query_vars['orderby'] ) ) {
+>>>>>>> FETCH_HEAD
 			$ordersby = is_array( $this->query_vars['orderby'] ) ?
 				$this->query_vars['orderby'] :
 				preg_split( '/[,\s]/', $this->query_vars['orderby'] );
@@ -789,9 +907,13 @@ class WP_Comment_Query {
 		if ( ! empty( $post_fields ) ) {
 			$join_posts_table = true;
 			foreach ( $post_fields as $field_name => $field_value ) {
+<<<<<<< HEAD
 				// $field_value may be an array.
 				$esses = array_fill( 0, count( (array) $field_value ), '%s' );
 				$where[] = $wpdb->prepare( " {$wpdb->posts}.{$field_name} IN (" . implode( ',', $esses ) . ')', $field_value );
+=======
+				$where[] = $wpdb->prepare( " {$wpdb->posts}.{$field_name} = %s", $field_value );
+>>>>>>> FETCH_HEAD
 			}
 		}
 
@@ -821,11 +943,20 @@ class WP_Comment_Query {
 			$join = "JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->comments.comment_post_ID";
 		}
 
+<<<<<<< HEAD
 		if ( ! empty( $meta_query_clauses ) ) {
 			$join .= $meta_query_clauses['join'];
 
 			// Strip leading 'AND'.
 			$where[] = preg_replace( '/^\s*AND\s*/', '', $meta_query_clauses['where'] );
+=======
+		if ( ! empty( $this->meta_query->queries ) ) {
+			$clauses = $this->meta_query->get_sql( 'comment', $wpdb->comments, 'comment_ID', $this );
+			$join .= $clauses['join'];
+
+			// Strip leading 'AND'.
+			$where[] = preg_replace( '/^\s*AND\s*/', '', $clauses['where'] );
+>>>>>>> FETCH_HEAD
 
 			if ( ! $this->query_vars['count'] ) {
 				$groupby = "{$wpdb->comments}.comment_ID";
@@ -840,7 +971,11 @@ class WP_Comment_Query {
 
 		$where = implode( ' AND ', $where );
 
+<<<<<<< HEAD
 		$pieces = array( 'fields', 'join', 'where', 'orderby', 'limits', 'groupby' );
+=======
+		$pieces = array( 'fields', 'join', 'where', 'orderby', 'order', 'limits', 'groupby' );
+>>>>>>> FETCH_HEAD
 		/**
 		 * Filter the comment query clauses.
 		 *
@@ -867,7 +1002,11 @@ class WP_Comment_Query {
 		}
 
 		if ( $orderby ) {
+<<<<<<< HEAD
 			$orderby = "ORDER BY $orderby";
+=======
+			$orderby = "ORDER BY $orderby $order";
+>>>>>>> FETCH_HEAD
 		}
 
 		$this->request = "SELECT $fields FROM $wpdb->comments $join $where $groupby $orderby $limits";
@@ -1131,7 +1270,11 @@ function get_comment_count( $post_id = 0 ) {
  * Add meta data field to a comment.
  *
  * @since 2.9.0
+<<<<<<< HEAD
  * @link https://codex.wordpress.org/Function_Reference/add_comment_meta
+=======
+ * @link http://codex.wordpress.org/Function_Reference/add_comment_meta
+>>>>>>> FETCH_HEAD
  *
  * @param int $comment_id Comment ID.
  * @param string $meta_key Metadata name.
@@ -1151,7 +1294,11 @@ function add_comment_meta($comment_id, $meta_key, $meta_value, $unique = false) 
  * allows removing all metadata matching key, if needed.
  *
  * @since 2.9.0
+<<<<<<< HEAD
  * @link https://codex.wordpress.org/Function_Reference/delete_comment_meta
+=======
+ * @link http://codex.wordpress.org/Function_Reference/delete_comment_meta
+>>>>>>> FETCH_HEAD
  *
  * @param int $comment_id comment ID
  * @param string $meta_key Metadata name.
@@ -1166,7 +1313,11 @@ function delete_comment_meta($comment_id, $meta_key, $meta_value = '') {
  * Retrieve comment meta field for a comment.
  *
  * @since 2.9.0
+<<<<<<< HEAD
  * @link https://codex.wordpress.org/Function_Reference/get_comment_meta
+=======
+ * @link http://codex.wordpress.org/Function_Reference/get_comment_meta
+>>>>>>> FETCH_HEAD
  *
  * @param int $comment_id Comment ID.
  * @param string $key Optional. The meta key to retrieve. By default, returns data for all keys.
@@ -1187,7 +1338,11 @@ function get_comment_meta($comment_id, $key = '', $single = false) {
  * If the meta field for the comment does not exist, it will be added.
  *
  * @since 2.9.0
+<<<<<<< HEAD
  * @link https://codex.wordpress.org/Function_Reference/update_comment_meta
+=======
+ * @link http://codex.wordpress.org/Function_Reference/update_comment_meta
+>>>>>>> FETCH_HEAD
  *
  * @param int $comment_id Comment ID.
  * @param string $meta_key Metadata key.

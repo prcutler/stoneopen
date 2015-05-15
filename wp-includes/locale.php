@@ -83,6 +83,11 @@ class WP_Locale {
 	public $number_format;
 
 	/**
+	 * @var array
+	 */
+	var $number_format;
+	
+	/**
 	 * Sets up the translated strings and object properties.
 	 *
 	 * The method creates the translatable strings for various

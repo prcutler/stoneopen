@@ -106,17 +106,24 @@
 }
 
 /*!
+<<<<<<< HEAD
  * jQuery UI Draggable/Sortable 1.11.4
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
+=======
+ * jQuery UI Draggable/Sortable 1.11.2
+ * http://jqueryui.com
+ *
+ * Copyright 2014 jQuery Foundation and other contributors
+>>>>>>> FETCH_HEAD
  * Released under the MIT license.
  * http://jquery.org/license
  */
 .ui-draggable-handle,
 .ui-sortable-handle {
 	-ms-touch-action: none;
-	touch-action: none;
+	touch-action:     none;
 }
 
 /**
@@ -232,11 +239,13 @@
 .media-toolbar-primary {
 	float: right;
 	height: 100%;
+	max-width: 33%;
 }
 
 .media-toolbar-secondary {
 	float: left;
 	height: 100%;
+	max-width: 66%;
 }
 
 .media-toolbar-primary > .media-button,
@@ -738,6 +747,7 @@
 .media-frame select.attachment-filters {
 	margin-top: 11px;
 	margin-right: 2%;
+<<<<<<< HEAD
 	max-width: 42%;
 	max-width: -webkit-calc(48% - 12px);
 	max-width: calc(48% - 12px);
@@ -745,6 +755,9 @@
 
 .media-frame select.attachment-filters:last-of-type {
 	margin-right: 0;
+=======
+	max-width: 47%;
+>>>>>>> FETCH_HEAD
 }
 
 /**
@@ -935,7 +948,11 @@
 	position: absolute;
 }
 
+<<<<<<< HEAD
 .wp-core-ui .attachment .close {
+=======
+.attachment .close {
+>>>>>>> FETCH_HEAD
 	display: block;
 	position: absolute;
 	top: 5px;
@@ -961,8 +978,13 @@
 	transition-property: none;
 }
 
+<<<<<<< HEAD
 .wp-core-ui .attachment a.close:hover,
 .wp-core-ui .attachment a.close:focus {
+=======
+.attachment a.close:hover,
+.attachment a.close:focus {
+>>>>>>> FETCH_HEAD
 	-webkit-box-shadow: 0 0 0 1px rgba( 0, 0, 0, 0.6 );
 	box-shadow: 0 0 0 1px rgba( 0, 0, 0, 0.6 );
 	background-position: -36px 4px;
@@ -1453,6 +1475,11 @@
 	width: 40px;
 	padding: 0;
 	margin: 4px;
+<<<<<<< HEAD
+=======
+	-webkit-box-shadow: none;
+	box-shadow: none;
+>>>>>>> FETCH_HEAD
 }
 
 .media-selection .attachment .thumbnail {

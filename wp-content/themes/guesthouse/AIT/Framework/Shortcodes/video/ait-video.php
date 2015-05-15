@@ -6,12 +6,17 @@ function theme_video( $params, $content = null) {
     extract( shortcode_atts( array(
         'type' => '',
         'link' => '',
+        'src' => '',
         'width' => '',
         'height' => '',
         'border' => ''
     ), $params ) );
 	
-	if($link == "") { return ""; }
+	if (!empty($src)) {
+		$link = $src;
+	} elseif (empty($link)) {
+		return "";
+	}
 	
 	if($width == "") { $width = 600; }
 	
@@ -25,9 +30,15 @@ function theme_video( $params, $content = null) {
 	
   	if($type == "youtube"){
   		
-		$vidparser = parse_url($link);
-		parse_str($vidparser['query'], $query);
-		$clip_id = ($query['v']);
+  		$vidparser = parse_url($link);
+
+  		// shorten URL
+  		if ($vidparser['host'] && $vidparser['host'] == 'youtu.be') {
+  			$clip_id = $vidparser['path'];
+  		} else {
+  			parse_str($vidparser['query'], $query);
+			$clip_id = ($query['v']);
+  		}
 		
   		return '<div class="sc-video'.$borderStyle.'"><div class="wrap"><iframe width="'.$width.'" height="'.$height.'" src="http://www.youtube.com/embed/'.$clip_id.'?wmode=opaque"></iframe></div></div>';
 		

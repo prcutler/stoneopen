@@ -2,9 +2,11 @@ jQuery(function($) {
     var callback = function() {
         var selector = nextgen_lightbox_filter_selector($, $([]));
         selector.addClass('shutterset');
-        var shutterLinks = {},
-            shutterSets = {};
-        window.shutterSettings = {imageCount: true};
+        window.shutterSettings = {
+            imageCount: true,
+            msgLoading: nextgen_shutter_i18n.msgLoading,
+            msgClose: nextgen_shutter_i18n.msgClose
+        };
         shutterReloaded.init();
     };
     $(this).bind('refreshed', callback);

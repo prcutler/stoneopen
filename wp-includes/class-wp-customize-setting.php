@@ -138,6 +138,8 @@ class WP_Customize_Setting {
 		return ( get_current_blog_id() === $this->_previewed_blog_id );
 	}
 
+	protected $_original_value;
+
 	/**
 	 * Original non-previewed value stored by the preview method.
 	 *
@@ -156,9 +158,12 @@ class WP_Customize_Setting {
 		if ( ! isset( $this->_original_value ) ) {
 			$this->_original_value = $this->value();
 		}
+<<<<<<< HEAD
 		if ( ! isset( $this->_previewed_blog_id ) ) {
 			$this->_previewed_blog_id = get_current_blog_id();
 		}
+=======
+>>>>>>> FETCH_HEAD
 
 		switch( $this->type ) {
 			case 'theme_mod' :
@@ -214,12 +219,17 @@ class WP_Customize_Setting {
 	 * @return mixed New or old value.
 	 */
 	public function _preview_filter( $original ) {
+<<<<<<< HEAD
 		if ( ! $this->is_current_blog_previewed() ) {
 			return $original;
 		}
 
 		$undefined = new stdClass(); // symbol hack
 		$post_value = $this->post_value( $undefined );
+=======
+		$undefined = new stdClass(); // symbol hack
+		$post_value = $this->manager->post_value( $this, $undefined );
+>>>>>>> FETCH_HEAD
 		if ( $undefined === $post_value ) {
 			$value = $this->_original_value;
 		} else {

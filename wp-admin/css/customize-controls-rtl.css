@@ -284,6 +284,13 @@ body {
 	right: 13px;
 }
 
+<<<<<<< HEAD
+=======
+.rtl .control-panel-back:before {
+	content: "\f345";
+}
+
+>>>>>>> FETCH_HEAD
 .in-sub-panel .control-panel-back {
 	right: 0;
 }
@@ -470,7 +477,11 @@ p.customize-section-description {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	margin: 0;
+<<<<<<< HEAD
 	padding: 0 10px;
+=======
+	padding: 5px 10px 0;
+>>>>>>> FETCH_HEAD
 }
 
 .customize-control .attachment-meta-title {
@@ -485,6 +496,7 @@ p.customize-section-description {
 	cursor: pointer;
 }
 
+<<<<<<< HEAD
 #customize-controls .thumbnail-audio .thumbnail {
 	max-width: 64px;
 	max-height: 64px;
@@ -492,6 +504,8 @@ p.customize-section-description {
 	float: right;
 }
 
+=======
+>>>>>>> FETCH_HEAD
 #customize-preview iframe {
 	width: 100%;
 	height: 100%;
@@ -621,7 +635,10 @@ p.customize-section-description {
 
 /** Media controls **/
 
+<<<<<<< HEAD
 .customize-control-media .current,
+=======
+>>>>>>> FETCH_HEAD
 .customize-control-upload .current,
 .customize-control-image .current,
 .customize-control-background .current,
@@ -648,9 +665,12 @@ p.customize-section-description {
 	display: block;
 }
 
+<<<<<<< HEAD
 .customize-control-media .remove-button,
 .customize-control-media .default-button,
 .customize-control-media .upload-button,
+=======
+>>>>>>> FETCH_HEAD
 .customize-control-upload .remove-button,
 .customize-control-upload .default-button,
 .customize-control-upload .upload-button,
@@ -667,7 +687,10 @@ p.customize-section-description {
 	height: auto;
 }
 
+<<<<<<< HEAD
 .customize-control-media .current .container,
+=======
+>>>>>>> FETCH_HEAD
 .customize-control-upload .current .container,
 .customize-control-image .current .container,
 .customize-control-background .current .container,
@@ -679,14 +702,20 @@ p.customize-section-description {
 	border-radius: 2px;
 }
 
+<<<<<<< HEAD
 .customize-control-media .current .container,
+=======
+>>>>>>> FETCH_HEAD
 .customize-control-upload .current .container,
 .customize-control-background .current .container,
 .customize-control-image .current .container {
 	min-height: 40px;
 }
 
+<<<<<<< HEAD
 .customize-control-media .placeholder,
+=======
+>>>>>>> FETCH_HEAD
 .customize-control-upload .placeholder,
 .customize-control-image .placeholder,
 .customize-control-background .placeholder,
@@ -697,7 +726,10 @@ p.customize-section-description {
 	cursor: default;
 }
 
+<<<<<<< HEAD
 .customize-control-media .inner,
+=======
+>>>>>>> FETCH_HEAD
 .customize-control-upload .inner,
 .customize-control-image .inner,
 .customize-control-background .inner,
@@ -711,7 +743,10 @@ p.customize-section-description {
 	overflow: hidden;
 }
 
+<<<<<<< HEAD
 .customize-control-media .inner,
+=======
+>>>>>>> FETCH_HEAD
 .customize-control-upload .inner,
 .customize-control-background .inner,
 .customize-control-image .inner {
@@ -719,7 +754,10 @@ p.customize-section-description {
 	min-height: 40px;
 }
 
+<<<<<<< HEAD
 .customize-control-media .inner,
+=======
+>>>>>>> FETCH_HEAD
 .customize-control-upload .inner,
 .customize-control-image .inner,
 .customize-control-background .inner,
@@ -829,7 +867,10 @@ p.customize-section-description {
 	100% { color: #d4b146; }
 }
 
+<<<<<<< HEAD
 .customize-control-media .actions,
+=======
+>>>>>>> FETCH_HEAD
 .customize-control-upload .actions,
 .customize-control-image .actions,
 .customize-control-background .actions,
@@ -847,7 +888,10 @@ p.customize-section-description {
 	margin-bottom: 0;
 }
 
+<<<<<<< HEAD
 .customize-control-media img,
+=======
+>>>>>>> FETCH_HEAD
 .customize-control-upload img,
 .customize-control-image img,
 .customize-control-background img,
@@ -857,8 +901,11 @@ p.customize-section-description {
 	border-radius: 2px;
 }
 
+<<<<<<< HEAD
 .customize-control-media .remove-button,
 .customize-control-media .default-button,
+=======
+>>>>>>> FETCH_HEAD
 .customize-control-upload .remove-button,
 .customize-control-upload .default-button,
 .customize-control-image .remove-button,
@@ -870,7 +917,10 @@ p.customize-section-description {
 	margin-left: 3px;
 }
 
+<<<<<<< HEAD
 .customize-control-media .upload-button,
+=======
+>>>>>>> FETCH_HEAD
 .customize-control-upload .upload-button,
 .customize-control-image .upload-button,
 .customize-control-background .upload-button,

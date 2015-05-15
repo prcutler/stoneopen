@@ -1017,6 +1017,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				var elements = [], child = node.firstChild;
 				while (typeof child !== 'undefined' && child !== null) {
 					elements.push(child);
+<<<<<<< HEAD
 
 					child = child.walk();
 					if (child !== null) {
@@ -1026,6 +1027,17 @@ define("tinymce/pasteplugin/WordFilter", [
 					}
 				}
 
+=======
+
+					child = child.walk();
+					if (child !== null) {
+						while (typeof child !== 'undefined' && child.parent !== node) {
+							child = child.walk();
+						}
+					}
+				}
+
+>>>>>>> FETCH_HEAD
 				for (var i = 0; i < elements.length; i++) {
 					node = elements[i];
 

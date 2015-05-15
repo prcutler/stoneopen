@@ -942,7 +942,11 @@ function wp_dropdown_languages( $args = array() ) {
 			$structure[] = sprintf(
 				'<option value="%s" lang="%s"%s>%s</option>',
 				esc_attr( $translation['language'] ),
+<<<<<<< HEAD
 				esc_attr( current( $translation['iso'] ) ),
+=======
+				esc_attr( $translation['iso'][1] ),
+>>>>>>> FETCH_HEAD
 				selected( $translation['language'], $args['selected'], false ),
 				esc_html( $translation['native_name'] )
 			);

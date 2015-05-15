@@ -126,8 +126,12 @@
 	height: auto;
 }
 
+<<<<<<< HEAD
 .wp_attachment_holder .wp-video,
 .wp_attachment_holder .wp-audio-shortcode {
+=======
+.wp_attachment_holder .wp-video {
+>>>>>>> FETCH_HEAD
 	margin-top: 18px;
 }
 

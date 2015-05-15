@@ -55,7 +55,11 @@ class WP_oEmbed {
 			'#https?://vine.co/v/.*#i'                            => array( 'https://vine.co/oembed.{format}',                    true  ),
  			'#https?://(www\.)?soundcloud\.com/.*#i'              => array( 'http://soundcloud.com/oembed',                       true  ),
 			'#https?://(.+?\.)?slideshare\.net/.*#i'              => array( 'https://www.slideshare.net/api/oembed/2',            true  ),
+<<<<<<< HEAD
 			'#https?://instagr(\.am|am\.com)/p/.*#i'              => array( 'https://api.instagram.com/oembed',                   true  ),
+=======
+			'#http://instagr(\.am|am\.com)/p/.*#i'                => array( 'http://api.instagram.com/oembed',                    true  ),
+>>>>>>> FETCH_HEAD
 			'#https?://(www\.)?rdio\.com/.*#i'                    => array( 'http://www.rdio.com/api/oembed/',                    true  ),
 			'#https?://rd\.io/x/.*#i'                             => array( 'http://www.rdio.com/api/oembed/',                    true  ),
 			'#https?://(open|play)\.spotify\.com/.*#i'            => array( 'https://embed.spotify.com/oembed/',                  true  ),
@@ -139,10 +143,13 @@ class WP_oEmbed {
 		 * | ------------ | -------------------- | ----- | --------- |
 		 * | Vine         | vine.co              |  Yes  | 4.1.0     |
 		 * | ------------ | -------------------- | ----- | --------- |
+<<<<<<< HEAD
 		 * | Tumblr       | tumblr.com           |  Yes  | 4.2.0     |
 		 * | Kickstarter  | kickstarter.com      |  Yes  | 4.2.0     |
 		 * | Kickstarter  | kck.st               |  Yes  | 4.2.0     |
 		 * | ------------ | -------------------- | ----- | --------- |
+=======
+>>>>>>> FETCH_HEAD
 		 *
 		 * No longer supported providers:
 		 *
@@ -566,6 +573,7 @@ class WP_oEmbed {
 	 * @return string Possibly modified $html
 	 */
 	public function _strip_newlines( $html, $data, $url ) {
+<<<<<<< HEAD
 		if ( false === strpos( $html, "\n" ) ) {
 			return $html;
 		}
@@ -590,6 +598,10 @@ class WP_oEmbed {
 		$stripped = str_replace( array( "\r\n", "\n" ), '', $replaced );
 		$pre = array_values( $found );
 		$tokens = array_keys( $found );
+=======
+		if ( false !== strpos( $html, "\n" ) )
+			$html = str_replace( array( "\r\n", "\n" ), '', $html );
+>>>>>>> FETCH_HEAD
 
 		return str_replace( $tokens, $pre, $stripped );
 	}

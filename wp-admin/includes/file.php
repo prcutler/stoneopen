@@ -220,9 +220,15 @@ function _wp_handle_upload( &$file, $overrides, $time, $action ) {
 
 	/**
 	 * Filter the data for a file before it is uploaded to WordPress.
+<<<<<<< HEAD
 	 *
 	 * The dynamic portion of the hook name, `$action`, refers to the post action.
 	 *
+=======
+	 *
+	 * The dynamic portion of the hook name, `$action`, refers to the post action.
+	 *
+>>>>>>> FETCH_HEAD
 	 * @since 2.9.0 as 'wp_handle_upload_prefilter'.
 	 * @since 4.0.0 Converted to a dynamic hook with `$action`.
 	 *
@@ -886,6 +892,7 @@ function WP_Filesystem( $args = false, $context = false, $allow_relaxed_file_own
 }
 
 /**
+<<<<<<< HEAD
  * Determines which method to use for reading, writing, modifying, or deleting
  * files on the filesystem.
  *
@@ -907,6 +914,30 @@ function WP_Filesystem( $args = false, $context = false, $allow_relaxed_file_own
  *                                             for being writable. Default false.
  * @param bool   $allow_relaxed_file_ownership Optional. Whether to allow Group/World writable.
  *                                             Default false.
+=======
+ * Determines which Filesystem Method to use.
+ *
+ * The priority of the Transports are: Direct, SSH2, FTP PHP Extension,
+ * FTP Sockets (Via Sockets class, or `fsockopen()`).
+ *
+ * Note that the return value of this function can be overridden in 2 ways
+ *
+ *  - By defining FS_METHOD in your `wp-config.php` file
+ *  - By using the filesystem_method filter
+ *
+ * Valid values for these are: 'direct', 'ssh2', 'ftpext' or 'ftpsockets'.
+ *
+ * Plugins may also define a custom transport handler, See the WP_Filesystem
+ * function for more information.
+ *
+ * @since 2.5.0
+ *
+ * @todo Properly mark arguments as optional.
+ *
+ * @param array $args Connection details.
+ * @param string $context Full path to the directory that is tested for being writable.
+ * @param bool $allow_relaxed_file_ownership Whether to allow Group/World writable.
+>>>>>>> FETCH_HEAD
  * @return string The transport to use, see description for valid return values.
  */
 function get_filesystem_method( $args = array(), $context = false, $allow_relaxed_file_ownership = false ) {
@@ -937,11 +968,19 @@ function get_filesystem_method( $args = array(), $context = false, $allow_relaxe
 			}
 
 			if ( $wp_file_owner !== false && $wp_file_owner === $temp_file_owner ) {
+<<<<<<< HEAD
 				// WordPress is creating files as the same owner as the WordPress files,
 				// this means it's safe to modify & create new files via PHP.
 				$method = 'direct';
 				$GLOBALS['_wp_filesystem_direct_method'] = 'file_owner';
 			} elseif ( $allow_relaxed_file_ownership ) {
+=======
+				// WordPress is creating files as the same owner as the WordPress files, 
+				// this means it's safe to modify & create new files via PHP.
+				$method = 'direct';
+				$GLOBALS['_wp_filesystem_direct_method'] = 'file_owner';
+			} else if ( $allow_relaxed_file_ownership ) {
+>>>>>>> FETCH_HEAD
 				// The $context directory is writable, and $allow_relaxed_file_ownership is set, this means we can modify files
 				// safely in this directory. This mode doesn't create new files, only alter existing ones.
 				$method = 'direct';
@@ -990,7 +1029,11 @@ function get_filesystem_method( $args = array(), $context = false, $allow_relaxe
  * @param string $type the chosen Filesystem method in use
  * @param boolean $error if the current request has failed to connect
  * @param string $context The directory which is needed access to, The write-test will be performed on this directory by get_filesystem_method()
+<<<<<<< HEAD
  * @param array $extra_fields Extra POST fields which should be checked for to be included in the post.
+=======
+ * @param string $extra_fields Extra POST fields which should be checked for to be included in the post.
+>>>>>>> FETCH_HEAD
  * @param bool $allow_relaxed_file_ownership Whether to allow Group/World writable.
  * @return boolean False on failure. True on success.
  */

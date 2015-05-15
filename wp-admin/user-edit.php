@@ -39,7 +39,11 @@ else
 $profile_help = '<p>' . __('Your profile contains information about you (your &#8220;account&#8221;) as well as some personal options related to using WordPress.') . '</p>' .
 	'<p>' . __('You can change your password, turn on keyboard shortcuts, change the color scheme of your WordPress administration screens, and turn off the WYSIWYG (Visual) editor, among other things. You can hide the Toolbar (formerly called the Admin Bar) from the front end of your site, however it cannot be disabled on the admin screens.') . '</p>' .
 	'<p>' . __('Your username cannot be changed, but you can use other fields to enter your real name or a nickname, and change which name to display on your posts.') . '</p>' .
+<<<<<<< HEAD
 	'<p>' . __( 'You can log out of other devices, such as your phone or a public computer, by clicking the Log Out of All Other Sessions button.' ) . '</p>' .
+=======
+	'<p>' . __( 'You can log out of other devices, such as your phone or a public computer, by clicking the Log Out of All Other Sessions button. The button will only display if you are logged in to more than one device.' ) . '</p>' .
+>>>>>>> FETCH_HEAD
 	'<p>' . __('Required fields are indicated; the rest are optional. Profile information will only be displayed if your theme is set up to do so.') . '</p>' .
 	'<p>' . __('Remember to click the Update Profile button when you are finished.') . '</p>';
 
@@ -235,7 +239,11 @@ if ( ! IS_PROFILE_PAGE ) {
 <table class="form-table">
 <?php if ( ! ( IS_PROFILE_PAGE && ! $user_can_edit ) ) : ?>
 	<tr class="user-rich-editing-wrap">
+<<<<<<< HEAD
 		<th scope="row"><?php _e( 'Visual Editor' ); ?></th>
+=======
+		<th scope="row"><label for="rich_editing"><?php _e( 'Visual Editor' )?></label></th>
+>>>>>>> FETCH_HEAD
 		<td><label for="rich_editing"><input name="rich_editing" type="checkbox" id="rich_editing" value="false" <?php if ( ! empty( $profileuser->rich_editing ) ) checked( 'false', $profileuser->rich_editing ); ?> /> <?php _e( 'Disable the visual editor when writing' ); ?></label></td>
 	</tr>
 <?php endif; ?>
@@ -261,12 +269,21 @@ if ( ! IS_PROFILE_PAGE ) {
 endif; // $_wp_admin_css_colors
 if ( !( IS_PROFILE_PAGE && !$user_can_edit ) ) : ?>
 <tr class="user-comment-shortcuts-wrap">
+<<<<<<< HEAD
 <th scope="row"><?php _e( 'Keyboard Shortcuts' ); ?></th>
 <td><label for="comment_shortcuts"><input type="checkbox" name="comment_shortcuts" id="comment_shortcuts" value="true" <?php if ( ! empty( $profileuser->comment_shortcuts ) ) checked( 'true', $profileuser->comment_shortcuts ); ?> /> <?php _e('Enable keyboard shortcuts for comment moderation.'); ?></label> <?php _e('<a href="https://codex.wordpress.org/Keyboard_Shortcuts" target="_blank">More information</a>'); ?></td>
 </tr>
 <?php endif; ?>
 <tr class="show-admin-bar user-admin-bar-front-wrap">
 <th scope="row"><?php _e( 'Toolbar' ); ?></th>
+=======
+<th scope="row"><label for="comment_shortcuts"><?php _e( 'Keyboard Shortcuts' ); ?></label></th>
+<td><label for="comment_shortcuts"><input type="checkbox" name="comment_shortcuts" id="comment_shortcuts" value="true" <?php if ( ! empty( $profileuser->comment_shortcuts ) ) checked( 'true', $profileuser->comment_shortcuts ); ?> /> <?php _e('Enable keyboard shortcuts for comment moderation.'); ?></label> <?php _e('<a href="http://codex.wordpress.org/Keyboard_Shortcuts" target="_blank">More information</a>'); ?></td>
+</tr>
+<?php endif; ?>
+<tr class="show-admin-bar user-admin-bar-front-wrap">
+<th scope="row"><label for="admin_bar_front"><?php _e( 'Toolbar' )?></label></th>
+>>>>>>> FETCH_HEAD
 <td><fieldset><legend class="screen-reader-text"><span><?php _e('Toolbar') ?></span></legend>
 <label for="admin_bar_front">
 <input name="admin_bar_front" type="checkbox" id="admin_bar_front" value="1"<?php checked( _get_admin_bar_pref( 'front', $profileuser->ID ) ); ?> />

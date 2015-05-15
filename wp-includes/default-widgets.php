@@ -287,8 +287,14 @@ class WP_Widget_Archives extends WP_Widget {
 		if ( $d ) {
 			$dropdown_id = "{$this->id_base}-dropdown-{$this->number}";
 ?>
+<<<<<<< HEAD
 		<label class="screen-reader-text" for="<?php echo esc_attr( $dropdown_id ); ?>"><?php echo $title; ?></label>
 		<select id="<?php echo esc_attr( $dropdown_id ); ?>" name="archive-dropdown" onchange='document.location.href=this.options[this.selectedIndex].value;'>
+=======
+		<select name="archive-dropdown" onchange='document.location.href=this.options[this.selectedIndex].value;'>
+			<option value=""><?php esc_attr_e( 'Select Month' ); ?></option>
+
+>>>>>>> FETCH_HEAD
 			<?php
 			/**
 			 * Filter the arguments for the Archives widget drop-down.

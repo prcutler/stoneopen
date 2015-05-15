@@ -303,12 +303,16 @@ if ( isset( $_GET['updated'] ) ) {
 
 			<tr>
 				<th scope="row"><label for="upload_filetypes"><?php _e( 'Upload file types' ) ?></label></th>
+<<<<<<< HEAD
 				<td>
 					<input name="upload_filetypes" type="text" id="upload_filetypes" aria-describedby="upload-filetypes-desc" class="large-text" value="<?php echo esc_attr( get_site_option( 'upload_filetypes', 'jpg jpeg png gif' ) ) ?>" size="45" />
 					<p class="description" id="upload-filetypes-desc">
 						<?php _e( 'Allowed file types. Separate types by spaces.' ) ?>
 					</p>
 				</td>
+=======
+				<td><input name="upload_filetypes" type="text" id="upload_filetypes" class="large-text" value="<?php echo esc_attr( get_site_option( 'upload_filetypes', 'jpg jpeg png gif' ) ) ?>" size="45" /></td>
+>>>>>>> FETCH_HEAD
 			</tr>
 
 			<tr>

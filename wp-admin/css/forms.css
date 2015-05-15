@@ -873,6 +873,7 @@ table.form-table td .updated p {
 	display: block;
 }
 
+<<<<<<< HEAD
 .request-filesystem-credentials-dialog input[type="text"],
 .request-filesystem-credentials-dialog input[type="password"] {
 	width: 100%;
@@ -920,6 +921,40 @@ table.form-table td .updated p {
 }
 
 
+=======
+.settings-php .language-install-spinner,
+.options-general-php .language-install-spinner {
+	display: inline-block;
+	float: none;
+	margin: -3px 5px 0;
+	vertical-align: middle;
+}
+
+/*------------------------------------------------------------------------------
+  21.0 - Network Admin
+------------------------------------------------------------------------------*/
+
+.form-field #site-address {
+	max-width: 25em;
+}
+
+.form-field #domain {
+	max-width: 22em;
+}
+
+.form-field #site-title,
+.form-field #admin-email,
+.form-field #path,
+.form-field #blog_registered,
+.form-field #blog_last_updated {
+	max-width: 25em;
+}
+
+.form-field #path {
+	margin-bottom: 5px;
+}
+
+>>>>>>> FETCH_HEAD
 /* =Media Queries
 -------------------------------------------------------------- */
 

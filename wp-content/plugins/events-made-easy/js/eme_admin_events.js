@@ -81,7 +81,9 @@ function updateShowHideTime () {
 }
 
 function eme_event_location_info () {
-    if (!use_select_for_locations) {
+    // for autocomplete to work, the element needs to exist, otherwise JS errors occur
+    // we check for that using length
+    if (!use_select_for_locations && jQuery("input[name=location_name]").length) {
           jQuery("input[name=location_name]").autocomplete({
             source: function(request, response) {
                          jQuery.ajax({ url: eme_locations_search_url,
@@ -145,15 +147,17 @@ jQuery(document).ready( function() {
    jQuery("#rec-start-date-to-submit").hide();
    jQuery("#rec-end-date-to-submit").hide(); 
 
-   jQuery.datepick.setDefaults( jQuery.datepick.regional[locale_code] );
+   jQuery.datepick.setDefaults( jQuery.datepick.regionalOptions[locale_code] );
    jQuery.datepick.setDefaults({
       changeMonth: true,
-      changeYear: true
+      changeYear: true,
+      altFormat: "yyyy-mm-dd",
+      firstDay: firstDayOfWeek
    });
-   jQuery("#localised-start-date").datepick({ altField: "#start-date-to-submit", altFormat: "yyyy-mm-dd" });
-   jQuery("#localised-end-date").datepick({ altField: "#end-date-to-submit", altFormat: "yyyy-mm-dd" });
-   jQuery("#localised-rec-start-date").datepick({ altField: "#rec-start-date-to-submit", altFormat: "yyyy-mm-dd" });
-   jQuery("#localised-rec-end-date").datepick({ altField: "#rec-end-date-to-submit", altFormat: "yyyy-mm-dd" });
+   jQuery("#localised-start-date").datepick({ altField: "#start-date-to-submit" });
+   jQuery("#localised-end-date").datepick({ altField: "#end-date-to-submit" });
+   jQuery("#localised-rec-start-date").datepick({ altField: "#rec-start-date-to-submit" });
+   jQuery("#localised-rec-end-date").datepick({ altField: "#rec-end-date-to-submit" });
 
    jQuery("#start-time").timeEntry({spinnerImage: '', show24Hours: show24Hours });
    jQuery("#end-time").timeEntry({spinnerImage: '', show24Hours: show24Hours });
@@ -293,8 +297,8 @@ jQuery(document).ready( function() {
       var recurring = jQuery("input[name=repeated_event]:checked").val();
       //requiredFields= new Array('event_name', 'localised_event_start_date', 'location_name','location_address','location_town');
       var requiredFields = ['event_name', 'localised_event_start_date'];
-      var localisedRequiredFields = {'event_name':"<?php _e ( 'Name', 'eme' )?>",
-                      'localised_event_start_date':"<?php _e ( 'Date', 'eme' )?>"
+      var localisedRequiredFields = {'event_name':eme.translate_name,
+                      'localised_event_start_date':eme.translate_date
                      };
       
       var missingFields = [];
@@ -309,10 +313,10 @@ jQuery(document).ready( function() {
       }
    
       if (missingFields.length > 0) {
-         errors = "<?php echo _e ( 'Some required fields are missing:', 'eme' )?> " + missingFields.join(", ") + ".\n";
+         errors = eme.translate_fields_missing + missingFields.join(", ") + ".\n";
       }
       if (recurring && jQuery("input#localised-rec-end-date").val() == "" && jQuery("select#recurrence-frequency").val() != "specific") {
-         errors = errors +  "<?php _e ( 'Since the event is repeated, you must specify an end date', 'eme' )?>."; 
+         errors = errors + eme.translate_enddate_required; 
          jQuery("input#localised-rec-end-date").css('border','2px solid red');
       } else {
          jQuery("input#localised-rec-end-date").css('border','1px solid #DFDFDF');

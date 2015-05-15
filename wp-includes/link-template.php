@@ -888,10 +888,16 @@ function edit_tag_link( $link = '', $before = '', $after = '', $tag = null ) {
  *
  * @since 3.1.0
  *
+<<<<<<< HEAD
  * @param int    $term_id     Term ID.
  * @param string $taxonomy    Taxonomy.
  * @param string $object_type The object type. Used to highlight the proper post type menu on the linked page.
  *                            Defaults to the first object_type associated with the taxonomy.
+=======
+ * @param int $term_id Term ID
+ * @param string $taxonomy Taxonomy
+ * @param string $object_type The object type
+>>>>>>> FETCH_HEAD
  * @return string The edit term link URL for the given term.
  */
 function get_edit_term_link( $term_id, $taxonomy, $object_type = '' ) {
@@ -1341,7 +1347,11 @@ function edit_comment_link( $text = null, $before = '', $after = '' ) {
  *
  * @since 2.7.0
  *
+<<<<<<< HEAD
  * @param int|stdClass $link Optional. Bookmark ID.
+=======
+ * @param int $link Optional. Bookmark ID.
+>>>>>>> FETCH_HEAD
  * @return string The edit bookmark link URL.
  */
 function get_edit_bookmark_link( $link = 0 ) {
@@ -1518,6 +1528,7 @@ function get_adjacent_post( $in_same_term = false, $excluded_terms = '', $previo
 
 		if ( ! empty( $excluded_terms ) ) {
 			$where .= " AND p.ID NOT IN ( SELECT tr.object_id FROM $wpdb->term_relationships tr LEFT JOIN $wpdb->term_taxonomy tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id) WHERE tt.term_id IN (" . implode( $excluded_terms, ',' ) . ') )';
+<<<<<<< HEAD
 		}
 	}
 
@@ -1545,6 +1556,8 @@ function get_adjacent_post( $in_same_term = false, $excluded_terms = '', $previo
 			} else {
 				$where .= $wpdb->prepare( " OR (p.post_author = %d AND p.post_status = %s)", $user_id, $state );
 			}
+=======
+>>>>>>> FETCH_HEAD
 		}
 		$where .= " )";
 	} else {

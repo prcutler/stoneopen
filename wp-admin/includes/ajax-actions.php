@@ -830,6 +830,10 @@ function wp_ajax_get_tagcloud() {
 	if ( ! $tax ) {
 		wp_die( 0 );
 	}
+	
+	if ( ! current_user_can( $tax->cap->assign_terms ) ) {
+		wp_die( -1 );
+	}
 
 	if ( ! current_user_can( $tax->cap->assign_terms ) ) {
 		wp_die( -1 );
@@ -2867,12 +2871,17 @@ function wp_ajax_destroy_sessions() {
 		$message = __( 'You are now logged out everywhere else.' );
 	} else {
 		$sessions->destroy_all();
+<<<<<<< HEAD
 		/* translators: 1: User's display name. */
+=======
+		/* translators: 1: User's display name. */ 
+>>>>>>> FETCH_HEAD
 		$message = sprintf( __( '%s has been logged out.' ), $user->display_name );
 	}
 
 	wp_send_json_success( array( 'message' => $message ) );
 }
+<<<<<<< HEAD
 
 
 /**
@@ -2971,3 +2980,5 @@ function wp_ajax_press_this_add_category() {
 
 	$GLOBALS['wp_press_this']->add_category();
 }
+=======
+>>>>>>> FETCH_HEAD

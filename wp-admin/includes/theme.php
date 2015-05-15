@@ -68,6 +68,7 @@ function delete_theme($stylesheet, $redirect = '') {
 	if ( ! $deleted ) {
 		return new WP_Error( 'could_not_remove_theme', sprintf( __( 'Could not fully remove the theme %s.' ), $stylesheet ) );
 	}
+<<<<<<< HEAD
 
 	$theme_translations = wp_get_installed_translations( 'themes' );
 
@@ -81,6 +82,24 @@ function delete_theme($stylesheet, $redirect = '') {
 		}
 	}
 
+=======
+
+	$translations_dir = $wp_filesystem->wp_lang_dir();
+	$translations_dir = trailingslashit( $translations_dir );
+
+	$theme_translations = wp_get_installed_translations( 'themes' );
+
+	// Remove language files, silently.
+	if ( ! empty( $theme_translations[ $stylesheet ] ) ) {
+		$translations = $theme_translations[ $stylesheet ];
+
+		foreach ( $translations as $translation => $data ) {
+			$wp_filesystem->delete( WP_LANG_DIR . '/themes/' . $stylesheet . '-' . $translation . '.po' );
+			$wp_filesystem->delete( WP_LANG_DIR . '/themes/' . $stylesheet . '-' . $translation . '.mo' );
+		}
+	}
+
+>>>>>>> FETCH_HEAD
 	// Force refresh of theme update information.
 	delete_site_transient( 'update_themes' );
 
@@ -488,7 +507,11 @@ function wp_prepare_themes_for_js( $themes = null ) {
 	}
 
 	// Remove 'delete' action if theme has an active child
+<<<<<<< HEAD
 	if ( ! empty( $parents ) && array_key_exists( $current_theme, $parents ) ) {
+=======
+	if ( isset( $parents ) && array_key_exists( $current_theme, $parents ) ) {
+>>>>>>> FETCH_HEAD
 		unset( $prepared_themes[ $parents[ $current_theme ] ]['actions']['delete'] );
 	}
 

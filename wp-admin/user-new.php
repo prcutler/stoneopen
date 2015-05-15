@@ -280,7 +280,11 @@ if ( is_multisite() ) {
 		$type  = 'text';
 	}
 ?>
+<<<<<<< HEAD
 <form method="post" name="adduser" id="adduser" class="validate" novalidate="novalidate"<?php
+=======
+<form action="" method="post" name="adduser" id="adduser" class="validate" novalidate="novalidate"<?php
+>>>>>>> FETCH_HEAD
 	/**
 	 * Fires inside the adduser form tag.
 	 *
@@ -334,7 +338,11 @@ if ( current_user_can( 'create_users') ) {
 		echo '<h3 id="create-new-user">' . __( 'Add New User' ) . '</h3>';
 ?>
 <p><?php _e('Create a brand new user and add them to this site.'); ?></p>
+<<<<<<< HEAD
 <form method="post" name="createuser" id="createuser" class="validate" novalidate="novalidate"<?php
+=======
+<form action="" method="post" name="createuser" id="createuser" class="validate" novalidate="novalidate"<?php
+>>>>>>> FETCH_HEAD
 	/** This action is documented in wp-admin/user-new.php */
 	do_action( 'user_new_form_tag' );
 ?>>

@@ -2020,7 +2020,11 @@ function wp_ext2type( $ext ) {
 		'image'       => array( 'jpg', 'jpeg', 'jpe',  'gif',  'png',  'bmp',   'tif',  'tiff', 'ico' ),
 		'audio'       => array( 'aac', 'ac3',  'aif',  'aiff', 'm3a',  'm4a',   'm4b',  'mka',  'mp1',  'mp2',  'mp3', 'ogg', 'oga', 'ram', 'wav', 'wma' ),
 		'video'       => array( '3g2',  '3gp', '3gpp', 'asf', 'avi',  'divx', 'dv',   'flv',  'm4v',   'mkv',  'mov',  'mp4',  'mpeg', 'mpg', 'mpv', 'ogm', 'ogv', 'qt',  'rm', 'vob', 'wmv' ),
+<<<<<<< HEAD
 		'document'    => array( 'doc', 'docx', 'docm', 'dotm', 'odt',  'pages', 'pdf',  'xps',  'oxps', 'rtf',  'wp', 'wpd', 'psd', 'xcf' ),
+=======
+		'document'    => array( 'doc', 'docx', 'docm', 'dotm', 'odt',  'pages', 'pdf',  'xps',  'oxps', 'rtf',  'wp', 'wpd', 'psd' ),
+>>>>>>> FETCH_HEAD
 		'spreadsheet' => array( 'numbers',     'ods',  'xls',  'xlsx', 'xlsm',  'xlsb' ),
 		'interactive' => array( 'swf', 'key',  'ppt',  'pptx', 'pptm', 'pps',   'ppsx', 'ppsm', 'sldx', 'sldm', 'odp' ),
 		'text'        => array( 'asc', 'csv',  'tsv',  'txt' ),
@@ -2053,7 +2057,7 @@ function wp_check_filetype( $filename, $mimes = null ) {
 	$ext = false;
 
 	foreach ( $mimes as $ext_preg => $mime_match ) {
-		$ext_preg = '!\.(' . $ext_preg . ')$!i';
+		$ext_preg = '!\.(' . $ext_preg . ')(\?.*)?$!i';
 		if ( preg_match( $ext_preg, $filename, $ext_matches ) ) {
 			$type = $mime_match;
 			$ext = $ext_matches[1];
@@ -2229,7 +2233,10 @@ function wp_get_mime_types() {
 	'7z' => 'application/x-7z-compressed',
 	'exe' => 'application/x-msdownload',
 	'psd' => 'application/octet-stream',
+<<<<<<< HEAD
 	'xcf' => 'application/octet-stream',
+=======
+>>>>>>> FETCH_HEAD
 	// MS Office formats.
 	'doc' => 'application/msword',
 	'pot|pps|ppt' => 'application/vnd.ms-powerpoint',
@@ -2687,11 +2694,19 @@ function wp_json_encode( $data, $options = 0, $depth = 512 ) {
 /**
  * Perform sanity checks on data that shall be encoded to JSON.
  *
+<<<<<<< HEAD
  * @ignore
  * @since 4.1.0
  * @access private
  *
  * @see wp_json_encode()
+=======
+ * @see wp_json_encode()
+ *
+ * @since 4.1.0
+ * @access private
+ * @internal
+>>>>>>> FETCH_HEAD
  *
  * @param mixed $data  Variable (usually an array or object) to encode as JSON.
  * @param int   $depth Maximum depth to walk through $data. Must be greater than 0.
@@ -2750,11 +2765,19 @@ function _wp_json_sanity_check( $data, $depth ) {
 /**
  * Convert a string to UTF-8, so that it can be safely encoded to JSON.
  *
+<<<<<<< HEAD
  * @ignore
  * @since 4.1.0
  * @access private
  *
  * @see _wp_json_sanity_check()
+=======
+ * @see _wp_json_sanity_check()
+ *
+ * @since 4.1.0
+ * @access private
+ * @internal
+>>>>>>> FETCH_HEAD
  *
  * @param string $string The string which is to be converted.
  * @return string The checked string.
@@ -4183,7 +4206,11 @@ function wp_scheduled_delete() {
  * If the file data is not within that first 8kiB, then the author should correct
  * their plugin file and move the data headers to the top.
  *
+<<<<<<< HEAD
  * @link https://codex.wordpress.org/File_Header
+=======
+ * @link http://codex.wordpress.org/File_Header
+>>>>>>> FETCH_HEAD
  *
  * @since 2.9.0
  *

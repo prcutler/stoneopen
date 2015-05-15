@@ -91,6 +91,7 @@ function wpmu_delete_blog( $blog_id, $drop = false ) {
 
 	// Don't destroy the initial, main, or root blog.
 	if ( $drop && ( 1 == $blog_id || is_main_site( $blog_id ) || ( $blog->path == $current_site->path && $blog->domain == $current_site->domain ) ) ) {
+<<<<<<< HEAD
 		$drop = false;
 	}
 
@@ -100,6 +101,17 @@ function wpmu_delete_blog( $blog_id, $drop = false ) {
 	if ( $drop && get_site_option( 'ms_files_rewriting' ) && empty( $upload_path ) ) {
 		$drop = false;
 	}
+=======
+		$drop = false;
+	}
+
+	$upload_path = trim( get_option( 'upload_path' ) );
+
+	// If ms_files_rewriting is enabled and upload_path is empty, wp_upload_dir is not reliable.
+	if ( $drop && get_site_option( 'ms_files_rewriting' ) && empty( $upload_path ) ) {
+		$drop = false;
+	}
+>>>>>>> FETCH_HEAD
 
 	if ( $drop ) {
 		$uploads = wp_upload_dir();
@@ -596,10 +608,17 @@ function format_code_lang( $code = '' ) {
  *
  * @since 3.0.0
  *
+<<<<<<< HEAD
  * @param object $term     The term.
  * @param string $taxonomy The taxonomy for $term. Should be 'category' or 'post_tag', as these are
  *                         the only taxonomies which are processed by this function; anything else
  *                         will be returned untouched.
+=======
+ * @param $term     The term.
+ * @param $taxonomy The taxonomy for $term. Should be 'category' or 'post_tag', as these are
+ *                  the only taxonomies which are processed by this function; anything else
+ *                  will be returned untouched.
+>>>>>>> FETCH_HEAD
  * @return object|array Returns `$term`, after filtering the 'slug' field with {@see sanitize_title()}
  *                      if $taxonomy is 'category' or 'post_tag'.
  */
@@ -965,7 +984,13 @@ function can_edit_network( $site_id ) {
 function _thickbox_path_admin_subfolder() {
 ?>
 <script type="text/javascript">
+<<<<<<< HEAD
 var tb_pathToImage = "<?php echo includes_url( 'js/thickbox/loadingAnimation.gif', 'relative' ); ?>";
+=======
+//<![CDATA[
+var tb_pathToImage = "<?php echo includes_url( 'js/thickbox/loadingAnimation.gif', 'relative' ); ?>";
+//]]>
+>>>>>>> FETCH_HEAD
 </script>
 <?php
 }

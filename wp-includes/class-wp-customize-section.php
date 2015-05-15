@@ -229,6 +229,61 @@ class WP_Customize_Section {
 	}
 
 	/**
+	 * Check whether section is active to current Customizer preview.
+	 *
+	 * @since 4.1.0
+	 * @access public
+	 *
+	 * @return bool Whether the section is active to the current preview.
+	 */
+	public final function active() {
+		$section = $this;
+		$active = call_user_func( $this->active_callback, $this );
+
+		/**
+		 * Filter response of {@see WP_Customize_Section::active()}.
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param bool                 $active  Whether the Customizer section is active.
+		 * @param WP_Customize_Section $section {@see WP_Customize_Section} instance.
+		 */
+		$active = apply_filters( 'customize_section_active', $active, $section );
+
+		return $active;
+	}
+
+	/**
+	 * Default callback used when invoking {@see WP_Customize_Section::active()}.
+	 *
+	 * Subclasses can override this with their specific logic, or they may provide
+	 * an 'active_callback' argument to the constructor.
+	 *
+	 * @since 4.1.0
+	 * @access public
+	 *
+	 * @return bool Always true.
+	 */
+	public function active_callback() {
+		return true;
+	}
+
+	/**
+	 * Gather the parameters passed to client JavaScript via JSON.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @return array The array to be exported to the client as JSON.
+	 */
+	public function json() {
+		$array = wp_array_slice_assoc( (array) $this, array( 'title', 'description', 'priority', 'panel', 'type' ) );
+		$array['content'] = $this->get_content();
+		$array['active'] = $this->active();
+		$array['instanceNumber'] = $this->instance_number;
+		return $array;
+	}
+
+	/**
 	 * Checks required user capabilities and whether the theme has the
 	 * feature support required by the section.
 	 *
@@ -236,7 +291,11 @@ class WP_Customize_Section {
 	 *
 	 * @return bool False if theme doesn't support the section or user doesn't have the capability.
 	 */
+<<<<<<< HEAD
 	final public function check_capabilities() {
+=======
+	public final function check_capabilities() {
+>>>>>>> FETCH_HEAD
 		if ( $this->capability && ! call_user_func_array( 'current_user_can', (array) $this->capability ) ) {
 			return false;
 		}
@@ -255,7 +314,11 @@ class WP_Customize_Section {
 	 *
 	 * @return string Contents of the section.
 	 */
+<<<<<<< HEAD
 	final public function get_content() {
+=======
+	public final function get_content() {
+>>>>>>> FETCH_HEAD
 		ob_start();
 		$this->maybe_render();
 		$template = trim( ob_get_contents() );
@@ -268,7 +331,11 @@ class WP_Customize_Section {
 	 *
 	 * @since 3.4.0
 	 */
+<<<<<<< HEAD
 	final public function maybe_render() {
+=======
+	public final function maybe_render() {
+>>>>>>> FETCH_HEAD
 		if ( ! $this->check_capabilities() ) {
 			return;
 		}
@@ -320,6 +387,7 @@ class WP_Customize_Section {
 }
 
 /**
+<<<<<<< HEAD
  * Customize Themes Section class.
  *
  * A UI container for theme controls, which behaves like a backwards Panel.
@@ -402,6 +470,13 @@ class WP_Customize_Themes_Section extends WP_Customize_Section {
 /**
  * Customizer section representing widget area (sidebar).
  *
+=======
+ * Customizer section representing widget area (sidebar).
+ *
+ * @package WordPress
+ * @subpackage Customize
+ *
+>>>>>>> FETCH_HEAD
  * @since 4.1.0
  *
  * @see WP_Customize_Section

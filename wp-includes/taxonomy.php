@@ -681,6 +681,7 @@ class WP_Tax_Query {
 
 	/**
 	 * Terms and taxonomies fetched by this query.
+<<<<<<< HEAD
 	 *
 	 * We store this data in a flat array because they are referenced in a
 	 * number of places by {@see WP_Query}.
@@ -694,6 +695,21 @@ class WP_Tax_Query {
 	/**
 	 * Database table that where the metadata's objects are stored (eg $wpdb->users).
 	 *
+=======
+	 *
+	 * We store this data in a flat array because they are referenced in a
+	 * number of places by {@see WP_Query}.
+	 *
+	 * @since 4.1.0
+	 * @access public
+	 * @var array
+	 */
+	public $queried_terms = array();
+
+	/**
+	 * Database table that where the metadata's objects are stored (eg $wpdb->users).
+	 *
+>>>>>>> FETCH_HEAD
 	 * @since 4.1.0
 	 * @access public
 	 * @var string
@@ -774,7 +790,11 @@ class WP_Tax_Query {
 				$cleaned_query['relation'] = $this->sanitize_relation( $query );
 
 			// First-order clause.
+<<<<<<< HEAD
 			} elseif ( self::is_first_order_clause( $query ) ) {
+=======
+			} else if ( self::is_first_order_clause( $query ) ) {
+>>>>>>> FETCH_HEAD
 
 				$cleaned_clause = array_merge( $defaults, $query );
 				$cleaned_clause['terms'] = (array) $cleaned_clause['terms'];
@@ -797,6 +817,7 @@ class WP_Tax_Query {
 					if ( ! empty( $cleaned_clause['terms'] ) && ! isset( $this->queried_terms[ $taxonomy ]['terms'] ) ) {
 						$this->queried_terms[ $taxonomy ]['terms'] = $cleaned_clause['terms'];
 					}
+<<<<<<< HEAD
 
 					if ( ! empty( $cleaned_clause['field'] ) && ! isset( $this->queried_terms[ $taxonomy ]['field'] ) ) {
 						$this->queried_terms[ $taxonomy ]['field'] = $cleaned_clause['field'];
@@ -805,6 +826,26 @@ class WP_Tax_Query {
 
 			// Otherwise, it's a nested query, so we recurse.
 			} elseif ( is_array( $query ) ) {
+				$cleaned_subquery = $this->sanitize_query( $query );
+
+				if ( ! empty( $cleaned_subquery ) ) {
+					// All queries with children must have a relation.
+					if ( ! isset( $cleaned_subquery['relation'] ) ) {
+						$cleaned_subquery['relation'] = 'AND';
+					}
+
+					$cleaned_query[] = $cleaned_subquery;
+				}
+			}
+=======
+
+					if ( ! empty( $cleaned_clause['field'] ) && ! isset( $this->queried_terms[ $taxonomy ]['field'] ) ) {
+						$this->queried_terms[ $taxonomy ]['field'] = $cleaned_clause['field'];
+					}
+				}
+
+			// Otherwise, it's a nested query, so we recurse.
+			} else if ( is_array( $query ) ) {
 				$cleaned_subquery = $this->sanitize_query( $query );
 
 				if ( ! empty( $cleaned_subquery ) ) {
@@ -835,7 +876,46 @@ class WP_Tax_Query {
 			return 'OR';
 		} else {
 			return 'AND';
+>>>>>>> FETCH_HEAD
 		}
+
+		return $cleaned_query;
+	}
+
+	/**
+	 * Sanitize a 'relation' operator.
+	 *
+	 * @since 4.1.0
+	 * @access public
+	 *
+	 * @param string $relation Raw relation key from the query argument.
+	 * @return string Sanitized relation ('AND' or 'OR').
+	 */
+	public function sanitize_relation( $relation ) {
+		if ( 'OR' === strtoupper( $relation ) ) {
+			return 'OR';
+		} else {
+			return 'AND';
+		}
+	}
+
+	/**
+	 * Determine whether a clause is first-order.
+	 *
+	 * A "first-order" clause is one that contains any of the first-order
+	 * clause keys ('terms', 'taxonomy', 'include_children', 'field',
+	 * 'operator'). An empty clause also counts as a first-order clause,
+	 * for backward compatibility. Any clause that doesn't meet this is
+	 * determined, by process of elimination, to be a higher-order query.
+	 *
+	 * @since 4.1.0
+	 * @access protected
+	 *
+	 * @param array $query Tax query arguments.
+	 * @return bool Whether the query clause is a first-order clause.
+	 */
+	protected static function is_first_order_clause( $query ) {
+		return is_array( $query ) && ( empty( $query ) || array_key_exists( 'terms', $query ) || array_key_exists( 'taxonomy', $query ) || array_key_exists( 'include_children', $query ) || array_key_exists( 'field', $query ) || array_key_exists( 'operator', $query ) );
 	}
 
 	/**
@@ -906,10 +986,17 @@ class WP_Tax_Query {
 		if ( ! empty( $sql['where'] ) ) {
 			$sql['where'] = ' AND ' . $sql['where'];
 		}
+<<<<<<< HEAD
 
 		return $sql;
 	}
 
+=======
+
+		return $sql;
+	}
+
+>>>>>>> FETCH_HEAD
 	/**
 	 * Generate SQL clauses for a single query array.
 	 *
@@ -948,7 +1035,11 @@ class WP_Tax_Query {
 		foreach ( $query as $key => &$clause ) {
 			if ( 'relation' === $key ) {
 				$relation = $query['relation'];
+<<<<<<< HEAD
 			} elseif ( is_array( $clause ) ) {
+=======
+			} else if ( is_array( $clause ) ) {
+>>>>>>> FETCH_HEAD
 
 				// This is a first-order clause.
 				if ( $this->is_first_order_clause( $clause ) ) {
@@ -957,7 +1048,11 @@ class WP_Tax_Query {
 					$where_count = count( $clause_sql['where'] );
 					if ( ! $where_count ) {
 						$sql_chunks['where'][] = '';
+<<<<<<< HEAD
 					} elseif ( 1 === $where_count ) {
+=======
+					} else if ( 1 === $where_count ) {
+>>>>>>> FETCH_HEAD
 						$sql_chunks['where'][] = $clause_sql['where'][0];
 					} else {
 						$sql_chunks['where'][] = '( ' . implode( ' AND ', $clause_sql['where'] ) . ' )';
@@ -1135,6 +1230,7 @@ class WP_Tax_Query {
 		// Sanity check. Only IN queries use the JOIN syntax .
 		if ( ! isset( $clause['operator'] ) || 'IN' !== $clause['operator'] ) {
 			return $alias;
+<<<<<<< HEAD
 		}
 
 		// Since we're only checking IN queries, we're only concerned with OR relations.
@@ -1142,6 +1238,15 @@ class WP_Tax_Query {
 			return $alias;
 		}
 
+=======
+		}
+
+		// Since we're only checking IN queries, we're only concerned with OR relations.
+		if ( ! isset( $parent_query['relation'] ) || 'OR' !== $parent_query['relation'] ) {
+			return $alias;
+		}
+
+>>>>>>> FETCH_HEAD
 		$compatible_operators = array( 'IN' );
 
 		foreach ( $parent_query as $sibling ) {
@@ -1572,11 +1677,19 @@ function get_term_to_edit( $id, $taxonomy ) {
  * @param array|string $args {
  *     Optional. Array or string of arguments to get terms.
  *
+<<<<<<< HEAD
  *     @type string       $orderby           Field(s) to order terms by. Accepts term fields ('name', 'slug',
  *                                           'term_group', 'term_id', 'id', 'description'), 'count' for term
  *                                           taxonomy count, 'include' to match the 'order' of the $include param,
  *                                           or 'none' to skip ORDER BY. Defaults to 'name'.
  *     @type string       $order             Whether to order terms in ascending or descending order.
+=======
+ *     @type string   $orderby               Field(s) to order terms by. Accepts term fields ('name', 'slug',
+ *                                           'term_group', 'term_id', 'id'), 'count' for term taxonomy count,
+ *                                           'include' to match the 'order' of the $include param, or 'none'
+ *                                           to skip ORDER BY. Defaults to 'name'.
+ *     @type string   $order                 Whether to order terms in ascending or descending order.
+>>>>>>> FETCH_HEAD
  *                                           Accepts 'ASC' (ascending) or 'DESC' (descending).
  *                                           Default 'ASC'.
  *     @type bool|int     $hide_empty        Whether to hide terms not assigned to any posts. Accepts
@@ -1595,7 +1708,10 @@ function get_term_to_edit( $id, $taxonomy ) {
  *     @type string       $fields            Term fields to query for. Accepts 'all' (returns an array of
  *                                           term objects), 'ids' or 'names' (returns an array of integers
  *                                           or strings, respectively. Default 'all'.
+<<<<<<< HEAD
  *     @type string|array $name              Optional. Name or array of names to return term(s) for. Default empty.
+=======
+>>>>>>> FETCH_HEAD
  *     @type string|array $slug              Optional. Slug or array of slugs to return term(s) for. Default empty.
  *     @type bool         $hierarchical      Whether to include terms that have non-empty descendants (even
  *                                           if $hide_empty is set to true). Default true.
@@ -1646,6 +1762,7 @@ function get_terms( $taxonomies, $args = '' ) {
 	$args['offset'] = absint( $args['offset'] );
 
 	// Save queries by not crawling the tree in the case of multiple taxes or a flat tax.
+<<<<<<< HEAD
 	$has_hierarchical_tax = false;
 	foreach ( $taxonomies as $_tax ) {
 		if ( is_taxonomy_hierarchical( $_tax ) ) {
@@ -1654,6 +1771,9 @@ function get_terms( $taxonomies, $args = '' ) {
 	}
 
 	if ( ! $has_hierarchical_tax ) {
+=======
+	if ( ! $single_taxonomy || ! is_taxonomy_hierarchical( reset( $taxonomies ) ) ) {
+>>>>>>> FETCH_HEAD
 		$args['hierarchical'] = false;
 		$args['pad_counts'] = false;
 	}
@@ -1740,10 +1860,17 @@ function get_terms( $taxonomies, $args = '' ) {
 		$orderby = 't.name';
 	} elseif ( 'slug' == $_orderby ) {
 		$orderby = 't.slug';
+<<<<<<< HEAD
 	} elseif ( 'include' == $_orderby && ! empty( $args['include'] ) ) {
 		$include = implode( ',', array_map( 'absint', $args['include'] ) );
 		$orderby = "FIELD( t.term_id, $include )";
 	} elseif ( 'term_group' == $_orderby ) {
+=======
+	} else if ( 'include' == $_orderby && ! empty( $args['include'] ) ) {
+		$include = implode( ',', array_map( 'absint', $args['include'] ) );
+		$orderby = "FIELD( t.term_id, $include )";
+	} else if ( 'term_group' == $_orderby ) {
+>>>>>>> FETCH_HEAD
 		$orderby = 't.term_group';
 	} elseif ( 'description' == $_orderby ) {
 		$orderby = 'tt.description';
@@ -1919,10 +2046,17 @@ function get_terms( $taxonomies, $args = '' ) {
 			$selects = array( 'COUNT(*)' );
 			break;
 		case 'id=>name':
+<<<<<<< HEAD
 			$selects = array( 't.term_id', 't.name', 'tt.count', 'tt.taxonomy' );
 			break;
 		case 'id=>slug':
 			$selects = array( 't.term_id', 't.slug', 'tt.count', 'tt.taxonomy' );
+=======
+			$selects = array( 't.term_id', 't.name', 'tt.count' );
+			break;
+		case 'id=>slug':
+			$selects = array( 't.term_id', 't.slug', 'tt.count' );
+>>>>>>> FETCH_HEAD
 			break;
 	}
 
@@ -2610,8 +2744,11 @@ function wp_delete_category( $cat_ID ) {
  * Retrieves the terms associated with the given object(s), in the supplied taxonomies.
  *
  * @since 2.3.0
+<<<<<<< HEAD
  * @since 4.2.0 Added support for 'taxonomy', 'parent', and 'term_taxonomy_id' values of `$orderby`.
  *              Introduced `$parent` argument.
+=======
+>>>>>>> FETCH_HEAD
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
@@ -2897,7 +3034,11 @@ function wp_insert_term( $term, $taxonomy, $args = array() ) {
 		if ( ! empty( $alias->term_group ) ) {
 			// The alias we want is already in a group, so let's use that one.
 			$term_group = $alias->term_group;
+<<<<<<< HEAD
 		} elseif ( ! empty( $alias->term_id ) ) {
+=======
+		} else if ( ! empty( $alias->term_id ) ) {
+>>>>>>> FETCH_HEAD
 			/*
 			 * The alias is not in a group, so we create a new one
 			 * and add the alias to it.
@@ -2910,6 +3051,7 @@ function wp_insert_term( $term, $taxonomy, $args = array() ) {
 		}
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Prevent the creation of terms with duplicate names at the same level of a taxonomy hierarchy,
 	 * unless a unique slug has been explicitly provided.
@@ -2932,6 +3074,22 @@ function wp_insert_term( $term, $taxonomy, $args = array() ) {
 				}
 			} else {
 				return new WP_Error( 'term_exists', __( 'A term with the name already exists in this taxonomy.' ), $name_match->term_id );
+=======
+	// Terms with duplicate names are not allowed at the same level of a taxonomy hierarchy.
+	if ( $exists = term_exists( $slug, $taxonomy ) ) {
+		$existing_term = get_term( $exists['term_id'], $taxonomy );
+
+		if ( $name === $existing_term->name ) {
+
+			if ( is_taxonomy_hierarchical( $taxonomy ) ) {
+				$siblings = get_terms( $taxonomy, array( 'fields' => 'names', 'get' => 'all', 'parent' => $parent ) );
+				if ( in_array( $name, $siblings ) ) {
+					return new WP_Error( 'term_exists', __( 'A term with the name and slug already exists with this parent.' ), $exists['term_id'] );
+				}
+
+			} else {
+				return new WP_Error( 'term_exists', __( 'A term with the name and slug already exists in this taxonomy.' ), $exists['term_id'] );
+>>>>>>> FETCH_HEAD
 			}
 		}
 	}
@@ -3423,7 +3581,11 @@ function wp_update_term( $term_id, $taxonomy, $args = array() ) {
 		if ( ! empty( $alias->term_group ) ) {
 			// The alias we want is already in a group, so let's use that one.
 			$term_group = $alias->term_group;
+<<<<<<< HEAD
 		} elseif ( ! empty( $alias->term_id ) ) {
+=======
+		} else if ( ! empty( $alias->term_id ) ) {
+>>>>>>> FETCH_HEAD
 			/*
 			 * The alias is not in a group, so we create a new one
 			 * and add the alias to it.
@@ -3466,12 +3628,15 @@ function wp_update_term( $term_id, $taxonomy, $args = array() ) {
 
 	$tt_id = $wpdb->get_var( $wpdb->prepare( "SELECT tt.term_taxonomy_id FROM $wpdb->term_taxonomy AS tt INNER JOIN $wpdb->terms AS t ON tt.term_id = t.term_id WHERE tt.taxonomy = %s AND t.term_id = %d", $taxonomy, $term_id) );
 
+<<<<<<< HEAD
 	// Check whether this is a shared term that needs splitting.
 	$_term_id = _split_shared_term( $term_id, $tt_id );
 	if ( ! is_wp_error( $_term_id ) ) {
 		$term_id = $_term_id;
 	}
 
+=======
+>>>>>>> FETCH_HEAD
 	/**
 	 * Fires immediately before the given terms are edited.
 	 *
@@ -3789,7 +3954,11 @@ function clean_term_cache($ids, $taxonomy = '', $clean_taxonomy = true) {
  *
  * @since 2.3.0
  *
+<<<<<<< HEAD
  * @param int    $id       Term object ID
+=======
+ * @param int|array $id Term object ID
+>>>>>>> FETCH_HEAD
  * @param string $taxonomy Taxonomy Name
  * @return bool|array Empty array if $terms found, but not $taxonomy. False if nothing is in cache for $taxonomy and $id.
  */
@@ -3810,10 +3979,16 @@ function get_object_term_cache($id, $taxonomy) {
  *
  * @since 2.3.0
  *
+<<<<<<< HEAD
  * @param string|array $object_ids  Comma-separated list or array of term object IDs..
  * @param array|string $object_type The taxonomy object type.
  * @return null|false Null if `$object_ids` is empty, false if all of the terms in
  *                    `$object_ids` are already cached.
+=======
+ * @param string|array $object_ids Single or list of term object ID(s)
+ * @param array|string $object_type The taxonomy object type
+ * @return null|false Null value is given with empty $object_ids. False if
+>>>>>>> FETCH_HEAD
  */
 function update_object_term_cache($object_ids, $object_type) {
 	if ( empty($object_ids) )
@@ -4228,6 +4403,7 @@ function _split_shared_term( $term_id, $term_taxonomy_id ) {
 }
 
 /**
+<<<<<<< HEAD
  * Check default categories when a term gets split to see if any of them need to be updated.
  *
  * @ignore
@@ -4324,6 +4500,8 @@ function wp_get_split_term( $old_term_id, $taxonomy ) {
 }
 
 /**
+=======
+>>>>>>> FETCH_HEAD
  * Generate a permalink for a taxonomy term archive.
  *
  * @since 2.5.0
@@ -4636,7 +4814,11 @@ function get_ancestors( $object_id = 0, $object_type = '', $resource_type = '' )
 	if ( ! $resource_type ) {
 		if ( is_taxonomy_hierarchical( $object_type ) ) {
 			$resource_type = 'taxonomy';
+<<<<<<< HEAD
 		} elseif ( post_type_exists( $object_type ) ) {
+=======
+		} else if ( post_type_exists( $object_type ) ) {
+>>>>>>> FETCH_HEAD
 			$resource_type = 'post_type';
 		}
 	}
@@ -4655,7 +4837,11 @@ function get_ancestors( $object_id = 0, $object_type = '', $resource_type = '' )
 	 * Filter a given object's ancestors.
 	 *
 	 * @since 3.1.0
+<<<<<<< HEAD
 	 * @since 4.1.0 Introduced the `$resource_type` parameter.
+=======
+	 * @since 4.1.1 Introduced the `$resource_type` parameter.
+>>>>>>> FETCH_HEAD
 	 *
 	 * @param array  $ancestors     An array of object ancestors.
 	 * @param int    $object_id     Object ID.

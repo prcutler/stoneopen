@@ -40,6 +40,7 @@ class WP_Widget {
 	 * @var string
 	 */
 	public $name;
+<<<<<<< HEAD
 
 	/**
 	 * Option array passed to {@see wp_register_sidebar_widget()}.
@@ -78,6 +79,46 @@ class WP_Widget {
 	public $id = false;
 
 	/**
+=======
+
+	/**
+	 * Option array passed to {@see wp_register_sidebar_widget()}.
+	 *
+	 * @since 2.8.0
+	 * @access public
+	 * @var array
+	 */
+	public $widget_options;
+
+	/**
+	 * Option array passed to {@see wp_register_widget_control()}.
+	 *
+	 * @since 2.8.0
+	 * @access public
+	 * @var array
+	 */
+	public $control_options;
+
+	/**
+	 * Unique ID number of the current instance.
+	 *
+	 * @since 2.8.0
+	 * @access public
+	 * @var bool|int
+	 */
+	public $number = false;
+
+	/**
+	 * Unique ID string of the current instance (id_base-number).
+	 *
+	 * @since 2.8.0
+	 * @access public
+	 * @var bool|string
+	 */
+	public $id = false;
+
+	/**
+>>>>>>> FETCH_HEAD
 	 * Whether the widget data has been updated.
 	 *
 	 * Set to true when the data is updated after a POST submit - ensures it does
@@ -109,6 +150,7 @@ class WP_Widget {
 
 	/**
 	 * Update a particular instance.
+<<<<<<< HEAD
 	 *
 	 * This function should check that $new_instance is set correctly. The newly-calculated
 	 * value of `$instance` should be returned. If false is returned, the instance won't be
@@ -117,6 +159,16 @@ class WP_Widget {
 	 * @since 2.8.0
 	 * @access public
 	 *
+=======
+	 *
+	 * This function should check that $new_instance is set correctly. The newly-calculated
+	 * value of `$instance` should be returned. If false is returned, the instance won't be
+	 * saved/updated.
+	 *
+	 * @since 2.8.0
+	 * @access public
+	 *
+>>>>>>> FETCH_HEAD
 	 * @param array $new_instance New settings for this instance as input by the user via
 	 *                            {@see WP_Widget::form()}.
 	 * @param array $old_instance Old settings for this instance.
@@ -128,10 +180,17 @@ class WP_Widget {
 
 	/**
 	 * Output the settings update form.
+<<<<<<< HEAD
 	 *
 	 * @since 2.8.0
 	 * @access public
 	 *
+=======
+	 *
+	 * @since 2.8.0
+	 * @access public
+	 *
+>>>>>>> FETCH_HEAD
 	 * @param array $instance Current settings.
 	 * @return string Default return is 'noform'.
 	 */
@@ -166,7 +225,11 @@ class WP_Widget {
 
 	/**
 	 * PHP4 constructor
+<<<<<<< HEAD
 	 *
+=======
+	 * 
+>>>>>>> FETCH_HEAD
 	 * @param string $id_base
 	 * @param string $name
 	 * @param array  $widget_options

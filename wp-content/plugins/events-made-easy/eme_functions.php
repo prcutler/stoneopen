@@ -64,9 +64,17 @@ function eme_get_contact($event) {
    if (!get_userdata($contact_id)) $contact_id = get_option('eme_default_contact_person');
    if ($contact_id < 1)
       $contact_id = $event['event_author'];
-   if ($contact_id < 1)
-      $contact_id = get_current_user_id();
-   $userinfo=get_userdata($contact_id);
+   if ($contact_id < 1) {
+      if (function_exists('is_multisite') && is_multisite()) {
+         $thisblog = get_current_blog_id();
+         $userinfo = get_user_by('email', get_blog_option($thisblog, 'admin_email'));
+      } else {
+         $userinfo = get_user_by('email', get_option('admin_email'));
+      }
+      #$contact_id = get_current_user_id();
+   } else {
+      $userinfo=get_userdata($contact_id);
+   }
    return $userinfo;
 }
 
@@ -74,20 +82,11 @@ function eme_get_user_phone($user_id) {
    return get_user_meta($user_id, 'eme_phone',true);
 }
 
-function eme_get_date_format() {
-   $format="";
-   $current_userid=get_current_user_id();
-   if ($current_userid)
-      $format = get_user_meta($current_userid, 'eme_date_format',true);
-   if ($format == '') $format=get_option('date_format');
-   return $format;
-}
-
 // got from http://davidwalsh.name/php-email-encode-prevent-spam
 function eme_ascii_encode($e) {
     $output = "";
-    if (has_filter('eme_email_filter')) {
-       $output=apply_filters('eme_email_filter',$e);
+    if (has_filter('eme_email_obfuscate_filter')) {
+       $output=apply_filters('eme_email_obfuscate_filter',$e);
     } else {
        for ($i = 0; $i < strlen($e); $i++) { $output .= '&#'.ord($e[$i]).';'; }
     }
@@ -106,21 +105,22 @@ function eme_permalink_convert ($val) {
 function eme_event_url($event,$language="") {
    global $wp_rewrite;
 
+   $def_language = eme_detect_lang();
    if (empty($language))
-         $language = eme_detect_lang();
+         $language = $def_language;
    if ($event['event_url'] != '') {
       $the_link = $event['event_url'];
    } else {
-      $url_mode=1;
-      $language = eme_detect_lang();
       if (isset($wp_rewrite) && $wp_rewrite->using_permalinks() && get_option('eme_seo_permalink')) {
          $events_prefix=eme_permalink_convert(get_option ( 'eme_permalink_events_prefix'));
          $slug = $event['event_slug'] ? $event['event_slug'] : $event['event_name'];
          $name=$events_prefix.$event['event_id']."/".eme_permalink_convert($slug);
          $the_link = home_url();
          // some plugins add the lang info to the home_url, remove it so we don't get into trouble or add it twice
+         $the_link = preg_replace("/\/$def_language$/","",$the_link);
          $the_link = trailingslashit(remove_query_arg('lang',$the_link));
          if (!empty($language)) {
+            $url_mode=eme_lang_url_mode();
             if ($url_mode==2) {
                $the_link = $the_link."$language/".user_trailingslashit($name);
             } else {
@@ -130,6 +130,7 @@ function eme_event_url($event,$language="") {
          } else {
             $the_link = $the_link.user_trailingslashit($name);
          }
+
       } else {
          $the_link = eme_get_events_page(true, false);
          // some plugins add the lang info to the home_url, remove it so we don't get into trouble or add it twice
@@ -145,14 +146,14 @@ function eme_event_url($event,$language="") {
 function eme_location_url($location,$language="") {
    global $wp_rewrite;
 
+   $def_language = eme_detect_lang();
    if (empty($language))
-         $language = eme_detect_lang();
+         $language = $def_language;
    $the_link = "";
    if ($location['location_url'] != '') {
       $the_link = $location['location_url'];
    } else {
-      $url_mode=1;
-      $language = eme_detect_lang();
+      $url_mode=eme_lang_url_mode();
       if (isset($location['location_id']) && isset($location['location_name'])) {
          if (isset($wp_rewrite) && $wp_rewrite->using_permalinks() && get_option('eme_seo_permalink')) {
             $locations_prefix=eme_permalink_convert(get_option ( 'eme_permalink_locations_prefix'));
@@ -160,8 +161,10 @@ function eme_location_url($location,$language="") {
             $name=$locations_prefix.$location['location_id']."/".eme_permalink_convert($slug);
             $the_link = home_url();
             // some plugins add the lang info to the home_url, remove it so we don't get into trouble or add it twice
+            $the_link = preg_replace("/\/$def_language$/","",$the_link);
             $the_link = trailingslashit(remove_query_arg('lang',$the_link));
             if (!empty($language)) {
+               $url_mode=eme_lang_url_mode();
                if ($url_mode==2) {
                   $the_link = $the_link."$language/".user_trailingslashit($name);
                } else {
@@ -187,15 +190,18 @@ function eme_location_url($location,$language="") {
 function eme_calendar_day_url($day) {
    global $wp_rewrite;
 
-   $url_mode=1;
+   $def_language = eme_detect_lang();
+   $language = $def_language;
 
    if (isset($wp_rewrite) && $wp_rewrite->using_permalinks() && get_option('eme_seo_permalink')) {
       $events_prefix=eme_permalink_convert(get_option ( 'eme_permalink_events_prefix'));
       $name=$events_prefix.eme_permalink_convert($day);
       $the_link = home_url();
       // some plugins add the lang info to the home_url, remove it so we don't get into trouble or add it twice
+      $the_link = preg_replace("/\/$def_language$/","",$the_link);
       $the_link = trailingslashit(remove_query_arg('lang',$the_link));
       if (!empty($language)) {
+         $url_mode=eme_lang_url_mode();
          if ($url_mode==2) {
             $the_link = $the_link."$language/".user_trailingslashit($name);
          } else {
@@ -219,15 +225,17 @@ function eme_calendar_day_url($day) {
 function eme_payment_url($payment_id) {
    global $wp_rewrite;
 
-   $url_mode=1;
-   $language = eme_detect_lang();
+   $def_language = eme_detect_lang();
+   $language = $def_language;
    if (isset($wp_rewrite) && $wp_rewrite->using_permalinks() && get_option('eme_seo_permalink')) {
       $events_prefix=eme_permalink_convert(get_option ( 'eme_permalink_events_prefix'));
       $name=$events_prefix."p$payment_id";
       $the_link = home_url();
       // some plugins add the lang info to the home_url, remove it so we don't get into trouble or add it twice
+      $the_link = preg_replace("/\/$def_language$/","",$the_link);
       $the_link = trailingslashit(remove_query_arg('lang',$the_link));
       if (!empty($language)) {
+         $url_mode=eme_lang_url_mode();
          if ($url_mode==2) {
             $the_link = $the_link."$language/".user_trailingslashit($name);
          } else {
@@ -248,18 +256,21 @@ function eme_payment_url($payment_id) {
    return $the_link;
 }
 
-function eme_event_category_url($cat_name) {
+function eme_category_url($category) {
    global $wp_rewrite;
 
-   $url_mode=1;
-   $language = eme_detect_lang();
+   $def_language = eme_detect_lang();
+   $language = $def_language;
    if (isset($wp_rewrite) && $wp_rewrite->using_permalinks() && get_option('eme_seo_permalink')) {
       $events_prefix=eme_permalink_convert(get_option ( 'eme_permalink_events_prefix'));
-      $name=$events_prefix."cat/".eme_permalink_convert($cat_name);
+      $slug = $category['category_slug'] ? $category['category_slug'] : $category['category_name'];
+      $name=$events_prefix."cat/".eme_permalink_convert($slug);
       $the_link = home_url();
       // some plugins add the lang info to the home_url, remove it so we don't get into trouble or add it twice
+      $the_link = preg_replace("/\/$def_language$/","",$the_link);
       $the_link = trailingslashit(remove_query_arg('lang',$the_link));
       if (!empty($language)) {
+         $url_mode=eme_lang_url_mode();
          if ($url_mode==2) {
             $the_link = $the_link."$language/".user_trailingslashit($name);
          } else {
@@ -273,7 +284,7 @@ function eme_event_category_url($cat_name) {
       $the_link = eme_get_events_page(true, false);
       // some plugins add the lang info to the home_url, remove it so we don't get into trouble or add it twice
       $the_link = remove_query_arg('lang',$the_link);
-      $the_link = add_query_arg( array( 'eme_event_cat' => $cat_name ), $the_link );
+      $the_link = add_query_arg( array( 'eme_event_cat' => $category['category_name'] ), $the_link );
       if (!empty($language))
          $the_link = add_query_arg( array( 'lang' => $language ), $the_link );
    }
@@ -295,6 +306,25 @@ function eme_payment_return_url($event,$payment_id,$resultcode) {
          $the_link = add_query_arg( array( 'eme_pmt_id' => $payment_id ), $the_link );
       }
    }
+   return $the_link;
+}
+
+function eme_cancel_booking_url($booking_id) {
+   if (!is_user_logged_in()) return;
+
+   $booking=eme_get_booking($booking_id);
+   $current_userid=get_current_user_id();
+   if ($booking['wp_id']!=$current_userid) return;
+
+   $def_language = eme_detect_lang();
+   $language = $def_language;
+
+   $the_link = "";
+   // some plugins add the lang info to the home_url, remove it so we don't get into trouble or add it twice
+   $the_link = remove_query_arg('lang',$the_link);
+   $the_link = add_query_arg( array( 'eme_cancel_booking' => $booking_id ), $the_link );
+   if (!empty($language))
+	   $the_link = add_query_arg( array( 'lang' => $language ), $the_link );
    return $the_link;
 }
 
@@ -366,10 +396,10 @@ function eme_get_all_caps() {
 }
 
 function eme_daydifference($date1,$date2) {
-   $ConvertToTimeStamp_Date1 = strtotime($date1);
-   $ConvertToTimeStamp_Date2 = strtotime($date2);
-   $DateDifference = intval($ConvertToTimeStamp_Date2) - intval($ConvertToTimeStamp_Date1);
-   return round($DateDifference/86400);
+   $datetime1 = new DateTime($date2);
+   $datetime2 = new DateTime($date1);
+   $interval = $datetime2->diff($datetime1);
+   return intval($interval->format('%r%a'));
 }
 
 function eme_hourdifference($date1,$date2) {
@@ -395,20 +425,22 @@ function eme_status_array() {
    return $event_status_array;
 }
 
-function eme_localised_date($mydate, $is_unixtimestamp=0) {
-   $date_format = eme_get_date_format();
-   if ($is_unixtimestamp)
-      return date_i18n ( $date_format, $mydate);
-   else
-      return date_i18n ( $date_format, strtotime($mydate));
+function eme_localised_unixdatetime($mydate,$format='') {
+   if (empty($format))
+      $format = get_option('date_format');
+   return date_i18n ( $format, $mydate);
+}
+function eme_localised_date($mydate,$date_format='') {
+   return eme_localised_unixdatetime (strtotime($mydate), $date_format);
 }
 
-function eme_localised_time($mydate, $is_unixtimestamp=0) {
-   $date_format = get_option('time_format');
-   if ($is_unixtimestamp)
-      return date_i18n ( $date_format, $mydate);
-   else
-      return date_i18n ( $date_format, strtotime($mydate));
+function eme_localised_unixtime($mydate) {
+   $time_format = get_option('time_format');
+   return eme_localised_unixdatetime ($mydate, $time_format);
+}
+function eme_localised_time($mydate) {
+   $time_format = get_option('time_format');
+   return eme_localised_unixdatetime (strtotime($mydate), $time_format);
 }
 
 function eme_currency_array() {
@@ -461,19 +493,67 @@ function eme_transfer_nbr_be97($my_nbr) {
    return $transfer_nbr_be97_main.$transfer_nbr_be97_check;
 }
 
-function eme_convert_date_format($format,$datestring) {
-   if (empty($datestring))
-      return date($format);
+function eme_unixdate_calc($calc,$unixdate="") {
+   if (empty($unixdate))
+      return strtotime($calc);
    else
-      return date($format, strtotime($datestring));
+      return strtotime($calc,$unixdate);
+}
+function eme_date_calc($calc,$date="") {
+   if (empty($date))
+      return date("Y-m-d",strtotime($calc));
+   else
+      return date("Y-m-d",strtotime($calc,strtotime($date)));
+}
+
+function eme_redefine_locale($locale) {
+   if (function_exists('pll_current_language') && function_exists('pll_languages_list')) {
+      $languages=pll_languages_list();
+      if (!$languages) return $locale;
+      $locale="";
+      foreach ($languages as $tmp_lang) {
+         if (preg_match("/^$tmp_lang\/|\/$tmp_lang\//",$_SERVER['REQUEST_URI']))
+               $locale=$tmp_lang.'_'.strtoupper($tmp_lang);
+      }
+      if (empty($locale))
+         $locale=pll_current_language('locale');
+   }
+   return $locale;
+}
+
+function eme_detect_lang_js_trans_function() {
+   if (function_exists('ppqtrans_use')) {
+      $function_name="pqtrans_use";
+   } elseif (function_exists('qtrans_use')) {
+      $function_name="qtrans_use";
+   } else {
+      $function_name="";
+   }
+   return $function_name;
 }
 
 function eme_detect_lang() {
+   $language="";
    if (function_exists('qtrans_getLanguage')) {
       // if permalinks are on, $_GET doesn't contain lang as a parameter
       // so we get it like this to be sure
       $language=qtrans_getLanguage();
+   } elseif (function_exists('ppqtrans_getLanguage')) {
+      $language=ppqtrans_getLanguage();
+   } elseif (function_exists('qtranxf_getLanguage')) {
+      $language=qtranxf_getLanguage();
+   } elseif (function_exists('pll_current_language') && function_exists('pll_languages_list')) {
+      $languages=pll_languages_list();
+      if (is_array($languages)) {
+          foreach ($languages as $tmp_lang) {
+             if (preg_match("/^$tmp_lang\/|\/$tmp_lang\//",$_SERVER['REQUEST_URI']))
+                   $language=$tmp_lang;
+          }
+      }
+      if (empty($language))
+         $language=pll_current_language('slug');
    } elseif (defined('ICL_LANGUAGE_CODE')) {
+      // Both polylang and wpml define this constant, so check polylang first (above)
       // if permalinks are on, $_GET doesn't contain lang as a parameter
       // so we get it like this to be sure
       $language=ICL_LANGUAGE_CODE;
@@ -483,6 +563,23 @@ function eme_detect_lang() {
       $language="";
    }
    return $language;
+}
+
+function eme_lang_url_mode() {
+   $url_mode=1;
+   if (function_exists('mqtranslate_conf')) {
+      // only some functions in mqtrans are different, but the options are named the same as for qtranslate
+      $url_mode=get_option('mqtranslate_url_mode');
+   } elseif (function_exists('qtrans_getLanguage')) {
+      $url_mode=get_option('qtranslate_url_mode');
+   } elseif (function_exists('ppqtrans_getLanguage')) {
+      $url_mode=get_option('pqtranslate_url_mode');
+   } elseif (function_exists('qtranxf_getLanguage')) {
+      $url_mode=get_option('qtranslate_url_mode');
+   } elseif (function_exists('pll_current_language')) {
+      $url_mode=2;
+   }
+   return $url_mode;
 }
 
 # support older php version for array_replace_recursive
@@ -518,4 +615,12 @@ if (!function_exists('array_replace_recursive')) {
       return $array;
    }
 }
+
+function eme_get_query_arg($arg) {
+   if (isset($_GET[$arg]))
+      return eme_strip_tags($_GET[$arg]);
+   else
+      return false;
+}
+
 ?>

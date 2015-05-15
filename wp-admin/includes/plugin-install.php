@@ -195,6 +195,11 @@ function install_search_form( $type_selector = true ) {
 /**
  * Upload from zip
  * @since 2.8.0
+<<<<<<< HEAD
+=======
+ *
+ * @param integer $page
+>>>>>>> FETCH_HEAD
  */
 function install_plugins_upload() {
 ?>
@@ -251,7 +256,11 @@ function display_plugins_table() {
 	}
 
 	?>
+<<<<<<< HEAD
 	<form id="plugin-filter" method="post">
+=======
+	<form id="plugin-filter" action="" method="post">
+>>>>>>> FETCH_HEAD
 		<?php $wp_list_table->display(); ?>
 	</form>
 	<?php
@@ -531,7 +540,11 @@ function install_plugin_information() {
 	<?php
 		if ( ! empty( $api->tested ) && version_compare( substr( $GLOBALS['wp_version'], 0, strlen( $api->tested ) ), $api->tested, '>' ) ) {
 			echo '<div class="notice notice-warning"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been tested</strong> with your current version of WordPress.') . '</p></div>';
+<<<<<<< HEAD
 		} elseif ( ! empty( $api->requires ) && version_compare( substr( $GLOBALS['wp_version'], 0, strlen( $api->requires ) ), $api->requires, '<' ) ) {
+=======
+		} else if ( ! empty( $api->requires ) && version_compare( substr( $GLOBALS['wp_version'], 0, strlen( $api->requires ) ), $api->requires, '<' ) ) {
+>>>>>>> FETCH_HEAD
 			echo '<div class="notice notice-warning"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been marked as compatible</strong> with your version of WordPress.') . '</p></div>';
 		}
 

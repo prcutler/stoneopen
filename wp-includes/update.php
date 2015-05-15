@@ -659,6 +659,10 @@ function wp_clean_update_cache() {
 	} else {
 		delete_site_transient( 'update_plugins' );
 	}
+<<<<<<< HEAD
+=======
+	wp_clean_plugins_cache();
+>>>>>>> FETCH_HEAD
 	wp_clean_themes_cache();
 	delete_site_transient( 'update_core' );
 }
