@@ -7,10 +7,15 @@ function my_deregister_javascript() { wp_dequeue_script('JS_googleMaps'); wp_der
 function theme_shortcode_googlemap($atts, $content = null, $code) {
 
 	$folder = basename(dirname(__FILE__));
-	// loading script only if there is googlemap shortcode on page
-	// will be printed in footer
-	wp_enqueue_script('googlemap-api', "http://maps.google.com/maps/api/js?sensor=false&amp;language=en");
-	wp_enqueue_script('ait-gmap', AIT_FRAMEWORK_URL . "/Shortcodes/{$folder}/gmap3.min.js",  array('jquery', 'googlemap-api'), '1.0');
+
+	// directory themes already include gmaps
+	$list = $GLOBALS['wp_scripts']->queue;
+	if (!in_array('ait-googlemaps-api', $list)) {
+		wp_enqueue_script('googlemap-api', "http://maps.google.com/maps/api/js?sensor=false&amp;language=en");
+	}
+	if (!in_array('ait-jquery-gmap3', $list)) {
+		wp_enqueue_script('ait-gmap', AIT_FRAMEWORK_URL . "/Shortcodes/{$folder}/gmap3.min.js",  array('jquery', 'googlemap-api'), '1.0');
+	}
 
 	extract(shortcode_atts(array(
 		"width" => false,

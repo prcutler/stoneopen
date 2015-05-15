@@ -62,56 +62,49 @@ wp_enqueue_style('thickbox');
 			}
 		});
 	} else if (type == 'dropdown'){
-		// Creates a new plugin class and a custom listbox
-	    tinymce.create('tinymce.plugins.ait_shortcodes_<?php echo $shortcode; ?>', {
-	        createControl: function(n, cm) {
-	            switch (n) {
-	                case 'ait_shortcodes_<?php echo $shortcode; ?>':
-	                var c = cm.createSplitButton('ait_shortcodes_<?php echo $shortcode; ?>', {
-	                    title : '<?php echo $title; ?>',
-	                    image : '<?php echo THEME_URL; ?>/AIT/Framework/Shortcodes/<?php echo $shortcode; ?>/icon.png',
-	                    onclick : function() {
-	                    }
-	                });
+<?php if ( isset($data['dropdownOptions']) ){ ?>
+	// Creates a new plugin class and a custom listbox
+	tinymce.create('tinymce.plugins.ait_shortcodes_<?php echo $shortcode; ?>', {
+		init : function(editor, url) {
 
-	                c.onRenderMenu.add(function(c, m) {
-	                    <?php if ( isset($data['dropdownOptions']) ){
+			var menu = [];
+			<?php
 
-	                    foreach ($data['dropdownOptions'] as $key => $value) {
+			foreach ($data['dropdownOptions'] as $key => $value) {
 
-						if($value['type']=='header'){ ?>
+				if($value['type']=='header'){ ?>
 
-						m.add({title : '<?php echo $value['label']; ?>', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
+					// menu.push({text : '<?php echo $value['label']; ?>', selectable: false, disabled: true});
 
-						<?php } elseif($value['type']=='option') { ?>
+				<?php } elseif($value['type']=='option') { ?>
 
-	                    m.add({title : '<?php echo $value['label']; ?>', onclick : function() {
+					menu.push({text : '<?php echo $value['label']; ?>', onclick : function() {
 
-	                    	var selectedContent = tinyMCE.activeEditor.selection.getContent();
-	                    	var content = '<?php echo $value['value']; ?>';
+					var selectedContent = tinyMCE.activeEditor.selection.getContent();
+					var content = '<?php echo $value['value']; ?>';
 
-	                    	if(content.indexOf("$content") != -1){
-	                    		content = content.replace('$content',selectedContent);
-	                    	}
+					if(content.indexOf("$content") != -1){
+						content = content.replace('$content',selectedContent);
+					}
 
-	                        tinyMCE.activeEditor.execCommand( 'mceInsertContent', false, content );
-	                    }});
+					tinyMCE.activeEditor.execCommand( 'mceInsertContent', false, content );
+					}});
 
-	                    <?php } } } ?>
-	                });
+				<?php } } ?>
 
-	                // Return the new splitbutton instance
-	                return c;
+				editor.addButton('ait_shortcodes_<?php echo $shortcode; ?>', {
+					type: "menubutton",
+					title: "<?php echo $title ?>",
+					menu: menu
+				});
 
-	            }
-	            return null;
-	        }
-	    });
-	}
-	// Register plugin
-	// first parameter is the button ID and must match ID elsewhere
-	// second parameter must match the first parameter of the tinymce.create() function above
-	tinymce.PluginManager.add('ait_shortcodes_<?php echo $shortcode; ?>', tinymce.plugins.ait_shortcodes_<?php echo $shortcode; ?>);
+	}});
+<?php } ?>
+}
+// Register plugin
+// first parameter is the button ID and must match ID elsewhere
+// second parameter must match the first parameter of the tinymce.create() function above
+tinymce.PluginManager.add('ait_shortcodes_<?php echo $shortcode; ?>', tinymce.plugins.ait_shortcodes_<?php echo $shortcode; ?>);
 
-	}
+}
 })();

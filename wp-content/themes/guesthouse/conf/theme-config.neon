@@ -27,15 +27,6 @@ generalOptions:
 						enable:
 							label: 'Yes'
 							checked: true
-				ThemeBox: section
-				#################
-				displayThemebox:
-					label: Show Themebox
-					type: checkbox
-					default:
-						enable:
-							label: 'Yes'
-							checked: true
 				Top-Header: section
 				#################
 				logo_text:
@@ -43,7 +34,7 @@ generalOptions:
 					type: text
 					default: Guest House
 				logo_img:
-					label: Logo image					
+					label: Logo image
 					type: image-url
 					default: 'design/img/logo.png'
 					skinable: false

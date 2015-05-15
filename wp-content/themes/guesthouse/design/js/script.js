@@ -1,7 +1,7 @@
 $j = jQuery.noConflict();
 
 $j(function(){
-	
+
 	Wpml_change_flag();
 
 	FixContactFormWPML();
@@ -21,31 +21,39 @@ $j(function(){
 	OpenCloseShortcode();
 
 	PrettySociableInit();
-	
+
 	DropdownPanel();
-	
+
 	RoomIcons();
-	
+
 	DatePickers();
-	
+
 	SmallRoomViewerDescription();
-	
+
 	RoomThumb();
-	
+
 	HomeRoomViewerActivateForm();
-	
+
 	SliderCheck();
-	
+
 	notificationClose();
-	
+
 	widgetsSize();
-	
+
 	fixAnythingSlider();
-	
+
+	wpcfFix();
+
 	$j(window).resize(function(){
     fixAnythingSlider();
   });
 });
+
+function wpcfFix(){
+	$j('span.wpcf7-form-control-wrap').hover(function(){
+		$j(this).children('span.wpcf7-not-valid-tip').fadeOut('fast');
+	});
+}
 
 function FixContactFormWPML () {
 	// fix link starts with "//" to "/"
@@ -68,15 +76,15 @@ function fixAnythingSlider(){
     $j('.anythingSlider').css({'height':'213px'});
     /*$j('.anythingSlider .anythingWindow #slider').children().each(function(){
       $j(this).css({'width':'480px','height':'213px'});
-    });*/  
+    });*/
   } else if($j(window).width() >= 498) {
     $j('.anythingSlider').css({'height':'430px'});
     /*$j('.anythingSlider .anythingWindow #slider').children().each(function(){
       $j(this).css({'width':'960px','height':'430px'});
     });*/
   } else {
-  
-  }  
+
+  }
 }
 
 function SliderCheck(){
@@ -84,7 +92,7 @@ function SliderCheck(){
     //alert("no slider");
     $j(".white-space").css({"background-image":"none",'height':'30px'});
     $j(".white-space-sub").css({"background-image":"none",'height':'30px'});
-    $j("#no-slider").css({'margin-bottom':'0px'});    
+    $j("#no-slider").css({'margin-bottom':'0px'});
   }
   else if($j(".slider").has('.subpage-slider-container').length){
     //alert("small slider");
@@ -99,6 +107,7 @@ function HomeRoomViewerActivateForm(){
   if($j("#showRoomSearchByDefault").text() == "false"){
     $j("#subpage-room-options-container-left").css({'display':'none'});
     $j("#showHideHousing").removeClass('show');
+    $j("#showHideHousing").addClass('hide');
   } else {
     $j("#room-controls-1").find("img").addClass("active");
     $j(".reservation-form").css({"display":"block"});
@@ -141,12 +150,12 @@ function PopulateForm(form){
   var room = $j("#"+form).find('#room :selected').text();
   var roomVal = $j("#"+form).find('#room :selected').val();
   var roomThumb = $j("#"+form).find('#room :selected').val();
-  
+
   var dateFrom = 0;
   var dateFromDefaultText = "";
   var dateTo = 0;
   var dateToDefaultText = "";
-  
+
   /*
   var inputs = $j("#formEnabledInputs").text().trim().split(/\W+/);
   var count = inputs.length + 1;    //4
@@ -158,21 +167,21 @@ function PopulateForm(form){
   });
   var count = inputs.length + 1;    //4
   //console.log(count);
-  
+
   if($j.inArray("From",inputs) != -1){
     dateFrom = $j("#"+form).find("#datePicker1").val();
     dateFromDefaultText = $j("#inputName1").text();
   }
-  
+
   if($j.inArray("To",inputs) != -1){
     dateTo = $j("#"+form).find("#datePicker2").val();
     dateToDefaultText = $j("#inputName2").text();
   }
-  
+
   if(roomVal != "NULL"){count--;}
   if(dateFrom != dateFromDefaultText && dateFrom != 0){count--;}
   if(dateTo != dateToDefaultText && dateTo != 0){count--;}
-    
+
   if(sendFormLink != ""){
     if(count == 0){
       if(inputs.length == 2){
@@ -212,7 +221,7 @@ function PopulateForm(form){
 
 function DatePickers(){
     var dateFormatVar = $j("#datepickerFormat").text();
-    
+
     $j( "#datePicker1" ).datepicker({
       dateFormat : dateFormatVar,
       altField : "#datePicker1-alt",
@@ -222,7 +231,7 @@ function DatePickers(){
       dateFormat : dateFormatVar,
       altField : "#datePicker2-alt",
       altFormat: "mm/dd/yy"
-    });    
+    });
 }
 
 function RoomIcons(){
@@ -237,7 +246,7 @@ function RoomIcons(){
      else
      {
         $j(".reservation-form").css({"display":"none"});
-     }     
+     }
   });
 }
 
@@ -324,7 +333,7 @@ function Wpml_change_flag()
   $j(".flags").mouseover(function(){
 	  $j(this).css({'overflow':'visible'});
 	});
-	
+
 	$j(".flags").mouseout(function(){
 	  $j(this).css({'overflow':'hidden'});
 	});
@@ -341,11 +350,11 @@ function CustomizeMenu(){
 function RollUpMenu(){
   var time = parseInt($j('#mainmenu-dropdown-duration').text());
   var easing = $j('#mainmenu-dropdown-easing').text();
-  
+
   $j(".mainmenu ul").find('ul').each(function(){
     $j(this).css({'display':'block', 'visibility':'none'});
   });
-	
+
   $j(".mainmenu").find('ul').children('li').each(function(){
     if($j(this).has('ul').length){
       var submenu = $j(this).children('ul');
@@ -357,7 +366,7 @@ function RollUpMenu(){
       });
     }
   });
-  
+
   $j(".mainmenu ul").find('ul').each(function(){
     $j(this).css({'display':'none', 'visibility':'block'});
   });

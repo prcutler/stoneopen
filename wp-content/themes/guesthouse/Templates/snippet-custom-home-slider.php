@@ -224,6 +224,7 @@
            <form id="reservation-form-1" action="#" method="post">
                 <input type="hidden" value="{$reservationOptions->sliderFormUrl}" name="formLink" id="formLink"/>
                 <div class="select-wrapper">
+                  {if $headerOptions->searchBoxType != 'rooms' && $reservationOptions->sliderFormCat != -1 || $headerOptions->searchBoxType == 'rooms'}
                   <select name="room" id="room">
                     <option value="NULL" SELECTED>{$reservationOptions->sliderroomFormDefaultRoomText}</option>
                       {if $headerOptions->searchBoxType == 'rooms'}
@@ -255,6 +256,7 @@
                         {/if}
                       {/if}
                   </select>
+                  {/if}
                 </div>
                 <div id="datepickerFormat" style="display: none; visibility: hidden">{!$reservationOptions->sliderdatepickerFormat}</div>
                 {if isset($reservationOptions->sliderdisplayroomFormDefaultFromText)}

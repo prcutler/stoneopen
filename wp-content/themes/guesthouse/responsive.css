@@ -671,7 +671,8 @@ input.wpcf7-acceptance {width: 17px !important; margin: 20px 0 10px !important;}
 
 .widget_wpdev_booking {width: 100%;}
 
-}
+.gallery dl.gallery-item { width: auto !important; }
 
+}
 
 @media all and (max-width: 320px){}

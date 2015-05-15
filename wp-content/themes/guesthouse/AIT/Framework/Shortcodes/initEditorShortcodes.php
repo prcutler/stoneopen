@@ -4,6 +4,7 @@
 Hook into WordPress
 */
 add_action('init', 'aitAddShortcodesButtons');
+add_action('admin_footer', 'aitAddShortcodesButtonsCss');
 
 
 
@@ -36,6 +37,25 @@ function aitAddShortcodesButtons()
 
 
 /*
+ * Add tinymce shortcode buttons css to admin footer
+ * This is needed for displaying buttons' icons
+ */
+function aitAddShortcodesButtonsCss() {
+	global $aitThemeShortcodes;
+
+	echo '<style type="text/css">';
+	foreach($aitThemeShortcodes as $shortcode => $ver){
+		if (file_exists(AIT_FRAMEWORK_DIR . "/Shortcodes/{$shortcode}/icon.png")) {
+			$shortcodeButtonIconPath =  get_template_directory_uri() . "/AIT/Framework/Shortcodes/{$shortcode}/icon.png";
+			echo ".mce-i-ait_shortcodes_{$shortcode} { background-image: url('{$shortcodeButtonIconPath}'); }";
+		}
+	}
+	echo "</style>";
+}
+
+
+
+/*
 Register Buttons
 */
 function aitMceButtons( $buttons ) {
@@ -57,10 +77,12 @@ Register TinyMCE Plugins
 function aitMceExternaPlugins($plugins) {
 	global $aitEditorShortcodes;
 
+	$oldWpVersion = get_bloginfo('version') < 3.9 ? "-old" : "";
+
 	$from = $_SERVER['REQUEST_URI'];
 	if(isset($aitEditorShortcodes) and !empty($aitEditorShortcodes)){
 		foreach($aitEditorShortcodes as $shortcode){
-			$plugins["ait_shortcodes_" . $shortcode] =  AIT_FRAMEWORK_URL . "/Shortcodes/pluginScript.php?plugin={$shortcode}&from={$from}";
+			$plugins["ait_shortcodes_" . $shortcode] =  AIT_FRAMEWORK_URL . "/Shortcodes/pluginScript{$oldWpVersion}.php?plugin={$shortcode}&from={$from}";
 		}
 	}
    	return $plugins;

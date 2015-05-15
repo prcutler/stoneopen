@@ -21,7 +21,7 @@ popupOptions:
 		label: Border
 		type: checkbox
 		class: all
-	link:
+	src:
 		label: Link
 		type: text
 		class: all
