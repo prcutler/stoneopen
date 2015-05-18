@@ -3,7 +3,7 @@
 /**
  * AIT WordPress Framework
  *
- * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.com)
+ * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.club)
  */
 
 /**
@@ -797,8 +797,9 @@ function aitGetAitUpdatesData()
 			}
 
 			$themeVersion = get_site_transient('ait_theme_versions_update');
-			if($themeVersion !== false && $themeVersion->updateAvailable && !get_option('disableAitThemeUpdates'))
+			if($themeVersion !== false && isset($themeVersion->updateAvailable) && $themeVersion->updateAvailable && !get_option('disableAitThemeUpdates')){
 				$counts['themeUpdate'] = 1;
+			}
 		}
 
 		$counts['total'] = $counts['news'] + $counts['themeUpdate'];
@@ -1098,6 +1099,9 @@ function aitGetImageSize($imageUrl)
 
 function getRealThumbnailUrl($multisiteUrl)
 {
+	if (TIMTHUMB_URL == '')
+		return $multisiteUrl;
+
 	global $blog_id;
 	if(is_multisite()){
 		if(strstr($multisiteUrl, '/files/') !== false){

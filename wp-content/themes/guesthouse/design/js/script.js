@@ -232,6 +232,7 @@ function DatePickers(){
       altField : "#datePicker2-alt",
       altFormat: "mm/dd/yy"
     });
+
 }
 
 function RoomIcons(){
@@ -281,7 +282,7 @@ function PrettySociableInit(){
 					'active': true,
 					'encode':true, // If sharing is not working, try to turn to false
 					'title': 'Delicious',
-					'url': 'http://del.icio.us/post?url=',
+					'url': 'https://delicious.com/save?&url=',
 					'icon':homeUrl+'/design/img/prettySociable/large_icons/delicious.png',
 					'sizes':{'width':70,'height':70}
 				},
@@ -491,7 +492,9 @@ function InitMisc() {
 	}
   });
 
-  $j('#content label').inFieldLabels();
+  if($j('body').hasClass('woocommerce-checkout') == false){
+  		$j('#content label').inFieldLabels();
+  }
 
   $j('.rule span').click(function() {
 	  $j.scrollTo(0, 1000, {axis:'y'});

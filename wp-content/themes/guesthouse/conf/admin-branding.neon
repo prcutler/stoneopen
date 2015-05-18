@@ -39,4 +39,4 @@ branding:
 			label: "Custom Admin Footer Text"
 			type: wysiwyg
 			# Use only double quotes with HTML attributtes
-			default: 'Created by <a href="http://www.ait-themes.com">AIT Themes</a>. Powered by <a href="http://www.wordpress.org">WordPress</a> with <a href="http://www.ait-themes.com">AIT WordPress Framework</a>.'
+			default: 'Created by <a href="http://www.ait-themes.club">AIT Themes</a>. Powered by <a href="http://www.wordpress.org">WordPress</a> with <a href="http://www.ait-themes.club">AIT WordPress Framework</a>.'

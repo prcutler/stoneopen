@@ -315,7 +315,7 @@ class AitImageResizer
 			return $url;
 
     	//validate inputs
-    	if(!$url) return false;
+    	if(!$url) return $url;
     	if(!isset($params['w'])) return $url;
 
     	//define upload path & dir
@@ -324,7 +324,7 @@ class AitImageResizer
     	$upload_url = $upload_info['baseurl'];
 
 		//check if $img_url is local
-		if(strpos($url, $upload_url) === false) return false;
+		if(strpos($url, $upload_url) === false) return $url;
 
 		//define path of image
 		$rel_path = str_replace($upload_url, '', $url);

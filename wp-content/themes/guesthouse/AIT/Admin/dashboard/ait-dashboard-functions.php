@@ -3,7 +3,7 @@
 /**
  * AIT WordPress Framework
  *
- * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.com)
+ * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.club)
  */
 
 
@@ -13,8 +13,6 @@ $aitDashboardPages = array(
 	'dashboard' => 	__('Dashboard', THEME_CODE_NAME),
 	'docs' => 		__('Documentation', THEME_CODE_NAME),
 	'faq' => 		__('FAQ', THEME_CODE_NAME),
-	//'videos' => 	__('Videos', THEME_CODE_NAME),
-	'support' => 	__('Support Forum', THEME_CODE_NAME),
 );
 
 $aitDashboardWidgets = array();
@@ -82,11 +80,7 @@ function aitDashboardTabs()
 			($current == '' and $i == 0) ? $active = ' nav-tab-active' : $active = ''; // activate first item
 		}
 
-		if($tabKey == 'support'){
-			$links .= '<a class="nav-tab" target="_blank" href="http://support.ait-themes.com/categories/wp-' . THEME_CODE_NAME . '">' . $tabTitle . '</a>';
-		}else{
-			$links .= '<a class="nav-tab' . $active .'" href="admin.php?page=ait-admin' . $tabSlug .'">' . $tabTitle . '</a>';
-		}
+		$links .= '<a class="nav-tab' . $active .'" href="admin.php?page=ait-admin' . $tabSlug .'">' . $tabTitle . '</a>';
 		$i++;
 	}
 

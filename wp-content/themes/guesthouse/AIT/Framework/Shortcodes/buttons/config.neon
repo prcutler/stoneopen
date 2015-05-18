@@ -26,7 +26,7 @@ popupOptions:
 	link:
 		label: Link
 		type: text
-		default: http://www.ait-themes.com
+		default: http://www.ait-themes.club
 		class: button
 	modalname:
 		label: Modal Window Name

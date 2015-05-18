@@ -3,7 +3,7 @@
 /**
  * AIT WordPress Framework
  *
- * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.com)
+ * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.club)
  */
 if(!defined('THEME_CODE_NAME'))	define('THEME_CODE_NAME', sanitize_key(strtolower(get_stylesheet())));
 
@@ -49,10 +49,15 @@ define("AIT_CACHE_URL", get_stylesheet_directory_uri() . '/ait-cache');
 
 define("AIT_TEMPLATES_DIR", get_stylesheet_directory() . '/Templates');
 
-$showAdmin = array('dashboard' => 'enabled', 'backup' => 'enabled', 'skins' => 'enabled', 'branding' => 'disable', 'website_settings' => 'enabled', 'ait_news_notifications' => 'enabled', 'wysiwyg' => 'enabled');
+$showAdmin = array('dashboard' => 'enabled', 'backup' => 'enabled', 'skins' => 'enabled', 'branding' => 'enabled', 'website_settings' => 'enabled', 'ait_news_notifications' => 'enabled', 'wysiwyg' => 'enabled');
 
 if(file_exists(THEME_DIR."/config.php")){
 	$showAdmin = array_merge($showAdmin, parse_ini_file(THEME_DIR."/config.php"));
+}
+
+function aitShowAdminFeature($feature){
+	global $showAdmin;
+	return (isset($showAdmin[$feature]) and $showAdmin[$feature] === 'enabled');
 }
 
 if(file_exists(THEME_DIR . '/tn.php'))

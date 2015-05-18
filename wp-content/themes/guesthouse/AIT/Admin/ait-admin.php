@@ -3,7 +3,7 @@
 /**
  * AIT WordPress Framework
  *
- * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.com)
+ * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.club)
  */
 
 
@@ -235,8 +235,6 @@ function aitSetupAdminMenu()
  */
 function aitGenerateAdminMenu($config, $brandingOptions)
 {
-	global $aitDisableBranding, $showAdmin;
-
 	$branding = @$brandingOptions->branding;
 	$updateData = aitGetAitUpdatesData();
 
@@ -248,33 +246,31 @@ function aitGenerateAdminMenu($config, $brandingOptions)
 	unset($c);
 	$wkey = $key;
 
-	if(current_user_can('manage_options') && @$showAdmin['dashboard'] != 'disabled'){
+	if(current_user_can('manage_options') && aitShowAdminFeature('dashboard')){
 		$adminTitle = THEME_SHORT_NAME . ' ' . __('Options', THEME_CODE_NAME);
 		$title = 'AIT Themes';
 		$slug = 'ait-admin';
 		$key = 'ait-admin';
 	}else{
-		if(@$showAdmin['backup'] != 'disabled'){
+		if(aitShowAdminFeature('backup')){
 			$adminTitle = $branding->adminTitle;
 			$title = $adminTitle;
 			$slug = 'ait-admin-backup';
 			$key = 'backup';
 		}
-		if(@$showAdmin['skins'] != 'disabled'){
+		if(aitShowAdminFeature('skins')){
 			$adminTitle = $branding->adminTitle;
 			$title = $adminTitle;
 			$slug = 'ait-admin-skins';
 			$key = 'skins';
 		}
-		if(!@$aitDisableBranding){
-			if(@$showAdmin['branding'] != 'disabled'){
-				$adminTitle = $branding->adminTitle;
-				$title = $adminTitle;
-				$slug = 'ait-admin-branding';
-				$key = 'branding';
-			}
+		if(aitShowAdminFeature('branding')){
+			$adminTitle = $branding->adminTitle;
+			$title = $adminTitle;
+			$slug = 'ait-admin-branding';
+			$key = 'branding';
 		}
-		if(@$showAdmin['website_settings'] != 'disabled'){
+		if(aitShowAdminFeature('website_settings')){
 			$adminTitle = $branding->adminTitle;
 			$title = $adminTitle;
 			$slug = 'ait-admin-' . $wkey;
@@ -285,10 +281,11 @@ function aitGenerateAdminMenu($config, $brandingOptions)
 	add_filter('option_page_capability_' . AIT_OPTIONS_KEY , create_function('', "return 'unfiltered_html';"), 1);
 
 	if ($slug) {
+		$cap = current_user_can('manage_options') ? 'manage_options' : 'unfiltered_html';
 		add_menu_page(
 			$title,
 			sprintf( __('AIT Dashboard %s', THEME_CODE_NAME), "<span class='update-plugins count-{$updateData['counts']['total']}' title='{$updateData['title']}'><span class='update-count'>" . number_format_i18n($updateData['counts']['total']) . "</span></span>" ),
-			'unfiltered_html',
+			$cap,
 			$slug,
 			create_function('', 'aitAdmin("' . $key . '", "' . $adminTitle . '");'),
 			THEME_URL . '/' . @$branding->adminMenuIcon,
@@ -296,8 +293,8 @@ function aitGenerateAdminMenu($config, $brandingOptions)
 		);
 	}
 
-	if(@$showAdmin['dashboard'] != 'disabled'){
-		if(current_user_can('manage_options') && @$showAdmin['dashboard'] != 'disabled'){
+	if(aitShowAdminFeature('dashboard')){
+		if(current_user_can('manage_options') && aitShowAdminFeature('dashboard')){
 			add_submenu_page(
 				'ait-admin',
 				THEME_LONG_NAME . ' Dashboard',
@@ -317,19 +314,14 @@ function aitGenerateAdminMenu($config, $brandingOptions)
 		}
 	}
 
-	if(isset($showAdmin['website_settings']) == false){
-		$showAdmin['website_settings'] = "enabled";
-	}
-
-	if(@$showAdmin['website_settings'] != 'disabled'){
-
+	if(aitShowAdminFeature('website_settings')){
 		foreach($config as $keyF => $page){
 			if($keyF != $key){
 				add_submenu_page(
 					$slug,
 					THEME_LONG_NAME . ' ' . esc_html($page['title']),
 					esc_html($page['menu-title']),
-					'unfiltered_html',
+					'manage_options',
 					'ait-admin-' . $keyF,
 					create_function('', 'aitAdmin("' . $keyF . '", "' . $adminTitle . '");')
 				);
@@ -346,42 +338,28 @@ function aitGenerateAdminMenu($config, $brandingOptions)
 
 	}
 
-	if(isset($aitDisableBranding) == false){
-		$aitDisableBranding = false;
-	}
-
-	if(!@$aitDisableBranding){
-		if(isset($showAdmin['branding']) == false){
-			$showAdmin['branding'] = "enabled";
-		}
-
-		if(@$showAdmin['branding'] != 'disabled'){
-			if($slug != "ait-admin-branding"){
-				add_submenu_page(
-					$slug,
-					THEME_LONG_NAME . ' ' . __('Admin Branding', THEME_CODE_NAME),
-					__('Admin Branding', THEME_CODE_NAME),
-					'manage_options',
-					'ait-admin-branding',
-					create_function('', 'aitAdmin("branding", "' . __('Admin Branding', THEME_CODE_NAME) . '");')
-				);
-			} else {
-				add_submenu_page(
-					$slug,
-					THEME_LONG_NAME . ' ' . __('Admin Branding', THEME_CODE_NAME),
-					__('Admin Branding', THEME_CODE_NAME),
-					'manage_options',
-					'ait-admin-branding'
-				);
-			}
+	if(aitShowAdminFeature('branding')){
+		if($slug != "ait-admin-branding"){
+			add_submenu_page(
+				$slug,
+				THEME_LONG_NAME . ' ' . __('Admin Branding', THEME_CODE_NAME),
+				__('Admin Branding', THEME_CODE_NAME),
+				'manage_options',
+				'ait-admin-branding',
+				create_function('', 'aitAdmin("branding", "' . __('Admin Branding', THEME_CODE_NAME) . '");')
+			);
+		} else {
+			add_submenu_page(
+				$slug,
+				THEME_LONG_NAME . ' ' . __('Admin Branding', THEME_CODE_NAME),
+				__('Admin Branding', THEME_CODE_NAME),
+				'manage_options',
+				'ait-admin-branding'
+			);
 		}
 	}
 
-	if(isset($showAdmin['skins']) == false){
-		$showAdmin['skins'] = "enabled";
-	}
-
-	if(@$showAdmin['skins'] != 'disabled'){
+	if(aitShowAdminFeature('skins')){
 		if($slug != "ait-admin-skins"){
 			add_submenu_page(
 				$slug,
@@ -402,11 +380,8 @@ function aitGenerateAdminMenu($config, $brandingOptions)
 		}
 	}
 
-	if(isset($showAdmin['backup']) == false){
-		$showAdmin['backup'] = "enabled";
-	}
 
-	if(@$showAdmin['backup'] != 'disabled'){
+	if(aitShowAdminFeature('backup')){
 		if($slug != "ait-admin-backup"){
 			add_submenu_page(
 				$slug,
@@ -1475,7 +1450,8 @@ function aitUpdateAitNews()
 		'body' => array('aitNews' => true, 'lastDate' => empty($news) ? '' : $news[0]->date),
 	);
 
-	$rawResponse = wp_remote_post('http://ait-themes.com/notifications.php', $options);
+	$d = 'com';
+	$rawResponse = wp_remote_post("http://ait-themes.{$d}/notifications.php", $options);
 
 
 	if(is_wp_error($rawResponse) || 200 != wp_remote_retrieve_response_code($rawResponse))
@@ -1541,7 +1517,7 @@ function aitUpdateThemeVersions()
 		'body' => array('themeVersions' => true, 'theme' => THEME_CODE_NAME, 'version' => $currentVersion),
 	);
 
-	$rawResponse = wp_remote_post('http://ait-themes.com/notifications.php', $options);
+	$rawResponse = wp_remote_post('http://ait-themes.club/notifications.php', $options);
 
 
 	if(is_wp_error($rawResponse) || 200 != wp_remote_retrieve_response_code($rawResponse))

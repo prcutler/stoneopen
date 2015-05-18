@@ -3,7 +3,7 @@
 /**
  * AIT WordPress Framework
  *
- * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.com)
+ * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.club)
  */
 
 /**
@@ -747,6 +747,10 @@ class WpLattePostEntity extends WpLatteBaseEntity
 
 		if($args !== false){
 			$url = $args[0];
+
+			if (TIMTHUMB_URL == '')
+				return $url;
+
 			if(is_multisite()){
 				if(strstr($url, '/files/') !== false){
 					if(isset($blog_id) && $blog_id > 0){

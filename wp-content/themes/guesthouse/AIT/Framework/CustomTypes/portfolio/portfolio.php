@@ -3,7 +3,7 @@
 /**
  * AIT Theme Admin
  *
- * Copyright (c) 2011, AIT s.r.o (http://ait-themes.com)
+ * Copyright (c) 2011, AIT s.r.o (http://ait-themes.club)
  *
  */
 
