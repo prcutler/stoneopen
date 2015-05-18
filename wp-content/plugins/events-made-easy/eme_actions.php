@@ -54,6 +54,14 @@ function eme_actions_init() {
       echo '{"bookedSeats":'.eme_get_booked_seats(intval($_GET['event_id'])).',"availableSeats":'.eme_get_available_seats(intval($_GET['event_id'])).'}';
       exit();
    }
+   if (isset($_GET['eme_admin_action']) && $_GET['eme_admin_action'] == 'autocomplete_locations' && is_admin()) {
+      eme_locations_search_ajax();
+      exit;
+   }
+   if (isset($_GET['eme_admin_action']) && $_GET['eme_admin_action'] == 'autocomplete_people' && is_admin()) {
+      eme_people_search_ajax();
+      exit;
+   }
    if (isset($_GET['eme_admin_action']) && $_GET['eme_admin_action'] == 'booking_printable' && is_admin() && isset($_GET['event_id'])) {
       eme_printable_booking_report(intval($_GET['event_id']));
       exit();
@@ -103,15 +111,14 @@ function eme_actions_init() {
       eme_fdgg_notification();
       exit();
    }
-   if (isset($_GET['eme_cancel_booking']) && is_user_logged_in()) {
-	   $booking_id=intval($_GET['eme_cancel_booking']);
-	   $booking=eme_get_booking($booking_id);
-      $event=eme_get_event($booking['event_id']);
-      $future=strtotime($event['event_start_date']." ".$event['event_start_time']) > time()?1:0;
-	   $current_userid=get_current_user_id();
-	   if ($booking['wp_id']==$current_userid && $future) {
-		   eme_delete_booking($booking_id);
-	   }
+   if (isset($_GET['eme_eventAction']) && $_GET['eme_eventAction']=="worldpay_notification") {
+      eme_worldpay_notification();
+      exit();
+   }
+   if (isset($_GET['eme_eventAction']) && $_GET['eme_eventAction']=="sagepay_notification") {
+      eme_sagepay_notification();
+      // sagepay doesn't use a notification url, but sends the status along as part of the return url, so we just check
+      // the status and set payed or not, but then we continue regular flow of events
    }
 
 }
@@ -163,9 +170,13 @@ function eme_admin_register_scripts() {
    wp_register_script( 'eme-jquery-timeentry', EME_PLUGIN_URL.'js/timeentry/jquery.timeentry.js', array('jquery','eme-jquery-plugin','eme-jquery-mousewheel'));
    wp_register_script( 'eme-jquery-datatables', EME_PLUGIN_URL."js/jquery-datatables/js/jquery.dataTables.min.js",array( 'jquery' ));
    wp_register_script( 'eme-datatables-clearsearch', EME_PLUGIN_URL."js/jquery-datatables/plugins/datatables_clearsearch.js");
+   wp_register_script( 'eme-datatables-colvis', EME_PLUGIN_URL."js/jquery-datatables/extensions/ColVis-1.1.1/js/dataTables.colVis.min.js");
+   wp_register_script( 'eme-datatables-colreorder', EME_PLUGIN_URL."js/jquery-datatables/extensions/ColReorder-1.1.3-dev/js/dataTables.colReorder.js");
+   wp_register_script( 'eme-datatables-tabletools', EME_PLUGIN_URL."js/jquery-datatables/extensions/TableTools-2.2.4-dev/js/dataTables.tableTools.js");
    wp_register_script( 'eme-google-maps', '//maps.google.com/maps/api/js?v=3.1&sensor=false');
    wp_register_script( 'eme', EME_PLUGIN_URL.'js/eme.js', array('jquery'));
    wp_register_script( 'eme-events', EME_PLUGIN_URL.'js/eme_admin_events.js',array( 'jquery' ));
+   wp_register_script( 'eme-registrations', EME_PLUGIN_URL.'js/eme_admin_registrations.js',array( 'jquery' ));
    wp_register_script( 'eme-options', EME_PLUGIN_URL.'js/eme_admin_options.js',array( 'jquery' ));
    wp_register_script( 'eme-sendmails', EME_PLUGIN_URL.'js/eme_admin_send_mails.js',array( 'jquery' ));
    eme_admin_enqueue_js();
@@ -177,7 +188,7 @@ function eme_register_scripts() {
    wp_register_script( 'eme-jquery-plugin', EME_PLUGIN_URL.'js/jquery-datepick/jquery.plugin.min.js');
    wp_register_script( 'eme-jquery-datepick',EME_PLUGIN_URL.'js/jquery-datepick/jquery.datepick.js',array( 'jquery','eme-jquery-plugin' ));
    wp_register_style('eme_stylesheet',EME_PLUGIN_URL."events_manager.css");
-   if (get_option('eme_use_client_clock')) {
+   if (get_option('eme_use_client_clock') && !isset($_SESSION['eme_client_unixtime'])) {
    	wp_register_script( 'eme-client_clock_submit', EME_PLUGIN_URL.'js/client-clock.js', array('jquery'));
 	wp_enqueue_script('eme-client_clock_submit');
    }

@@ -78,6 +78,22 @@ function eme_get_contact($event) {
    return $userinfo;
 }
 
+function eme_get_author($event) {
+   $author_id = $event['event_author'];
+   if ($author_id < 1) {
+      if (function_exists('is_multisite') && is_multisite()) {
+         $thisblog = get_current_blog_id();
+         $userinfo = get_user_by('email', get_blog_option($thisblog, 'admin_email'));
+      } else {
+         $userinfo = get_user_by('email', get_option('admin_email'));
+      }
+      #$contact_id = get_current_user_id();
+   } else {
+      $userinfo=get_userdata($author_id);
+   }
+   return $userinfo;
+}
+
 function eme_get_user_phone($user_id) {
    return get_user_meta($user_id, 'eme_phone',true);
 }
@@ -284,14 +300,15 @@ function eme_category_url($category) {
       $the_link = eme_get_events_page(true, false);
       // some plugins add the lang info to the home_url, remove it so we don't get into trouble or add it twice
       $the_link = remove_query_arg('lang',$the_link);
-      $the_link = add_query_arg( array( 'eme_event_cat' => $category['category_name'] ), $the_link );
+      $slug = $category['category_slug'] ? $category['category_slug'] : $category['category_name'];
+      $the_link = add_query_arg( array( 'eme_event_cat' => $slug ), $the_link );
       if (!empty($language))
          $the_link = add_query_arg( array( 'lang' => $language ), $the_link );
    }
    return $the_link;
 }
 
-function eme_payment_return_url($event,$payment_id,$resultcode) {
+function eme_payment_return_url($event,$payment,$resultcode) {
    $the_link=eme_event_url($event);
    if (get_option('eme_payment_show_custom_return_page')) {
       if ($resultcode==1) {
@@ -300,11 +317,9 @@ function eme_payment_return_url($event,$payment_id,$resultcode) {
          $res="fail";
       }
       $the_link = add_query_arg( array( 'eme_pmt_result' => $res ), $the_link );
-      $event_id=$event['event_id'];
-      $the_link = add_query_arg( array( 'event_id' => $event_id ), $the_link );
-      if (get_option('eme_payment_add_bookingid_to_return')) {
-         $the_link = add_query_arg( array( 'eme_pmt_id' => $payment_id ), $the_link );
-      }
+      $the_link = add_query_arg( array( 'event_id' => $event['event_id'] ), $the_link );
+      if (get_option('eme_payment_add_bookingid_to_return'))
+         $the_link = add_query_arg( array( 'eme_pmt_id' => $payment['id'] ), $the_link );
    }
    return $the_link;
 }
@@ -323,6 +338,19 @@ function eme_cancel_booking_url($booking_id) {
    // some plugins add the lang info to the home_url, remove it so we don't get into trouble or add it twice
    $the_link = remove_query_arg('lang',$the_link);
    $the_link = add_query_arg( array( 'eme_cancel_booking' => $booking_id ), $the_link );
+   if (!empty($language))
+	   $the_link = add_query_arg( array( 'lang' => $language ), $the_link );
+   return $the_link;
+}
+
+function eme_cancel_url($payment_randomid) {
+   $def_language = eme_detect_lang();
+   $language = $def_language;
+
+   $the_link = eme_get_events_page(true, false);
+   // some plugins add the lang info to the home_url, remove it so we don't get into trouble or add it twice
+   $the_link = remove_query_arg('lang',$the_link);
+   $the_link = add_query_arg( array( 'eme_cancel_booking' => $payment_randomid ), $the_link );
    if (!empty($language))
 	   $the_link = add_query_arg( array( 'lang' => $language ), $the_link );
    return $the_link;
