@@ -3,7 +3,7 @@
 /**
  * AIT WordPress Framework
  *
- * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.com)
+ * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.club)
  */
 
 /**
@@ -68,21 +68,17 @@ if(isset($aitThemeCustomTypes) and !empty($aitThemeCustomTypes)){
 
 function aitAddAdminBarMenu($wpAdminBar)
 {
-	global $showAdmin, $aitThemeConfig;
+	global $aitThemeConfig;
 
 	$adminUrl = get_admin_url(0, 'admin.php?page=');
 	$adminId = 'ait-admin';
 	$rootId = '';
 	$rootHref = '';
 
-	if(isset($showAdmin['branding']) == false){
-		$showAdmin['branding'] = "enabled";
-	}
-
-	if(@$showAdmin['backup'] != 'disabled'){ $rootId = 'ait-admin-backup'; }
-	if(@$showAdmin['skins'] != 'disabled'){ $rootId = 'ait-admin-skins'; }
-	if(@$showAdmin['branding'] != 'disabled'){ $rootId = 'ait-admin-branding'; }
-	if(@$showAdmin['website_settings'] != 'disabled'){
+	if(aitShowAdminFeature('backup')){ $rootId = 'ait-admin-backup'; }
+	if(aitShowAdminFeature('skins')){ $rootId = 'ait-admin-skins'; }
+	if(aitShowAdminFeature('branding')){ $rootId = 'ait-admin-branding'; }
+	if(aitShowAdminFeature('website_settings')){
 		$c = array_slice($aitThemeConfig, 0, 1);
 		$_keys = array_keys($c);
 		$key = reset($_keys);
@@ -93,13 +89,13 @@ function aitAddAdminBarMenu($wpAdminBar)
 
 	$pages = array();
 
-	if(@$showAdmin['branding'] != 'disabled' and isset($aitDisableBranding) and !@$aitDisableBranding){ $pages['branding'] = __('Admin Branding', 'ait'); }
-	if(@$showAdmin['skins'] != 'disabled'){ $pages['skins'] = __('Skins', 'ait'); }
-	if(@$showAdmin['backup'] != 'disabled'){ $pages['backup'] = __('Backup', 'ait'); }
+	if(aitShowAdminFeature('branding') and isset($aitDisableBranding) and !@$aitDisableBranding){ $pages['branding'] = __('Admin Branding', 'ait'); }
+	if(aitShowAdminFeature('skins')){ $pages['skins'] = __('Skins', 'ait'); }
+	if(aitShowAdminFeature('backup')){ $pages['backup'] = __('Backup', 'ait'); }
 
 	if ($rootId) {
 		// root node
-		if(@$showAdmin['dashboard'] != 'disabled'){
+		if(aitShowAdminFeature('dashboard')){
 			$wpAdminBar->add_node(array(
 				'id' => $rootId,
 				'title' => __('AIT Themes Admin', 'ait'),
@@ -116,13 +112,10 @@ function aitAddAdminBarMenu($wpAdminBar)
 
 
 	// Dashboard pages
-	if(@$showAdmin['dashboard'] != 'disabled'){
+	if(aitShowAdminFeature('dashboard')){
 		$dashboardPages = array(
-			//'dashboard' => 	__('Dashboard', 'ait'),
 			'docs' => 		__('Documentation', 'ait'),
 			'faq' => 		__('FAQ', 'ait'),
-			//'videos' => 	__('Videos', 'ait'),
-			'support' => 	__('Support Forum', 'ait'),
 		);
 
 		$wpAdminBar->add_node(array(
@@ -133,16 +126,13 @@ function aitAddAdminBarMenu($wpAdminBar)
 		));
 
 		foreach($dashboardPages as $id => $title){
-			if($id == 'support')
-				$wpAdminBar->add_node(array('id' => "{$rootId}-{$id}", 'parent' => $rootId . '-dashboard', 'title' => $title, 'href' => 'http://support.ait-themes.com/categories/wp-' . THEME_CODE_NAME, 'meta' => array('target' => '_blank')));
-			else
-				$wpAdminBar->add_node(array('id' => "{$rootId}-{$id}", 'parent' => $rootId . '-dashboard', 'title' => $title, 'href' => $adminUrl . $adminId . "&tab={$id}"));
+			$wpAdminBar->add_node(array('id' => "{$rootId}-{$id}", 'parent' => $rootId . '-dashboard', 'title' => $title, 'href' => $adminUrl . $adminId . "&tab={$id}"));
 		}
 	}
 
 
 	//  Config pages
-	if(@$showAdmin['website_settings'] != 'disabled'){
+	if(aitShowAdminFeature('website_settings')){
 		foreach($aitThemeConfig as $key => $page){
 
 			$wpAdminBar->add_node(array(

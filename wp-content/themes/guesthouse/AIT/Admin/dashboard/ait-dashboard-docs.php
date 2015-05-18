@@ -3,7 +3,7 @@
 /**
  * AIT WordPress Framework
  *
- * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.com)
+ * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.club)
  */
 
 $docPage = (isset($_GET['tab']) and $_GET['tab'] == 'docs' and isset($_GET['doc'])) ? $_GET['doc'] : '';
@@ -11,7 +11,8 @@ $docPage = (isset($_GET['tab']) and $_GET['tab'] == 'docs' and isset($_GET['doc'
 $adminDocsUrl = admin_url('admin.php?page=ait-admin&tab=docs');
 $adminDocUrl = admin_url('admin.php?page=ait-admin&tab=docs&doc=');
 
-$server = "http://www.ait-themes.com/";
+$d = 'com';
+$server = "http://www.ait-themes.{$d}/";
 $documentationUrl = $server . "documentation/";
 $docUrl = $server . "doc/";
 

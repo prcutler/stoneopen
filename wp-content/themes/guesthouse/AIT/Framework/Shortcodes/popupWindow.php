@@ -188,7 +188,7 @@ $data = NNeon::decode(file_get_contents($configFile, true));
 			echo '<input type="text" id="ait-'.$key.'" name="'.$key.'" value="'.$value['default'].'" class="ait-colorpicker type-'.$value['class'].'">';
 
 		// select-language
-		} elseif($value['type'] == 'select-language'){
+		} elseif($value['type'] == 'select-language' and function_exists('icl_get_languages')){
 
 			// require WPML plugin
 			$languages = icl_get_languages('skip_missing=0');

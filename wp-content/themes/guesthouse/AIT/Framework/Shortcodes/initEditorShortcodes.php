@@ -13,7 +13,7 @@ Create Our Initialization Function
 */
 function aitAddShortcodesButtons()
 {
-	global $showAdmin, $aitThemeShortcodes, $aitEditorShortcodes;
+	global $aitThemeShortcodes, $aitEditorShortcodes;
 
 	if(isset($aitThemeShortcodes) and !empty($aitThemeShortcodes)){
 		foreach($aitThemeShortcodes as $shortcode => $ver){
@@ -23,15 +23,11 @@ function aitAddShortcodesButtons()
 
 	if(!current_user_can('edit_posts') && !current_user_can('edit_pages')) return;
 
-   	if(isset($showAdmin['wysiwyg']) == false){
-   		$showAdmin['wysiwyg'] = "enabled";
-   	}
 
-   	if (get_user_option('rich_editing') == 'true' && $showAdmin['wysiwyg'] != 'disabled' and is_admin()) {
-     	add_filter('mce_external_plugins', 'aitMceExternaPlugins');
-     	add_filter('mce_buttons_3', 'aitMceButtons');
-   	}
-
+	if (get_user_option('rich_editing') == 'true' && aitShowAdminFeature('wysiwyg') and is_admin()) {
+		add_filter('mce_external_plugins', 'aitMceExternaPlugins');
+		add_filter('mce_buttons_3', 'aitMceButtons');
+	}
 }
 
 
@@ -54,7 +50,6 @@ function aitAddShortcodesButtonsCss() {
 }
 
 
-
 /*
 Register Buttons
 */
@@ -63,6 +58,7 @@ function aitMceButtons( $buttons ) {
 
 	if(isset($aitEditorShortcodes) and !empty($aitEditorShortcodes)){
 		foreach($aitEditorShortcodes as $shortcode){
+			if($shortcode === 'language' and !function_exists('icl_get_languages')) continue;
 			$buttons[] = "ait_shortcodes_" . $shortcode;
 		}
 	}
@@ -85,7 +81,7 @@ function aitMceExternaPlugins($plugins) {
 			$plugins["ait_shortcodes_" . $shortcode] =  AIT_FRAMEWORK_URL . "/Shortcodes/pluginScript{$oldWpVersion}.php?plugin={$shortcode}&from={$from}";
 		}
 	}
-   	return $plugins;
+	return $plugins;
 }
 
 /*
@@ -94,13 +90,13 @@ Shortcode empty Paragraph fix
 add_filter('the_content', 'sc_empty_p_fix');
 function sc_empty_p_fix($content)
 {
-    $array = array (
-        '<p>[' => '[',
-        ']</p>' => ']',
-        ']<br />' => ']'
-    );
+	$array = array (
+		'<p>[' => '[',
+		']</p>' => ']',
+		']<br />' => ']'
+	);
 
-    $content = strtr($content, $array);
+	$content = strtr($content, $array);
 
 	return $content;
 }

@@ -94,6 +94,7 @@ class WPAlchemy_MetaBox
 
 
 	var $config;
+	var $configData;
 	var $configDefaults;
 
 	/**
@@ -553,6 +554,8 @@ class WPAlchemy_MetaBox
 		}
 	}
 
+
+
 	/**
 	 * Used to correct double serialized data during post/page export/import
 	 *
@@ -662,9 +665,11 @@ class WPAlchemy_MetaBox
 		ob_start();
 
 		?>
+		<?php if ($this->hide_editor): ?>
 		<style type="text/css">
-			<?php if ($this->hide_editor): ?> #postdiv, #postdivrich { display:none; } <?php endif; ?>
+			 #postdiv, #postdivrich { display:none; }
 		</style>
+		<?php endif; ?>
 		<?php
 
 		$content = ob_get_contents();
@@ -874,7 +879,7 @@ class WPAlchemy_MetaBox
 		$sections_count = 0;
 		$structure = array();
 		foreach($config as $k => $v){
-			if(isset($v['section-title']) or isset($v['section'])){
+			if(is_string($v) and ($v === 'section-title' or $v === 'section')){
 				$sections_count++;
 				$structure[] = $v;
 			}else{

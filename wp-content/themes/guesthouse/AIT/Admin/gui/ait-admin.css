@@ -1,7 +1,7 @@
 /**
  * AIT WordPress Framework
  *
- * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.com)
+ * Copyright (c) 2011, Affinity Information Technology, s.r.o. (http://ait-themes.club)
  */
 
 .form-table .ait-clone-form-table{
@@ -310,3 +310,49 @@
 
 .form-table tr td input.color {width: 115px}
 .form-table tr td input.opacity {width: 30px}
+
+
+@media all and (max-width: 782px) {
+
+/* ==================================== */
+/* = RESPONSIVE FOR ITEMS IN WP-ADMIN = */
+/* ==================================== */
+
+	.column-thumbnail,
+	.column-address,
+	.column-ait-dir-item-location,
+	.column-category,
+	.column-menu_order,
+	.column-rating-status,
+	.column-rating-value,
+	.column-rating-post-id,
+	.column-offer_item,
+	.column-offer_date_from,
+	.column-offer_date_to,
+	.column-offer_price,
+	.column-offer_special,
+	.column-offer_capacity,
+	.column-tour_email,
+	.column-tour_phone,
+	.column-tour_item,
+	.column-tour_offer,
+	.column-date,
+	.column-content,
+	.column-tour_offers,
+	.column-ait-dir-item-amenities { display: none; }
+
+	.post-type-ait-tour-reservation .check-column { width: 10%; }
+	.post-type-ait-tour-reservation .column-title { width: 90%; }
+
+}
+
+
+#TB_ajaxContent {
+	width: auto !important;
+	height: auto !important;
+	position: absolute;
+	top: 30px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}

@@ -13,5 +13,6 @@ $ALLOWED_SITES = array (
 	'imgur.com',
 	'imageshack.us',
 	'tinypic.com',
+	'preview.ait-themes.com',
 	'preview.ait-themes.com'
 );

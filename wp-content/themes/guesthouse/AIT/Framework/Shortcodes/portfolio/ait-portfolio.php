@@ -12,9 +12,9 @@ function ait_portfolio( $params ) {
 
 
     if($cat_id != 0) {
-		$args = array( 'numberposts' => 500, 'post_type' => 'ait-portfolio', 'orderby' => 'menu_order', 'order' => 'ASC', 'suppress_filters' => false, 'tax_query' => array( array( 'taxonomy' => 'ait-portfolio-category', 'field' => 'id', 'terms' => $cat_id) ) );
+		$args = array( 'numberposts' => 500, 'post_type' => 'ait-portfolio', 'orderby' => 'menu_order', 'order' => 'ASC', 'suppress_filters' => false, 'tax_query' => array( array( 'taxonomy' => 'ait-portfolio-category', 'field' => 'id', 'terms' => intval($cat_id)) ) );
   	} else {
-		$args = array( 'numberposts' => 500, 'post_type' => 'ait-portfolio', 'orderby' => 'menu_order', 'order' => 'ASC', 'suppress_filters' => false, 'category' => $cat_id );
+		$args = array( 'numberposts' => 500, 'post_type' => 'ait-portfolio', 'orderby' => 'menu_order', 'order' => 'ASC', 'suppress_filters' => false, 'category' => intval($cat_id) );
   	}
 
 	if ($cols > 4) $cols = 1;

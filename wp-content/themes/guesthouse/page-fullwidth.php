@@ -15,7 +15,7 @@ $latteParams['post'] = WpLatte::createPostEntity(
 	)
 );
 
-$latteParams['page']->classes = implode(' ', get_post_class());
+$latteParams['post']->classes = implode(' ', get_post_class());
 
 
 if ( ! isset( $content_width ) )
