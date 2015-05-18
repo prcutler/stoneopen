@@ -53,7 +53,7 @@ function eme_locations_page() {
          $message = __('You have no right to copy this location!','eme');
          eme_locations_table_layout($message);
       }
-    } elseif (isset($_POST['eme_admin_action']) && $_POST['eme_admin_action'] == "addlocation") { 
+    } elseif (isset($_POST['eme_admin_action']) && $_POST['eme_admin_action'] == "add_location") { 
       if (current_user_can( get_option('eme_cap_add_locations'))) {
          $location = eme_new_location();
          eme_locations_edit_layout($location);
@@ -61,7 +61,7 @@ function eme_locations_page() {
          $message = __('You have no right to add a location!','eme');
          eme_locations_table_layout($message);
       }
-   } elseif (isset($_POST['eme_admin_action']) && $_POST['eme_admin_action'] == "deletelocation" && isset($_POST['locations'])) { 
+   } elseif (isset($_POST['eme_admin_action']) && $_POST['eme_admin_action'] == "delete_location" && isset($_POST['locations'])) { 
       $locations = $_POST['locations'];
       foreach($locations as $location_id) {
          $location = eme_get_location(intval($location_id));
@@ -326,7 +326,7 @@ jQuery(document).ready(function($){
                  $selected = "";
               }
            ?>
-              <input type="checkbox" name="location_category_ids[]" value="<?php echo $category['category_id']; ?>" <?php echo $selected ?> /><?php echo $category['category_name']; ?><br />
+              <input type="checkbox" name="location_category_ids[]" value="<?php echo $category['category_id']; ?>" <?php echo $selected ?> /><?php echo eme_trans_sanitize_html($category['category_name']); ?><br />
            <?php
            }
            ?>
@@ -403,7 +403,7 @@ function eme_locations_table_layout($message = "") {
          <?php } ?>
          <div class="wrap">
          <form id="locations-filter" method="post" action="<?php echo admin_url("admin.php?page=eme-locations"); ?>">
-            <input type="hidden" name="eme_admin_action" value="addlocation" />
+            <input type="hidden" name="eme_admin_action" value="add_location" />
             <input type="submit" class="button-primary" name="submit" value="<?php _e('Add location', 'eme');?>" />
          </form>
          </div>
@@ -412,7 +412,7 @@ function eme_locations_table_layout($message = "") {
          <div id="col-container">
              <div class="col-wrap">
                 <form id="locations-filter" method="post" action="<?php echo admin_url("admin.php?page=eme-locations"); ?>">
-                  <input type="hidden" name="eme_admin_action" value="deletelocation" />
+                  <input type="hidden" name="eme_admin_action" value="delete_location" />
                   <?php if (count($locations)>0) : ?>
                   <table class="widefat">
                      <thead>
@@ -432,7 +432,7 @@ function eme_locations_table_layout($message = "") {
                            <th><?php _e('Name', 'eme') ?></th>
                            <th><?php _e('Address', 'eme') ?></th>
                            <th><?php _e('Town', 'eme') ?></th>
-                           <th></th>
+                           <th><?php _e('Copy', 'eme') ?></th>
                         </tr>
                      </tfoot>
                      <tbody>
@@ -440,10 +440,10 @@ function eme_locations_table_layout($message = "") {
                         <tr>
                            <td><input type="checkbox" class ="row-selector" value="<?php echo $this_location['location_id']; ?>" name="locations[]" /></td>
                            <td><?php echo $this_location['location_id']; ?></td>
-                           <td><a href="<?php echo admin_url("admin.php?page=eme-locations&amp;eme_admin_action=edit_location&amp;location_id=".$this_location['location_id']); ?>"><?php echo eme_trans_sanitize_html($this_location['location_name']); ?></a></td>
+                           <td><a href="<?php echo admin_url("admin.php?page=eme-locations&amp;eme_admin_action=edit_location&amp;location_id=".$this_location['location_id']); ?>" title="<?php _e('Edit location','eme');?>"><?php echo eme_trans_sanitize_html($this_location['location_name']); ?></a></td>
                            <td><?php echo eme_trans_sanitize_html($this_location['location_address']); ?></td>
                            <td><?php echo eme_trans_sanitize_html($this_location['location_town']); ?></td>
-                           <td><a href="<?php echo admin_url("admin.php?page=eme-locations&amp;eme_admin_action=copy_location&amp;location_id=".$this_location['location_id']); ?>" title="<?php _e('Duplicate this location','eme'); ?>">+</a></td>
+                           <td><a href="<?php echo admin_url("admin.php?page=eme-locations&amp;eme_admin_action=copy_location&amp;location_id=".$this_location['location_id']); ?>" title="<?php _e('Duplicate this location','eme'); ?>"><img src='<?php echo EME_PLUGIN_URL."images/copy_16.png";?>'/></a></td>
                         </tr>
                         <?php endforeach; ?>
                      </tbody>
@@ -666,11 +666,6 @@ function eme_update_location($location) {
       unset($location['location_id']);
    }
 
-   // we can't check the return code for wpdb->update,
-   // since sometimes the update returns 0 because of no rows
-   // updated (eg, when you just add an image)
-   // DONE: add modif timestamps, so that changes for each update,
-   // and then we can check for the return code again (as for events)
    if (!is_serialized($location['location_attributes']))
       $location['location_attributes'] = serialize($location['location_attributes']);
       
@@ -861,7 +856,9 @@ function eme_global_map($atts) {
 
       $id_base = preg_replace("/\D/","_",microtime(1));
       $id_base = rand()."_".$id_base;
-      $result = "<div id='eme_global_map_$id_base' class='eme_global_map' style='width: {$width}px; height: {$height}px'>map</div>";
+      if (!preg_match('/\%$|px$/',$width)) $width=$width."px";
+      if (!preg_match('/\%$|px$/',$height)) $height=$height."px";
+      $result = "<div id='eme_global_map_$id_base' class='eme_global_map' style='width: $width; height: $height'>map</div>";
       // get the paging output ready
       if ($paging==1) {
          $pagination_top = "<div id='locations-pagination-top'> ";
@@ -1267,7 +1264,18 @@ function eme_replace_locations_placeholders($format, $location="", $target="html
          }
 
       } elseif (preg_match('/#_CATEGORIES|#_LOCATIONCATEGORIES/', $result) && get_option('eme_categories_enabled')) {
-         $categories = eme_get_location_categories($location['location_id']);
+         $categories = eme_get_location_category_names($location['location_id']);
+         $replacement = eme_trans_sanitize_html(join(", ",$categories),$lang);
+         if ($target == "html") {
+            $replacement = apply_filters('eme_general', $replacement);
+         } elseif ($target == "rss")  {
+            $replacement = apply_filters('eme_general_rss', $replacement);
+         } else {
+            $replacement = apply_filters('eme_text', $replacement);
+         }
+
+      } elseif (preg_match('/#_LOCATIONCATEGORYDESCRIPTIONS/', $result) && get_option('eme_categories_enabled')) {
+         $categories = eme_get_location_category_descriptions($location['location_id']);
          $replacement = eme_trans_sanitize_html(join(", ",$categories),$lang);
          if ($target == "html") {
             $replacement = apply_filters('eme_general', $replacement);
@@ -1423,10 +1431,13 @@ function eme_single_location_map($location,$width=0,$height=0) {
       #$latitude_string="latitude";
       #$longitude_string="longitude";
          //$map_div = "<div id='$id' style=' background: green; width: 400px; height: 300px'></div>" ;
-      if ($width>0 && $height>0)
-         $map_div = "<div id='$id' style='width: {$width}px; height: {$height}px' ></div>" ;
-      else
+      if (!empty($width) && !empty($height)) {
+	 if (!preg_match('/\%$|px$/',$width)) $width=$width."px";
+	 if (!preg_match('/\%$|px$/',$height)) $height=$height."px";
+         $map_div = "<div id='$id' style='width: $width; height: $height' ></div>" ;
+      } else {
          $map_div = "<div id='$id' class='eme-location-map'></div>" ;
+      }
       $map_div .= "<script type='text/javascript'>
       <!--// 
       $latitude_string = parseFloat('".$location['location_latitude']."');
@@ -1456,3 +1467,50 @@ function eme_events_in_location_list($location, $scope = "") {
    }
    return $list;
 }
+
+function eme_locations_search_ajax() {
+   if(isset($_GET['id']) && $_GET['id'] != "") {
+      $item = eme_get_location($_GET['id']);
+      $record = array();
+      $record['id']      = $item['location_id'];
+      $record['name']    = eme_trans_sanitize_html($item['location_name']); 
+      $record['address'] = eme_trans_sanitize_html($item['location_address']);
+      $record['town']    = eme_trans_sanitize_html($item['location_town']); 
+      $record['latitude']    = eme_trans_sanitize_html($item['location_latitude']); 
+      $record['longitude']    = eme_trans_sanitize_html($item['location_longitude']); 
+      echo json_encode($record);
+
+   } else {
+
+      $locations = eme_get_locations();
+      $return = array();
+
+      if (!isset($_GET["q"])) {
+         echo json_encode($return);
+         return;
+      }
+
+      foreach($locations as $item) {
+         $record = array();
+         $record['id']      = $item['location_id'];
+         $record['name']    = eme_trans_sanitize_html($item['location_name']); 
+         $record['address'] = eme_trans_sanitize_html($item['location_address']);
+         $record['town']    = eme_trans_sanitize_html($item['location_town']); 
+         $record['latitude']    = eme_trans_sanitize_html($item['location_latitude']); 
+         $record['longitude']    = eme_trans_sanitize_html($item['location_longitude']); 
+         $return[]  = $record;
+      }
+
+      $q = strtolower($_GET["q"]);
+      if (!$q) return;
+
+      $result=array();
+      foreach($return as $row) {
+         if (strpos(strtolower($row['name']), $q) !== false)
+            $result[]=$row;
+      }
+      echo json_encode($result);
+   }
+}
+
+?>

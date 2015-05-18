@@ -15,7 +15,6 @@ function eme_categories_page() {
       return;
    }
 
-   $validation_result = '';
    $message = '';
    if (isset($_POST['eme_admin_action'])) {
       // Insert/Update/Delete Record
@@ -23,10 +22,11 @@ function eme_categories_page() {
       if ($_POST['eme_admin_action'] == "do_editcategory" ) {
          // category update required  
          $category = array();
-         $category['category_name'] = trim(stripslashes($_POST['category_name']));
+         $category['category_name'] =  trim(stripslashes($_POST['category_name']));
+         $category['description'] =  trim(stripslashes($_POST['description']));
          $category['category_slug'] = untrailingslashit(eme_permalink_convert($category['category_name']));
          $validation_result = $wpdb->update( $categories_table, $category, array('category_id' => intval($_POST['category_id'])) );
-         if ($validation_result !== false && !empty($validation_result) ) {
+         if ($validation_result !== false) {
             $message = __("Successfully edited the category", "eme");
          } else {
             $message = __("There was a problem editing your category, please try again.","eme");
@@ -34,10 +34,11 @@ function eme_categories_page() {
       } elseif ($_POST['eme_admin_action'] == "do_addcategory" ) {
          // Add a new category
          $category = array();
-         $category['category_name'] = trim(stripslashes($_POST['category_name']));
+         $category['category_name'] =  trim(stripslashes($_POST['category_name']));
+         $category['description'] =  trim(stripslashes($_POST['description']));
          $category['category_slug'] = untrailingslashit(eme_permalink_convert($category['category_name']));
          $validation_result = $wpdb->insert($categories_table, $category);
-         if ($validation_result !== false && !empty($validation_result) ) {
+         if ($validation_result !== false) {
             $message = __("Successfully added the category", "eme");
          } else {
             $message = __("There was a problem adding your category, please try again.","eme");
@@ -54,11 +55,9 @@ function eme_categories_page() {
                else
                   $message = __("There was a problem deleting the selected categories, please try again.","eme");
             } else {
-               $validation_result = false;
                $message = __("Couldn't delete the categories. Incorrect category IDs supplied. Please try again.","eme");
             }
          } else {
-            $validation_result = false;
             $message = __("Couldn't delete the categories. Incorrect category IDs supplied. Please try again.","eme");
          }
       }
@@ -113,7 +112,7 @@ function eme_categories_table_layout($message = "") {
                            <tr>
                            <td><input type='checkbox' class ='row-selector' value='".$this_category['category_id']."' name='categories[]' /></td>
                            <td><a href='".admin_url("admin.php?page=eme-categories&amp;eme_admin_action=edit_category&amp;category_id=".$this_category['category_id'])."'>".$this_category['category_id']."</a></td>
-                           <td><a href='".admin_url("admin.php?page=eme-categories&amp;eme_admin_action=edit_category&amp;category_id=".$this_category['category_id'])."'>".$this_category['category_name']."</a></td>
+                           <td><a href='".admin_url("admin.php?page=eme-categories&amp;eme_admin_action=edit_category&amp;category_id=".$this_category['category_id'])."'>".eme_trans_sanitize_html($this_category['category_name'])."</a></td>
                            </tr>
                         ";
                      }
@@ -151,6 +150,8 @@ EOT;
                            <label for='category_name'>".__('Category name', 'eme')."</label>
                            <input name='category_name' id='category_name' type='text' value='' size='40' />
                             <p>".__('The name of the category', 'eme').".</p>
+                            <label for='description'>".__('Category description', 'eme')."</label>
+                            <textarea name='description' id='description' rows='5' /></textarea>
                          </div>
                          <p class='submit'><input type='submit' class='button-primary' name='submit' value='".__('Add category', 'eme')."' /></p>
                       </form>
@@ -193,6 +194,11 @@ function eme_categories_edit_layout($message = "") {
                <th scope='row' valign='top'><label for='category_name'>".__('Category name', 'eme')."</label></th>
                <td><input name='category_name' id='category_name' type='text' value='".eme_sanitize_html($category['category_name'])."' size='40' /><br />
                  ".__('The name of the category', 'eme')."</td>
+            </tr>
+            <tr class='form-field form-required'>
+               <th scope='row' valign='top'><label for='description'>".__('Category description', 'eme')."</label></th>
+               <td><textarea name='description' id='description' rows='5' />".eme_sanitize_html($category['description'])."</textarea><br />
+                 ".__('The description of the category', 'eme')."</td>
             </tr>
          </table>
       <p class='submit'><input type='submit' class='button-primary' name='submit' value='".__('Update category', 'eme')."' /></p>
@@ -253,6 +259,16 @@ function eme_get_event_category_names($event_id,$extra_conditions="") {
    return $wpdb->get_col($sql);
 }
 
+function eme_get_event_category_descriptions($event_id,$extra_conditions="") { 
+   global $wpdb;
+   $event_table = $wpdb->prefix.EVENTS_TBNAME; 
+   $categories_table = $wpdb->prefix.CATEGORIES_TBNAME; 
+   if ($extra_conditions !="")
+      $extra_conditions = " AND ($extra_conditions)";
+   $sql = $wpdb->prepare("SELECT description FROM $categories_table, $event_table where event_id = %d AND FIND_IN_SET(category_id,event_category_ids) $extra_conditions",$event_id);
+   return $wpdb->get_col($sql);
+}
+
 function eme_get_event_categories($event_id,$extra_conditions="") { 
    global $wpdb;
    $event_table = $wpdb->prefix.EVENTS_TBNAME; 
@@ -276,7 +292,7 @@ function eme_get_category_eventids($category_id,$future=0) {
    return $wpdb->get_col($sql);
 }
 
-function eme_get_location_categories($location_id) { 
+function eme_get_location_category_names($location_id) { 
    global $wpdb;
    $locations_table = $wpdb->prefix.LOCATIONS_TBNAME; 
    $categories_table = $wpdb->prefix.CATEGORIES_TBNAME; 
@@ -284,16 +300,20 @@ function eme_get_location_categories($location_id) {
    return $wpdb->get_col($sql);
 }
 
+function eme_get_location_category_descriptions($location_id) { 
+   global $wpdb;
+   $locations_table = $wpdb->prefix.LOCATIONS_TBNAME; 
+   $categories_table = $wpdb->prefix.CATEGORIES_TBNAME; 
+   $sql = $wpdb->prepare("SELECT description FROM $categories_table, $locations_table where location_id = %d AND FIND_IN_SET(category_id,location_category_ids)",$location_id);
+   return $wpdb->get_col($sql);
+}
+
 function eme_get_category_ids($cat_slug) {
    global $wpdb;
    $categories_table = $wpdb->prefix.CATEGORIES_TBNAME; 
    $cat_ids = array();
-   $conditions="";
    if (!empty($cat_slug)) {
-      $conditions = " category_slug = '$cat_slug'";
-   }
-   if (!empty($conditions)) {
-      $sql = "SELECT DISTINCT category_id FROM $categories_table WHERE ".$conditions;
+      $sql = $wpdb->prepare("SELECT DISTINCT category_id FROM $categories_table WHERE category_slug = %s",$cat_slug);
       $cat_ids = $wpdb->get_col($sql);
    }
    return $cat_ids;
