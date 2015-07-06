@@ -36,7 +36,7 @@ function eme_add_booking_form($event_id,$show_message=1) {
          $eval_filter_return=array(0=>1,1=>'');
       if (is_array($eval_filter_return) && !$eval_filter_return[0]) {
          // the result of own eval rules failed, so let's use that as a result
-         $booking_ids_done = 0;
+         $booking_id_done = 0;
          $form_result_message = $eval_filter_return[1];
       } else {
          $send_mail=1;
@@ -644,6 +644,8 @@ function eme_cancel_seats($event) {
             $booking = eme_get_booking ($booking_id);
             eme_delete_booking($booking_id);
             eme_email_rsvp_booking($booking,"cancelRegistration");
+            // delete the booking answers after the mail is sent, so the answers can still be used in the mail
+            eme_delete_answers($booking_id);
          }
          $result = __('Booking deleted', 'eme');
       } else {
@@ -750,7 +752,7 @@ function eme_multibook_seats($events, $send_mail, $format) {
             } elseif (preg_match ("/PHONE/",$required_field)) {
                // PHONE regex also catches HTML5_PHONE
                if (!isset($_POST['phone']) || empty($_POST['phone'])) array_push($missing_required_fields, __('Phone number','eme'));
-            } elseif (preg_match ("/(ADDRESS1|ADDRESS2|CITY|STATE|ZIP|COUNTRY)/",$required_field, $matches)) {
+            } elseif (preg_match ("/(ADDRESS1|ADDRESS2|CITY|STATE|ZIP|COUNTRY|FIRSTNAME)/",$required_field, $matches)) {
                $fieldname=strtolower($matches[1]);
                $fieldname_ucfirst=ucfirst($fieldname);
                if (!isset($_POST[$fieldname])) array_push($missing_required_fields, __($fieldname_ucfirst,'eme'));
@@ -880,12 +882,11 @@ function eme_multibook_seats($events, $send_mail, $format) {
    }
 
    $booking_ids_done=join(',',$booking_ids);
-
    if (!empty($booking_ids_done)) {
       // the payment needs to be created before the mail is sent or placeholders replaced, otherwise you can't send a link to the payment ...
       eme_create_payment($booking_ids_done);
 
-      foreach ($booking_ids_done as $booking_id) {
+      foreach ($booking_ids as $booking_id) {
          $booking = eme_get_booking ($booking_id);
          $total_price += eme_get_total_booking_price($event,$booking);
 
@@ -1010,7 +1011,7 @@ function eme_book_seats($event, $send_mail) {
          } elseif (preg_match ("/PHONE/",$required_field)) {
             // PHONE regex also catches _HTML5_PHONE
             if (!isset($_POST['phone']) || empty($_POST['phone'])) array_push($missing_required_fields, __('Phone number','eme'));
-         } elseif (preg_match ("/(ADDRESS1|ADDRESS2|CITY|STATE|ZIP|COUNTRY)/",$required_field, $matches)) {
+         } elseif (preg_match ("/(ADDRESS1|ADDRESS2|CITY|STATE|ZIP|COUNTRY|FIRSTNAME)/",$required_field, $matches)) {
             $fieldname=strtolower($matches[1]);
             $fieldname_ucfirst=ucfirst($fieldname);
             if (!isset($_POST[$fieldname])) array_push($missing_required_fields, __($fieldname_ucfirst,'eme'));
@@ -1277,11 +1278,16 @@ function eme_get_booked_multiseats_by_person_event_id($person_id,$event_id) {
    return $result;
 }
 
-function eme_get_event_by_booking_id($booking_id) {
+function eme_get_event_id_by_booking_id($booking_id) {
    global $wpdb; 
    $bookings_table = $wpdb->prefix.BOOKINGS_TBNAME;
    $sql = $wpdb->prepare("SELECT DISTINCT event_id FROM $bookings_table WHERE booking_id = %d",$booking_id);
    $event_id = $wpdb->get_var($sql);
+   return $event_id;
+}
+
+function eme_get_event_by_booking_id($booking_id) {
+   $event_id = eme_get_event_id_by_booking_id($booking_id);
    if ($event_id)
       $event = eme_get_event($event_id);
    else
@@ -1326,20 +1332,21 @@ function eme_record_booking($event, $person_id, $seats, $seats_mp, $comment, $la
    if ($wpdb->insert($bookings_table,$booking)) {
 	   $booking_id = $wpdb->insert_id;
 	   $booking['booking_id'] = $booking_id;
-	   eme_record_answers($booking_id,$booking['event_id']);
+	   eme_record_answers($booking_id);
 	   // now that everything is (or should be) correctly entered in the db, execute possible actions for the new booking
 	   if (has_action('eme_insert_rsvp_action')) do_action('eme_insert_rsvp_action',$booking);
-	   return $booking['booking_id'];
+	   return $booking_id;
    } else {
 	   return false;
    }
 }
 
-function eme_record_answers($booking_id,$event_id) {
+function eme_record_answers($booking_id) {
    global $wpdb;
    $answers_table = $wpdb->prefix.ANSWERS_TBNAME; 
    $fields_seen=array();
 
+   $event_id=eme_get_event_id_by_booking_id($booking_id);
    // first do the multibooking answers if any
    if (isset($_POST['bookings'][$event_id])) {
 	   foreach($_POST['bookings'][$event_id] as $key =>$value) {
@@ -1460,10 +1467,7 @@ function eme_transfer_all_bookings($person_id,$to_person_id) {
 
 function eme_delete_booking($booking_id) {
    global $wpdb;
-   // first delete all the answers
-   eme_delete_answers($booking_id);
    $bookings_table = $wpdb->prefix.BOOKINGS_TBNAME; 
-   //eme_delete_payment_booking_id($booking_id);
    $sql = $wpdb->prepare("DELETE FROM $bookings_table WHERE booking_id = %d",$booking_id);
    return $wpdb->query($sql);
 }
@@ -2472,8 +2476,11 @@ function eme_registration_seats_page($pending=0) {
                   eme_update_booking_payed($booking_id,intval($bookings_payed[$key]));
                if ($send_mail) eme_email_rsvp_booking($booking,$action);
             } elseif ($action == 'denyRegistration') {
+               // the mail needs to be sent after the deletion, otherwise the count of free spaces is wrong
                eme_delete_booking($booking_id);
                if ($send_mail) eme_email_rsvp_booking($booking,$action);
+               // delete the booking answers after the mail is sent, so the answers can still be used in the mail
+               eme_delete_answers($booking_id);
             }
          }
       }
