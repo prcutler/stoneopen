@@ -203,10 +203,7 @@ function twentyfourteen_post_thumbnail() {
 
 	<?php endif; // End is_singular()
 }
-<<<<<<< HEAD
 endif;
-=======
->>>>>>> FETCH_HEAD
 
 if ( ! function_exists( 'twentyfourteen_excerpt_more' ) && ! is_admin() ) :
 /**

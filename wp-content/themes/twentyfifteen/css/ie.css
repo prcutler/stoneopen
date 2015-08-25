@@ -93,13 +93,9 @@ button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"],
-<<<<<<< HEAD
 .post-password-form input[type="submit"],
 .widecolumn #submit,
 .widecolumn .mu_register input[type="submit"] {
-=======
-.post-password-form input[type="submit"] {
->>>>>>> FETCH_HEAD
 	font-size: 16px;
 	padding: 0.8125em 1.625em;
 }
@@ -129,14 +125,8 @@ textarea {
 	padding: 0.75em 0;
 }
 
-<<<<<<< HEAD
 .main-navigation .menu-item-has-children > a {
 	padding-right: 48px;
-=======
-.main-navigation .page_item_has_children > a,
-.main-navigation .main-navigation .menu-item-has-children > a {
-	padding-right: 53px;
->>>>>>> FETCH_HEAD
 }
 
 .main-navigation .menu-item-description {
@@ -191,13 +181,9 @@ textarea {
 .site-info,
 .wp-caption-text,
 .gallery-caption,
-<<<<<<< HEAD
 .entry-caption,
 .widecolumn label,
 .widecolumn .mu_register label {
-=======
-.entry-caption {
->>>>>>> FETCH_HEAD
 	font-size: 16px;
 }
 
@@ -471,12 +457,8 @@ img.aligncenter {
 	padding: 0 9.0909%;
 }
 
-<<<<<<< HEAD
 .entry-title,
 .widecolumn h2 {
-=======
-.entry-title {
->>>>>>> FETCH_HEAD
 	font-size: 39px;
 	line-height: 1.2308;
 	margin-bottom: 1.2308em;
@@ -789,7 +771,6 @@ video {
 	padding: 0.5em 0;
 }
 
-<<<<<<< HEAD
 .widecolumn {
 	margin: 7.6923%;
 }
@@ -820,8 +801,6 @@ video {
 	margin: 0 0 0.421em;
 }
 
-=======
->>>>>>> FETCH_HEAD
 
 /**
  * RTL
@@ -859,16 +838,9 @@ video {
 	margin-left: auto;
 }
 
-<<<<<<< HEAD
 .rtl .main-navigation .menu-item-has-children > a {
 	padding-right: 0;
 	padding-left: 48px;
-=======
-.rtl .main-navigation .page_item_has_children > a,
-.rtl .main-navigation .main-navigation .menu-item-has-children > a {
-	padding-right: 0;
-	padding-left: 53px;
->>>>>>> FETCH_HEAD
 }
 
 .rtl .secondary-toggle {

@@ -8,33 +8,41 @@
 ( function( $ ) {
 	var $body, $window, $sidebar, adminbarOffset, top = false,
 	    bottom = false, windowWidth, windowHeight, lastWindowPos = 0,
-<<<<<<< HEAD
 	    topOffset = 0, bodyHeight, sidebarHeight, resizeTimer,
-		secondary, button;
+	    secondary, button;
 
-	// Add dropdown toggle that display child menu items.
-	$( '.main-navigation .menu-item-has-children > a' ).after( '<button class="dropdown-toggle" aria-expanded="false">' + screenReaderText.expand + '</button>' );
+	function initMainNavigation( container ) {
+		// Add dropdown toggle that display child menu items.
+		container.find( '.menu-item-has-children > a' ).after( '<button class="dropdown-toggle" aria-expanded="false">' + screenReaderText.expand + '</button>' );
 
-	// Toggle buttons and submenu items with active children menu items.
-	$( '.main-navigation .current-menu-ancestor > button' ).addClass( 'toggle-on' );
-	$( '.main-navigation .current-menu-ancestor > .sub-menu' ).addClass( 'toggled-on' );
-=======
-	    topOffset = 0, bodyHeight, sidebarHeight, resizeTimer;
+		// Toggle buttons and submenu items with active children menu items.
+		container.find( '.current-menu-ancestor > button' ).addClass( 'toggle-on' );
+		container.find( '.current-menu-ancestor > .sub-menu' ).addClass( 'toggled-on' );
 
-	// Add dropdown toggle that display child menu items.
-	$( '.main-navigation .page_item_has_children > a, .main-navigation .menu-item-has-children > a' ).after( '<button class="dropdown-toggle" aria-expanded="false">' + screenReaderText.expand + '</button>' );
->>>>>>> FETCH_HEAD
+		container.find( '.dropdown-toggle' ).click( function( e ) {
+			var _this = $( this );
+			e.preventDefault();
+			_this.toggleClass( 'toggle-on' );
+			_this.next( '.children, .sub-menu' ).toggleClass( 'toggled-on' );
+			_this.attr( 'aria-expanded', _this.attr( 'aria-expanded' ) === 'false' ? 'true' : 'false' );
+			_this.html( _this.html() === screenReaderText.expand ? screenReaderText.collapse : screenReaderText.expand );
+		} );
+	}
+	initMainNavigation( $( '.main-navigation' ) );
 
-	$( '.dropdown-toggle' ).click( function( e ) {
-		var _this = $( this );
-		e.preventDefault();
-		_this.toggleClass( 'toggle-on' );
-		_this.next( '.children, .sub-menu' ).toggleClass( 'toggled-on' );
-		_this.attr( 'aria-expanded', _this.attr( 'aria-expanded' ) === 'false' ? 'true' : 'false' );
-		_this.html( _this.html() === screenReaderText.expand ? screenReaderText.collapse : screenReaderText.expand );
-	} );
+	// Re-initialize the main navigation when it is updated, persisting any existing submenu expanded states.
+	$( document ).on( 'customize-preview-menu-refreshed', function( e, params ) {
+		if ( 'primary' === params.wpNavMenuArgs.theme_location ) {
+			initMainNavigation( params.newContainer );
 
-<<<<<<< HEAD
+			// Re-sync expanded states from oldContainer.
+			params.oldContainer.find( '.dropdown-toggle.toggle-on' ).each(function() {
+				var containerId = $( this ).parent().prop( 'id' );
+				$( params.newContainer ).find( '#' + containerId + ' > .dropdown-toggle' ).triggerHandler( 'click' );
+			});
+		}
+	});
+
 	secondary = $( '#secondary' );
 	button = $( '.site-branding' ).find( '.secondary-toggle' );
 
@@ -42,17 +50,6 @@
 	( function() {
 		var menu, widgets, social;
 		if ( ! secondary || ! button ) {
-=======
-	// Enable menu toggle for small screens.
-	( function() {
-		var secondary = $( '#secondary' ), button, menu, widgets, social;
-		if ( ! secondary ) {
-			return;
-		}
-
-		button = $( '.site-branding' ).find( '.secondary-toggle' );
-		if ( ! button ) {
->>>>>>> FETCH_HEAD
 			return;
 		}
 
@@ -69,7 +66,6 @@
 			secondary.toggleClass( 'toggled-on' );
 			secondary.trigger( 'resize' );
 			$( this ).toggleClass( 'toggled-on' );
-<<<<<<< HEAD
 			if ( $( this, secondary ).hasClass( 'toggled-on' ) ) {
 				$( this ).attr( 'aria-expanded', 'true' );
 				secondary.attr( 'aria-expanded', 'true' );
@@ -101,17 +97,6 @@
 	// Sidebar scrolling.
 	function resize() {
 		windowWidth = $window.width();
-=======
-		} );
-	} )();
-
-	// Sidebar scrolling.
-	function resize() {
-		windowWidth   = $window.width();
-		windowHeight  = $window.height();
-		bodyHeight    = $body.height();
-		sidebarHeight = $sidebar.height();
->>>>>>> FETCH_HEAD
 
 		if ( 955 > windowWidth ) {
 			top = bottom = false;
@@ -126,13 +111,10 @@
 			return;
 		}
 
-<<<<<<< HEAD
 		sidebarHeight = $sidebar.height();
 		windowHeight  = $window.height();
 		bodyHeight    = $body.height();
 
-=======
->>>>>>> FETCH_HEAD
 		if ( sidebarHeight + adminbarOffset > windowHeight ) {
 			if ( windowPos > lastWindowPos ) {
 				if ( top ) {
@@ -178,7 +160,6 @@
 
 		$window
 			.on( 'scroll.twentyfifteen', scroll )
-<<<<<<< HEAD
 			.on( 'load.twentyfifteen', onResizeARIA )
 			.on( 'resize.twentyfifteen', function() {
 				clearTimeout( resizeTimer );
@@ -186,13 +167,6 @@
 				onResizeARIA();
 			} );
 		$sidebar.on( 'click.twentyfifteen keydown.twentyfifteen', 'button', resizeAndScroll );
-=======
-			.on( 'resize.twentyfifteen', function() {
-				clearTimeout( resizeTimer );
-				resizeTimer = setTimeout( resizeAndScroll, 500 );
-			} );
-		$sidebar.on( 'click keydown', 'button', resizeAndScroll );
->>>>>>> FETCH_HEAD
 
 		resizeAndScroll();
 
