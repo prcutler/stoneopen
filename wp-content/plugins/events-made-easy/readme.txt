@@ -3,8 +3,8 @@ Contributors: liedekef
 Donate link: http://www.e-dynamics.be/wordpress
 Tags: events, manager, booking, calendar, gigs, concert, maps, geotagging, paypal, rsvp  
 Requires at least: 4.0
-Tested up to: 4.2.2
-Stable tag: 1.5.40
+Tested up to: 4.2.3
+Stable tag: 1.5.41
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,19 @@ Events list and calendars can be added to your blogs through widgets, shortcodes
 See the FAQ section at [the documentation site](http://www.e-dynamics.be/wordpress).
 
 == Changelog ==
+
+= 1.5.41 (2015/7/27) =
+* Feature: added placeholder #_EVENTCATEGORIES_CSS, returning a space-separated list of categories.
+           Also, excluding categories is possible, like in #_EVENTCATEGORIES
+           Also added #_LOCATIONCATEGORIES_CSS
+* Feature: added rsvp placeholders #_RESPNICKNAME, #_RESPNICKNAME and attendee placeholders #_ATTENDNICKNAME and #_ATTENDDISPNAME (displays the nickname or displayname for a booker or attendee if the user is a wordpress user)
+* Feature: add extra header/footer format settings when showing the list of events for a specific category
+* Feature: allow attributes to be text areas now, so you can do more with them
+* Feature: add the option to ignore paypal tax setting in your profile
+* Change: mails with no subject or body will not be sent
+* Bugfix: for some reason, in the older plugin code I added the logic that the excerpt was never to be shown on single event pages. This has been corrected now.
+* Bugfix: add db column 'lang' for the peoples table if missing
+* Bugfix: the booker firstname/lastname was not correctly replaced in the cancel form for WP users
 
 = 1.5.40 (2015/05/31) =
 * Bugfix: when deleting a booking, the extra field answers were deleted before the mail was sent, resulting in some placeholders not being replaced in that mail
