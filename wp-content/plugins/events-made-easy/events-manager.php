@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Events Made Easy
-Version: 1.5.40
+Version: 1.5.41
 Plugin URI: http://www.e-dynamics.be/wordpress
 Description: Manage and display events. Includes recurring events; locations; widgets; Google maps; RSVP; ICAL and RSS feeds; Paypal, 2Checkout and others. <a href="admin.php?page=eme-options">Settings</a> | <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=SMGDS4GLCYWNG&lc=BE&item_name=To%20support%20development%20of%20EME&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">Donate</a>
 Author: Franky Van Liedekerke
@@ -99,7 +99,7 @@ function eme_client_clock_callback() {
 }
 
 // Setting constants
-define('EME_DB_VERSION', 80);
+define('EME_DB_VERSION', 83);
 define('EME_PLUGIN_URL', plugins_url('',plugin_basename(__FILE__)).'/'); //PLUGIN URL
 define('EME_PLUGIN_DIR', ABSPATH.PLUGINDIR.'/'.str_replace(basename( __FILE__),"",plugin_basename(__FILE__)).'/'); //PLUGIN DIRECTORY
 define('EVENTS_TBNAME','eme_events');
@@ -138,6 +138,8 @@ define('DEFAULT_CAP_SEND_OTHER_MAILS','edit_others_posts');
 define('DEFAULT_EVENT_LIST_HEADER_FORMAT',"<ul class='eme_events_list'>");
 define('DEFAULT_EVENT_LIST_ITEM_FORMAT', '<li>#_STARTDATE - #_STARTTIME<br /> #_LINKEDNAME<br />#_TOWN </li>');
 define('DEFAULT_EVENT_LIST_FOOTER_FORMAT','</ul>');
+define('DEFAULT_CAT_EVENT_LIST_HEADER_FORMAT',"<ul class='eme_events_list'>");
+define('DEFAULT_CAT_EVENT_LIST_FOOTER_FORMAT','</ul>');
 define('DEFAULT_SINGLE_EVENT_FORMAT', '<p>#_STARTDATE - #_STARTTIME</p><p>#_TOWN</p><p>#_NOTES</p><p>#_ADDBOOKINGFORM</p><p>#_MAP</p>'); 
 define('DEFAULT_EVENTS_PAGE_TITLE',__('Events','eme') ) ;
 define('DEFAULT_EVENT_PAGE_TITLE_FORMAT', '#_EVENTNAME'); 
@@ -869,6 +871,7 @@ function eme_create_people_table($charset,$collate) {
       maybe_add_column($table_name, 'state', "ALTER TABLE $table_name add state tinytext DEFAULT '';"); 
       maybe_add_column($table_name, 'zip', "ALTER TABLE $table_name add zip tinytext DEFAULT '';"); 
       maybe_add_column($table_name, 'country', "ALTER TABLE $table_name add country tinytext DEFAULT '';"); 
+      maybe_add_column($table_name, 'lang', "ALTER TABLE $table_name add lang varchar(10) DEFAULT '';"); 
       if ($db_version<10) {
          $wpdb->query("ALTER TABLE $table_name MODIFY person_phone tinytext DEFAULT 0;");
       }
@@ -1122,11 +1125,6 @@ function eme_replace_notes_placeholders($format, $event="", $target="html") {
             $show_excerpt=0;
          else
             $show_excerpt=1;
-
-         // when on the single event page, never show just the excerpt
-         if (eme_is_single_event_page() && $target == "html") {
-            $show_excerpt=0;
-         }
 
          // If excerpt, we use more link text
          if ($show_excerpt) {
@@ -1856,6 +1854,18 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
             $replacement = apply_filters('eme_text', $replacement);
          }
 
+      } elseif ($event && preg_match('/#_EVENTCATEGORIES_CSS$/', $result) && get_option('eme_categories_enabled')) {
+         $categories = eme_get_event_category_names($event['event_id']);
+         if ($target == "html") {
+            $replacement = eme_trans_sanitize_html(join(" ",$categories),$lang);
+            $replacement = apply_filters('eme_general', $replacement); 
+         } elseif ($target == "rss")  {
+            $replacement = eme_translate(join(" ",$categories),$lang);
+            $replacement = apply_filters('eme_general_rss', $replacement);
+         } else {
+            $replacement = eme_translate(join(" ",$categories),$lang);
+            $replacement = apply_filters('eme_text', $replacement);
+         }
 
       } elseif ($event && preg_match('/#_EVENTCATEGORYDESCRIPTIONS$/', $result) && get_option('eme_categories_enabled')) {
          $categories = eme_get_event_category_descriptions($event['event_id']);
@@ -1910,6 +1920,27 @@ function eme_replace_placeholders($format, $event="", $target="html", $do_shortc
             $replacement = apply_filters('eme_general_rss', $replacement);
          } else {
             $replacement = eme_translate(join(", ",$categories),$lang);
+            $replacement = apply_filters('eme_text', $replacement);
+         }
+
+      } elseif ($event && preg_match('/^#_EVENTCATEGORIES_CSS\{(.*?)\}\{(.*?)\}/', $result, $matches) && get_option('eme_categories_enabled')) {
+         $include_cats=$matches[1];
+         $exclude_cats=$matches[2];
+         $extra_conditions_arr = array();
+         if (!empty($include_cats))
+            array_push($extra_conditions_arr, "category_id IN ($include_cats)");
+         if (!empty($exclude_cats))
+            array_push($extra_conditions_arr, "category_id NOT IN ($exclude_cats)");
+         $extra_conditions = join(" AND ",$extra_conditions_arr);
+         $categories = eme_get_event_category_names($event['event_id'],$extra_conditions);
+         if ($target == "html") {
+            $replacement = eme_trans_sanitize_html(join(" ",$categories),$lang);
+            $replacement = apply_filters('eme_general', $replacement); 
+         } elseif ($target == "rss")  {
+            $replacement = eme_translate(join(" ",$categories),$lang);
+            $replacement = apply_filters('eme_general_rss', $replacement);
+         } else {
+            $replacement = eme_translate(join(" ",$categories),$lang);
             $replacement = apply_filters('eme_text', $replacement);
          }
 

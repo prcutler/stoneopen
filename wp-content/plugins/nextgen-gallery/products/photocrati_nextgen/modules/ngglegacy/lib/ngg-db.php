@@ -45,14 +45,6 @@ class nggdb
     var $paged = false;
 
     /**
-     * PHP4 compatibility layer for calling the PHP5 constructor.
-     *
-     */
-    function nggdb() {
-        return $this->__construct();
-    }
-
-    /**
      * Init the Database Abstraction layer for NextGEN Gallery
      *
      */
@@ -65,7 +57,6 @@ class nggdb
         $this->paged     = array();
 
         register_shutdown_function(array(&$this, '__destruct'));
-
     }
 
     /**
@@ -653,7 +644,7 @@ class nggdb
      * @deprecated
      * @return
      */
-    static function find_last_images($page = 0, $limit = 30, $exclude = true, $galleryId = 0, $orderby = "id") {
+    static function find_last_images($page = 0, $limit = 30, $exclude = true, $galleryId = 0, $orderby = "pid") {
 	    // Determine ordering
 	    $order_field        = $orderby;
 	    $order_direction    = 'DESC';
@@ -683,7 +674,7 @@ class nggdb
 	    if ($offset && $limit) $mapper->limit($limit, $offset);
 
 	    // Add exclusion clause
-	    if ($exclude) $mapper->where(array("exclude = %d"), 1);
+	    if ($exclude) $mapper->where(array("exclude = 0"));
 
 	    // Add gallery clause
 	    if ($galleryId) $mapper->where(array("galleryid = %d"), $galleryId);
