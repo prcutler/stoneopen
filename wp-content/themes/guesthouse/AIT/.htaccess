@@ -1,9 +1,0 @@
-<Files *>
-	Order Allow,Deny
-	Deny from all
-</Files>
-
-<Files ~ "\.(css|js|gif|jpg|png|swf)$|ThemeBoxAjax\.php|timthumb\.php|pluginScript\.php|pluginScript-old\.php|popupWindow\.php">
-	Order Allow,Deny
-	Allow from all
-</Files>
