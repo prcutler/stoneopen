@@ -277,7 +277,7 @@ class BWGControllerAlbums_bwg {
       $message = 5;
     }
     else {
-      $message = 2;
+      $message = 6;
     }
     $page = WDWLibrary::get('page');
     $query_url = wp_nonce_url( admin_url('admin.php'), 'albums_bwg', 'bwg_nonce' );

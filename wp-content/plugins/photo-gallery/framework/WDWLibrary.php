@@ -43,103 +43,103 @@ class WDWLibrary {
     if ($message_id) {
       switch($message_id) {
         case 1: {
-          $message = 'Item Succesfully Saved.';
+          $message = __('Item Succesfully Saved.', 'bwg_back');
           $type = 'updated';
           break;
 
         }
         case 2: {
-          $message = 'Error. Please install plugin again.';
+          $message = __('Error. Please install plugin again.', 'bwg_back');
           $type = 'error';
           break;
 
         }
         case 3: {
-          $message = 'Item Succesfully Deleted.';
+          $message = __('Item Succesfully Deleted.', 'bwg_back');
           $type = 'updated';
           break;
 
         }
         case 4: {
-          $message = "You can't delete default theme";
+          $message = __("You can't delete default theme", 'bwg_back');
           $type = 'error';
           break;
 
         }
         case 5: {
-          $message = 'Items Succesfully Deleted.';
+          $message = __('Items Succesfully Deleted.', 'bwg_back');
           $type = 'updated';
           break;
 
         }
         case 6: {
-          $message = 'You must select at least one item.';
+          $message = __('You must select at least one item.', 'bwg_back');
           $type = 'error';
           break;
 
         }
         case 7: {
-          $message = 'The item is successfully set as default.';
+          $message = __('The item is successfully set as default.', 'bwg_back');
           $type = 'updated';
           break;
 
         }
         case 8: {
-          $message = 'Options Succesfully Saved.';
+          $message = __('Options Succesfully Saved.', 'bwg_back');
           $type = 'updated';
           break;
 
         }
         case 9: {
-          $message = 'Item Succesfully Published.';
+          $message = __('Item Succesfully Published.', 'bwg_back');
           $type = 'updated';
           break;
 
         }
         case 10: {
-          $message = 'Items Succesfully Published.';
+          $message = __('Items Succesfully Published.', 'bwg_back');
           $type = 'updated';
           break;
 
         }
         case 11: {
-          $message = 'Item Succesfully Unpublished.';
+          $message = __('Item Succesfully Unpublished.', 'bwg_back');
           $type = 'updated';
           break;
 
         }
         case 12: {
-          $message = 'Items Succesfully Unpublished.';
+          $message = __('Items Succesfully Unpublished.', 'bwg_back');
           $type = 'updated';
           break;
 
         }
         case 13: {
-          $message = 'Ordering Succesfully Saved.';
+          $message = __('Ordering Succesfully Saved.', 'bwg_back');
           $type = 'updated';
           break;
 
         }
         case 14: {
-          $message = 'A term with the name provided already exists.';
+          $message = __('A term with the name provided already exists.', 'bwg_back');
           $type = 'error';
           break;
 
         }
         case 15: {
-          $message = 'Name field is required.';
+          $message = __('Name field is required.', 'bwg_back');
           $type = 'error';
           break;
 
         }
         case 16: {
-          $message = 'The slug must be unique.';
+          $message = __('The slug must be unique.', 'bwg_back');
           $type = 'error';
           break;
 
         }
         case 17: {
-          $message = 'Changes must be saved.';
+          $message = __('Changes must be saved.', 'bwg_back');
           $type = 'error';
           break;
 
@@ -185,8 +185,8 @@ class WDWLibrary {
         <input type="text" id="search_value" name="search_value" class="spider_search_value" onkeypress="return check_search_key(event, this);" value="<?php echo esc_html($search_value); ?>" style="width: 150px;<?php echo (get_bloginfo('version') > '3.7') ? ' height: 28px;' : ''; ?>" />
       </div>
       <div class="alignleft actions">
-        <input type="button" value="Search" onclick="spider_search()" class="button-secondary action">
-        <input type="button" value="Reset" onclick="spider_reset()" class="button-secondary action">
+        <input type="button" value="<?php echo __('Search', 'bwg_back'); ?>" onclick="spider_search()" class="button-secondary action">
+        <input type="button" value="<?php echo __('Reset', 'bwg_back'); ?>" onclick="spider_reset()" class="button-secondary action">
       </div>
     </div>
     <?php
@@ -312,7 +312,7 @@ class WDWLibrary {
         <span class="paging-input">
           <span class="total-pages">
           <input class="current_page" id="current_page" name="current_page" value="<?php echo $page_number; ?>" onkeypress="return check_enter_key(event, this)" title="Go to the page" type="text" size="1" />
-        </span> of 
+        </span> <?php echo __('of', 'bwg_back'); ?> 
         <span class="total-pages">
             <?php echo $items_county; ?>
           </span>
@@ -359,8 +359,8 @@ class WDWLibrary {
         <input type="text" id="search_value" name="search_value" class="spider_search_value" onkeypress="return check_search_key(event, this);" value="<?php echo esc_html($search_value); ?>" style="width: 150px;<?php echo (get_bloginfo('version') > '3.7') ? ' height: 28px;' : ''; ?>" />
       </div>
       <div class="alignleft actions">
-        <input type="button" value="Search" onclick="spider_search()" class="button-secondary action">
-        <input type="button" value="Reset" onclick="spider_reset()" class="button-secondary action">
+        <input type="button" value="<?php echo __('Search', 'bwg_back'); ?>" onclick="spider_search()" class="button-secondary action">
+        <input type="button" value="<?php echo __('Reset', 'bwg_back'); ?>" onclick="spider_reset()" class="button-secondary action">
       </div>
     </div>
     <?php
@@ -433,7 +433,7 @@ class WDWLibrary {
       <span class="displaying-num">
         <?php
         if ($count_items != 0) {
-          echo $count_items; ?> item<?php echo (($count_items == 1) ? '' : 's');
+          echo $count_items; ?> <?php echo __('item', 'bwg_back'); ?><?php echo (($count_items == 1) ? '' : 's');
         }
         ?>
       </span>
@@ -462,7 +462,7 @@ class WDWLibrary {
         <span class="paging-input">
           <span class="total-pages">
           <input class="current_page" id="current_page" name="current_page" value="<?php echo $page_number; ?>" onkeypress="return check_enter_key(event, this)" title="Go to the page" type="text" size="1" />
-        </span> of 
+        </span> <?php echo __('of', 'bwg_back'); ?> 
         <span class="total-pages">
             <?php echo $items_county; ?>
           </span>

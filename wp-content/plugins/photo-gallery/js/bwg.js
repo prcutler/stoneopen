@@ -339,7 +339,7 @@ function spider_form_submit(event, form_id) {
 // Check if required field is empty.
 function spider_check_required(id, name) {
   if (jQuery('#' + id).val() == '') {
-    alert(name + '* field is required.');
+    alert(name + '* ' + bwg_objectL10B.bwg_field_required);
     jQuery('#' + id).attr('style', 'border-color: #FF0000;');
     jQuery('#' + id).focus();
     jQuery('html, body').animate({
@@ -354,12 +354,12 @@ function spider_check_required(id, name) {
 
 // Show/hide order column and drag and drop column.
 function spider_show_hide_weights() {
-  if (jQuery("#show_hide_weights").val() == 'Show order column') {
+  if (jQuery("#show_hide_weights").val() == bwg_objectL10B.bwg_show_order) {
     jQuery(".connectedSortable").css("cursor", "default");
     jQuery("#tbody_arr").find(".handle").hide(0);
     jQuery("#th_order").show(0);
     jQuery("#tbody_arr").find(".spider_order").show(0);
-    jQuery("#show_hide_weights").val("Hide order column");
+    jQuery("#show_hide_weights").val(bwg_objectL10B.bwg_hide_order);
     if (jQuery("#tbody_arr").sortable()) {
       jQuery("#tbody_arr").sortable("disable");
     }
@@ -392,7 +392,7 @@ function spider_show_hide_weights() {
     jQuery("#tbody_arr").find(".handle").attr('class', 'handle connectedSortable');
     jQuery("#th_order").hide(0);
     jQuery("#tbody_arr").find(".spider_order").hide(0);
-    jQuery("#show_hide_weights").val("Show order column");
+    jQuery("#show_hide_weights").val(bwg_objectL10B.bwg_show_order);
   }
 }
 
@@ -454,7 +454,7 @@ function spider_uploader(button_id, input_id, delete_id, img_id) {
             }
           }
           if (img_id != '') {
-            alert('You must select an image file.');
+            alert(bwg_objectL10B.bwg_select_image);
             tb_remove();
             return;
           }
@@ -465,7 +465,7 @@ function spider_uploader(button_id, input_id, delete_id, img_id) {
         }
         else {
           if (img_id == '') {
-            alert('You must select an audio file.');
+            alert(bwg_objectL10B.bwg_field_required);
             tb_remove();
             return;
           }
@@ -1064,7 +1064,7 @@ function bwg_get_embed_info(input_id) {
 
   var url = encodeURI(jQuery("#" + input_id).val());  
   if (!url) {
-    alert('Please enter url to embed.');
+    alert(bwg_objectL10B.bwg_enter_url);
     return '';
   }
   var filesValid = [];
@@ -1078,7 +1078,7 @@ function bwg_get_embed_info(input_id) {
    // get from the server data for the url. Here we use the server as a proxy, since Cross-Origin Resource Sharing AJAX is forbidden.
   jQuery.post(ajax_url, data, function(response) {
     if(response == false){
-      alert('Error: cannot get response from the server.');
+      alert(bwg_objectL10B.bwg_cannot_response);
       jQuery('#opacity_div').hide();
       jQuery('#loading_div').hide();
       return '';
@@ -1088,7 +1088,7 @@ function bwg_get_embed_info(input_id) {
       var index_start = response.indexOf("WD_delimiter_start");
       var index_end = response.indexOf("WD_delimiter_end");
       if(index_start == -1 || index_end == -1){
-        alert('Error: something wrong happened at the server.');
+        alert(bwg_objectL10B.bwg_something_wrong);
         jQuery('#opacity_div').hide();
         jQuery('#loading_div').hide();
       
@@ -1103,7 +1103,7 @@ function bwg_get_embed_info(input_id) {
       response_JSON = jQuery.parseJSON(response);
         /*if indexed array, it means there is error*/
       if(typeof response_JSON[0] !== 'undefined'){
-        alert('Error: ' + jQuery.parseJSON(response)[1]);
+        alert(bwg_objectL10B.bwg_error + jQuery.parseJSON(response)[1]);
         jQuery('#opacity_div').hide();
         jQuery('#loading_div').hide();
         return '';

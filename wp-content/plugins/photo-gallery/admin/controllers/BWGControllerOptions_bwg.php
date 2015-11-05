@@ -381,7 +381,7 @@ class BWGControllerOptions_bwg {
       if (!is_dir(ABSPATH . $images_directory . '/photo-gallery')) {
         mkdir(ABSPATH . $images_directory . '/photo-gallery', 0777);
       }
-      echo WDWLibrary::message('Item Succesfully Saved.', 'updated');
+      echo WDWLibrary::message(__('Item Succesfully Saved.', 'bwg_back'), 'updated');
 
     }
     else {

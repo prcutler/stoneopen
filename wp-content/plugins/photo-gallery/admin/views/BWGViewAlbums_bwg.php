@@ -37,8 +37,8 @@ class BWGViewAlbums_bwg {
     ?>
     <div style="clear: both; float: left; width: 99%;">
       <div style="float:left; font-size: 14px; font-weight: bold;">
-        This section allows you to create, edit and delete albums.
-        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery-guide-step-4.html">Read More in User Manual</a>
+        <?php _e("This section allows you to create, edit and delete albums.", 'bwg_back'); ?>
+        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery-guide-step-4.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
       </div>
       <div style="float: right; text-align: right;">
         <a style="text-decoration: none;" target="_blank" href="https://web-dorado.com/files/fromPhotoGallery.php">
@@ -50,29 +50,29 @@ class BWGViewAlbums_bwg {
     <?php wp_nonce_field( 'albums_bwg', 'bwg_nonce' ); ?>
       <span class="album-icon"></span>
       <h2>
-        Albums
+        <?php _e("Albums", 'bwg_back'); ?>
         <a href="" class="add-new-h2" onclick="spider_set_input_value('task', 'add');
-                                               spider_form_submit(event, 'albums_form')">Add new</a>
+                                               spider_form_submit(event, 'albums_form')"><?php _e("Add new", 'bwg_back'); ?></a>
       </h2>
-      <div id="draganddrop" class="updated" style="display:none;"><strong><p>Changes made in this table should be saved.</p></strong></div>
+      <div id="draganddrop" class="updated" style="display:none;"><strong><p><?php _e("Changes made in this table should be saved.", 'bwg_back'); ?></p></strong></div>
       <div class="buttons_div">
         <span class="button-secondary non_selectable" onclick="spider_check_all_items()">
           <input type="checkbox" id="check_all_items" name="check_all_items" onclick="spider_check_all_items_checkbox()" style="margin: 0; vertical-align: middle;" />
-          <span style="vertical-align: middle;">Select All</span>
+          <span style="vertical-align: middle;"><?php _e("Select All", 'bwg_back'); ?></span>
         </span>
-        <input id="show_hide_weights"  class="button-secondary" type="button" onclick="spider_show_hide_weights();return false;" value="Hide order column" />
-        <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'save_order')" value="Save Order" />
-        <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'publish_all')" value="Publish" />
-        <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'unpublish_all')" value="Unpublish" />
-        <input class="button-secondary" type="submit" onclick="if (confirm('Do you want to delete selected items?')) {
+        <input id="show_hide_weights"  class="button-secondary" type="button" onclick="spider_show_hide_weights();return false;" value="<?php _e("Hide order column", 'bwg_back'); ?>" />
+        <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'save_order')" value="<?php _e("Save Order", 'bwg_back'); ?>" />
+        <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'publish_all')" value="<?php _e("Publish", 'bwg_back'); ?>" />
+        <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'unpublish_all')" value="<?php _e("Unpublish", 'bwg_back'); ?>" />
+        <input class="button-secondary" type="submit" onclick="if (confirm('<?php _e("Do you want to delete selected items?", 'bwg_back'); ?>')) {
                                                        spider_set_input_value('task', 'delete_all');
                                                      } else {
                                                        return false;
-                                                     }" value="Delete" />
+                                                     }" value="<?php _e("Delete", 'bwg_back'); ?>" />
       </div>
       <div class="tablenav top">
         <?php
-        WDWLibrary::search('Name', $search_value, 'albums_form');
+        WDWLibrary::search(__("Name", "bwg_back"), $search_value, 'albums_form');
         WDWLibrary::html_page_nav($page_nav['total'],$pager++, $page_nav['limit'], 'albums_form', $per_page);
         ?>
       </div>
@@ -93,7 +93,7 @@ class BWGViewAlbums_bwg {
                         spider_set_input_value('order_by', 'name');
                         spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'name') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                         spider_form_submit(event, 'albums_form')" href="">
-              <span>Name</span><span class="sorting-indicator"></span>
+              <span><?php _e("Name", 'bwg_back'); ?></span><span class="sorting-indicator"></span>
             </a>
           </th>
           <th class="<?php if ($order_by == 'slug') {echo $order_class;} ?>">
@@ -101,16 +101,16 @@ class BWGViewAlbums_bwg {
                         spider_set_input_value('order_by', 'slug');
                         spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'slug') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                         spider_form_submit(event, 'albums_form')" href="">
-              <span>Slug</span><span class="sorting-indicator"></span>
+              <span><?php _e("Slug", 'bwg_back'); ?></span><span class="sorting-indicator"></span>
             </a>
           </th>
-          <th class="table_extra_large_col">Thumbnail</th>
+          <th class="table_extra_large_col"><?php _e("Thumbnail", 'bwg_back'); ?></th>
           <th id="th_order" class="table_medium_col <?php if ($order_by == 'order') {echo $order_class;} ?>">
             <a onclick="spider_set_input_value('task', '');
                         spider_set_input_value('order_by', 'order');
                         spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'order') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                         spider_form_submit(event, 'albums_form')" href="">
-              <span>Order</span><span class="sorting-indicator"></span>
+              <span><?php _e("Order", 'bwg_back'); ?></span><span class="sorting-indicator"></span>
             </a>
           </th>
           <th class="<?php if ($order_by == 'display_name') {echo $order_class;} ?>">
@@ -118,7 +118,7 @@ class BWGViewAlbums_bwg {
                         spider_set_input_value('order_by', 'display_name');
                         spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'display_name') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                         spider_form_submit(event, 'albums_form')" href="">
-              <span>Author</span><span class="sorting-indicator"></span>
+              <span><?php _e("Author", 'bwg_back'); ?></span><span class="sorting-indicator"></span>
             </a>
           </th>
           <th class="table_big_col <?php if ($order_by == 'published') {echo $order_class;} ?>">
@@ -126,11 +126,11 @@ class BWGViewAlbums_bwg {
                         spider_set_input_value('order_by', 'published');
                         spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'published') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                         spider_form_submit(event, 'albums_form')" href="">
-              <span>Published</span><span class="sorting-indicator"></span>
+              <span><?php _e("Published", 'bwg_back'); ?></span><span class="sorting-indicator"></span>
             </a>
           </th>
-          <th class="table_big_col">Edit</th>
-          <th class="table_big_col">Delete</th>
+          <th class="table_big_col"><?php _e("Edit", 'bwg_back'); ?></th>
+          <th class="table_big_col"><?php _e("Delete", 'bwg_back'); ?></th>
         </thead>
         <tbody id="tbody_arr">
           <?php
@@ -152,7 +152,7 @@ class BWGViewAlbums_bwg {
                 <td class="table_small_col"><?php echo $row_data->id; ?></td>                
                 <td><a onclick="spider_set_input_value('task', 'edit');
                                 spider_set_input_value('current_id', '<?php echo $row_data->id; ?>');
-                                spider_form_submit(event, 'albums_form')" href="" title="Edit"><?php echo $row_data->name; ?></a></td>
+                                spider_form_submit(event, 'albums_form')" href="" title="<?php _e("Edit", 'bwg_back'); ?>"><?php echo $row_data->name; ?></a></td>
                 <td><?php echo $row_data->slug; ?></td>                
                 <td class="table_extra_large_col">
                   <img title="<?php echo $row_data->name; ?>" style="border: 1px solid #CCCCCC; max-width:60px; max-height:60px;" src="<?php echo $preview_image; ?>">
@@ -162,10 +162,10 @@ class BWGViewAlbums_bwg {
                 <td class="table_big_col"><a onclick="spider_set_input_value('task', '<?php echo $published; ?>');spider_set_input_value('current_id', '<?php echo $row_data->id; ?>');spider_form_submit(event, 'albums_form')" href=""><img src="<?php echo WD_BWG_URL . '/images/' . $published_image . '.png'; ?>"></img></a></td>
                 <td class="table_big_col"><a onclick="spider_set_input_value('task', 'edit');
                                                       spider_set_input_value('current_id', '<?php echo $row_data->id; ?>');
-                                                      spider_form_submit(event, 'albums_form')" href="">Edit</a></td>
+                                                      spider_form_submit(event, 'albums_form')" href=""><?php _e("Edit", 'bwg_back'); ?></a></td>
                 <td class="table_big_col"><a onclick="spider_set_input_value('task', 'delete');
                                                       spider_set_input_value('current_id', '<?php echo $row_data->id; ?>');
-                                                      spider_form_submit(event, 'albums_form')" href="">Delete</a></td>
+                                                      spider_form_submit(event, 'albums_form')" href=""><?php _e("Delete", 'bwg_back'); ?></a></td>
               </tr>
               <?php
               $ids_string .= $row_data->id . ',';
@@ -194,13 +194,13 @@ class BWGViewAlbums_bwg {
   public function edit($id) {
     global $WD_BWG_UPLOAD_DIR;
     $row = $this->model->get_row_data($id);
-    $page_title = (($id != 0) ? 'Edit album ' . $row->name : 'Create new album');
+    $page_title = (($id != 0) ? __('Edit album ',"bwg_back") . $row->name : __('Create new album',"bwg_back"));
     $per_page = $this->model->per_page();
     ?>
     <div style="clear: both; float: left; width: 99%;">
       <div style="float:left; font-size: 14px; font-weight: bold;">
-        This section allows you to add/edit album.
-        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery-guide-step-4.html">Read More in User Manual</a>
+        <?php _e("This section allows you to add/edit album.", 'bwg_back'); ?>
+        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery-guide-step-4.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
       </div>
       <div style="float: right; text-align: right;">
         <a style="text-decoration: none;" target="_blank" href="https://web-dorado.com/files/fromPhotoGallery.php">
@@ -268,22 +268,22 @@ class BWGViewAlbums_bwg {
       <span class="album-icon"></span>
       <h2><?php echo $page_title; ?></h2>
       <div style="float:right;">
-        <input class="button-secondary" type="submit" onclick="if(spider_check_required('name', 'Name')){return false;};spider_set_input_value('task', 'save')" value="Save" />
-        <input class="button-secondary" type="submit" onclick="if(spider_check_required('name', 'Name')){return false;};spider_set_input_value('task', 'apply')" value="Apply" />
-        <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'cancel')" value="Cancel" />
+        <input class="button-secondary" type="submit" onclick="if(spider_check_required('name', 'Name')){return false;};spider_set_input_value('task', 'save')" value="<?php _e("Save", 'bwg_back'); ?>" />
+        <input class="button-secondary" type="submit" onclick="if(spider_check_required('name', 'Name')){return false;};spider_set_input_value('task', 'apply')" value="<?php _e("Apply", 'bwg_back'); ?>" />
+        <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'cancel')" value="<?php _e("Cancel", 'bwg_back'); ?>" />
       </div>
       <table style="clear:both;">
         <tbody>
           <tr>
-            <td class="spider_label"><label for="name">Name: <span style="color:#FF0000;">*</span> </label></td>
+            <td class="spider_label"><label for="name"><?php _e("Name:", 'bwg_back'); ?> <span style="color:#FF0000;">*</span> </label></td>
             <td><input type="text" id="name" name="name" value="<?php echo $row->name; ?>" size="39" /></td>
           </tr>
           <tr>
-            <td class="spider_label"><label for="slug">Slug: </label></td>
+            <td class="spider_label"><label for="slug"><?php _e("Slug:", 'bwg_back'); ?> </label></td>
             <td><input type="text" id="slug" name="slug" value="<?php echo $row->slug; ?>" size="39" /></td>
           </tr>
           <tr>
-            <td class="spider_label"><label for="description">Description: </label></td>
+            <td class="spider_label"><label for="description"><?php _e("Description:", 'bwg_back'); ?> </label></td>
             <td>
               <div style="width:500px;">
               <?php
@@ -302,20 +302,20 @@ class BWGViewAlbums_bwg {
             </td>
           </tr>
           <tr>
-            <td class="spider_label"><label>Author: </label></td>
+            <td class="spider_label"><label><?php _e("Author:", 'bwg_back'); ?> </label></td>
             <td><?php echo get_userdata($row->author)->display_name; ?></td>
           </tr>
           <tr>
-            <td class="spider_label"><label for="published1">Published: </label></td>
+            <td class="spider_label"><label for="published1"><?php _e("Published:", 'bwg_back'); ?> </label></td>
             <td>
               <input type="radio" class="inputbox" id="published0" name="published" <?php echo (($row->published) ? '' : 'checked="checked"'); ?> value="0" >
-              <label for="published0">No</label>
+              <label for="published0"><?php _e("No", 'bwg_back'); ?></label>
               <input type="radio" class="inputbox" id="published1" name="published" <?php echo (($row->published) ? 'checked="checked"' : ''); ?> value="1" >
-              <label for="published1">Yes</label>
+              <label for="published1"><?php _e("Yes", 'bwg_back'); ?></label>
             </td>
           </tr>
           <tr>
-            <td class="spider_label"><label for="url">Preview image: </label></td>
+            <td class="spider_label"><label for="url"><?php _e("Preview image:", 'bwg_back'); ?> </label></td>
             <td>
             <?php 
             $query_url =  add_query_arg(array('action' => 'addImages', 'width' => '700', 'height' => '550', 'extensions' => 'jpg,jpeg,png,gif', 'callback' => 'bwg_add_preview_image'), admin_url('admin-ajax.php'));
@@ -330,7 +330,7 @@ class BWGViewAlbums_bwg {
                  title="Add Preview Image"
                  onclick="return false;"
                  style="margin-bottom:5px; display:none;">
-                Add Preview Image
+                <?php _e("Add Preview Image", 'bwg_back'); ?>
               </a>
               <input type="hidden" id="preview_image" name="preview_image" value="<?php echo $row->preview_image; ?>" style="display:inline-block;"/>
               <img id="img_preview_image"
@@ -341,7 +341,7 @@ class BWGViewAlbums_bwg {
             </td>
           </tr>
           <tr>
-            <td class="spider_label"><label for="content-add_media">Albums And Galleries: </label></td>
+            <td class="spider_label"><label for="content-add_media"><?php _e("Albums And Galleries:", 'bwg_back'); ?> </label></td>
             <td>
             <?php 
               $query_url = add_query_arg(array('action' => 'addAlbumsGalleries', 'album_id' => $id, 'width' => '700', 'height' => '550', 'bwg_items_per_page'=>$per_page ), admin_url('admin-ajax.php'));
@@ -351,7 +351,7 @@ class BWGViewAlbums_bwg {
               
             ?>
               <a href="<?php echo $query_url; ?>" class="button-primary thickbox thickbox-preview" id="content-add_media" title="Add Images" onclick="return false;" style="margin-bottom:5px;">
-                Add Albums/Galleries
+                <?php _e("Add Albums/Galleries", 'bwg_back'); ?>
               </a>              
               <?php $albums_galleries = $this->model->get_albums_galleries_rows_data($id) ?>
               <table id="table_albums_galleries" class="widefat spider_table" <?php echo (($albums_galleries) ? '' : 'style="display:none;"'); ?>>          
@@ -363,7 +363,7 @@ class BWGViewAlbums_bwg {
                       if ($alb_gal) {
                         ?>
                         <tr id="tr_<?php echo $alb_gal->id . ":" . $alb_gal->is_album . ":" . $alb_gal->alb_gal_id ?>" style="height:35px;">
-                          <td class="connectedSortable table_small_col" title="Drag to re-order"><div class="handle"></div></td>
+                          <td class="connectedSortable table_small_col" title="<?php _e("Drag to re-order", 'bwg_back'); ?>"><div class="handle"></div></td>
                           <td style="max-width:420px; min-width:400px;"><?php echo ($alb_gal->is_album ? 'Album: ' : 'Gallery: ') . $alb_gal->name; ?></td>
                           <td class="table_small_col">
                             <span class="spider_delete_img" onclick="spider_remove_row('tbody_albums_galleries', event, this)"/>

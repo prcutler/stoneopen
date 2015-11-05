@@ -146,7 +146,7 @@ function bwg_show_search_box() {
 
 function bwg_change_compuct_album_view_type() {
   if (jQuery("input[name=compuct_album_view_type]:checked").val() == 'thumbnail') {
-    jQuery("#compuct_album_image_thumb_dimensions").html('Image thumbnail dimensions: ');
+    jQuery("#compuct_album_image_thumb_dimensions").html(bwg_image_thumb);
     jQuery("#compuct_album_image_thumb_dimensions_x").css('display', '');
     jQuery("#compuct_album_image_thumb_width").css('display', '');
     jQuery("#compuct_album_image_thumb_height").css('display', '');
@@ -158,7 +158,7 @@ function bwg_change_compuct_album_view_type() {
   }
   
   else if(jQuery("input[name=compuct_album_view_type]:checked").val() == 'masonry'){
-    jQuery("#compuct_album_image_thumb_dimensions").html('Image thumbnail width: '); 
+    jQuery("#compuct_album_image_thumb_dimensions").html(bwg_image_thumb_width); 
     jQuery("#compuct_album_image_thumb_dimensions_x").css('display', 'none');
     jQuery("#compuct_album_image_thumb_width").css('display', '');
     jQuery("#compuct_album_image_thumb_height").css('display', 'none');
@@ -177,12 +177,12 @@ function bwg_change_compuct_album_view_type() {
     jQuery("#tr_compuct_album_resizable_mosaic").css('display', '');
     jQuery("#tr_compuct_album_mosaic_total_width").css('display', '');
     if(jQuery("input[name=compuct_album_mosaic_hor_ver]:checked").val() == 'vertical'){
-      jQuery("#compuct_album_image_thumb_dimensions").html('Image thumbnail width: ');
+      jQuery("#compuct_album_image_thumb_dimensions").html(bwg_image_thumb_width);
       jQuery("#compuct_album_image_thumb_height").css('display', 'none');
       jQuery("#compuct_album_image_thumb_width").css('display', '');
     }
     else{
-      jQuery("#compuct_album_image_thumb_dimensions").html('Image thumbnail height: ');
+      jQuery("#compuct_album_image_thumb_dimensions").html(bwg_image_thumb_height);
       jQuery("#compuct_album_image_thumb_width").css('display', 'none');
       jQuery("#compuct_album_image_thumb_height").css('display', '');
 
@@ -194,7 +194,7 @@ function bwg_change_compuct_album_view_type() {
 
 function bwg_change_extended_album_view_type() {
   if (jQuery("input[name=extended_album_view_type]:checked").val() == 'thumbnail') {
-    jQuery("#extended_album_image_thumb_dimensions").html('Image thumbnail dimensions: ');
+    jQuery("#extended_album_image_thumb_dimensions").html(bwg_image_thumb);
     jQuery("#extended_album_image_thumb_dimensions_x").css('display', '');
     jQuery("#extended_album_image_thumb_width").css('display', '');
     jQuery("#extended_album_image_thumb_height").css('display', '');
@@ -206,7 +206,7 @@ function bwg_change_extended_album_view_type() {
   }
   
   else if(jQuery("input[name=extended_album_view_type]:checked").val() == 'masonry'){
-    jQuery("#extended_album_image_thumb_dimensions").html('Image thumbnail width: '); 
+    jQuery("#extended_album_image_thumb_dimensions").html(bwg_image_thumb_width); 
     jQuery("#extended_album_image_thumb_dimensions_x").css('display', 'none');
     jQuery("#extended_album_image_thumb_width").css('display', '');
     jQuery("#extended_album_image_thumb_height").css('display', 'none');
@@ -224,12 +224,12 @@ function bwg_change_extended_album_view_type() {
     jQuery("#tr_extended_album_resizable_mosaic").css('display', '');
     jQuery("#tr_extended_album_mosaic_total_width").css('display', '');
     if(jQuery("input[name=extended_album_mosaic_hor_ver]:checked").val() == 'vertical'){
-      jQuery("#extended_album_image_thumb_dimensions").html('Image thumbnail width: ');
+      jQuery("#extended_album_image_thumb_dimensions").html(bwg_image_thumb_width);
       jQuery("#extended_album_image_thumb_height").css('display', 'none');
       jQuery("#extended_album_image_thumb_width").css('display', '');
     }
     else{
-      jQuery("#extended_album_image_thumb_dimensions").html('Image thumbnail height: ');
+      jQuery("#extended_album_image_thumb_dimensions").html(bwg_image_thumb_height);
       jQuery("#extended_album_image_thumb_width").css('display', 'none');
       jQuery("#extended_album_image_thumb_height").css('display', '');
 
@@ -395,8 +395,8 @@ function bwg_gallery_type(gallery_type) {
       jQuery("#tr_sort_by").css('display', '');
       jQuery("#tr_order_by").css('display', '');
       jQuery("#tr_show_search_box").css('display', '');
-      bwg_change_label('image_column_number_label', 'Max. number of image columns: ');
-      bwg_change_label('thumb_width_height_label', 'Image thumbnail dimensions: ');
+      bwg_change_label('image_column_number_label', bwg_max_column);
+      bwg_change_label('thumb_width_height_label', bwg_image_thumb);
       jQuery('#thumb_width').show();
       jQuery('#thumb_height').show();
       jQuery('#thumb_width_height_separator').show();
@@ -423,13 +423,13 @@ function bwg_gallery_type(gallery_type) {
 			jQuery("#tr_show_tag_box").css('display', '');
       if (jQuery("input[name=masonry_hor_ver]:checked").val() == 'horizontal') {
         bwg_change_label('image_column_number_label', 'Number of image rows: ');
-        bwg_change_label('thumb_width_height_label', 'Image thumbnail height: ');
+        bwg_change_label('thumb_width_height_label', bwg_image_thumb_height);
         jQuery('#thumb_width').hide();
         jQuery('#thumb_height').show();
       }
       else {
-        bwg_change_label('image_column_number_label', 'Max. number of image columns: ');
-        bwg_change_label('thumb_width_height_label', 'Image thumbnail width: ');
+        bwg_change_label('image_column_number_label', bwg_max_column);
+        bwg_change_label('thumb_width_height_label', bwg_image_thumb_width);
         jQuery('#thumb_width').show();
         jQuery('#thumb_height').hide();
       }
@@ -453,12 +453,12 @@ function bwg_gallery_type(gallery_type) {
       jQuery("#tr_show_sort_images").css('display', '');
       jQuery("#tr_show_tag_box").css('display', '');
       if (jQuery("input[name=mosaic_hor_ver]:checked").val() == 'horizontal') {
-        bwg_change_label('thumb_width_height_label', 'Image thumbnail height: ');
+        bwg_change_label('thumb_width_height_label', bwg_image_thumb_height);
         jQuery('#thumb_width').hide();
         jQuery('#thumb_height').show();
       }
       else {
-        bwg_change_label('thumb_width_height_label', 'Image thumbnail width: ');
+        bwg_change_label('thumb_width_height_label', bwg_image_thumb_width);
         jQuery('#thumb_width').show();
         jQuery('#thumb_height').hide();
       }

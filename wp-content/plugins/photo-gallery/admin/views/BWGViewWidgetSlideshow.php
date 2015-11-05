@@ -98,12 +98,12 @@ class BWGViewWidgetSlideshow {
     $options_row = $this->model->get_options_row_data();
     ?>
     <p>
-      <label for="<?php echo $id_title; ?>">Title:</label>
+      <label for="<?php echo $id_title; ?>"><?php _e("Title:", 'bwg_back'); ?></label>
       <input class="widefat" id="<?php echo $id_title; ?>" name="<?php echo $name_title; ?>" type="text" value="<?php echo $instance['title']; ?>"/>
     </p>    
     <p>
       <select name="<?php echo $name_gallery_id; ?>" id="<?php echo $id_gallery_id; ?>" class="widefat">
-        <option value="0">Select Gallery</option>
+        <option value="0"><?php _e("Select Gallery", 'bwg_back'); ?></option>
         <?php
         foreach ($gallery_rows as $gallery_row) {
           ?>
@@ -114,16 +114,16 @@ class BWGViewWidgetSlideshow {
       </select>
     </p>
     <p>
-      <label for="<?php echo $id_width; ?>">Dimensions:</label>
+      <label for="<?php echo $id_width; ?>"><?php _e("Dimensions:", 'bwg_back'); ?></label>
       <input class="widefat" style="width:25%;" id="<?php echo $id_width; ?>" name="<?php echo $name_width; ?>" type="text" value="<?php echo $instance['width']; ?>"/> x 
       <input class="widefat" style="width:25%;" id="<?php echo $id_height; ?>" name="<?php echo $name_height; ?>" type="text" value="<?php echo $instance['height']; ?>"/> px
     </p>
-    <p title="This option is disabled in free version." <?php echo ($options_row->slideshow_enable_filmstrip ? 'style="color: #7F7F7F;"' : 'style="display: none;"'); ?>>
-      <label>Filmstrip height:</label>
+    <p title="<?php _e("This option is disabled in free version.", 'bwg_back'); ?>" <?php echo ($options_row->slideshow_enable_filmstrip ? 'style="color: #7F7F7F;"' : 'style="display: none;"'); ?>>
+      <label><?php _e("Filmstrip height:", 'bwg_back'); ?></label>
       <input disabled="disabled" class="widefat" style="width: 25%; color: #7F7F7F;" type="text" value="40" /> px
     </p>
     <p>
-      <label for="<?php echo $id_effect; ?>">Slideshow effect:</label>
+      <label for="<?php echo $id_effect; ?>"><?php _e("Slideshow effect:", 'bwg_back'); ?></label>
       <select name="<?php echo $name_effect; ?>" id="<?php echo $id_effect; ?>" class="widefat">        
         <?php
         foreach ($slideshow_effects as $key => $slideshow_effect) {
@@ -135,17 +135,17 @@ class BWGViewWidgetSlideshow {
       </select>
     </p>
     <p>
-      <label for="<?php echo $id_interval; ?>">Time interval:</label>
+      <label for="<?php echo $id_interval; ?>"><?php _e("Time interval:", 'bwg_back'); ?></label>
       <input class="widefat" style="width:25%;" id="<?php echo $id_interval; ?>" name="<?php echo $name_interval; ?>" type="text" value="<?php echo $instance['interval']; ?>" /> sec.
     </p>
     <p>
-      <label>Enable shuffle:</label>
-      <input type="radio" name="<?php echo $name_shuffle; ?>" id="<?php echo $id_shuffle . "_1"; ?>" value="1" <?php if ($instance['shuffle']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "1");' /><label for="<?php echo $id_shuffle . "_1"; ?>">Yes</label>
-      <input type="radio" name="<?php echo $name_shuffle; ?>" id="<?php echo $id_shuffle . "_0"; ?>" value="0" <?php if (!$instance['shuffle']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "0");' /><label for="<?php echo $id_shuffle . "_0"; ?>">No</label>
+      <label><?php _e("Enable shuffle:", 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_shuffle; ?>" id="<?php echo $id_shuffle . "_1"; ?>" value="1" <?php if ($instance['shuffle']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "1");' /><label for="<?php echo $id_shuffle . "_1"; ?>"><?php _e("Yes", 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_shuffle; ?>" id="<?php echo $id_shuffle . "_0"; ?>" value="0" <?php if (!$instance['shuffle']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "0");' /><label for="<?php echo $id_shuffle . "_0"; ?>"><?php _e("No", 'bwg_back'); ?></label>
       <input type="hidden" name="<?php echo $name_shuffle; ?>" id="<?php echo $id_shuffle; ?>" value="<?php echo $instance['shuffle']; ?>" class="bwg_hidden" />
     </p>
     <p>
-      <select name="<?php echo $name_theme_id; ?>" id="<?php echo $id_theme_id; ?>" class="widefat" <?php echo (get_option("wd_bwg_theme_version") ? 'title="This option is disabled in free version."  disabled="disabled"' : ''); ?>>
+      <select name="<?php echo $name_theme_id; ?>" id="<?php echo $id_theme_id; ?>" class="widefat" <?php echo (get_option("wd_bwg_theme_version") ? 'title="'.__("This option is disabled in free version.", "bwg_back").'"  disabled="disabled"' : ''); ?>>
         <?php
         foreach ($theme_rows as $theme_row) {
           ?>

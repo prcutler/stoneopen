@@ -410,8 +410,10 @@ class BWGViewThumbnails {
                   $image_thumb_width = $params['thumb_width'];
                   if($image_row->resolution != ''){
                     $resolution_arr = explode(" ",$image_row->resolution);
+                    
                     $resolution_w = intval($resolution_arr[0]);
                     $resolution_h = intval($resolution_arr[2]);
+
                     if($resolution_w != 0 && $resolution_h != 0){
                       $scale = $scale = max($params['thumb_width'] / $resolution_w, $params['thumb_height'] / $resolution_h);
                       $image_thumb_width = $resolution_w * $scale;

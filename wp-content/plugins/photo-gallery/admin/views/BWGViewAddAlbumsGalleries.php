@@ -42,13 +42,13 @@ class BWGViewAddAlbumsGalleries {
     <script src="<?php echo WD_BWG_URL . '/js/bwg.js?ver='.wd_bwg_version(); ?>" type="text/javascript"></script>
     <form class="wrap wp-core-ui" id="albums_galleries_form" method="post" action="<?php echo add_query_arg(array('action' => 'addAlbumsGalleries', 'width' => '700', 'height' => '550', 'callback' => 'bwg_add_items', 'bwg_items_per_page'=>$per_page , 'TB_iframe' => '1'), admin_url('admin-ajax.php')); ?>" style="width:95%; margin: 0 auto;">
       <?php wp_nonce_field( 'addAlbumsGalleries', 'bwg_nonce' ); ?>
-      <h2 style="width:200px;float:left">Albums/Galleries</h2>
+      <h2 style="width:200px;float:left"><?php _e("Albums/Galleries", 'bwg_back'); ?></h2>
       <a href="" class="thickbox thickbox-preview" id="content-add_media" title="Add Album/Gallery" onclick="spider_get_items(event);" style="float:right; padding: 9px 0px 4px 0">
         <img src="<?php echo WD_BWG_URL . '/images/add_but.png'; ?>" style="border:none;" />
       </a>
       <div class="tablenav top">
         <?php
-        WDWLibrary::search('Name', $search_value, 'albums_galleries_form');
+        WDWLibrary::search(__("Name", 'bwg_back'), $search_value, 'albums_galleries_form');
         WDWLibrary::html_page_nav($page_nav['total'],$pager++, $page_nav['limit'], 'albums_galleries_form', $per_page);
         ?>
       </div>
@@ -67,14 +67,14 @@ class BWGViewAddAlbumsGalleries {
                         spider_set_input_value('order_by', 'is_album');
                         spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'is_album') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                         spider_form_submit(event, 'albums_galleries_form')" href="">
-              <span>Type</span><span class="sorting-indicator"></span>
+              <span><?php _e("Type", 'bwg_back'); ?></span><span class="sorting-indicator"></span>
             </a>
           </th>
           <th class="<?php if ($order_by == 'name') {echo $order_class;} ?>">
             <a onclick="spider_set_input_value('order_by', 'name');
                         spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'name') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                         spider_form_submit(event, 'albums_galleries_form')" href="">
-              <span>Name</span><span class="sorting-indicator"></span>
+              <span><?php _e("Name", 'bwg_back'); ?></span><span class="sorting-indicator"></span>
             </a>
           </th>          
         </thead>
@@ -88,7 +88,7 @@ class BWGViewAddAlbumsGalleries {
               <tr id="tr_<?php echo $iterator; ?>" <?php echo $alternate; ?>>
                 <td class="table_small_col check-column"><input id="check_<?php echo $iterator; ?>" name="check_<?php echo $iterator; ?>" type="checkbox" /></td>
                 <td id="id_<?php echo $iterator; ?>" class="table_small_col"><?php echo $row_data->id; ?></td>
-                <td id="url_<?php echo $iterator; ?>" class="table_medium_col_uncenter"><?php echo ($row_data->is_album ? "Album" : "Gallery") ; ?></td>
+                <td id="url_<?php echo $iterator; ?>" class="table_medium_col_uncenter"><?php echo ($row_data->is_album ? __("Album", 'bwg_back') : __("Gallery", 'bwg_back')) ; ?></td>
                 <td>
                   <a onclick="window.parent.bwg_add_items(['<?php echo $row_data->id?>'],['<?php echo htmlspecialchars(addslashes($row_data->name))?>'], ['<?php echo htmlspecialchars(addslashes($row_data->is_album))?>'])" id="a_<?php echo $iterator; ?>" style="cursor:pointer;">
                     <?php echo $row_data->name?>

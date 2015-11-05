@@ -103,17 +103,17 @@ class BWGViewWidget {
       }
     </script>
     <p>
-      <label for="<?php echo $id_title; ?>">Title:</label>
+      <label for="<?php echo $id_title; ?>"><?php _e("Title:", 'bwg_back'); ?></label>
       <input class="widefat" id="<?php echo $id_title; ?>" name="<?php echo $name_title; ?>'" type="text" value="<?php echo $instance['title']; ?>"/>
     </p>
     <p>
-      <input type="radio" name="<?php echo $name_type; ?>" id="<?php echo $id_type . "_1"; ?>" value="gallery" class="sel_gallery" onclick="bwg_change_type(event, this)" <?php if ($instance['type'] == "gallery") echo 'checked="checked"'; ?> /><label for="<?php echo $id_type . "_1"; ?>">Gallery</label>
-      <input type="radio" name="<?php echo $name_type; ?>" id="<?php echo $id_type . "_2"; ?>" value="album" class="sel_album" onclick="bwg_change_type(event, this)" <?php if ($instance['type'] == "album") echo 'checked="checked"'; ?> /><label for="<?php echo $id_type . "_2"; ?>">Album</label>
+      <input type="radio" name="<?php echo $name_type; ?>" id="<?php echo $id_type . "_1"; ?>" value="gallery" class="sel_gallery" onclick="bwg_change_type(event, this)" <?php if ($instance['type'] == "gallery") echo 'checked="checked"'; ?> /><label for="<?php echo $id_type . "_1"; ?>"><?php _e("Gallery", 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_type; ?>" id="<?php echo $id_type . "_2"; ?>" value="album" class="sel_album" onclick="bwg_change_type(event, this)" <?php if ($instance['type'] == "album") echo 'checked="checked"'; ?> /><label for="<?php echo $id_type . "_2"; ?>"><?php _e("Album", 'bwg_back'); ?></label>
       <input type="hidden" name="<?php echo $name_type; ?>" id="<?php echo $id_type; ?>" value="<?php echo $instance['type']; ?>" class="bwg_hidden" />
     </p>
     <p id="p_galleries" style="display:<?php echo ($instance['type'] == "gallery") ? "" : "none" ?>;">
       <select name="<?php echo $name_gallery_id; ?>" id="<?php echo $id_gallery_id; ?>" class="widefat">
-        <option value="0">Select Gallery</option>
+        <option value="0"><?php _e("Select Gallery", 'bwg_back'); ?></option>
         <?php
         foreach ($gallery_rows as $gallery_row) {
           ?>
@@ -125,7 +125,7 @@ class BWGViewWidget {
     </p>
     <p id="p_albums" style="display:<?php echo ($instance['type'] == "album") ? "" : "none" ?>;">
       <select name="<?php echo $name_album_id; ?>" id="<?php echo $id_album_id; ?>" class="widefat">
-        <option value="0">Select Album</option>
+        <option value="0"><?php _e("Select Album", 'bwg_back'); ?></option>
         <?php
         foreach ($album_rows as $album_row) {
           ?>
@@ -136,17 +136,17 @@ class BWGViewWidget {
       </select>
     </p>    
     <p>
-      <input type="radio" name="<?php echo $name_show; ?>" id="<?php echo $id_show . "_1"; ?>" value="random" <?php if ($instance['show'] == "random") echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "random");' /><label for="<?php echo $id_show . "_1"; ?>">Random</label>
-      <input type="radio" name="<?php echo $name_show; ?>" id="<?php echo $id_show . "_2"; ?>" value="first" <?php if ($instance['show'] == "first") echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "first");' /><label for="<?php echo $id_show . "_2"; ?>">First</label>
-      <input type="radio" name="<?php echo $name_show; ?>" id="<?php echo $id_show . "_3"; ?>" value="last" <?php if ($instance['show'] == "last") echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "last");' /><label for="<?php echo $id_show . "_3"; ?>">Last</label>
+      <input type="radio" name="<?php echo $name_show; ?>" id="<?php echo $id_show . "_1"; ?>" value="random" <?php if ($instance['show'] == "random") echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "random");' /><label for="<?php echo $id_show . "_1"; ?>"><?php _e("Random", 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_show; ?>" id="<?php echo $id_show . "_2"; ?>" value="first" <?php if ($instance['show'] == "first") echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "first");' /><label for="<?php echo $id_show . "_2"; ?>"><?php _e("First", 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_show; ?>" id="<?php echo $id_show . "_3"; ?>" value="last" <?php if ($instance['show'] == "last") echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "last");' /><label for="<?php echo $id_show . "_3"; ?>"><?php _e("Last", 'bwg_back'); ?></label>
       <input type="hidden" name="<?php echo $name_show; ?>" id="<?php echo $id_show; ?>" value="<?php echo $instance['show']; ?>" class="bwg_hidden" />
     </p>
     <p>
-      <label for="<?php echo $id_count; ?>">Count:</label>
+      <label for="<?php echo $id_count; ?>"><?php _e("Count:", 'bwg_back'); ?></label>
       <input class="widefat" style="width:25%;" id="<?php echo $id_count; ?>" name="<?php echo $name_count; ?>'" type="text" value="<?php echo $instance['count']; ?>"/>
     </p>
     <p>
-      <label for="<?php echo $id_width; ?>">Dimensions:</label>
+      <label for="<?php echo $id_width; ?>"><?php _e("Dimensions:", 'bwg_back'); ?></label>
       <input class="widefat" style="width:25%;" id="<?php echo $id_width; ?>" name="<?php echo $name_width; ?>'" type="text" value="<?php echo $instance['width']; ?>"/> x 
       <input class="widefat" style="width:25%;" id="<?php echo $id_height; ?>" name="<?php echo $name_height; ?>'" type="text" value="<?php echo $instance['height']; ?>"/> px
     </p>

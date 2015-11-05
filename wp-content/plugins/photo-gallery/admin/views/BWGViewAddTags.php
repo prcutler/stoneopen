@@ -42,13 +42,13 @@ class BWGViewAddTags {
     <script src="<?php echo WD_BWG_URL . '/js/bwg.js?ver='.wd_bwg_version(); ?>" type="text/javascript"></script>
     <form class="wrap wp-core-ui" id="tags_form" method="post" action="<?php echo add_query_arg(array('action' => 'addTags', 'width' => '650', 'height' => '500', 'bwg_items_per_page'=>$per_page , 'TB_iframe' => '1'), admin_url('admin-ajax.php')); ?>" style="width:99%; margin: 0 auto;">
       <?php wp_nonce_field( 'addTags', 'bwg_nonce' ); ?>
-      <h2 style="width:200px; float:left;">Tags</h2>
+      <h2 style="width:200px; float:left;"><?php _e("Tags", 'bwg_back'); ?></h2>
       <a href="" class="thickbox thickbox-preview" id="content-add_media" title="Add Tag" onclick="bwg_get_tags('<?php echo $image_id; ?>', event);" style="float:right; padding: 9px 0px 4px 0">
         <img src="<?php echo WD_BWG_URL . '/images/add_but.png'; ?>" style="border:none;" />
       </a>
       <div class="tablenav top">
         <?php
-        WDWLibrary::search('Name', $search_value, 'tags_form');
+        WDWLibrary::search(__('Name', 'bwg_back'), $search_value, 'tags_form');
         WDWLibrary::html_page_nav($page_nav['total'], $pager++, $page_nav['limit'], 'tags_form', $per_page);
         ?>
       </div>
@@ -65,14 +65,14 @@ class BWGViewAddTags {
             <a onclick="spider_set_input_value('order_by', 'name');
                         spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'name') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                         spider_form_submit(event, 'tags_form')" href="">
-              <span>Name</span><span class="sorting-indicator"></span>
+              <span><?php _e("Name", 'bwg_back'); ?></span><span class="sorting-indicator"></span>
             </a>
           </th>
           <th class="<?php if ($order_by == 'slug') {echo $order_class;} ?>">
             <a onclick="spider_set_input_value('order_by', 'slug');
                         spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'slug') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                         spider_form_submit(event, 'tags_form')" href="">
-              <span>Slug</span><span class="sorting-indicator"></span>
+              <span><?php _e("Slug", 'bwg_back'); ?></span><span class="sorting-indicator"></span>
             </a>
           </th>
         </thead>

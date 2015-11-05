@@ -26,27 +26,27 @@ class BWGViewLicensing_bwg {
     ?>
     <div id="featurs_tables">
       <div id="featurs_table1">
-        <span>WordPress 3.4+ ready</span>
-        <span>SEO-friendly</span>
-        <span>Responsive Design and Layout</span>
-        <span>5 Standard Gallery/Album Views</span>
-        <span>Watermarking/ Advertising Possibility</span>
-        <span>Basic Tag Cloud Widget</span>
-        <span>Image Download</span>
-        <span>Photo Gallery Slideshow Widget</span>
-        <span>Photo Gallery Widget</span>
-        <span>Slideshow/Lightbox Effects</span>
-        <span>Possibility of Editing/Creating New Themes</span>
-        <span>10 Pro Gallery/Album Views</span>
-        <span>Image Commenting</span>
-        <span>Image Social Sharing</span>
-        <span>Photo Gallery Tags Cloud Widget</span>
-        <span>Instagram Integration</span>
-        <span>AddThis Integration</span>
-        <span>Add-ons Support</span>
+        <span>WordPress 3.4+ <?php _e("ready", 'bwg_back'); ?></span>
+        <span>SEO-<?php _e("friendly", 'bwg_back'); ?></span>
+        <span><?php _e("Responsive Design and Layout", 'bwg_back'); ?></span>
+        <span><?php _e("5 Standard Gallery/Album Views", 'bwg_back'); ?></span>
+        <span><?php _e("Watermarking/ Advertising Possibility", 'bwg_back'); ?></span>
+        <span><?php _e("Basic Tag Cloud Widget", 'bwg_back'); ?></span>
+        <span><?php _e("Image Download", 'bwg_back'); ?></span>
+        <span><?php _e("Photo Gallery Slideshow Widget", 'bwg_back'); ?></span>
+        <span><?php _e("Photo Gallery Widget", 'bwg_back'); ?></span>
+        <span><?php _e("Slideshow/Lightbox Effects", 'bwg_back'); ?></span>
+        <span><?php _e("Possibility of Editing/Creating New Themes", 'bwg_back'); ?></span>
+        <span><?php _e("10 Pro Gallery/Album Views", 'bwg_back'); ?></span>
+        <span><?php _e("Image Commenting", 'bwg_back'); ?></span>
+        <span><?php _e("Image Social Sharing", 'bwg_back'); ?></span>
+        <span><?php _e("Photo Gallery Tags Cloud Widget", 'bwg_back'); ?></span>
+        <span><?php _e("Instagram Integration", 'bwg_back'); ?></span>
+        <span>AddThis <?php _e("Integration", 'bwg_back'); ?></span>
+        <span><?php _e("Add-ons Support", 'bwg_back'); ?></span>
       </div>
       <div id="featurs_table2">
-        <span style="padding-top: 18px;height: 39px;">Free</span>
+        <span style="padding-top: 18px;height: 39px;"><?php _e("Free", 'bwg_back'); ?></span>
         <span class="yes"></span>
         <span class="yes"></span>
         <span class="yes"></span>
@@ -67,7 +67,7 @@ class BWGViewLicensing_bwg {
         <span class="no"></span>
       </div>
       <div id="featurs_table3">
-        <span>Pro Version</span>
+        <span><?php _e("Pro Version", 'bwg_back'); ?></span>
         <span class="yes"></span>
         <span class="yes"></span>
         <span class="yes"></span>
@@ -94,11 +94,11 @@ class BWGViewLicensing_bwg {
         </a>
       </div>
     <div style="float: left; clear: both;">
-      <p>After purchasing the commercial version follow these steps:</p>
+      <p><?php _e("After purchasing the commercial version follow these steps:", 'bwg_back'); ?></p>
       <ol>
-        <li>Deactivate Photo Gallery plugin.</li>
-        <li>Delete Photo Gallery plugin.</li>
-        <li>Install the downloaded commercial version of the plugin.</li>
+        <li><?php _e("Deactivate Photo Gallery plugin.", 'bwg_back'); ?></li>
+        <li><?php _e("Delete Photo Gallery plugin.", 'bwg_back'); ?></li>
+        <li><?php _e("Install the downloaded commercial version of the plugin.", 'bwg_back'); ?></li>
       </ol>
     </div>
     <?php

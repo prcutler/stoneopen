@@ -724,7 +724,7 @@ class BWGControllerGalleries_bwg {
   }
 
   public function save() {
-    echo WDWLibrary::message('Item Succesfully Saved.', 'updated');
+    echo WDWLibrary::message(__('Item Succesfully Saved.', 'bwg_back'), 'updated');
     $this->display();
   }
 
@@ -865,10 +865,10 @@ class BWGControllerGalleries_bwg {
       ));
     }
     if ($save !== FALSE) {
-      echo WDWLibrary::message('Item Succesfully Saved.', 'updated');
+      echo WDWLibrary::message(__('Item Succesfully Saved.', 'bwg_back'), 'updated');
     }
     else {
-      echo WDWLibrary::message('Error. Please install plugin again.', 'error');
+      echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'error');
     }
   }
 
@@ -891,7 +891,7 @@ class BWGControllerGalleries_bwg {
         $i++;
       }
       if ($flag) {
-        echo WDWLibrary::message('Ordering Succesfully Saved.', 'updated');
+        echo WDWLibrary::message(__('Ordering Succesfully Saved.', 'bwg_back'), 'updated');
       }
     }
     $this->display();
@@ -905,10 +905,10 @@ class BWGControllerGalleries_bwg {
     if ($wpdb->query($query)) {
       $wpdb->query($query_image);
       $wpdb->query($query_album_gallery);
-      echo WDWLibrary::message('Item Succesfully Deleted.', 'updated');
+      echo WDWLibrary::message(__('Item Succesfully Deleted.', 'bwg_back'), 'updated');
     }
     else {
-      echo WDWLibrary::message('Error. Please install plugin again.', 'error');
+      echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'error');
     }
     /* Delete corresponding posts and their meta.*/
     $query2 = "SELECT ID, post_content FROM " . $wpdb->posts . " WHERE post_type = 'bwg_gallery'";
@@ -938,10 +938,10 @@ class BWGControllerGalleries_bwg {
       }
     }
     if ($flag) {
-      echo WDWLibrary::message('Items Succesfully Deleted.', 'updated');
+      echo WDWLibrary::message(__('Items Succesfully Deleted.', 'bwg_back'), 'updated');
     }
     else {
-      echo WDWLibrary::message('You must select at least one item.', 'error');
+      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'error');
     }
     $this->display();
   }
@@ -950,10 +950,10 @@ class BWGControllerGalleries_bwg {
     global $wpdb;
     $save = $wpdb->update($wpdb->prefix . 'bwg_gallery', array('published' => 1), array('id' => $id));
     if ($save !== FALSE) {
-      echo WDWLibrary::message('Item Succesfully Published.', 'updated');
+      echo WDWLibrary::message(__('Item Succesfully Published.', 'bwg_back'), 'updated');
     }
     else {
-      echo WDWLibrary::message('Error. Please install plugin again.', 'error');
+      echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'error');
     }
     $this->display();
   }
@@ -975,10 +975,10 @@ class BWGControllerGalleries_bwg {
       }
     }
     if ($flag) {
-      echo WDWLibrary::message('Items Succesfully Published.', 'updated');
+      echo WDWLibrary::message(__('Items Succesfully Published.', 'bwg_back'), 'updated');
     }
     else {
-      echo WDWLibrary::message('You must select at least one item.', 'error');
+      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'error');
     }
     $this->display();
   }
@@ -987,10 +987,10 @@ class BWGControllerGalleries_bwg {
     global $wpdb;
     $save = $wpdb->update($wpdb->prefix . 'bwg_gallery', array('published' => 0), array('id' => $id));
     if ($save !== FALSE) {
-      echo WDWLibrary::message('Item Succesfully Unpublished.', 'updated');
+      echo WDWLibrary::message(__('Item Succesfully Unpublished.', 'bwg_back'), 'updated');
     }
     else {
-      echo WDWLibrary::message('Error. Please install plugin again.', 'error');
+      echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'error');
     }
     $this->display();
   }
@@ -1012,10 +1012,10 @@ class BWGControllerGalleries_bwg {
       }
     }
     if ($flag) {
-      echo WDWLibrary::message('Items Succesfully Unpublished.', 'updated');
+      echo WDWLibrary::message(__('Items Succesfully Unpublished.', 'bwg_back'), 'updated');
     }
     else {
-      echo WDWLibrary::message('You must select at least one item.', 'error');
+      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'error');
     }
     $this->display();
   }
@@ -1094,10 +1094,10 @@ class BWGControllerGalleries_bwg {
 	    }
 	  }
 	  if ($flag == false) {
-      echo WDWLibrary::message('You must select at least one item.', 'error');
+      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'error');
     }
 	  else {
-		  echo WDWLibrary::message('Thumb Succesfully Resized', 'updated');
+		  echo WDWLibrary::message(__('Thumb Succesfully Resized', 'bwg_back'), 'updated');
 	  }
   }
 

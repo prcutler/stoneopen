@@ -40,8 +40,8 @@ class BWGViewTags_bwg {
     </script>
     <div style="clear: both; float: left; width: 99%;">
       <div style="float:left; font-size: 14px; font-weight: bold;">
-        This section allows you to create, edit and delete tags.
-        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery-guide-step-3.html">Read More in User Manual</a>
+        <?php _e("This section allows you to create, edit and delete tags.", 'bwg_back'); ?>
+        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery-guide-step-3.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
       </div>
       <div style="float: right; text-align: right;">
         <a style="text-decoration: none;" target="_blank" href="https://web-dorado.com/files/fromPhotoGallery.php">
@@ -49,18 +49,18 @@ class BWGViewTags_bwg {
         </a>
       </div>
     </div>
-    <div id="wordpress_message_1" style="width:99%;display:none"><div id="wordpress_message_2" class="updated"><p><strong>Item Succesfully Saved.</strong></p></div></div>
+    <div id="wordpress_message_1" style="width:99%;display:none"><div id="wordpress_message_2" class="updated"><p><strong><?php _e("Item Succesfully Saved.", 'bwg_back'); ?></strong></p></div></div>
     <form class="wrap" id="tags_form" method="post" action="admin.php?page=tags_bwg" style="float:left; width: 99%;">
       <?php wp_nonce_field( 'tags_bwg', 'bwg_nonce' ); ?>
       <span class="tag_icon"></span>
-      <h2>Tags</h2>
+      <h2><?php _e("Tags", 'bwg_back'); ?></h2>
       <div class="buttons_div">
-        <input class="button-secondary" type="submit" value="Save" onclick="if (confirm('Do you want to save items?')){
+        <input class="button-secondary" type="submit" value="<?php _e("Save", 'bwg_back'); ?>" onclick="if (confirm('Do you want to save items?')){
                                                                     spider_set_input_value('task', 'edit_tags');
                                                                   } else {
                                                                     return false;
                                                                   }" />
-        <input class="button-secondary" type="submit" value="Delete" onclick="if (confirm('Do you want to delete selected items?')) {
+        <input class="button-secondary" type="submit" value="<?php _e("Delete", 'bwg_back'); ?>" onclick="if (confirm('Do you want to delete selected items?')) {
                                                                       spider_set_input_value('task', 'delete_all');
                                                                     } else {
                                                                       return false;
@@ -68,7 +68,7 @@ class BWGViewTags_bwg {
       </div>
       <div class="tablenav top">
         <?php
-        WDWLibrary::search('Name', $search_value, 'tags_form');
+        WDWLibrary::search(__("Name", 'bwg_back'), $search_value, 'tags_form');
         WDWLibrary::html_page_nav($page_nav['total'], $pager++, $page_nav['limit'], 'tags_form', $per_page);
         ?>
       </div>
@@ -88,7 +88,7 @@ class BWGViewTags_bwg {
                           spider_set_input_value('order_by', 'A.name');
                           spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'A.name') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                           spider_form_submit(event, 'tags_form')" href="">
-                <span>Name</span><span class="sorting-indicator"></span>
+                <span><?php _e("Name", 'bwg_back'); ?></span><span class="sorting-indicator"></span>
               </a>
             </th>
             <th class="<?php if ($order_by == 'A.slug') {echo $order_class;} ?>">
@@ -96,7 +96,7 @@ class BWGViewTags_bwg {
                           spider_set_input_value('order_by', 'A.slug');
                           spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'A.slug') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                           spider_form_submit(event, 'tags_form')" href="">
-                <span>Slug</span><span class="sorting-indicator"></span>
+                <span><?php _e("Slug", 'bwg_back'); ?></span><span class="sorting-indicator"></span>
               </a>
             </th>
             <th class="<?php if ($order_by == 'B.count') {echo $order_class;} ?> table_big_col ">
@@ -104,11 +104,11 @@ class BWGViewTags_bwg {
                           spider_set_input_value('order_by', 'B.count');
                           spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'B.count') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                           spider_form_submit(event, 'tags_form')" href="">
-                <span>Count</span><span class="sorting-indicator"></span>
+                <span><?php _e("Count", 'bwg_back'); ?></span><span class="sorting-indicator"></span>
               </a>
             </th>
-            <th class="table_big_col">Edit</th>
-            <th class="table_big_col">Delete</th>
+            <th class="table_big_col"><?php _e("Edit", 'bwg_back'); ?></th>
+            <th class="table_big_col"><?php _e("Delete", 'bwg_back'); ?></th>
           </tr>		  
           <tr id="tr">
             <th></th>
@@ -123,7 +123,7 @@ class BWGViewTags_bwg {
             <th class="table_big_col">
               <a class="add_tag_th button-primary button button-small" onclick="spider_set_input_value('task', 'save');
                                                                                 spider_set_input_value('current_id', '');
-                                                                                spider_form_submit(event, 'tags_form')" href="">Add Tag </a>
+                                                                                spider_form_submit(event, 'tags_form')" href=""><?php _e("Add Tag", 'bwg_back'); ?> </a>
             </th>
             <th></th>
           </tr>
@@ -140,27 +140,27 @@ class BWGViewTags_bwg {
                 <td id="td_name_<?php echo $row_data->term_id; ?>" >
                   <a class="pointer" id="name<?php echo $row_data->term_id; ?>"
                      onclick="edit_tag(<?php echo $row_data->term_id; ?>)" 
-                     title="Edit"><?php echo $row_data->name; ?></a>
+                     title="<?php _e("Edit", 'bwg_back'); ?>"><?php echo $row_data->name; ?></a>
                 </td>
                 <td id="td_slug_<?php echo $row_data->term_id; ?>">
                   <a class="pointer"
                      id="slug<?php echo $row_data->term_id; ?>"
                      onclick="edit_tag(<?php echo $row_data->term_id; ?>)" 
-                     title="Edit"><?php echo $row_data->slug; ?></a>
+                     title="<?php _e("Edit", 'bwg_back'); ?>"><?php echo $row_data->slug; ?></a>
                 </td>
                 <td class="table_big_col" id="td_count_<?php echo $row_data->term_id; ?>" >
                   <a class="pointer"
                      id="count<?php echo $row_data->term_id; ?>"
                      onclick="edit_tag(<?php echo $row_data->term_id; ?>)"
-                     title="Edit"><?php echo $this->model->get_count_of_images($row_data->term_id); ?></a>
+                     title="<?php _e("Edit", 'bwg_back'); ?>"><?php echo $this->model->get_count_of_images($row_data->term_id); ?></a>
                 </td>
                 <td class="table_big_col" id="td_edit_<?php echo $row_data->term_id; ?>">
-                  <a onclick="edit_tag(<?php echo $row_data->term_id; ?>)">Edit</a>
+                  <a onclick="edit_tag(<?php echo $row_data->term_id; ?>)"><?php _e("Edit", 'bwg_back'); ?></a>
                 </td>
                 <td class="table_big_col" id="td_delete_<?php echo $row_data->term_id; ?>">
                   <a onclick="spider_set_input_value('task', 'delete');
                               spider_set_input_value('current_id', <?php echo $row_data->term_id; ?>);
-                              spider_form_submit(event, 'tags_form')" href="">Delete</a>
+                              spider_form_submit(event, 'tags_form')" href=""><?php _e("Delete", 'bwg_back'); ?></a>
                 </td>
               </tr>
               <?php

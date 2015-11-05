@@ -152,7 +152,7 @@ class BWGViewEditThumb {
       }
       else {
         ?>
-        <div class="thumb_message"><strong>You can't crop this type of image.</strong></div>
+        <div class="thumb_message"><strong><?php _e("You can't crop this type of image.", 'bwg_back'); ?></strong></div>
         <?php
       }
     }
@@ -221,10 +221,10 @@ class BWGViewEditThumb {
     </style>
     <?php
     if ($edit_type == 'crop') {
-      ?><div class="thumb_message" id="croped_message"><strong>The thumbnail successfully croped.</strong></div><?php
+      ?><div class="thumb_message" id="croped_message"><strong><?php _e("The thumbnail successfully croped.", 'bwg_back'); ?></strong></div><?php
     }
     else {
-      ?><div class="thumb_message" id="thumb_message"><strong>Select the area for the thumbnail.</strong></div><?php
+      ?><div class="thumb_message" id="thumb_message"><strong><?php _e("Select the area for the thumbnail.", 'bwg_back'); ?></strong></div><?php
     }
     ?>
     <form method="post" id="crop_image" action="<?php echo $form_action; ?>" >
@@ -237,7 +237,7 @@ class BWGViewEditThumb {
           <tr>
             <td class="thumb_preview_td" colspan="2">
               <input type="checkbox" id="chb" onclick="spider_crop_ratio()" checked="checked">
-              <label for="chb">Keep aspect ratio</label>
+              <label for="chb"><?php _e("Keep aspect ratio", 'bwg_back'); ?></label>
             </td>
           </tr>
           <tr>
@@ -710,31 +710,31 @@ class BWGViewEditThumb {
         <div class="cont_for_effect">          
           <div class="effect_cont">
             <img class="effect" onclick="spider_rotate('grayscale', 'bwg_rotate_image')" src="<?php echo WD_BWG_URL . '/images/effects/grayscale.png'; ?>"/>
-            <p class="effect_title">Grayscale</p>
+            <p class="effect_title"><?php _e("Grayscale", 'bwg_back'); ?></p>
           </div>
           <div class="effect_cont">
             <img class="effect" onclick="spider_rotate('negative', 'bwg_rotate_image')" src="<?php echo WD_BWG_URL . '/images/effects/negative.png'; ?>"/>
-            <p class="effect_title">Negative</p>
+            <p class="effect_title"><?php _e("Negative", 'bwg_back'); ?></p>
           </div>
           <div class="effect_cont">
             <img class="effect" onclick="spider_rotate('remove', 'bwg_rotate_image')" src="<?php echo WD_BWG_URL . '/images/effects/remove.png'; ?>"/>
-            <p class="effect_title">Removal</p>
+            <p class="effect_title"><?php _e("Removal", 'bwg_back'); ?></p>
           </div>
           <div class="effect_cont">
             <img class="effect" onclick="spider_rotate('sepia', 'bwg_rotate_image')" src="<?php echo WD_BWG_URL . '/images/effects/sepia.png'; ?>"/>
-            <p class="effect_title">Sepia</p>
+            <p class="effect_title"><?php _e("Sepia", 'bwg_back'); ?></p>
           </div>
           <div class="effect_cont">
             <img class="effect" onclick="spider_rotate('dark_slate_grey', 'bwg_rotate_image')" src="<?php echo WD_BWG_URL . '/images/effects/dark_slate_grey.png'; ?>"/>
-            <p class="effect_title">Slate</p>
+            <p class="effect_title"><?php _e("Slate", 'bwg_back'); ?></p>
           </div>
           <div class="effect_cont">
             <img class="effect" onclick="spider_rotate('saturate', 'bwg_rotate_image')" src="<?php echo WD_BWG_URL . '/images/effects/saturate.png'; ?>"/>				  
-            <p class="effect_title">Saturate</p>		 
+            <p class="effect_title"><?php _e("Saturate", 'bwg_back'); ?></p>		 
          </div>
         </div>		
         <div class="reset_cont">
-          <a class="reset_img" onclick="if (confirm('Do you want to reset the image?')) spider_rotate('recover', 'bwg_rotate_image'); else return false; ">Reset image</a>
+          <a class="reset_img" onclick="if (confirm('<?php _e("Do you want to reset the image?", 'bwg_back'); ?>')) spider_rotate('recover', 'bwg_rotate_image'); else return false; "><?php _e("Reset image", 'bwg_back'); ?></a>
         </div>
         <div class="flip_cont" >		  
           <img title="Flip Both" class="effect" onclick="spider_rotate('both', 'bwg_rotate_image')" src="<?php echo WD_BWG_URL . '/images/effects/flip_both.png'; ?>"/>
@@ -760,9 +760,9 @@ class BWGViewEditThumb {
                     <div class="brightness_part_1">
                       <div class="brightness_butt">
                         <div class="contForBrightness">
-                          <div class="brightness_title">Brightness</div>
+                          <div class="brightness_title"><?php _e("Brightness", 'bwg_back'); ?></div>
                           <img title="Press for brightness" class="brightnessEffect" onclick="spider_rotate('brightness', 'bwg_rotate_image')" src="<?php echo WD_BWG_URL . '/images/effects/brightness.png'; ?>" />
-                          <div class="tooltip_for_press">Press for result</div>
+                          <div class="tooltip_for_press"><?php _e("Press for result", 'bwg_back'); ?></div>
                         </div>
                       </div>
                       <div class="cont_for_val">
@@ -785,9 +785,9 @@ class BWGViewEditThumb {
                       </div>
                       <div class="contrast_butt">
                         <div class="contForContrast">
-                          <div class="contrast_title">Contrast</div>
+                          <div class="contrast_title"><?php _e("Contrast", 'bwg_back'); ?></div>
                           <img title="Press for Contrast" class="contrastEffect" onclick="spider_rotate('contrast', 'bwg_rotate_image')" src="<?php echo WD_BWG_URL . '/images/effects/contrast.png'; ?>" />
-                          <div class="tooltip_for_press_contrast">Press for result</div>
+                          <div class="tooltip_for_press_contrast"><?php _e("Press for result", 'bwg_back'); ?></div>
                         </div>
                       </div>
                     </div>				

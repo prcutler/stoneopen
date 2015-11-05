@@ -1,0 +1,3756 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: photo-gallery\n"
+"POT-Creation-Date: 15-10-28 03:22+000\n"
+"PO-Revision-Date: 2015-10-30 11:58+0400\n"
+"Last-Translator: admin < a@mail.ru >\n"
+"Language-Team: \n"
+"Language: pt_PT\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.5\n"
+
+#: ../photo-gallery-notices.php:188
+msgid "Leave A Review?"
+msgstr "Deixe um comentário?"
+
+#: ../photo-gallery-notices.php:189
+#, php-format
+msgid "We hope you've enjoyed using WordPress %s! Would you consider leaving us a review on WordPress.org?"
+msgstr "Esperamos que você tenha gostado usando o WordPress %s! Você consideraria deixando-nos um comentário sobre WordPress.org?"
+
+#: ../photo-gallery-notices.php:190
+msgid "Sure! I'd love to!"
+msgstr "Certo! Eu adoraria!"
+
+#: ../photo-gallery-notices.php:191
+msgid "I've already left a review"
+msgstr "Eu já deixou um comentário"
+
+#: ../photo-gallery-notices.php:192
+msgid "Maybe Later"
+msgstr "Talvez mais tarde"
+
+#: ../photo-gallery-notices.php:193 ../photo-gallery-notices.php:203
+msgid "Never show again"
+msgstr "Nunca mostrar novamente"
+
+#: ../photo-gallery-notices.php:199
+msgid "Hey! How's It Going?"
+msgstr "Ei! Como está indo?"
+
+#: ../photo-gallery-notices.php:200
+#, php-format
+msgid "Thank you for using WordPress %s! We hope that you've found everything you need, but if you have any questions:"
+msgstr "Obrigado por usar o WordPress %s! Esperamos que você encontrou tudo que você precisa, mas se você tiver quaisquer perguntas:"
+
+#: ../photo-gallery-notices.php:201
+msgid "Check out User Guide"
+msgstr "Confira Guia do Usuário"
+
+#: ../photo-gallery-notices.php:202
+msgid "Get Some Help"
+msgstr "Obter Ajuda"
+
+#. Name of the plugin
+msgid "Photo Gallery"
+msgstr "Galeria de fotos"
+
+#. URI of the plugin
+msgid "https://web-dorado.com/products/wordpress-photo-gallery-plugin.html"
+msgstr "https://web-dorado.com/products/wordpress-photo-gallery-plugin.html"
+
+#. Description of the plugin
+msgid "This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags."
+msgstr "Este plugin é uma galeria de plug-in totalmente responsivo com funcionalidades avançadas. Ele permite ter diferentes galerias de imagens para seus posts e páginas. Você pode criar um número ilimitado de galerias, combiná-las em álbuns, e fornecer descrições e tags."
+
+#. Author of the plugin
+msgid "WebDorado"
+msgstr "WebDorado"
+
+#. Author URI of the plugin
+msgid "https://web-dorado.com"
+msgstr "https://web-dorado.com"
+
+#: ../photo-gallery.php:71
+msgid "Add Galleries/Images"
+msgstr "Adicionar Galerias / Imagens"
+
+#: ../photo-gallery.php:76 .. /admin/views/BWGViewAlbums_bwg.php:53
+msgid "Albums"
+msgstr "Álbuns"
+
+#: ../photo-gallery.php:81 ../admin/views/BWGViewAddTags. php:45
+#: ../admin/views/BWGViewGalleries_bwg.php:857 ..
+#: /admin/views/BWGViewTags_bwg.php:56
+msgid "Tags"
+msgstr "Etiquetas"
+
+#: ../photo-gallery.php:86
+msgid "Options"
+msgstr "Opções"
+
+#: ../photo-gallery.php:90 .. /admin/views/BWGViewThemes_bwg.php:78
+msgid "Themes"
+msgstr "Temas"
+
+#: ../photo-gallery.php:95
+msgid "Generate Shortcode"
+msgstr "Gerar Shortcode"
+
+#: ../photo-gallery.php:97
+msgid "Licensing"
+msgstr "Licenciamento"
+
+#: ../photo-gallery.php:100
+msgid "Featured Plugins"
+msgstr "Plugins Destaque"
+
+#: ../photo-gallery.php:101
+msgid "Featured Themes"
+msgstr "Temas em destaque"
+
+#: ../photo-gallery.php:103
+msgid "Uninstall"
+msgstr "Desinstalar"
+
+#: ../photo-gallery.php:2446 ../photo-gallery.php:2615
+msgid "field is required."
+msgstr "campo é obrigatório."
+
+#: ../photo-gallery.php:2447
+msgid "You must select an image file."
+msgstr "Você deve selecionar um arquivo de imagem."
+
+#: ../photo-gallery.php:2448
+msgid "You must select an audio file."
+msgstr "Você deve selecionar um arquivo de áudio."
+
+#: ../photo-gallery.php:2449
+msgid "You do not have Instagram CLIENT_ID. Input its value in Options->Embed options. "
+msgstr "Você não tem Instagram CLIENT_ID. Entrada de seu valor em opções Opções> Incorporar."
+
+#: ../photo-gallery.php:2450
+msgid "Instagram recent post number must be between 1 and 33."
+msgstr "Instagram número post recente deve estar entre 1 e 33."
+
+#: ../photo-gallery.php:2451
+msgid "The gallery is not empty. Please delete all the images first."
+msgstr "A galeria não está vazio. Por favor, apague todas as imagens em primeiro lugar."
+
+#: ../photo-gallery.php:2452
+msgid "Please enter url to embed."
+msgstr "Por favor, indique url para incorporar."
+
+#: ../photo-gallery.php:2453
+msgid "Error: cannot get response from the server."
+msgstr "Erro: não é possível obter resposta do servidor."
+
+#: ../photo-gallery.php:2454
+msgid "Error: something wrong happened at the server."
+msgstr "Erro: algo de errado aconteceu no servidor."
+
+#: ../photo-gallery.php:2455
+msgid "Error"
+msgstr "Erro"
+
+#: ../photo-gallery.php:2456
+msgid "Show order column"
+msgstr "Mostrar coluna de ordem"
+
+#: ../photo-gallery.php:2457 ../admin/views/BWGViewAlbums_bwg.php:63 ..
+#: /admin/views/BWGViewGalleries_bwg.php:63
+#: ../admin/views/BWGViewGalleries_bwg. php:521
+#: ../admin/views/BWGViewGalleries_bwg.php:725
+msgid "Hide order column"
+msgstr "Ocultar coluna ordem"
+
+#: ../photo-gallery.php:2458
+msgid "Selected"
+msgstr "Selecionado"
+
+#: ../photo-gallery.php:2459 ../framework/WDWLibrary.php:436
+msgid "item"
+msgstr "item"
+
+#: ../photo-gallery.php:2460
+msgid "Items Succesfully Saved."
+msgstr "Itens com sucesso Salvo."
+
+#: ../photo-gallery.php:2461
+msgid "Item Succesfully Recovered."
+msgstr "Item com sucesso recuperado."
+
+#: ../photo-gallery.php:2462
+#: ../admin/controllers/BWGControllerGalleries_bwg.php:953
+#: ../framework/WDWLibrary.php:94
+msgid "Item Succesfully Published."
+msgstr "Publicado item com sucesso."
+
+#: ../photo-gallery.php:2463
+#: ../admin/controllers/BWGControllerGalleries_bwg.php:990
+#: ../framework/WDWLibrary.php:106
+msgid "Item Succesfully Unpublished."
+msgstr "Item com sucesso inédito."
+
+#: ../photo-gallery.php:2464
+#: ../admin/controllers/BWGControllerGalleries_bwg.php:908
+#: ../framework/WDWLibrary.php:58
+msgid "Item Succesfully Deleted."
+msgstr "Item com sucesso Excluídos."
+
+#: ../photo-gallery.php:2465
+#: ../admin/controllers/BWGControllerGalleries_bwg.php:944
+#: ../admin/controllers/BWGControllerGalleries_bwg.php:981 ..
+#: /admin/controllers/BWGControllerGalleries_bwg.php:1018
+#: /admin/controllers/BWGControllerGalleries_bwg.php:1097
+#: ../framework/WDWLibrary. php:76
+msgid "You must select at least one item."
+msgstr "Você deve selecionar pelo menos um item."
+
+#: ../photo-gallery.php:2466
+msgid "Items Succesfully resized."
+msgstr "Itens com sucesso redimensionada."
+
+#: ../photo-gallery.php:2467
+msgid "Watermarks Succesfully Set."
+msgstr "Marcas d'água com sucesso Set."
+
+#: ../photo-gallery.php:2468
+msgid "Items Succesfully Reset."
+msgstr "Itens com sucesso em Redefinir."
+
+#: ../photo-gallery.php:2616
+msgid "This is not a valid email address."
+msgstr "Este não é um endereço de e-mail válido."
+
+#: ../photo-gallery.php:2617
+#: ../frontend/views/BWGViewAlbum_compact_preview.php:744
+#: ../frontend/views/BWGViewAlbum_extended_preview.php:726
+msgid "There are no images matching your search."
+msgstr "Não existem imagens que correspondem à sua pesquisa."
+
+#: ../photo-gallery.php:2620
+msgid "Select Tag."
+msgstr "Escolha um Tag."
+
+#: ../addons/addons.php:5
+msgid "Photo Gallery Facebook"
+msgstr "Galeria de Fotos Facebook"
+
+#: ../addons/addons.php:7
+msgid "Photo Gallery Facebook is an add-on, which helps to display Facebook photos and videos within Photo Gallery plugin. You can create Facebook-only galleries, embed individual images and videos or include Facebook albums within mixed type albums."
+msgstr "Galeria de Fotos Facebook é um add-on, o que ajuda a visualizar fotos do Facebook e vídeos no Galeria plugin. Você pode criar Facebook só de galerias, imagens e vídeos individuais incorporar ou incluir álbuns do Facebook dentro de álbuns tipo misto."
+
+#: ../addons/addons.php:12
+msgid "NextGen Gallery Import to Photo Gallery"
+msgstr "NextGen Gallery Import à Galeria de Fotos"
+
+#: ../addons/addons.php:14
+msgid "This addon integrates NextGen with Photo Gallery allowing to import images and related data from NextGen to use with Photo Gallery"
+msgstr "Este addon integra NextGen com Galeria de Fotos permite importar imagens e dados relacionados de NextGen para usar com Galeria de Fotos"
+
+#: ../addons/addons.php:19
+msgid "Photo Gallery Export / Import"
+msgstr "Galeria de Fotos Export / Import"
+
+#: ../addons/addons.php:21
+msgid "Photo Gallery Export/Import helps to move created galleries and albums from one site to another. This way you can save the gallery/album options and manual modifications."
+msgstr "Galeria de Fotos Export / Import ajuda a mover galerias criadas e álbuns de um local para outro. Desta forma, você pode salvar as opções de galeria / álbuns e modificações manuais."
+
+#: ../addons/addons.php:30
+msgid "Photo Gallery Add-ons"
+msgstr "Galeria de-ons"
+
+#: ../addons/addons.php:33
+msgid "Attention"
+msgstr "Atenção"
+
+#: ../addons/addons.php:34
+msgid "Add-ons are supported by premium version of Photo Gallery"
+msgstr "Add-ons são suportados pela versão premium do Galeria de Fotos"
+
+#: ../addons/addons.php:69
+msgid "GET THIS ADD ON"
+msgstr "GET Esse complemento ON"
+
+#: ../admin/controllers/BWGControllerGalleries_bwg.php:727 ..
+#: /admin/controllers/BWGControllerGalleries_bwg.php:868
+#: /admin/controllers/BWGControllerOptions_bwg.php:384
+#: /admin/views/BWGViewTags_bwg.php:52 ../framework/WDWLibrary.php:46
+msgid "Item Succesfully Saved."
+msgstr "Salvo item com sucesso."
+
+#: ../admin/controllers/BWGControllerGalleries_bwg.php:871 ..
+#: /admin/controllers/BWGControllerGalleries_bwg.php:911
+#: /admin/controllers/BWGControllerGalleries_bwg.php:956
+#: /admin/controllers/BWGControllerGalleries_bwg.php:993
+#: ../framework/WDWLibrary. php:52
+msgid "Error. Please install plugin again."
+msgstr "Error. Por favor, instale o plugin novamente."
+
+#: ../admin/controllers/BWGControllerGalleries_bwg.php:894 ..
+#: /framework/WDWLibrary.php:118
+msgid "Ordering Succesfully Saved."
+msgstr "Ordenação sucesso Salvo."
+
+#: ../admin/controllers/BWGControllerGalleries_bwg.php:941 ..
+#: /framework/WDWLibrary.php:70
+msgid "Items Succesfully Deleted."
+msgstr "Itens com sucesso excluído."
+
+#: ../admin/controllers/BWGControllerGalleries_bwg.php:978 ..
+#: /framework/WDWLibrary.php:100
+msgid "Items Succesfully Published."
+msgstr "Itens com sucesso Publicado."
+
+#: ../admin/controllers/BWGControllerGalleries_bwg.php:1015 ..
+#: /framework/WDWLibrary.php:112
+msgid "Items Succesfully Unpublished."
+msgstr "Itens com sucesso inédito."
+
+#: ../admin/controllers/BWGControllerGalleries_bwg.php:1100
+msgid "Thumb Succesfully Resized"
+msgstr "Thumb com sucesso redimensionada"
+
+#: ../admin/views/BWGViewAddAlbumsGalleries.php:45
+msgid "Albums/Galleries"
+msgstr "Albums / Galerias"
+
+#: ../admin/views/BWGViewAddAlbumsGalleries.php:51 ..
+#: /admin/views/BWGViewAddAlbumsGalleries.php:77
+#: ../admin/views/BWGViewAddTags. php:51 ../admin/views/BWGViewAddTags.php:68
+#: ../admin/views/BWGViewAlbums_bwg. php:75
+#: ../admin/views/BWGViewAlbums_bwg.php:96
+#: /admin/views/BWGViewGalleries_bwg.php:75
+#: ../admin/views/BWGViewGalleries_bwg. php:97
+#: ../admin/views/BWGViewTags_bwg.php:71 ../admin/views/BWGViewTags_bwg.
+#: php:91 ../admin/views/BWGViewThemes_bwg.php:110
+msgid "Name"
+msgstr "Nome"
+
+#: ../admin/views/BWGViewAddAlbumsGalleries.php:70 ..
+#: /admin/views/BWGViewBWGShortcode.php:214
+#: ../admin/views/BWGViewGalleries_bwg. php:908
+msgid "Type"
+msgstr "Tipo"
+
+#: ../admin/views/BWGViewAddAlbumsGalleries.php:91
+#: ../admin/views/BWGViewWidget. php:111
+msgid "Album"
+msgstr "Álbum"
+
+#: ../admin/views/BWGViewAddAlbumsGalleries.php:91
+#: ../admin/views/BWGViewWidget. php:110
+msgid "Gallery"
+msgstr "Galeria"
+
+#: ../admin/views/BWGViewAddTags.php:75
+#: ../admin/views/BWGViewAlbums_bwg.php:104 .
+#: admin/views/BWGViewGalleries_bwg.php:105
+#: ../admin/views/BWGViewTags_bwg.php:99
+msgid "Slug"
+msgstr "Lesma"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:40
+msgid "This section allows you to create, edit and delete albums."
+msgstr "Esta seção permite-lhe criar, editar e apagar álbuns."
+
+#: ../admin/views/BWGViewAlbums_bwg.php:41
+#: ../admin/views/BWGViewAlbums_bwg.php:203
+#: ../admin/views/BWGViewGalleries_bwg.php:41 ..
+#: /admin/views/BWGViewGalleries_bwg.php:219
+#: ../admin/views/BWGViewOptions_bwg. php:31
+#: ../admin/views/BWGViewTags_bwg.php:44 ../admin/views/BWGViewThemes_bwg.
+#: php:40 ../admin/views/BWGViewThemes_bwg.php:251
+msgid "Read More in User Manual"
+msgstr "Leia mais no Manual do Usuário"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:55
+#: ../admin/views/BWGViewGalleries_bwg. php:55
+#: ../admin/views/BWGViewThemes_bwg.php:80
+msgid "Add new"
+msgstr "Adicionar novo"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:57
+#: ../admin/views/BWGViewGalleries_bwg. php:57
+#: ../admin/views/BWGViewGalleries_bwg.php:700
+msgid "Changes made in this table should be saved."
+msgstr "As alterações feitas nesta tabela deve ser salvo."
+
+#: ../admin/views/BWGViewAlbums_bwg.php:61
+#: ../admin/views/BWGViewGalleries_bwg. php:61
+#: ../admin/views/BWGViewGalleries_bwg.php:723 ../filemanager/view.php:268
+#: ../filemanager/view.php:353
+msgid "Select All"
+msgstr "Selecionar tudo"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:64
+#: ../admin/views/BWGViewGalleries_bwg. php:64
+msgid "Save Order"
+msgstr "Salvar Ordem"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:65
+#: ../admin/views/BWGViewGalleries_bwg. php:65
+#: ../admin/views/BWGViewGalleries_bwg.php:743
+msgid "Publish"
+msgstr "Publicar"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:66
+#: ../admin/views/BWGViewGalleries_bwg. php:66
+#: ../admin/views/BWGViewGalleries_bwg.php:746
+msgid "Unpublish"
+msgstr "Unpublish"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:67
+#: ../admin/views/BWGViewGalleries_bwg. php:67
+#: ../admin/views/BWGViewGalleries_bwg.php:747 ..
+#: /admin/views/BWGViewThemes_bwg.php:83
+msgid "Do you want to delete selected items?"
+msgstr "Você quer excluir os itens selecionados?"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:71
+#: ../admin/views/BWGViewAlbums_bwg.php:133
+#: ../admin/views/BWGViewAlbums_bwg.php:168 ..
+#: /admin/views/BWGViewGalleries_bwg.php:71
+#: ../admin/views/BWGViewGalleries_bwg. php:134
+#: ../admin/views/BWGViewGalleries_bwg.php:181
+#: /admin/views/BWGViewGalleries_bwg.php:753 php:874
+#: ../admin/views/BWGViewGalleries_bwg.php:980
+#: /admin/views/BWGViewTags_bwg.php:63 ../admin/views/BWGViewTags_bwg.php:111
+#: /admin/views/BWGViewTags_bwg.php:163
+#: ../admin/views/BWGViewThemes_bwg.php:87
+#: /admin/views/BWGViewThemes_bwg.php:120
+#: ../admin/views/BWGViewThemes_bwg.php:167
+msgid "Delete"
+msgstr "Excluir"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:107
+#: ../admin/views/BWGViewGalleries_bwg. php:91
+#: ../admin/views/BWGViewGalleries_bwg.php:832 ..
+#: /admin/views/BWGViewOptions_bwg.php:982
+msgid "Thumbnail"
+msgstr "Miniatura"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:113
+#: ../admin/views/BWGViewBWGShortcode. php:209
+#: ../admin/views/BWGViewGalleries_bwg.php:122 ..
+#: /admin/views/BWGViewGalleries_bwg.php:863
+msgid "Order"
+msgstr "Ordem"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:121
+#: ../admin/views/BWGViewGalleries_bwg. php:113
+msgid "Author"
+msgstr "Autor"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:129
+#: ../admin/views/BWGViewGalleries_bwg. php:130
+#: ../admin/views/BWGViewGalleries_bwg.php:871
+msgid "Published"
+msgstr "Publicados"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:132
+#: ../admin/views/BWGViewAlbums_bwg.php:155
+#: ../admin/views/BWGViewAlbums_bwg.php:165 ..
+#: /admin/views/BWGViewGalleries_bwg.php:133
+#: ../admin/views/BWGViewGalleries_bwg. php:165
+#: ../admin/views/BWGViewGalleries_bwg.php:178
+#: /admin/views/BWGViewGalleries_bwg.php:363 php:924
+#: ../admin/views/BWGViewTags_bwg.php:110 ../admin/views/BWGViewTags_bwg.
+#: php:143 ../admin/views/BWGViewTags_bwg.php:149 php:155
+#: ../admin/views/BWGViewTags_bwg.php:158
+#: /admin/views/BWGViewThemes_bwg.php:119
+#: ../admin/views/BWGViewThemes_bwg.php:138
+#: ../admin/views/BWGViewThemes_bwg.php:162
+msgid "Edit"
+msgstr "Editar"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:197
+msgid "Edit album "
+msgstr "Editar álbum"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:197
+msgid "Create new album"
+msgstr "Criar novo álbum"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:202
+msgid "This section allows you to add/edit album."
+msgstr "Esta seção permite que você adicione / álbum de edição."
+
+#: ../admin/views/BWGViewAlbums_bwg.php:271
+#: ../admin/views/BWGViewGalleries_bwg. php:535
+#: ../admin/views/BWGViewOptions_bwg.php:94 ..
+#: /admin/views/BWGViewTags_bwg.php:58
+#: ../admin/views/BWGViewThemes_bwg.php:264
+msgid "Save"
+msgstr "Guardar"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:272
+#: ../admin/views/BWGViewGalleries_bwg. php:538
+#: ../admin/views/BWGViewThemes_bwg.php:265
+msgid "Apply"
+msgstr "Aplicar"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:273
+#: ../admin/views/BWGViewGalleries_bwg. php:540
+#: ../admin/views/BWGViewGalleries_bwg.php:759 ..
+#: /admin/views/BWGViewGalleries_bwg.php:773 php:817
+#: ../admin/views/BWGViewThemes_bwg.php:266
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:278
+#: ../admin/views/BWGViewGalleries_bwg. php:545
+#: ../admin/views/BWGViewThemes_bwg.php:293
+msgid "Name:"
+msgstr "Nome:"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:282
+#: ../admin/views/BWGViewGalleries_bwg. php:549
+msgid "Slug:"
+msgstr "Slug:"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:286
+#: ../admin/views/BWGViewGalleries_bwg. php:601
+msgid "Description:"
+msgstr "Descrição:"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:305
+#: ../admin/views/BWGViewGalleries_bwg. php:620
+msgid "Author:"
+msgstr "Autor:"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:309
+#: ../admin/views/BWGViewGalleries_bwg. php:624
+msgid "Published:"
+msgstr "Publicados:"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:312
+#: ../admin/views/BWGViewGalleries_bwg. php:627
+#: ../admin/views/BWGViewOptions_bwg.php:147 ..
+#: /admin/views/BWGViewOptions_bwg.php:177
+#: ../admin/views/BWGViewOptions_bwg.php:187
+#: ../admin/views/BWGViewOptions_bwg.php:206
+#: /admin/views/BWGViewOptions_bwg.php:216 226
+#: ../admin/views/BWGViewOptions_bwg.php:245
+#: /admin/views/BWGViewOptions_bwg.php:255 265
+#: ../admin/views/BWGViewOptions_bwg.php:276
+#: /admin/views/BWGViewOptions_bwg.php:286 613
+#: ../admin/views/BWGViewOptions_bwg.php:650
+#: /admin/views/BWGViewOptions_bwg.php:669 688
+#: ../admin/views/BWGViewOptions_bwg.php:732
+#: /admin/views/BWGViewOptions_bwg.php:742 752
+#: ../admin/views/BWGViewOptions_bwg.php:762
+#: /admin/views/BWGViewOptions_bwg.php:772 788
+#: ../admin/views/BWGViewOptions_bwg.php:802
+#: /admin/views/BWGViewOptions_bwg.php:812 822
+#: ../admin/views/BWGViewOptions_bwg.php:832
+#: /admin/views/BWGViewOptions_bwg.php:842 852
+#: ../admin/views/BWGViewOptions_bwg.php:862
+#: /admin/views/BWGViewOptions_bwg.php:872 882
+#: ../admin/views/BWGViewOptions_bwg.php:892
+#: /admin/views/BWGViewOptions_bwg.php:902 912
+#: ../admin/views/BWGViewOptions_bwg.php:922
+#: /admin/views/BWGViewOptions_bwg.php:934 973
+#: ../admin/views/BWGViewOptions_bwg.php:1004
+#: /admin/views/BWGViewOptions_bwg.php:1014 1090
+#: ../admin/views/BWGViewOptions_bwg.php:1100
+#: /admin/views/BWGViewOptions_bwg.php:1120 1128
+#: ../admin/views/BWGViewOptions_bwg.php:1149
+#: /admin/views/BWGViewOptions_bwg.php:1184 1192
+#: ../admin/views/BWGViewOptions_bwg.php:1227
+#: /admin/views/BWGViewOptions_bwg.php:1287 1354
+#: ../admin/views/BWGViewOptions_bwg.php:1364
+#: /admin/views/BWGViewOptions_bwg.php:1372 1389
+#: ../admin/views/BWGViewOptions_bwg.php:1397
+#: /admin/views/BWGViewOptions_bwg.php:1415 1425
+#: ../admin/views/BWGViewOptions_bwg.php:1449
+#: /admin/views/BWGViewOptions_bwg.php:1477 1576
+#: ../admin/views/BWGViewOptions_bwg.php:1586
+#: /admin/views/BWGViewOptions_bwg.php:1596 1606
+#: ../admin/views/BWGViewOptions_bwg.php:1616
+#: /admin/views/BWGViewThemes_bwg.php:382
+#: ../admin/views/BWGViewThemes_bwg.php:623
+#: ../admin/views/BWGViewThemes_bwg.php:1364 ../admin/views/BWGViewThemes_bwg.
+#: php:1596 ../admin/views/BWGViewThemes_bwg.php:3314
+#: /admin/views/BWGViewThemes_bwg.php:3359
+#: ../admin/views/BWGViewWidgetSlideshow. php:144
+#: ../admin/views/BWGViewWidgetTags.php:125
+#: /admin/views/BWGViewWidgetTags.php:146
+msgid "No"
+msgstr "Não"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:314
+#: ../admin/views/BWGViewBWGShortcode. php:230
+#: ../admin/views/BWGViewGalleries_bwg.php:629 ..
+#: /admin/views/BWGViewOptions_bwg.php:146
+#: ../admin/views/BWGViewOptions_bwg.php:156
+#: ../admin/views/BWGViewOptions_bwg.php:166
+#: /admin/views/BWGViewOptions_bwg.php:176 186
+#: ../admin/views/BWGViewOptions_bwg.php:205
+#: /admin/views/BWGViewOptions_bwg.php:215 225
+#: ../admin/views/BWGViewOptions_bwg.php:244
+#: /admin/views/BWGViewOptions_bwg.php:254 264
+#: ../admin/views/BWGViewOptions_bwg.php:275
+#: /admin/views/BWGViewOptions_bwg.php:285 612
+#: ../admin/views/BWGViewOptions_bwg.php:649
+#: /admin/views/BWGViewOptions_bwg.php:668 687
+#: ../admin/views/BWGViewOptions_bwg.php:719
+#: /admin/views/BWGViewOptions_bwg.php:741 751
+#: ../admin/views/BWGViewOptions_bwg.php:761
+#: /admin/views/BWGViewOptions_bwg.php:771 787
+#: ../admin/views/BWGViewOptions_bwg.php:799
+#: /admin/views/BWGViewOptions_bwg.php:811 821
+#: ../admin/views/BWGViewOptions_bwg.php:831
+#: /admin/views/BWGViewOptions_bwg.php:841 851
+#: ../admin/views/BWGViewOptions_bwg.php:861
+#: /admin/views/BWGViewOptions_bwg.php:871 881
+#: ../admin/views/BWGViewOptions_bwg.php:891
+#: /admin/views/BWGViewOptions_bwg.php:901 911
+#: ../admin/views/BWGViewOptions_bwg.php:921
+#: /admin/views/BWGViewOptions_bwg.php:932 972
+#: ../admin/views/BWGViewOptions_bwg.php:1003
+#: /admin/views/BWGViewOptions_bwg.php:1013 1089
+#: ../admin/views/BWGViewOptions_bwg.php:1099
+#: /admin/views/BWGViewOptions_bwg.php:1119 1127
+#: ../admin/views/BWGViewOptions_bwg.php:1148
+#: /admin/views/BWGViewOptions_bwg.php:1183 1191
+#: ../admin/views/BWGViewOptions_bwg.php:1226
+#: /admin/views/BWGViewOptions_bwg.php:1288 1353
+#: ../admin/views/BWGViewOptions_bwg.php:1363
+#: /admin/views/BWGViewOptions_bwg.php:1371 1388
+#: ../admin/views/BWGViewOptions_bwg.php:1396
+#: /admin/views/BWGViewOptions_bwg.php:1414 1424
+#: ../admin/views/BWGViewOptions_bwg.php:1448
+#: /admin/views/BWGViewOptions_bwg.php:1476 1575
+#: ../admin/views/BWGViewOptions_bwg.php:1585
+#: /admin/views/BWGViewOptions_bwg.php:1595 1605
+#: ../admin/views/BWGViewOptions_bwg.php:1615
+#: /admin/views/BWGViewThemes_bwg.php:380
+#: ../admin/views/BWGViewThemes_bwg.php:621
+#: ../admin/views/BWGViewThemes_bwg.php:1362 ../admin/views/BWGViewThemes_bwg.
+#: php:1594 ../admin/views/BWGViewThemes_bwg.php:3312
+#: /admin/views/BWGViewThemes_bwg.php:3357
+#: ../admin/views/BWGViewUninstall_bwg. php:79
+#: ../admin/views/BWGViewWidgetSlideshow.php:143
+#: /admin/views/BWGViewWidgetTags.php:124
+#: ../admin/views/BWGViewWidgetTags.php:145
+msgid "Yes"
+msgstr "sim"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:318
+#: ../admin/views/BWGViewGalleries_bwg. php:633
+msgid "Preview image:"
+msgstr "Imagem de pré-visualização:"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:333
+#: ../admin/views/BWGViewGalleries_bwg. php:646
+msgid "Add Preview Image"
+msgstr "Adicionar Imagem"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:344
+msgid "Albums And Galleries:"
+msgstr "Álbuns e Galerias:"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:354
+msgid "Add Albums/Galleries"
+msgstr "Adicionar Albums / Galerias"
+
+#: ../admin/views/BWGViewAlbums_bwg.php:366
+msgid "Drag to re-order"
+msgstr "Arraste para reordenar"
+
+#: ../admin/views/BWGViewBWGShortcode.php:34
+#: ../admin/views/BWGViewOptions_bwg. php:307
+#: ../admin/views/BWGViewOptions_bwg.php:460 ..
+#: /admin/views/BWGViewThemes_bwg.php:196
+#: ../admin/views/BWGViewThemes_bwg.php:229
+msgid "None"
+msgstr "Nenhum"
+
+#: ../admin/views/BWGViewBWGShortcode.php:35
+msgid "Cube Horizontal"
+msgstr "Cube Horizontal"
+
+#: ../admin/views/BWGViewBWGShortcode.php:36
+msgid "Cube Vertical"
+msgstr "Cube Vertical"
+
+#: ../admin/views/BWGViewBWGShortcode.php:37
+msgid "Fade"
+msgstr "Desvanece-"
+
+#: ../admin/views/BWGViewBWGShortcode.php:38
+msgid "Slice Horizontal"
+msgstr "Fatia horizontal"
+
+#: ../admin/views/BWGViewBWGShortcode.php:39
+msgid "Slice Vertical"
+msgstr "Fatia Vertical"
+
+#: ../admin/views/BWGViewBWGShortcode.php:40
+msgid "Slide Horizontal"
+msgstr "Deslize Horizontal"
+
+#: ../admin/views/BWGViewBWGShortcode.php:41
+msgid "Slide Vertical"
+msgstr "Deslize Vertical"
+
+#: ../admin/views/BWGViewBWGShortcode.php:42
+msgid "Scale Out"
+msgstr "Dimensionar"
+
+#: ../admin/views/BWGViewBWGShortcode.php:43
+msgid "Scale In"
+msgstr "Em escala"
+
+#: ../admin/views/BWGViewBWGShortcode.php:44
+msgid "Block Scale"
+msgstr "Bloco Escala"
+
+#: ../admin/views/BWGViewBWGShortcode.php:45
+msgid "Kaleidoscope"
+msgstr "Caleidoscópio"
+
+#: ../admin/views/BWGViewBWGShortcode.php:46
+msgid "Fan"
+msgstr "Ventilador"
+
+#: ../admin/views/BWGViewBWGShortcode.php:47
+msgid "Blind Horizontal"
+msgstr "Cego Horizontal"
+
+#: ../admin/views/BWGViewBWGShortcode.php:48
+msgid "Blind Vertical"
+msgstr "Cegos Vertical"
+
+#: ../admin/views/BWGViewBWGShortcode.php:49
+#: ../admin/views/BWGViewBWGShortcode. php:216
+#: ../admin/views/BWGViewWidget.php:139 ../framework/WDWLibrary.php:851
+msgid "Random"
+msgstr "Acaso"
+
+#: ../admin/views/BWGViewBWGShortcode.php:97
+msgid "Display"
+msgstr "Display"
+
+#: ../admin/views/BWGViewBWGShortcode.php:116
+#: ../admin/views/BWGViewThemes_bwg. php:274
+msgid "Thumbnails"
+msgstr "Miniaturas"
+
+#: ../admin/views/BWGViewBWGShortcode.php:119
+#: ../admin/views/BWGViewBWGShortcode. php:123
+#: ../admin/views/BWGViewBWGShortcode.php:139 ..
+#: /admin/views/BWGViewBWGShortcode.php:147 php:151
+msgid "This view is disabled in free version."
+msgstr "Este ponto de vista é desativada na versão gratuita."
+
+#: ../admin/views/BWGViewBWGShortcode.php:120
+#: ../admin/views/BWGViewOptions_bwg. php:983
+#: ../admin/views/BWGViewThemes_bwg.php:275
+msgid "Masonry"
+msgstr "Alvenaria"
+
+#: ../admin/views/BWGViewBWGShortcode.php:124
+#: ../admin/views/BWGViewThemes_bwg. php:276
+msgid "Mosaic"
+msgstr "Mosaico"
+
+#: ../admin/views/BWGViewBWGShortcode.php:128
+#: ../admin/views/BWGViewOptions_bwg. php:109
+#: ../admin/views/BWGViewThemes_bwg.php:277
+msgid "Slideshow"
+msgstr "Slideshow"
+
+#: ../admin/views/BWGViewBWGShortcode.php:132
+#: ../admin/views/BWGViewThemes_bwg. php:278
+msgid "Image Browser"
+msgstr "Image Browser"
+
+#: ../admin/views/BWGViewBWGShortcode.php:136
+#: ../admin/views/BWGViewThemes_bwg. php:279
+msgid "Compact Album"
+msgstr "Compact Album"
+
+#: ../admin/views/BWGViewBWGShortcode.php:140
+#: ../admin/views/BWGViewThemes_bwg. php:280
+msgid "Masonry Album"
+msgstr "Maçonaria Album"
+
+#: ../admin/views/BWGViewBWGShortcode.php:144
+#: ../admin/views/BWGViewThemes_bwg. php:281
+msgid "Extended Album"
+msgstr "Álbum estendida"
+
+#: ../admin/views/BWGViewBWGShortcode.php:148
+#: ../admin/views/BWGViewThemes_bwg. php:282
+msgid "Blog Style"
+msgstr "Blog Estilo"
+
+#: ../admin/views/BWGViewBWGShortcode.php:152
+#: ../admin/views/BWGViewOptions_bwg. php:113
+#: ../admin/views/BWGViewThemes_bwg.php:285
+msgid "Carousel"
+msgstr "Carrossel"
+
+#: ../admin/views/BWGViewBWGShortcode.php:161
+msgid "Theme:"
+msgstr "Tema:"
+
+#: ../admin/views/BWGViewBWGShortcode.php:164
+msgid "Select Theme"
+msgstr "Escolha um tema"
+
+#: ../admin/views/BWGViewBWGShortcode.php:176
+msgid "Gallery:"
+msgstr "Galeria:"
+
+#: ../admin/views/BWGViewBWGShortcode.php:179
+#: ../admin/views/BWGViewWidget.php:116
+#: ../admin/views/BWGViewWidgetSlideshow.php:106
+msgid "Select Gallery"
+msgstr "Selecione Gallery"
+
+#: ../admin/views/BWGViewBWGShortcode.php:191
+msgid "The selected album expanded content will be displayed."
+msgstr "O conteúdo álbum expandiu selecionado será exibido."
+
+#: ../admin/views/BWGViewBWGShortcode.php:191
+msgid "Album:"
+msgstr "Álbum:"
+
+#: ../admin/views/BWGViewBWGShortcode.php:194
+#: ../admin/views/BWGViewWidget.php:128
+msgid "Select Album"
+msgstr "Selecione Album"
+
+#: ../admin/views/BWGViewBWGShortcode.php:206
+msgid "Sort images by:"
+msgstr "Ordenar as imagens por:"
+
+#: ../admin/views/BWGViewBWGShortcode.php:210
+#: ../admin/views/BWGViewThemes_bwg. php:91
+msgid "Title"
+msgstr "Título"
+
+#: ../admin/views/BWGViewBWGShortcode.php:211
+msgid "Date"
+msgstr "Encontro"
+
+#: ../admin/views/BWGViewBWGShortcode.php:212
+#: ../admin/views/BWGViewGalleries_bwg. php:822
+#: ../admin/views/BWGViewGalleries_bwg.php:838 ../framework/WDWLibrary.
+#: php:849
+msgid "Filename"
+msgstr "Nome do arquivo"
+
+#: ../admin/views/BWGViewBWGShortcode.php:213 ../framework/WDWLibrary.php:850
+msgid "Size"
+msgstr "Tamanho"
+
+#: ../admin/views/BWGViewBWGShortcode.php:215
+msgid "Resolution"
+msgstr "Resolução"
+
+#: ../admin/views/BWGViewBWGShortcode.php:221
+msgid "Order images"
+msgstr "Imagens Encomendar"
+
+#: ../admin/views/BWGViewBWGShortcode.php:223
+msgid "Ascending"
+msgstr "Crescente"
+
+#: ../admin/views/BWGViewBWGShortcode.php:224
+msgid "Descending"
+msgstr "Descendente"
+
+#: ../admin/views/BWGViewBWGShortcode.php:228
+#: ../admin/views/BWGViewOptions_bwg. php:183
+msgid "Show search box:"
+msgstr "Mostrar caixa de pesquisa:"
+
+#: ../admin/views/BWGViewEditThumb.php:155
+msgid "You can't crop this type of image."
+msgstr "Você não pode cortar esse tipo de imagem."
+
+#: ../admin/views/BWGViewEditThumb.php:224
+msgid "The thumbnail successfully croped."
+msgstr "A miniatura croped com sucesso."
+
+#: ../admin/views/BWGViewEditThumb.php:227
+msgid "Select the area for the thumbnail."
+msgstr "Selecione a área para a miniatura."
+
+#: ../admin/views/BWGViewEditThumb.php:240
+msgid "Keep aspect ratio"
+msgstr "Manter as proporções"
+
+#: ../admin/views/BWGViewEditThumb.php:713
+msgid "Grayscale"
+msgstr "Tons de cinza"
+
+#: ../admin/views/BWGViewEditThumb.php:717
+msgid "Negative"
+msgstr "Negativo"
+
+#: ../admin/views/BWGViewEditThumb.php:721
+msgid "Removal"
+msgstr "Remoção"
+
+#: ../admin/views/BWGViewEditThumb.php:725
+msgid "Sepia"
+msgstr "Sepia"
+
+#: ../admin/views/BWGViewEditThumb.php:729
+msgid "Slate"
+msgstr "Lousa"
+
+#: ../admin/views/BWGViewEditThumb.php:733
+msgid "Saturate"
+msgstr "Saturar"
+
+#: ../admin/views/BWGViewEditThumb.php:737
+#: ../admin/views/BWGViewGalleries_bwg. php:370
+#: ../admin/views/BWGViewGalleries_bwg.php:925
+msgid "Do you want to reset the image?"
+msgstr "Você deseja redefinir a imagem?"
+
+#: ../admin/views/BWGViewEditThumb.php:737
+msgid "Reset image"
+msgstr "Redefinir imagem"
+
+#: ../admin/views/BWGViewEditThumb.php:763
+msgid "Brightness"
+msgstr "Brilho"
+
+#: ../admin/views/BWGViewEditThumb.php:765
+#: ../admin/views/BWGViewEditThumb.php:790
+msgid "Press for result"
+msgstr "Pressione para resultado"
+
+#: ../admin/views/BWGViewEditThumb.php:788
+msgid "Contrast"
+msgstr "Contrastar"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:40
+msgid "This section allows you to create, edit and delete galleries."
+msgstr "Esta seção permite-lhe criar, editar e apagar galerias."
+
+#: ../admin/views/BWGViewGalleries_bwg.php:53
+msgid "Galleries"
+msgstr "Galerias"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:116
+msgid "Images count"
+msgstr "Imagens contar"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:211
+msgid "Edit gallery "
+msgstr "Editar galeria"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:211
+msgid "Create new gallery"
+msgstr "Criar uma nova galeria"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:218
+msgid "This section allows you to add/edit gallery."
+msgstr "Esta seção permite que você adicione / galeria de edição."
+
+#: ../admin/views/BWGViewGalleries_bwg.php:354 ..
+#: /admin/views/BWGViewGalleries_bwg.php:918
+msgid "Crop"
+msgstr "Colheita"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:371 ..
+#: /admin/views/BWGViewGalleries_bwg.php:733
+#: ../admin/views/BWGViewGalleries_bwg. php:930
+#: ../admin/views/BWGViewThemes_bwg.php:271 ../framework/WDWLibrary.php:189
+#: ../framework/WDWLibrary.php:363 ../framework/WDWLibrary.php:722
+#: /framework/WDWLibrary.php:784
+msgid "Reset"
+msgstr "Repor"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:475 ..
+#: /admin/views/BWGViewGalleries_bwg.php:738
+#: ../admin/views/BWGViewGalleries_bwg. php:955
+msgid "Add tag"
+msgstr "Adicionar tag"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:553
+msgid "Gallery content type:"
+msgstr "Galeria tipo de conteúdo:"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:556
+msgid "Standard"
+msgstr "Padrão"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:557
+msgid "Instagram only"
+msgstr "Única Instagram"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:565 ..
+#: /admin/views/BWGViewGalleries_bwg.php:788
+msgid "Instagram username:"
+msgstr "Instagram usuário:"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:566
+#: ../admin/views/BWGViewOptions_bwg. php:670
+#: ../admin/views/BWGViewOptions_bwg.php:679 ..
+#: /admin/views/BWGViewOptions_bwg.php:689
+#: ../admin/views/BWGViewOptions_bwg.php:789
+#: ../admin/views/BWGViewOptions_bwg.php:803
+#: /admin/views/BWGViewOptions_bwg.php:813 823
+#: ../admin/views/BWGViewOptions_bwg.php:833
+#: /admin/views/BWGViewOptions_bwg.php:863 873
+#: ../admin/views/BWGViewOptions_bwg.php:883
+#: /admin/views/BWGViewOptions_bwg.php:893 903
+#: ../admin/views/BWGViewOptions_bwg.php:935
+#: /admin/views/BWGViewOptions_bwg.php:984 1129
+#: ../admin/views/BWGViewOptions_bwg.php:1136
+#: /admin/views/BWGViewOptions_bwg.php:1365
+#: ../admin/views/BWGViewWidgetSlideshow. php:121
+#: ../admin/views/BWGViewWidgetSlideshow.php:148
+msgid "This option is disabled in free version."
+msgstr "Essa opção é desativada na versão gratuita."
+
+#: ../admin/views/BWGViewGalleries_bwg.php:569
+msgid "Number of Instagram recent posts to add to gallery: "
+msgstr "Número de Instagram posts recentes para adicionar à galeria:"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:573 ..
+#: /admin/views/BWGViewGalleries_bwg.php:796
+msgid "Instagram embed type:"
+msgstr "Instagram embed type:"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:576 ..
+#: /admin/views/BWGViewGalleries_bwg.php:799
+msgid "Content"
+msgstr "Conteúdo"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:578 ..
+#: /admin/views/BWGViewGalleries_bwg.php:801
+msgid "Whole post"
+msgstr "Pós Whole"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:582
+msgid "Gallery autoupdate option:"
+msgstr "Opção de atualização automática Gallery:"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:585
+msgid "No update"
+msgstr "Nenhuma atualização"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:587
+msgid "Add new media, keep old ones published."
+msgstr "Adicionar novos meios de comunicação, manter os antigos publicados."
+
+#: ../admin/views/BWGViewGalleries_bwg.php:589
+msgid "Add new media, unpublish old ones."
+msgstr "Adicionar novas mídias, despublicar os antigos."
+
+#: ../admin/views/BWGViewGalleries_bwg.php:595
+msgid "Add Instagram Gallery"
+msgstr "Adicionar Instagram Gallery"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:707 ..
+#: /admin/views/BWGViewGalleries_bwg.php:708
+msgid "Add Images"
+msgstr "Adicionar Imagens"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:717
+msgid "Embed Media"
+msgstr "Incorporar Mídia"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:718
+msgid "Bulk Embed"
+msgstr "Granel Embed"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:728
+msgid "Set Watermark"
+msgstr "Definir Watermark"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:729 ..
+#: /admin/views/BWGViewGalleries_bwg.php:816
+msgid "Resize"
+msgstr "Redimensionar"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:730
+msgid "Recreate Thumbnail"
+msgstr "Recriar Thumbnail"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:758 ..
+#: /admin/views/BWGViewGalleries_bwg.php:774
+msgid "Add to gallery"
+msgstr "Adicionar a galeria"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:761
+msgid "Enter YouTube, Vimeo, Instagram, Flickr or Dailymotion URL here."
+msgstr "Digite YouTube, Vimeo, Instagram, Flickr ou Dailymotion URL aqui."
+
+#: ../admin/views/BWGViewGalleries_bwg.php:761
+msgid "Help"
+msgstr "Socorro"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:764
+msgid "Close"
+msgstr "Fechar"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:765 ..
+#: /admin/views/BWGViewGalleries_bwg.php:766
+#: ../admin/views/BWGViewGalleries_bwg. php:767
+#: ../admin/views/BWGViewGalleries_bwg.php:768
+#: /admin/views/BWGViewGalleries_bwg.php:769
+msgid "example:"
+msgstr "exemplo:"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:767 ../filemanager/view.php:275
+msgid "Add"
+msgstr "Adicionar"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:767
+msgid "post"
+msgstr "posto"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:767
+msgid "to the end of URL if you want to embed the whole Instagram post, not only its content."
+msgstr "até o final do URL, se você deseja incorporar todo o post Instagram, não só o seu conteúdo."
+
+#: ../admin/views/BWGViewGalleries_bwg.php:779
+msgid "Bulk embed from:"
+msgstr "Incorporar em massa a partir de:"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:781
+msgid "instagram"
+msgstr "instagram"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:782
+msgid "Instagram"
+msgstr "Instagram"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:789
+msgid "Bulk embed from Instagram is disabled in free version"
+msgstr "Incorporar grandes quantidades de Instagram está desabilitado na versão livre"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:792
+msgid "Number of Instagram recent posts to add to gallery:"
+msgstr "Número de Instagram posts recentes para adicionar à galeria:"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:810
+msgid "Resize images to: "
+msgstr "Redimensionar imagens para:"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:818
+msgid "The maximum size of resized image."
+msgstr "O tamanho máximo de imagem redimensionada."
+
+#: ../admin/views/BWGViewGalleries_bwg.php:846
+msgid "Alt/Title"
+msgstr "Alt / Título"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:854
+msgid "Description"
+msgstr "Descrição"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:905
+msgid "Date modified"
+msgstr "Data modificada"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:906
+msgid "Image Resolution"
+msgstr "Resolução da imagem"
+
+#: ../admin/views/BWGViewGalleries_bwg.php:907
+msgid "Image size"
+msgstr "Tamanho da imagem"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:29
+msgid "ready"
+msgstr "pronto"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:30
+msgid "friendly"
+msgstr "amigáveis"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:31
+msgid "Responsive Design and Layout"
+msgstr "Projeto Responsive and Layout"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:32
+msgid "5 Standard Gallery/Album Views"
+msgstr "5 Padrão Galeria / Álbum Visualizações"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:33
+msgid "Watermarking/ Advertising Possibility"
+msgstr "Watermarking / Publicidade Possibilidade"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:34
+msgid "Basic Tag Cloud Widget"
+msgstr "Tag Básico Nuvem Widget"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:35
+msgid "Image Download"
+msgstr "Image Download"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:36
+msgid "Photo Gallery Slideshow Widget"
+msgstr "Galeria de Fotos Slideshow Widget"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:37
+msgid "Photo Gallery Widget"
+msgstr "Galeria de Fotos Widget"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:38
+msgid "Slideshow/Lightbox Effects"
+msgstr "Slides / Efeitos Luz"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:39
+msgid "Possibility of Editing/Creating New Themes"
+msgstr "Possibilidade de Edição / Criação de novos temas"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:40
+msgid "10 Pro Gallery/Album Views"
+msgstr "10 Pro Galeria / Álbum Visualizações"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:41
+msgid "Image Commenting"
+msgstr "Comentando imagem"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:42
+msgid "Image Social Sharing"
+msgstr "Imagem compartilhamento social"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:43
+msgid "Photo Gallery Tags Cloud Widget"
+msgstr "Galeria de Fotos Nuvem de Tags Widget"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:44
+msgid "Instagram Integration"
+msgstr "Integração Instagram"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:45
+msgid "Integration"
+msgstr "Integração"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:46
+msgid "Add-ons Support"
+msgstr "Suporte para o Thunderbird"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:49
+msgid "Free"
+msgstr "Livre"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:70
+msgid "Pro Version"
+msgstr "Versão Pro"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:97
+msgid "After purchasing the commercial version follow these steps:"
+msgstr "Depois de comprar a versão comercial siga estes passos:"
+
+#: ../admin/views/BWGViewLicensing_bwg.php:99
+msgid "Deactivate Photo Gallery plugin."
+msgstr "Desativar Galeria plugin."
+
+#: ../admin/views/BWGViewLicensing_bwg.php:100
+msgid "Delete Photo Gallery plugin."
+msgstr "Excluir Galeria plugin."
+
+#: ../admin/views/BWGViewLicensing_bwg.php:101
+msgid "Install the downloaded commercial version of the plugin."
+msgstr "Instale a versão comercial baixado do plugin."
+
+#: ../admin/views/BWGViewOptions_bwg.php:30
+msgid "This section allows you to change settings for different views and general options."
+msgstr "Esta seção permite que você altere as configurações para diferentes pontos de vista e as opções gerais."
+
+#: ../admin/views/BWGViewOptions_bwg.php:91
+msgid "Edit options"
+msgstr "Editar opções"
+
+#: ../admin/views/BWGViewOptions_bwg.php:95
+#: ../admin/views/BWGViewThemes_bwg.php:267
+msgid "Do you want to reset to default?"
+msgstr "Você quer redefinir para o padrão?"
+
+#: ../admin/views/BWGViewOptions_bwg.php:99
+msgid "Reset all options"
+msgstr "Redefinir todas as opções"
+
+#: ../admin/views/BWGViewOptions_bwg.php:104
+msgid "Global options"
+msgstr "As opções globais"
+
+#: ../admin/views/BWGViewOptions_bwg.php:105
+msgid "Watermark"
+msgstr "Marca dágua"
+
+#: ../admin/views/BWGViewOptions_bwg.php:106
+msgid "Advertisement"
+msgstr "Anúncio"
+
+#: ../admin/views/BWGViewOptions_bwg.php:107
+#: ../admin/views/BWGViewThemes_bwg.php:283
+msgid "Lightbox"
+msgstr "Caixa de luz"
+
+#: ../admin/views/BWGViewOptions_bwg.php:108
+msgid "Album options"
+msgstr "Opções do álbum"
+
+#: ../admin/views/BWGViewOptions_bwg.php:110
+msgid "Thumbnail options"
+msgstr "Opções em miniatura"
+
+#: ../admin/views/BWGViewOptions_bwg.php:111
+msgid "Image options"
+msgstr "Opções de imagem"
+
+#: ../admin/views/BWGViewOptions_bwg.php:112
+msgid "Embed options"
+msgstr "Incorporar opções"
+
+#: ../admin/views/BWGViewOptions_bwg.php:123
+msgid "Images directory:"
+msgstr "Imagens diretório:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:128
+msgid "Input an existing directory inside the Wordpress directory to store uploaded images.<br />Old directory content will be moved to the new one."
+msgstr "Entrada de um diretório existente dentro do diretório do Wordpress para armazenar imagens carregadas. <br /> Conteúdo do diretório Old serão movidos para o novo."
+
+#: ../admin/views/BWGViewOptions_bwg.php:133
+#: ../admin/views/BWGViewOptions_bwg. php:1550
+msgid "Image dimensions:"
+msgstr "Dimensões da imagem:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:138
+msgid "The maximum size of the uploaded image (0 for original size)."
+msgstr "O tamanho máximo da imagem carregada (0 para o tamanho original)."
+
+#: ../admin/views/BWGViewOptions_bwg.php:143
+msgid "Right click protection:"
+msgstr "Direito de proteção de cliques:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:148
+msgid "Disable image right click possibility."
+msgstr "Disable imagem com o botão direito possibilidade."
+
+#: ../admin/views/BWGViewOptions_bwg.php:153
+msgid "Gallery role:"
+msgstr "Papel Gallery:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:178
+msgid "Only author can change an image."
+msgstr "Apenas autor pode alterar uma imagem."
+
+#: ../admin/views/BWGViewOptions_bwg.php:193
+msgid "Search box width:"
+msgstr "Largura da caixa de pesquisa:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:202
+msgid "Show \"Order by\" dropdown list:"
+msgstr "Mostrar-Ordenar por - lista suspensa:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:212
+msgid "Show tag box:"
+msgstr "Mostrar caixa de tag:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:222
+msgid "Preload images:"
+msgstr "Pré-carregar imagens:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:232
+msgid "Count of images:"
+msgstr "Contagem de imagens:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:236
+msgid "Count of images to preload (0 for all)."
+msgstr "Conde de imagens para pré-carregar (0 para todos)."
+
+#: ../admin/views/BWGViewOptions_bwg.php:241
+msgid "Import from Media Library:"
+msgstr "Importar da biblioteca de mídia:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:246
+msgid "Enable import from Media Library in file manager."
+msgstr "Habil. a importação de biblioteca de mídia no gerenciador de arquivos."
+
+#: ../admin/views/BWGViewOptions_bwg.php:251
+msgid "Enable href attribute:"
+msgstr "Ativar atributo href:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:256
+msgid "Disable this option only if it conflicts with your theme."
+msgstr "Desativar essa opção somente se estiver em conflito com o seu tema."
+
+#: ../admin/views/BWGViewOptions_bwg.php:261
+msgid "Meta auto-fill:"
+msgstr "Meta de preenchimento automático:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:266
+msgid "Enabling this option the meta description of the image will be automatically filled in image description field."
+msgstr "A ativação desta opção a meta descrição da imagem será automaticamente preenchido no campo de descrição da imagem."
+
+#: ../admin/views/BWGViewOptions_bwg.php:272
+msgid "Show/hide custom post types:"
+msgstr "Mostrar / esconder pós costume tipos:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:282
+msgid "Show/hide comments for custom post types:"
+msgstr "Mostrar / esconder comentários para tipos de pós costume:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:303
+msgid "Watermark type: "
+msgstr "Tipo de marca dágua:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:309
+#: ../admin/views/BWGViewOptions_bwg. php:462
+#: ../admin/views/BWGViewThemes_bwg.php:3366 ..
+#: /admin/views/BWGViewWidgetTags.php:118
+msgid "Text"
+msgstr "Texto"
+
+#: ../admin/views/BWGViewOptions_bwg.php:311
+#: ../admin/views/BWGViewOptions_bwg. php:464
+#: ../admin/views/BWGViewWidgetTags.php:119
+msgid "Image"
+msgstr "Imagem"
+
+#: ../admin/views/BWGViewOptions_bwg.php:317
+msgid "Watermark url: "
+msgstr "Url Watermark:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:330
+#: ../admin/views/BWGViewOptions_bwg. php:485
+msgid "Add Image"
+msgstr "Adicionar imagem"
+
+#: ../admin/views/BWGViewOptions_bwg.php:332
+msgid "Only .png format is supported."
+msgstr "Apenas .png formato é suportado."
+
+#: ../admin/views/BWGViewOptions_bwg.php:337
+msgid "Watermark text: "
+msgstr "Watermark texto:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:346
+msgid "Watermark size: "
+msgstr "Watermark tamanho:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:350
+msgid "Enter size of watermark in percents according to image."
+msgstr "Digite o tamanho da marca de água em porcentagem de acordo com a imagem."
+
+#: ../admin/views/BWGViewOptions_bwg.php:355
+msgid "Watermark font size:"
+msgstr "Font size Watermark:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:364
+msgid "Watermark font style: "
+msgstr "Estilo de fonte Watermark:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:393
+msgid "Watermark color:"
+msgstr "Cor Watermark:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:402
+msgid "Watermark opacity:"
+msgstr "Opacidade Watermark:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:406
+msgid "Opacity value must be in the range of 0 to 100."
+msgstr "Opacidade valor deve estar no intervalo de 0 a 100."
+
+#: ../admin/views/BWGViewOptions_bwg.php:411
+msgid "Watermark position:"
+msgstr "Posição Watermark:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:456
+msgid "Advertisement type:"
+msgstr "Tipo de anúncio:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:470
+msgid "Advertisement url:"
+msgstr "Anúncio url:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:487
+msgid "Enter absolute image file url or add file from Options page. (.jpg,.jpeg,.png,.gif formats are supported)"
+msgstr "Digite absoluta url arquivo de imagem ou adicionar o arquivo a partir da página Opções. (.jpg, .jpeg, .png, .gif formatos são suportados)"
+
+#: ../admin/views/BWGViewOptions_bwg.php:492
+msgid "Advertisement text:"
+msgstr "Anúncio de texto:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:501
+msgid "Advertisement link:"
+msgstr "Link Publicidade:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:505
+msgid "Enter a URL to open when the advertisement banner is clicked."
+msgstr "Digite uma URL para abrir quando a faixa de anúncio é clicado."
+
+#: ../admin/views/BWGViewOptions_bwg.php:510
+msgid "Advertisement dimensions:"
+msgstr "Dimensões Publicidade:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:515
+msgid "Maximum values for watermark image width and height."
+msgstr "Os valores máximos para a largura da imagem de marca dágua e altura."
+
+#: ../admin/views/BWGViewOptions_bwg.php:520
+msgid "Advertisement font size:"
+msgstr "Font size Publicidade:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:529
+msgid "Advertisement font style:"
+msgstr "Estilo de fonte Publicidade:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:546
+msgid "Advertisement color:"
+msgstr "Anúncio cor:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:555
+msgid "Advertisement opacity:"
+msgstr "Anúncio opacidade:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:559
+#: ../admin/views/BWGViewThemes_bwg.php:403
+#: ../admin/views/BWGViewThemes_bwg.php:416 ../admin/views/BWGViewThemes_bwg.
+#: php:560 ../admin/views/BWGViewThemes_bwg.php:573 ..
+#: /admin/views/BWGViewThemes_bwg.php:844 930
+#: ../admin/views/BWGViewThemes_bwg.php:983 php:1052
+#: ../admin/views/BWGViewThemes_bwg.php:1165
+#: /admin/views/BWGViewThemes_bwg.php:1383 1396
+#: ../admin/views/BWGViewThemes_bwg.php:1617
+#: /admin/views/BWGViewThemes_bwg.php:1657 1736
+#: ../admin/views/BWGViewThemes_bwg.php:2054
+#: /admin/views/BWGViewThemes_bwg.php:2225 2261
+#: ../admin/views/BWGViewThemes_bwg.php:2314
+#: /admin/views/BWGViewThemes_bwg.php:2341 2626
+#: ../admin/views/BWGViewThemes_bwg.php:2748
+#: /admin/views/BWGViewThemes_bwg.php:2878 3305
+msgid "Value must be between 0 to 100."
+msgstr "O valor deve ser entre 0 a 100."
+
+#: ../admin/views/BWGViewOptions_bwg.php:564
+msgid "Advertisement position:"
+msgstr "Anúncio posição:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:609
+msgid "Full width lightbox:"
+msgstr "Largura total Lightbox:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:614
+msgid "Enable full width feature for the lightbox."
+msgstr "Ativar recurso de largura total para a mesa de luz."
+
+#: ../admin/views/BWGViewOptions_bwg.php:619
+msgid "Lightbox dimensions:"
+msgstr "Dimensões Mesa de Luz:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:629
+msgid "Lightbox effect:"
+msgstr "Efeito Lightbox:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:636
+msgid "This effect is disabled in free version."
+msgstr "Este efeito é desativado na versão gratuita."
+
+#: ../admin/views/BWGViewOptions_bwg.php:646
+msgid "Lightbox autoplay:"
+msgstr "Autoplay Lightbox:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:656
+#: ../admin/views/BWGViewOptions_bwg. php:1067
+#: ../admin/views/BWGViewOptions_bwg.php:1523 ..
+#: /admin/views/BWGViewWidgetSlideshow.php:138
+msgid "Time interval:"
+msgstr "Intervalo de tempo:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:665
+msgid "Enable filmstrip:"
+msgstr "Ativar filmstrip:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:675
+msgid "Filmstrip size:"
+msgstr "Filmstrip tamanho:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:684
+msgid "Display hit counter:"
+msgstr "Mostrar contador de visitas:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:694
+#: ../admin/views/BWGViewOptions_bwg. php:1106
+msgid "Show Next / Previous buttons:"
+msgstr "Mostrar Próximo / botões Anterior:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:697
+#: ../admin/views/BWGViewOptions_bwg. php:1109
+msgid "On hover"
+msgstr "Em foco"
+
+#: ../admin/views/BWGViewOptions_bwg.php:698
+#: ../admin/views/BWGViewOptions_bwg. php:1110
+msgid "Always"
+msgstr "Sempre"
+
+#: ../admin/views/BWGViewOptions_bwg.php:704
+#: ../admin/views/BWGViewOptions_bwg. php:1116
+msgid "Enable control buttons:"
+msgstr "Habil. botões de controle:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:738
+msgid "Enable fullscreen:"
+msgstr "Habil. tela cheia:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:748
+msgid "Enable info:"
+msgstr "Ativar info:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:758
+msgid "Display info by default:"
+msgstr "Exibir informações por padrão:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:768
+msgid "Full width info:"
+msgstr "Largura total info:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:773
+msgid "Display image information based on the lightbox dimensions."
+msgstr "Informações imagem de exibição com base nas dimensões lightbox."
+
+#: ../admin/views/BWGViewOptions_bwg.php:784
+msgid "Enable rating:"
+msgstr "Ativar classificação:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:794
+msgid "Enable comments:"
+msgstr "Ativar comentários:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:808
+msgid "Enable comments moderation:"
+msgstr "Ativar comentários moderação:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:818
+msgid "Enable Email for comments:"
+msgstr "Ativar E-mail para comentários:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:828
+msgid "Enable Captcha for comments:"
+msgstr "Ativar CAPTCHA para comentários:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:838
+msgid "Enable original image display button:"
+msgstr "Habil. botão original de exibição de imagem:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:848
+msgid "Enable download button:"
+msgstr "Habil. botão de download:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:858
+msgid "Enable Facebook button:"
+msgstr "Habil.botão Facebook:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:868
+msgid "Enable Twitter button:"
+msgstr "Botão Ativar Twitter:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:878
+msgid "Enable Google+ button:"
+msgstr "Habil. botão Google+:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:888
+msgid "Enable Pinterest button:"
+msgstr "Habil. botão Pinterest:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:898
+msgid "Enable Tumblr button:"
+msgstr "Habil. botão Tumblr:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:908
+msgid "Show images count:"
+msgstr "Mostrar imagens contam:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:918
+msgid "Enable loop:"
+msgstr "Habi.loop:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:928
+msgid "Enable"
+msgstr "Habilitar"
+
+#: ../admin/views/BWGViewOptions_bwg.php:951
+msgid "Number of album columns:"
+msgstr "Número de colunas do álbum:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:960
+msgid "Albums per page:"
+msgstr "Álbuns por página:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:969
+msgid "Enable pagination:"
+msgstr "Ativar pagination:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:979
+msgid "Album view type:"
+msgstr "Álbum tipo de vista:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:989
+msgid "Show title:"
+msgstr "Mostrar título:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:992
+#: ../admin/views/BWGViewOptions_bwg. php:1344
+msgid "Show on hover"
+msgstr "Mostrar no pairo"
+
+#: ../admin/views/BWGViewOptions_bwg.php:993
+#: ../admin/views/BWGViewOptions_bwg. php:1345
+msgid "Always show"
+msgstr "Sempre aparece"
+
+#: ../admin/views/BWGViewOptions_bwg.php:994
+#: ../admin/views/BWGViewOptions_bwg. php:1346
+msgid "Don't show"
+msgstr "Não mostrar"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1000
+msgid "Show album/gallery name:"
+msgstr "Mostrar nome do álbum / galeria:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1010
+msgid "Enable extended album description:"
+msgstr "Ativar descrição estendida álbum:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1020
+msgid "Album thumbnail dimensions:"
+msgstr "Álbum dimensões em miniatura:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1030
+msgid "Extended album height:"
+msgstr "Extensão altura álbum:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1050 ..
+#: /admin/views/BWGViewWidgetSlideshow.php:126
+msgid "Slideshow effect:"
+msgstr "Efeito Slideshow:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1076
+msgid "Slideshow dimensions:"
+msgstr "Dimensões Slides:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1086
+#: ../admin/views/BWGViewOptions_bwg. php:1582
+msgid "Enable autoplay:"
+msgstr "Ativar autoplay:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1096 ..
+#: /admin/views/BWGViewWidgetSlideshow.php:142
+msgid "Enable shuffle:"
+msgstr "Ativar Shuffle:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1125
+msgid "Enable slideshow filmstrip:"
+msgstr "Ativar slideshow filmstrip:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1133
+msgid "Slideshow filmstrip size:"
+msgstr "Slideshow tamanho filmstrip:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1146
+#: ../admin/views/BWGViewOptions_bwg. php:1573
+msgid "Enable image title:"
+msgstr "Ativar título da imagem:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1154
+#: ../admin/views/BWGViewThemes_bwg. php:440
+#: ../admin/views/BWGViewThemes_bwg.php:1420
+msgid "Title position:"
+msgstr "Posição Título:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1175
+msgid "Image title position on slideshow"
+msgstr "Imagem posição do título em slideshow"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1180
+msgid "Full width title:"
+msgstr "Título largura:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1185
+msgid "Display image title based on the slideshow dimensions."
+msgstr "Título da imagem de exibição com base nas dimensões de slideshow."
+
+#: ../admin/views/BWGViewOptions_bwg.php:1189
+msgid "Enable image description: "
+msgstr "Ativar descrição da imagem:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1197
+msgid "Description position:"
+msgstr "Descrição posição:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1218
+msgid "Image description position on slideshow"
+msgstr "Imagem posição descrição em slideshow"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1223
+msgid "Enable slideshow Music:"
+msgstr "Ativar Música slideshow:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1233
+msgid "Music url:"
+msgstr "Url Música:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1246
+msgid "Add Music"
+msgstr "Adicionar Música"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1248
+msgid "Only"
+msgstr "Somente"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1248
+msgid "formats are supported."
+msgstr "formatos são suportados."
+
+#: ../admin/views/BWGViewOptions_bwg.php:1264
+msgid "Masonry:"
+msgstr "Maçonaria:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1267
+#: ../admin/views/BWGViewOptions_bwg. php:1278
+msgid "Horizontal"
+msgstr "Horizontal"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1268
+#: ../admin/views/BWGViewOptions_bwg. php:1277
+msgid "Vertical"
+msgstr "Vertical"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1274
+msgid "Mosaic:"
+msgstr "Mosaic:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1284
+msgid "Resizable mosaic:"
+msgstr "Mosaico redimensionável:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1294
+msgid "Total width of mosaic:"
+msgstr "Largura total do mosaico:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1298
+msgid "Width of mosaic as a percentage of container's width."
+msgstr "Largura de mosaico como uma percentagem da largura da embalagem."
+
+#: ../admin/views/BWGViewOptions_bwg.php:1303
+msgid "Number of image columns:"
+msgstr "Número de colunas de imagem:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1312
+msgid "Images per page:"
+msgstr "Imagens por página:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1321
+msgid "Generated thumbnail dimensions:"
+msgstr "Dimensões miniatura gerada:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1326
+msgid "The maximum size of the generated thumbnail. Its dimensions should be larger than the ones of the frontend thumbnail."
+msgstr "O tamanho máximo da miniatura gerada. Suas dimensões devem ser maiores do que os do thumbnail frontend."
+
+#: ../admin/views/BWGViewOptions_bwg.php:1331
+msgid "Frontend thumbnail dimensions:"
+msgstr "Dimensões frontend em miniatura:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1336
+msgid "The default size of the thumbnail which will be displayed in the website"
+msgstr "O tamanho padrão da miniatura que será exibida no site"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1341
+msgid "Show image title:"
+msgstr "Mostrar título da imagem:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1351
+msgid "Show gallery name:"
+msgstr "Mostrar nome da galeria:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1360
+msgid "Show description in Vertical Masonry view:"
+msgstr "Mostrar descrição em vista a Maçonaria Vertical:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1369
+msgid "Enable image pagination:"
+msgstr "Ativar imagem pagination:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1377
+msgid "Thumbnail click action:"
+msgstr "Ação Clique na miniatura:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1379
+msgid "Open lightbox"
+msgstr "Abrir lightbox"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1380
+msgid "Redirect to url"
+msgstr "Redirecionar a url"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1381
+msgid "Do Nothing"
+msgstr "Fazer nada"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1386
+msgid "Open in a new window:"
+msgstr "Abrir em uma nova janela:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1394
+msgid "Play icon over the video thumbnail:"
+msgstr "Icon Jogar sobre a miniatura de vídeo:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1411
+msgid "Enable image title for Image Browser view:"
+msgstr "Ativar título imagem para tela Browser Image:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1421
+msgid "Enable image description for Image Browser view:"
+msgstr "Ativar descrição da imagem para tela Browser Image:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1431
+msgid "Image width for Image Browser view:"
+msgstr "Largura da imagem para tela Browser Image:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1440
+msgid "The Blog Style view is disabled in free version."
+msgstr "A visão Blog Estilo está desabilitado na versão gratuita."
+
+#: ../admin/views/BWGViewOptions_bwg.php:1445
+msgid "Enable image title for Blog Style view:"
+msgstr "Ativar título imagem para ver o Blog Estilo:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1455
+msgid "Image width for Blog Style view:"
+msgstr "Largura da imagem para ver o Blog Estilo:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1464
+msgid "Images per page in Blog Style view:"
+msgstr "Imagens por página em vista Blog Estilo:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1473
+msgid "Enable pagination for Blog Style view:"
+msgstr "Ativar paginação para ver o Blog Estilo:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1490
+msgid "Gallery autoupdate interval:"
+msgstr "Galeria intervalo de atualização automática:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1494
+msgid "hour"
+msgstr "hora"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1496
+msgid "min"
+msgstr "min"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1497
+msgid "Autoupdatable galleries are disabled in free version."
+msgstr "Galerias Autoupdatable são desativados na versão gratuita."
+
+#: ../admin/views/BWGViewOptions_bwg.php:1507
+msgid "galleries are disabled in free version."
+msgstr "galerias são desativados na versão gratuita."
+
+#: ../admin/views/BWGViewOptions_bwg.php:1532
+msgid "Max. number of images:"
+msgstr "Max. número de imagens:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1541
+msgid "Carousel image ratio:"
+msgstr "Rácio imagem Carrossel:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1560
+msgid "Fixed width:"
+msgstr "Largura fixa:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1592
+msgid "Container fit:"
+msgstr "Container fit:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1602
+msgid "Next/Previous buttons:"
+msgstr "Próximo / Anterior botões:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1612
+msgid "Play/Pause button:"
+msgstr "Botão Reproduzir / Pausa:"
+
+#: ../admin/views/BWGViewOptions_bwg.php:1625
+msgid "Carousel view is disabled in free version."
+msgstr "Vista Carousel é desativada na versão gratuita."
+
+#: ../admin/views/BWGViewTags_bwg.php:43
+msgid "This section allows you to create, edit and delete tags."
+msgstr "Esta seção permite-lhe criar, editar e apagar tags."
+
+#: ../admin/views/BWGViewTags_bwg.php:107
+msgid "Count"
+msgstr "Contar"
+
+#: ../admin/views/BWGViewTags_bwg.php:126
+msgid "Add Tag"
+msgstr "Adicionar Tag"
+
+#: ../admin/views/BWGViewThemes_bwg.php:39
+msgid "This section allows you to create, edit and delete themes."
+msgstr "Esta seção permite-lhe criar, editar e excluir temas."
+
+#: ../admin/views/BWGViewThemes_bwg.php:45
+msgid "This feature is disabled for the non-commercial version."
+msgstr "Esse recurso é desativado para a versão não-comercial."
+
+#: ../admin/views/BWGViewThemes_bwg.php:117 ../framework/WDWLibrary.php:848
+msgid "Default"
+msgstr "Padrão"
+
+#: ../admin/views/BWGViewThemes_bwg.php:197
+msgid "Solid"
+msgstr "Sólido"
+
+#: ../admin/views/BWGViewThemes_bwg.php:198
+msgid "Dotted"
+msgstr "Pontilhada"
+
+#: ../admin/views/BWGViewThemes_bwg.php:199
+msgid "Dashed"
+msgstr "Pontilhada"
+
+#: ../admin/views/BWGViewThemes_bwg.php:200
+#: ../admin/views/BWGViewThemes_bwg.php:237
+msgid "Double"
+msgstr "Duplo"
+
+#: ../admin/views/BWGViewThemes_bwg.php:201
+msgid "Groove"
+msgstr "Sulco"
+
+#: ../admin/views/BWGViewThemes_bwg.php:202
+msgid "Ridge"
+msgstr "Cume"
+
+#: ../admin/views/BWGViewThemes_bwg.php:203
+msgid "Inset"
+msgstr "Inserção"
+
+#: ../admin/views/BWGViewThemes_bwg.php:204
+msgid "Outset"
+msgstr "Início"
+
+#: ../admin/views/BWGViewThemes_bwg.php:219
+#: ../admin/views/BWGViewThemes_bwg.php:783
+#: ../admin/views/BWGViewThemes_bwg.php:2566 ../admin/views/BWGViewThemes_bwg.
+#: php:3020
+msgid "Left"
+msgstr "Deixou"
+
+#: ../admin/views/BWGViewThemes_bwg.php:220
+msgid "Center"
+msgstr "Centro"
+
+#: ../admin/views/BWGViewThemes_bwg.php:221
+#: ../admin/views/BWGViewThemes_bwg.php:781
+#: ../admin/views/BWGViewThemes_bwg.php:2564 ../admin/views/BWGViewThemes_bwg.
+#: php:3022
+msgid "Right"
+msgstr "Certo"
+
+#: ../admin/views/BWGViewThemes_bwg.php:224
+msgid "Lighter"
+msgstr "Isqueiro"
+
+#: ../admin/views/BWGViewThemes_bwg.php:225
+msgid "Normal"
+msgstr "Normal"
+
+#: ../admin/views/BWGViewThemes_bwg.php:226
+msgid "Bold"
+msgstr "Corajoso"
+
+#: ../admin/views/BWGViewThemes_bwg.php:230
+msgid "Rotate"
+msgstr "Rotate"
+
+#: ../admin/views/BWGViewThemes_bwg.php:231
+msgid "Scale"
+msgstr "Escala"
+
+#: ../admin/views/BWGViewThemes_bwg.php:232
+msgid "Skew"
+msgstr "Enviesado"
+
+#: ../admin/views/BWGViewThemes_bwg.php:235
+msgid "Chevron"
+msgstr "Divisa"
+
+#: ../admin/views/BWGViewThemes_bwg.php:236
+msgid "Angle"
+msgstr "Ângulo"
+
+#: ../admin/views/BWGViewThemes_bwg.php:240
+msgid "Star"
+msgstr "Estrela"
+
+#: ../admin/views/BWGViewThemes_bwg.php:241
+msgid "Bell"
+msgstr "Sino"
+
+#: ../admin/views/BWGViewThemes_bwg.php:242
+msgid "Circle"
+msgstr "Círculo"
+
+#: ../admin/views/BWGViewThemes_bwg.php:243
+msgid "Flag"
+msgstr "Bandeira"
+
+#: ../admin/views/BWGViewThemes_bwg.php:244
+msgid "Heart"
+msgstr "Coração"
+
+#: ../admin/views/BWGViewThemes_bwg.php:245
+msgid "Square"
+msgstr "Praça"
+
+#: ../admin/views/BWGViewThemes_bwg.php:250
+msgid "This section allows you to add/edit theme."
+msgstr "Esta seção permite que você adicione / tema de edição."
+
+#: ../admin/views/BWGViewThemes_bwg.php:280
+msgid "This tab is disabled in free version"
+msgstr "Este guia está desabilitado na versão livre"
+
+#: ../admin/views/BWGViewThemes_bwg.php:284
+msgid "Page Navigation"
+msgstr "Pág. de Naveg."
+
+#: ../admin/views/BWGViewThemes_bwg.php:289
+msgid "Parameters"
+msgstr "Parâmetros"
+
+#: ../admin/views/BWGViewThemes_bwg.php:304
+#: ../admin/views/BWGViewThemes_bwg.php:1109
+#: ../admin/views/BWGViewThemes_bwg.php:1291 ..
+#: /admin/views/BWGViewThemes_bwg.php:1714 2072
+#: ../admin/views/BWGViewThemes_bwg.php:3282
+msgid "Margin:"
+msgstr "Margin:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:310
+#: ../admin/views/BWGViewThemes_bwg.php:512
+#: ../admin/views/BWGViewThemes_bwg.php:1116 ../admin/views/BWGViewThemes_bwg.
+#: php:1284 ../admin/views/BWGViewThemes_bwg.php:1721 ..
+#: /admin/views/BWGViewThemes_bwg.php:2079 3289
+msgid "Padding:"
+msgstr "Preenchimento:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:316
+#: ../admin/views/BWGViewThemes_bwg.php:518
+#: ../admin/views/BWGViewThemes_bwg.php:1123 ../admin/views/BWGViewThemes_bwg.
+#: php:1298 ../admin/views/BWGViewThemes_bwg.php:2125 ..
+#: /admin/views/BWGViewThemes_bwg.php:3243
+msgid "Border width:"
+msgstr "Largura da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:322
+#: ../admin/views/BWGViewThemes_bwg.php:524
+#: ../admin/views/BWGViewThemes_bwg.php:1129 ../admin/views/BWGViewThemes_bwg.
+#: php:1304 ../admin/views/BWGViewThemes_bwg.php:2131 ..
+#: /admin/views/BWGViewThemes_bwg.php:3249
+msgid "Border style:"
+msgstr "Estilo de borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:336
+#: ../admin/views/BWGViewThemes_bwg.php:538
+#: ../admin/views/BWGViewThemes_bwg.php:1143 ../admin/views/BWGViewThemes_bwg.
+#: php:1318 ../admin/views/BWGViewThemes_bwg.php:2145 ..
+#: /admin/views/BWGViewThemes_bwg.php:3263
+msgid "Border color:"
+msgstr "Cor da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:342
+#: ../admin/views/BWGViewThemes_bwg.php:544
+#: ../admin/views/BWGViewThemes_bwg.php:1149 ../admin/views/BWGViewThemes_bwg.
+#: php:1324 ../admin/views/BWGViewThemes_bwg.php:1740 ..
+#: /admin/views/BWGViewThemes_bwg.php:2151 3269
+msgid "Border radius:"
+msgstr "Raio Border:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:345
+#: ../admin/views/BWGViewThemes_bwg.php:352
+#: ../admin/views/BWGViewThemes_bwg.php:492 ../admin/views/BWGViewThemes_bwg.
+#: php:499 ../admin/views/BWGViewThemes_bwg.php:547 ..
+#: /admin/views/BWGViewThemes_bwg.php:746 767
+#: ../admin/views/BWGViewThemes_bwg.php:791 php:825
+#: ../admin/views/BWGViewThemes_bwg.php:881
+#: /admin/views/BWGViewThemes_bwg.php:937 944
+#: ../admin/views/BWGViewThemes_bwg.php:990 php:997
+#: ../admin/views/BWGViewThemes_bwg.php:1039
+#: /admin/views/BWGViewThemes_bwg.php:1059 1112
+#: ../admin/views/BWGViewThemes_bwg.php:1119
+#: /admin/views/BWGViewThemes_bwg.php:1152 1172
+#: ../admin/views/BWGViewThemes_bwg.php:1225
+#: /admin/views/BWGViewThemes_bwg.php:1232 1265
+#: ../admin/views/BWGViewThemes_bwg.php:1287
+#: /admin/views/BWGViewThemes_bwg.php:1327 1334
+#: ../admin/views/BWGViewThemes_bwg.php:1472
+#: /admin/views/BWGViewThemes_bwg.php:1479 1526
+#: ../admin/views/BWGViewThemes_bwg.php:1580
+#: /admin/views/BWGViewThemes_bwg.php:1587 1670
+#: ../admin/views/BWGViewThemes_bwg.php:1710
+#: /admin/views/BWGViewThemes_bwg.php:1717 1743
+#: ../admin/views/BWGViewThemes_bwg.php:1776
+#: /admin/views/BWGViewThemes_bwg.php:1862 1881
+#: ../admin/views/BWGViewThemes_bwg.php:1954
+#: /admin/views/BWGViewThemes_bwg.php:2075 2089
+#: ../admin/views/BWGViewThemes_bwg.php:2154
+#: /admin/views/BWGViewThemes_bwg.php:2167 2212
+#: ../admin/views/BWGViewThemes_bwg.php:2307
+#: /admin/views/BWGViewThemes_bwg.php:2361 2394
+#: ../admin/views/BWGViewThemes_bwg.php:2493
+#: /admin/views/BWGViewThemes_bwg.php:2530 2574
+#: ../admin/views/BWGViewThemes_bwg.php:2607
+#: /admin/views/BWGViewThemes_bwg.php:2712 2781
+#: ../admin/views/BWGViewThemes_bwg.php:2788
+#: /admin/views/BWGViewThemes_bwg.php:2795 2911
+#: ../admin/views/BWGViewThemes_bwg.php:2918
+#: /admin/views/BWGViewThemes_bwg.php:2925 3112
+#: ../admin/views/BWGViewThemes_bwg.php:3131
+#: /admin/views/BWGViewThemes_bwg.php:3164 3272
+#: ../admin/views/BWGViewThemes_bwg.php:3285
+#: /admin/views/BWGViewThemes_bwg.php:3292 3321
+msgid "Use CSS type values."
+msgstr "Use valores de tipo CSS."
+
+#: ../admin/views/BWGViewThemes_bwg.php:349
+#: ../admin/views/BWGViewThemes_bwg.php:1331
+msgid "Shadow:"
+msgstr "Shadow:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:356
+#: ../admin/views/BWGViewThemes_bwg.php:597
+#: ../admin/views/BWGViewThemes_bwg.php:1338
+msgid "Hover effect:"
+msgstr "Passe efeito:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:370
+#: ../admin/views/BWGViewThemes_bwg.php:611
+#: ../admin/views/BWGViewThemes_bwg.php:1352 ../admin/views/BWGViewThemes_bwg.
+#: php:1635
+msgid "Hover effect value:"
+msgstr "Passe valor efeito:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:373
+#: ../admin/views/BWGViewThemes_bwg.php:1638
+msgid "E.g. Rotate:"
+msgstr "Por exemplo. Girar:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:373
+#: ../admin/views/BWGViewThemes_bwg.php:614
+#: ../admin/views/BWGViewThemes_bwg.php:1355 ../admin/views/BWGViewThemes_bwg.
+#: php:1638
+msgid "Scale:"
+msgstr "Escala:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:373
+#: ../admin/views/BWGViewThemes_bwg.php:614
+#: ../admin/views/BWGViewThemes_bwg.php:1355 ../admin/views/BWGViewThemes_bwg.
+#: php:1638
+msgid "Skew:"
+msgstr "Enviesar:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:377
+#: ../admin/views/BWGViewThemes_bwg.php:618
+msgid "Transition:"
+msgstr "Transição:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:393
+#: ../admin/views/BWGViewThemes_bwg.php:1374
+#: ../admin/views/BWGViewThemes_bwg.php:1642
+msgid "Thumbnail background color:"
+msgstr "Thumbnail cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:400
+#: ../admin/views/BWGViewThemes_bwg.php:1380
+#: ../admin/views/BWGViewThemes_bwg.php:1614
+msgid "Thumbnail transparency:"
+msgstr "Transparência miniaturas:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:407
+#: ../admin/views/BWGViewThemes_bwg.php:1043
+#: ../admin/views/BWGViewThemes_bwg.php:1387
+msgid "Full background color:"
+msgstr "Cor de fundo completa:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:413
+#: ../admin/views/BWGViewThemes_bwg.php:1049
+msgid "Full background transparency:"
+msgstr "A total transparência de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:420
+#: ../admin/views/BWGViewThemes_bwg.php:577
+#: ../admin/views/BWGViewThemes_bwg.php:1095 ../admin/views/BWGViewThemes_bwg.
+#: php:1400 ../admin/views/BWGViewThemes_bwg.php:2058 ..
+#: /admin/views/BWGViewThemes_bwg.php:3340
+msgid "Alignment:"
+msgstr "Alinhamento:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:443
+#: ../admin/views/BWGViewThemes_bwg.php:780
+#: ../admin/views/BWGViewThemes_bwg.php:1423 ../admin/views/BWGViewThemes_bwg.
+#: php:2292 ../admin/views/BWGViewThemes_bwg.php:2563 ..
+#: /admin/views/BWGViewThemes_bwg.php:2651 2719
+#: ../admin/views/BWGViewThemes_bwg.php:2849
+#: /admin/views/BWGViewThemes_bwg.php:3334
+msgid "Top"
+msgstr "Topo"
+
+#: ../admin/views/BWGViewThemes_bwg.php:445
+#: ../admin/views/BWGViewThemes_bwg.php:782
+#: ../admin/views/BWGViewThemes_bwg.php:1425 ../admin/views/BWGViewThemes_bwg.
+#: php:2294 ../admin/views/BWGViewThemes_bwg.php:2565 ..
+#: /admin/views/BWGViewThemes_bwg.php:2653 2721
+#: ../admin/views/BWGViewThemes_bwg.php:2851
+#: /admin/views/BWGViewThemes_bwg.php:3336
+msgid "Bottom"
+msgstr "Inferior"
+
+#: ../admin/views/BWGViewThemes_bwg.php:449
+#: ../admin/views/BWGViewThemes_bwg.php:948
+#: ../admin/views/BWGViewThemes_bwg.php:1429 ../admin/views/BWGViewThemes_bwg.
+#: php:1911 ../admin/views/BWGViewThemes_bwg.php:2963
+msgid "Title font size:"
+msgstr "Título Tamanho da fonte:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:455
+#: ../admin/views/BWGViewThemes_bwg.php:1435
+#: ../admin/views/BWGViewThemes_bwg.php:1917 ..
+#: /admin/views/BWGViewThemes_bwg.php:2929
+msgid "Title font color:"
+msgstr "Font color Título:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:461
+#: ../admin/views/BWGViewThemes_bwg.php:960
+#: ../admin/views/BWGViewThemes_bwg.php:1441 ../admin/views/BWGViewThemes_bwg.
+#: php:1923 ../admin/views/BWGViewThemes_bwg.php:2935
+msgid "Title font family:"
+msgstr "Título font family:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:475
+#: ../admin/views/BWGViewThemes_bwg.php:1455
+#: ../admin/views/BWGViewThemes_bwg.php:1937 ..
+#: /admin/views/BWGViewThemes_bwg.php:2949
+msgid "Title font weight:"
+msgstr "Título peso da fonte:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:489
+#: ../admin/views/BWGViewThemes_bwg.php:1469
+msgid "Title box shadow:"
+msgstr "Caixa Título sombra:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:496
+#: ../admin/views/BWGViewThemes_bwg.php:1476
+#: ../admin/views/BWGViewThemes_bwg.php:1872
+msgid "Title margin:"
+msgstr "Margem Título:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:557
+msgid "Transparency:"
+msgstr "Transparência:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:564
+#: ../admin/views/BWGViewThemes_bwg.php:662
+#: ../admin/views/BWGViewThemes_bwg.php:1156 ../admin/views/BWGViewThemes_bwg.
+#: php:1727 ../admin/views/BWGViewThemes_bwg.php:2045
+msgid "Background color:"
+msgstr "Cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:570
+#: ../admin/views/BWGViewThemes_bwg.php:1162
+#: ../admin/views/BWGViewThemes_bwg.php:1733 ..
+#: /admin/views/BWGViewThemes_bwg.php:2051
+msgid "Background transparency:"
+msgstr "Transparência do fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:614
+msgid "Rotate:"
+msgstr "Girar:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:627
+#: ../admin/views/BWGViewThemes_bwg.php:1001
+#: ../admin/views/BWGViewThemes_bwg.php:1984 ..
+#: /admin/views/BWGViewThemes_bwg.php:3004
+msgid "Description font size:"
+msgstr "Descrição tamanho da fonte:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:633
+#: ../admin/views/BWGViewThemes_bwg.php:1990
+#: ../admin/views/BWGViewThemes_bwg.php:2970
+msgid "Description font color:"
+msgstr "Descrição font color:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:639
+#: ../admin/views/BWGViewThemes_bwg.php:1996
+#: ../admin/views/BWGViewThemes_bwg.php:2976
+msgid "Description font family:"
+msgstr "Descrição font family:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:668
+#: ../admin/views/BWGViewThemes_bwg.php:2509
+msgid "Right, left buttons size:"
+msgstr "Direita, esquerda tamanho botões:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:674
+msgid "Play, pause buttons size:"
+msgstr "Reproduzir, pausar tamanho botões:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:680
+#: ../admin/views/BWGViewThemes_bwg.php:2177
+msgid "Buttons color:"
+msgstr "Botões de cor:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:686
+msgid "Buttons transparency:"
+msgstr "Botões transparência:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:689
+msgid "alue must be between 0 to 100."
+msgstr "alue deve estar entre 0 a 100."
+
+#: ../admin/views/BWGViewThemes_bwg.php:693
+msgid "Buttons hover color:"
+msgstr "Botões pairar cor:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:699
+#: ../admin/views/BWGViewThemes_bwg.php:2503
+msgid "Right, left buttons width:"
+msgstr "Direita, os botões esquerdo Largura:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:705
+#: ../admin/views/BWGViewThemes_bwg.php:2497
+msgid "Right, left buttons height:"
+msgstr "Direita, esquerda altura botões:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:711
+#: ../admin/views/BWGViewThemes_bwg.php:2478
+msgid "Right, left buttons background color:"
+msgstr "Direita, esquerda botões cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:717
+msgid "Right, left buttons border width:"
+msgstr "Direita, esquerda botões largura da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:723
+#: ../admin/views/BWGViewThemes_bwg.php:2540
+msgid "Right, left buttons border style: "
+msgstr "Direita, esquerda botões estilo de borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:737
+msgid "Right, left buttons border color:"
+msgstr "Direita, esquerda botões cor da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:743
+#: ../admin/views/BWGViewThemes_bwg.php:2527
+msgid "Right, left buttons border radius: "
+msgstr "Direita, esquerda botões raio de fronteira:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:750
+#: ../admin/views/BWGViewThemes_bwg.php:2464
+msgid "Right, left buttons style:"
+msgstr "Direita, esquerda botões estilo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:764
+#: ../admin/views/BWGViewThemes_bwg.php:2490
+msgid "Right, left buttons box shadow:"
+msgstr "Direita, os botões esquerdo caixa de sombra:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:777
+msgid "Filmstrip/Slider bullet position: "
+msgstr "Filmstrip / Slider posição bala:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:788
+msgid "Filmstrip margin:"
+msgstr "Filmstrip margem:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:795
+msgid "Filmstrip border width:"
+msgstr "Largura da borda Filmstrip:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:801
+msgid "Filmstrip border style: "
+msgstr "Filmstrip estilo de borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:816
+msgid "Filmstrip border color: "
+msgstr "Cor da borda Filmstrip:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:822
+msgid "Filmstrip border radius: "
+msgstr "Raio fronteira Filmstrip:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:829
+msgid "Filmstrip active border width:"
+msgstr "Filmstrip largura da borda ativa:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:835
+msgid "Filmstrip active border color:"
+msgstr "Filmstrip cor da borda ativa:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:841
+msgid "Filmstrip deactive transparency:"
+msgstr "Filmstrip transparência Deactive:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:848
+msgid "Filmstrip right, left buttons background color:"
+msgstr "Direito Tira de filme, botões esquerdo cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:854
+msgid "Filmstrip right, left buttons color: "
+msgstr "Filmstrip direita, deixou cor botões:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:860
+#: ../admin/views/BWGViewThemes_bwg.php:2630
+msgid "Filmstrip right, left buttons size: "
+msgstr "Filmstrip direito, esquerdo tamanho botões:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:866
+msgid "Slider bullet width: "
+msgstr "Slider largura bala:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:872
+msgid "Slider bullet height: "
+msgstr "Slider altura bala:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:878
+msgid "Slider bullet border radius:"
+msgstr "Slider raio fronteira bala:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:885
+msgid "Slider bullet background color: "
+msgstr "Slider cor bala fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:891
+msgid "Slider bullet margin:"
+msgstr "Slider margem de bala:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:897
+msgid "Slider bullet active background color:"
+msgstr "Slider bala cor de fundo ativo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:903
+msgid "Slider bullet active border width: "
+msgstr "Slider bala largura da borda ativa:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:909
+msgid "Slider bullet active border color:"
+msgstr "Slider bala cor da borda ativa:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:921
+msgid "Title background color:"
+msgstr "Título cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:927
+msgid "Title transparency: "
+msgstr "Transparência Título:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:934
+msgid "Title border radius:"
+msgstr "Título raio de fronteira:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:941
+#: ../admin/views/BWGViewThemes_bwg.php:1878
+msgid "Title padding:"
+msgstr "Título padding:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:954
+msgid "Title color:"
+msgstr "Cor título:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:974
+msgid "Description background color:"
+msgstr "Descrição cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:980
+msgid "Description transparency: "
+msgstr "Descrição transparência:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:987
+msgid "Description border radius: "
+msgstr "Descrição raio de fronteira:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:994
+#: ../admin/views/BWGViewThemes_bwg.php:1229
+#: ../admin/views/BWGViewThemes_bwg.php:1951
+msgid "Description padding:"
+msgstr "Descrição padding:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1007
+msgid "Description color: "
+msgstr "Descrição cor:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1013
+msgid "Description font family: "
+msgstr "Descrição font family:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1036
+msgid "Full padding:"
+msgstr "Preenchimento completo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1056
+msgid "Full border radius:"
+msgstr "Raio fronteira completa:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1063
+msgid "Full border width:"
+msgstr "Largura da borda completa:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1069
+msgid "Full border style:"
+msgstr "Estilo de borda completo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1083
+msgid "Full border color:"
+msgstr "Cor da borda completa:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1169
+#: ../admin/views/BWGViewThemes_bwg.php:2086
+#: ../admin/views/BWGViewThemes_bwg.php:3318
+msgid "Box shadow:"
+msgstr "Caixa de sombra:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1182
+msgid "Title alignment:"
+msgstr "Alinhamento Título:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1196
+#: ../admin/views/BWGViewThemes_bwg.php:1483
+#: ../admin/views/BWGViewThemes_bwg.php:2113 ..
+#: /admin/views/BWGViewThemes_bwg.php:3203
+msgid "Font size:"
+msgstr "Tamanho da fonte:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1202
+#: ../admin/views/BWGViewThemes_bwg.php:1489
+#: ../admin/views/BWGViewThemes_bwg.php:2119 ..
+#: /admin/views/BWGViewThemes_bwg.php:3209
+msgid "Font color:"
+msgstr "Cor da fonte:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1208
+#: ../admin/views/BWGViewThemes_bwg.php:1495
+#: ../admin/views/BWGViewThemes_bwg.php:2099 ..
+#: /admin/views/BWGViewThemes_bwg.php:3215
+msgid "Font family:"
+msgstr "Família de fontes:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1222
+msgid "Description margin:"
+msgstr "Descrição margin:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1236
+msgid "Description border width: "
+msgstr "Descrição largura da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1242
+msgid "Description border style: "
+msgstr "Descrição estilo de borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1256
+msgid "Description border color: "
+msgstr "Descrição cor da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1262
+msgid "Description border radius:"
+msgstr "Descrição raio de fronteira:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1269
+msgid "Description background color: "
+msgstr "Descrição cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1294
+#: ../admin/views/BWGViewThemes_bwg.php:2082
+msgid "se CSS type values."
+msgstr "valores de tipo se CSS."
+
+#: ../admin/views/BWGViewThemes_bwg.php:1355
+msgid "E.g. Rotate"
+msgstr "Por exemplo. Rotate"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1359
+#: ../admin/views/BWGViewThemes_bwg.php:1591
+msgid "Thumbnail transition:"
+msgstr "Transição miniaturas:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1393
+msgid "Full background transparency: "
+msgstr "A total transparência de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1509
+#: ../admin/views/BWGViewThemes_bwg.php:3229
+msgid "Font weight:"
+msgstr "Espessura da fonte:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1523
+#: ../admin/views/BWGViewThemes_bwg.php:1773
+msgid "Back padding:"
+msgstr "Voltar padding:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1539
+msgid "Thumbnail margin:"
+msgstr "Margem de miniaturas:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1545
+msgid "Thumbnail padding:"
+msgstr "Preenchimento de miniaturas:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1551
+msgid "Thumbnail border width:"
+msgstr "Largura da borda de miniaturas:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1557
+msgid "Thumbnail border style:"
+msgstr "Thumbnail estilo de borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1571
+msgid "Thumbnail border color:"
+msgstr "Cor da borda de miniaturas:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1577
+msgid "Thumbnail border radius:"
+msgstr "Raio fronteira miniaturas:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1584
+msgid "Thumbnail box shadow:"
+msgstr "Thumbnail caixa de sombra:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1600
+msgid "Thumbnail alignment:"
+msgstr "Alinhamento de miniaturas:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1621
+msgid "Thumbnail hover effect: "
+msgstr "Efeito hover miniaturas:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1648
+msgid "Thumbnails background color:"
+msgstr "Miniaturas cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1654
+msgid "Thumbnail background transparency:"
+msgstr "Thumbnail transparência do fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1667
+msgid "Thumbnail div padding:"
+msgstr "Thumbnail preenchimento div:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1674
+msgid "Thumbnail div background color:"
+msgstr "Thumbnail div cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1680
+msgid "Thumbnail div border width:"
+msgstr "Thumbnail div largura da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1687
+msgid "Thumbnail div border style:"
+msgstr "Thumbnail div style border:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1701
+msgid "Thumbnail div border color:"
+msgstr "Thumbnail div cor da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1707
+msgid "Thumbnail div border radius:"
+msgstr "Thumbnail div raio de fronteira:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1747
+msgid "Separator width:"
+msgstr "Largura do separador:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1753
+msgid "Separator style:"
+msgstr "Estilo separador:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1767
+msgid "Separator color:"
+msgstr "Cor separador:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1780
+msgid "Back font size:"
+msgstr "Voltar tamanho da fonte:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1786
+msgid "Back font color:"
+msgstr "Voltar font color:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1792
+msgid "Back font family:"
+msgstr "Voltar família da fonte:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1806
+msgid "Back font weight:"
+msgstr "Voltar peso da fonte:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1826
+msgid "Text div padding:"
+msgstr "Texto div padding:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1833
+msgid "Text div border width:"
+msgstr "Texto largura da borda div:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1839
+msgid "Text border style:"
+msgstr "Texto estilo de borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1853
+msgid "Text border color:"
+msgstr "Texto cor da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1859
+msgid "Text div border radius:"
+msgstr "Texto raio fronteira div:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1866
+msgid "Text background color:"
+msgstr "Texto cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1885
+msgid "Title border width:"
+msgstr "Título largura da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1891
+msgid "Title border style:"
+msgstr "Título estilo de borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1905
+msgid "Title border color:"
+msgstr "Título cor da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1958
+msgid "Description border width:"
+msgstr "Descrição largura da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1964
+msgid "Description border style:"
+msgstr "Descrição estilo de borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:1978
+msgid "Description border color:"
+msgstr "Descrição cor da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2010
+#: ../admin/views/BWGViewThemes_bwg.php:2990
+msgid "Description font weight:"
+msgstr "Descrição peso da fonte:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2024
+msgid "Description more size:"
+msgstr "Descrição mais tamanho:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2030
+msgid "Description more color:"
+msgstr "Descrição mais cor:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2164
+msgid "Buttons and title margin:"
+msgstr "Botões e margem de título:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2171
+msgid "Buttons size:"
+msgstr "Botões de tamanho:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2183
+msgid "Buttons and title border width:"
+msgstr "Botões e largura da borda de título:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2189
+msgid "Buttons and title border style:"
+msgstr "Botões e estilo de borda de título:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2203
+msgid "Buttons and title border color:"
+msgstr "Botões e cor da borda de título:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2209
+msgid "Buttons and title border radius:"
+msgstr "Botões e raio fronteira título:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2216
+msgid "Buttons and title background color:"
+msgstr "Botões e cor de fundo do título:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2222
+msgid "Buttons and title background transparency:"
+msgstr "Botões e transparência do fundo do título:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2229
+msgid "Buttons or title alignment:"
+msgstr "Botões ou alinhamento título:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2252
+msgid "Overlay background color:"
+msgstr "Overlay cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2258
+msgid "Overlay background transparency:"
+msgstr "Overlay transparência do fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2265
+msgid "Lightbox background color:"
+msgstr "Cor do fundo Lightbox:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2271
+msgid "Control buttons height:"
+msgstr "Botões de controle de altura:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2277
+msgid "Control buttons margin (top):"
+msgstr "Botões de controle de margem (em cima):"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2283
+msgid "Control buttons margin (left):"
+msgstr "Botões de controle de margem (esquerda):"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2289
+msgid "Control buttons position:"
+msgstr "Botões de controle de posição:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2298
+msgid "Control buttons background color: "
+msgstr "Controle de cor botões de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2304
+msgid "Control buttons container border radius:"
+msgstr "Controle raio botões contêiner de borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2311
+msgid "Control buttons container background transparency: "
+msgstr "Controle transparência botões recipiente fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2318
+msgid "Control buttons alignment: "
+msgstr "Botões de controle de alinhamento:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2332
+msgid "Control buttons color:"
+msgstr "Os botões de controle de cor:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2338
+msgid "Control buttons transparency:"
+msgstr "Botões de controle de transparência:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2345
+msgid "Toggle button height: "
+msgstr "Alternar altura botão:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2351
+msgid "Toggle button width: "
+msgstr "Alternar largura do botão:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2357
+msgid "Close button border radius:"
+msgstr "Fechar botão fronteira raio:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2365
+msgid "Close button border width:"
+msgstr "Fechar largura do botão border:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2371
+msgid "Close button border style: "
+msgstr "Fechar estilo de botão border:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2385
+msgid "Close button border color:"
+msgstr "Fechar botão beira da cor:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2391
+msgid "Close button box shadow:"
+msgstr "Fechar caixa botão sombra:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2398
+msgid "Close button background color:"
+msgstr "Fechar botão cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2404
+msgid "Close button transparency:"
+msgstr "Fechar botão transparência:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2410
+msgid "Close button width:"
+msgstr "Fechar botão width:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2416
+msgid "Close button height:"
+msgstr "Fechar botão height:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2422
+msgid "Close button top:"
+msgstr "Fechar botão de cima:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2428
+msgid "Close button right:"
+msgstr "Fechar botão direito:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2434
+msgid "Close button size:"
+msgstr "Fechar tamanho do botão:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2440
+msgid "Close button color:"
+msgstr "Fechar botão de cor:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2446
+msgid "Fullscreen close button color:"
+msgstr "Fullscreen cor botão:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2452
+msgid "Share buttons color:"
+msgstr "Compartilhar botões cor:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2484
+msgid "Right, left buttons transparency: "
+msgstr "Direita, esquerda botões transparência:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2515
+msgid "Right, left, close buttons hover color:"
+msgstr "Direita, esquerda, botões de fechar pairar cor:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2521
+msgid "Right, left buttons color:"
+msgstr "Direita, esquerda botões cor:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2534
+msgid "Right, left buttons border width: "
+msgstr "Direita, esquerda botões largura da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2554
+msgid "Right, left buttons border color: "
+msgstr "Direita, esquerda botões cor da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2560
+msgid "Filmstrip position: "
+msgstr "Posição Filmstrip:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2571
+msgid "Filmstrip thumbnail margin:"
+msgstr "Margem de miniaturas Filmstrip:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2578
+msgid "Filmstrip thumbnail border width: "
+msgstr "Filmstrip largura da borda em miniatura:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2584
+msgid "Filmstrip thumbnail border style:"
+msgstr "Filmstrip estilo de borda de miniaturas:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2598
+msgid "Filmstrip thumbnail border color:"
+msgstr "Filmstrip cor da borda de miniaturas:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2604
+msgid "Filmstrip thumbnail border radius:"
+msgstr "Filmstrip raio fronteira miniaturas:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2611
+msgid "Filmstrip thumbnail active border width:"
+msgstr "Thumbnail Filmstrip largura da borda ativa:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2617
+msgid "Filmstrip thumbnail active border color:"
+msgstr "Thumbnail Filmstrip cor da borda ativa:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2623
+msgid "Filmstrip thumbnail deactive transparency: "
+msgstr "Thumbnail Filmstrip transparência Deactive:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2636
+msgid "Filmstrip right, left buttons color:"
+msgstr "Filmstrip direita, deixou cor botões:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2642
+msgid "Filmstrip right, left button background color:"
+msgstr "Direito Tira de filme, o botão esquerdo cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2648
+msgid "Rating position: "
+msgstr "Posição Rating:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2657
+msgid "Rating alignment: "
+msgstr "Classificação alinhamento:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2671
+msgid "Rating icon:"
+msgstr "Avaliação ícone:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2685
+msgid "Rating color:"
+msgstr "Classificação de cor:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2691
+msgid "Rating hover color:"
+msgstr "Avaliação cor pairo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2697
+msgid "Rating size:"
+msgstr "Tamanho Rating:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2703
+msgid "Rating icon count:"
+msgstr "Avaliação ícone contar:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2709
+msgid "Rating padding:"
+msgstr "Classificação padding:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2716
+msgid "Hit counter position:"
+msgstr "Hit posição do contador:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2725
+msgid "Hit counter alignment:"
+msgstr "Hit alinhamento contador:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2739
+msgid "Hit counter background color:"
+msgstr "Cor hit contador de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2745
+msgid "Hit counter background transparency: "
+msgstr "Hit counter transparência do fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2752
+msgid "Hit counter border width: "
+msgstr "Hit largura da borda contador:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2758
+msgid "Hit counter border style:"
+msgstr "Hit counter estilo de borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2772
+msgid "Hit counter border color:"
+msgstr "Cor hit contador border:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2778
+msgid "Hit counter border radius:"
+msgstr "Hit counter raio de fronteira:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2785
+msgid "Hit counter padding:"
+msgstr "Hit counter padding:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2792
+msgid "Hit counter margin:"
+msgstr "Hit margem de contador:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2799
+msgid "Hit counter font color:"
+msgstr "Cor hit balcão da pia batismal:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2805
+msgid "Hit counter font family:"
+msgstr "Hit família balcão da pia batismal:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2819
+msgid "Hit counter font weight:"
+msgstr "Hit contra-peso da fonte:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2833
+msgid "Hit counter font size:"
+msgstr "Hit tamanho da fonte contador:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2846
+msgid "Info position:"
+msgstr "Informações posição:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2855
+msgid "Info alignment:"
+msgstr "Informações alinhamento:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2869
+msgid "Info background color:"
+msgstr "Informações cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2875
+msgid "Info background transparency:"
+msgstr "Informações transparência do fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2882
+msgid "Info border width:"
+msgstr "Informações largura da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2888
+msgid "Info border style:"
+msgstr "Informações estilo de borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2902
+msgid "Info border color:"
+msgstr "Informações cor da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2908
+msgid "Info border radius:"
+msgstr "Informações raio de fronteira:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2915
+msgid "Info padding:"
+msgstr "Informações padding:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:2922
+msgid "Info margin:"
+msgstr "Margem Info:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3011
+msgid "Comments Width:"
+msgstr "Comentários Largura:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3017
+msgid "Comments position:"
+msgstr "Comentários posição:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3026
+msgid "Comments background color:"
+msgstr "Comentários cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3032
+msgid "Comments font size:"
+msgstr "Comentários Tamanho da fonte:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3038
+msgid "Comments font color:"
+msgstr "Comentários font color:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3044
+msgid "Comments font family:"
+msgstr "Comentários família da fonte:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3058
+msgid "Comments author font size:"
+msgstr "Font size comentários do autor:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3065
+msgid "Comments date font size:"
+msgstr "Comentários font size data:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3071
+msgid "Comments body font size:"
+msgstr "Font size comentários corpo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3077
+msgid "Comment input border width: "
+msgstr "Comentário largura da borda de entrada:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3083
+msgid "Comment input border style: "
+msgstr "Comente estilo de borda de entrada:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3097
+msgid "Comment input border color:"
+msgstr "Comentário cor da borda de entrada:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3103
+msgid "Comment input border radius:"
+msgstr "Comentário raio de fronteira de entrada:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3109
+msgid "Comment input padding:"
+msgstr "Comentário preenchimento de entrada:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3116
+msgid "Comment input background color:"
+msgstr "Comentário cor de fundo de entrada:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3122
+msgid "Comment button background color:"
+msgstr "Comentário botão cor de fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3128
+msgid "Comment button padding:"
+msgstr "Comentário botão padding:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3135
+msgid "Comment button border width:"
+msgstr "Comentário largura da borda botão:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3141
+msgid "Comment button border style:"
+msgstr "Comentário botão estilo de borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3155
+msgid "Comment button border color:"
+msgstr "Comentário botão cor da borda:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3161
+msgid "Comment button border radius:"
+msgstr "Comentário botão raio de fronteira:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3168
+msgid "Comment separator width:"
+msgstr "Comentário largura separador:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3174
+msgid "Comment separator style:"
+msgstr "Comente estilo separador:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3188
+msgid "Comment separator color:"
+msgstr "Comentário cor separador:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3296
+msgid "Button background color:"
+msgstr "Cor de fundo da tecla:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3302
+msgid "Button background transparency:"
+msgstr "Botão transparência do fundo:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3309
+msgid "Button transition:"
+msgstr "Transição Button:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3331
+msgid "Position:"
+msgstr "Posição:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3354
+msgid "Numbering:"
+msgstr "Numeração:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3363
+msgid "Button text:"
+msgstr "Texto do botão:"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3368
+msgid "Arrow"
+msgstr "Flecha"
+
+#: ../admin/views/BWGViewThemes_bwg.php:3369
+msgid "Next, previous buttons values."
+msgstr "Valores próximos, botões anteriores."
+
+#: ../admin/views/BWGViewUninstall_bwg.php:33
+#: ../admin/views/BWGViewUninstall_bwg. php:155
+msgid "Uninstall Photo Gallery"
+msgstr "Desinstalar Galeria de Fotos"
+
+#: ../admin/views/BWGViewUninstall_bwg.php:35
+msgid "Deactivating Photo Gallery plugin does not remove any data that may have been created. To completely remove this plugin, you can uninstall it here."
+msgstr "Desativando Galeria plugin não remover quaisquer dados que possam ter sido criados. Para remover completamente este plugin, você pode desinstalá-lo aqui."
+
+#: ../admin/views/BWGViewUninstall_bwg.php:38
+msgid "WARNING:"
+msgstr "AVISO:"
+
+#: ../admin/views/BWGViewUninstall_bwg.php:39
+msgid "Once uninstalled, this can't be undone. You should use a Database Backup plugin of WordPress to back up all the data first."
+msgstr "Uma vez desinstalado, este não pode ser desfeita. Você deve usar um plug-in do WordPress Database Backup para fazer backup de todos os dados em primeiro lugar."
+
+#: ../admin/views/BWGViewUninstall_bwg.php:42
+msgid "The following Database Tables will be deleted:"
+msgstr "As seguintes tabelas de banco de dados serão excluídos:"
+
+#: ../admin/views/BWGViewUninstall_bwg.php:47
+msgid "Database Tables"
+msgstr "Tabelas de banco de dados"
+
+#: ../admin/views/BWGViewUninstall_bwg.php:70
+msgid "Delete the folder containing uploaded images."
+msgstr "Excluir a pasta que contém imagens enviadas."
+
+#: ../admin/views/BWGViewUninstall_bwg.php:76
+msgid "Do you really want to uninstall Photo Gallery?"
+msgstr "Você realmente deseja desinstalar Galeria de Fotos?"
+
+#: ../admin/views/BWGViewUninstall_bwg.php:83
+msgid ""
+"You are About to Uninstall Photo Gallery from WordPress.\n"
+"This Action Is Not Reversible."
+msgstr "Você está prestes a desinstalar Galeria de fotos a partir do WordPress. \\\\\\\\ NEsta acção não é reversível."
+
+#: ../admin/views/BWGViewUninstall_bwg.php:133
+msgid "The following Database Tables successfully deleted:"
+msgstr "As seguintes tabelas de banco de dados excluído com sucesso:"
+
+#: ../admin/views/BWGViewUninstall_bwg.php:149
+msgid "The folder was successfully deleted."
+msgstr "A pasta foi excluído com sucesso."
+
+#: ../admin/views/BWGViewUninstall_bwg.php:149
+msgid "An error occurred when deleting the folder."
+msgstr "Ocorreu um erro ao excluir a pasta."
+
+#: ../admin/views/BWGViewUninstall_bwg.php:156
+msgid "Click Here"
+msgstr "Clique aqui"
+
+#: ../admin/views/BWGViewUninstall_bwg.php:156
+msgid "To Finish the Uninstallation and Photo Gallery will be Deactivated Automatically."
+msgstr "Para terminar a desinstalação e Galeria de Fotos será automaticamente desativado."
+
+#: ../admin/views/BWGViewWidget.php:106
+#: ../admin/views/BWGViewWidgetSlideshow.php:101
+#: ../admin/views/BWGViewWidgetTags.php:114
+msgid "Title:"
+msgstr "Título:"
+
+#: ../admin/views/BWGViewWidget.php:140 ../framework/WDWLibrary.php:521
+msgid "First"
+msgstr "Primeiro"
+
+#: ../admin/views/BWGViewWidget.php:141 ../framework/WDWLibrary.php:524
+msgid "Last"
+msgstr "Último"
+
+#: ../admin/views/BWGViewWidget.php:145
+msgid "Count:"
+msgstr "Contagem:"
+
+#: ../admin/views/BWGViewWidget.php:149
+#: ../admin/views/BWGViewWidgetSlideshow.php:117
+#: ../admin/views/BWGViewWidgetTags.php:139
+msgid "Dimensions:"
+msgstr "Dimensões:"
+
+#: ../admin/views/BWGViewWidgetSlideshow.php:122
+msgid "Filmstrip height:"
+msgstr "Altura Filmstrip:"
+
+#: ../admin/views/BWGViewWidgetTags.php:123
+msgid "Show Tag Names:"
+msgstr "Mostrar Nomes de Tags:"
+
+#: ../admin/views/BWGViewWidgetTags.php:129
+msgid "Open in:"
+msgstr "Aberto em:"
+
+#: ../admin/views/BWGViewWidgetTags.php:130
+msgid "page"
+msgstr "página"
+
+#: ../admin/views/BWGViewWidgetTags.php:131
+msgid "lightbox"
+msgstr "Caixa de luz"
+
+#: ../admin/views/BWGViewWidgetTags.php:135
+msgid "Number (0 for all):"
+msgstr "Número (0 para todos):"
+
+#: ../admin/views/BWGViewWidgetTags.php:144
+msgid "Transparent Background:"
+msgstr "Fundo transparente:"
+
+#: ../admin/views/BWGViewWidgetTags.php:150
+msgid "Background Color:"
+msgstr "Cor de fundo:"
+
+#: ../admin/views/BWGViewWidgetTags.php:154
+msgid "Text Color:"
+msgstr "Cor do texto:"
+
+#. Author of the plugin
+msgid "Rob"
+msgstr "Roubar"
+
+#: ../filemanager/view.php:63
+msgid "File loading failed"
+msgstr "Carregamento do arquivo falhou"
+
+#: ../filemanager/view.php:65
+msgid "Are you sure you want to permanently remove selected items?"
+msgstr "Tem certeza de que deseja remover permanentemente os itens selecionados?"
+
+#: ../filemanager/view.php:66
+msgid "This will cancel uploads. Continue?"
+msgstr "Isto irá cancelar uploads. Continuar?"
+
+#: ../filemanager/view.php:68
+msgid "Enter directory name"
+msgstr "Digite o nome do diretório"
+
+#: ../filemanager/view.php:69
+msgid "Enter new name"
+msgstr "Digite novo nome"
+
+#: ../filemanager/view.php:70
+msgid "Processing uploaded files..."
+msgstr "Processamento de arquivos enviados ..."
+
+#: ../filemanager/view.php:118
+msgid "Up"
+msgstr "Acima"
+
+#: ../filemanager/view.php:119
+msgid "Make a directory"
+msgstr "Crie um diretório"
+
+#: ../filemanager/view.php:120
+msgid "Rename item"
+msgstr "Renomear um item"
+
+#: ../filemanager/view.php:122
+msgid "Copy"
+msgstr "Cópia"
+
+#: ../filemanager/view.php:123
+msgid "Cut"
+msgstr "corte"
+
+#: ../filemanager/view.php:124
+msgid "Paste"
+msgstr "Colar"
+
+#: ../filemanager/view.php:125
+msgid "Remove items"
+msgstr "Remover itens"
+
+#: ../filemanager/view.php:128
+msgid "Upload files"
+msgstr "Fazer upload de arquivos"
+
+#: ../filemanager/view.php:133
+msgid "Media library"
+msgstr "Biblioteca de mídia"
+
+#: ../filemanager/view.php:142
+msgid "View thumbs"
+msgstr "Veja os polegares"
+
+#: ../filemanager/view.php:143
+msgid "View list"
+msgstr "Veja lista"
+
+#: ../filemanager/view.php:150
+msgid "To change upload directory go to Options page."
+msgstr "Para alterar o diretório de upload ir para a página Opções."
+
+#: ../filemanager/view.php:275
+msgid "Add selected images to gallery"
+msgstr "Adicionar imagens selecionadas para a Galeria"
+
+#: ../filemanager/view.php:285 ../filemanager/view.php:368
+msgid "Thumbnail Maximum Dimensions:"
+msgstr "Miniatura Máximo Dimensões:"
+
+#: ../filemanager/view.php:290 ../filemanager/view.php:373 ..
+#: /frontend/views/BWGViewAlbum_compact_preview.php:603
+#: /frontend/views/BWGViewAlbum_extended_preview.php:584
+msgid "Back"
+msgstr "Costas"
+
+#: ../filemanager/view.php:293 ../filemanager/view.php:376
+msgid "Image Maximum Dimensions:"
+msgstr "Imagem dimensões máximas:"
+
+#: ../filemanager/view.php:360
+msgid "Import selected images"
+msgstr "Importar imagens selecionadas"
+
+#: ../filemanager/view.php:384
+msgid "Drag files here or click the button below"
+msgstr "Arraste arquivos aqui ou clique no botão abaixo"
+
+#: ../filemanager/view.php:384
+msgid "to upload files"
+msgstr "para fazer upload de arquivos"
+
+#: ../filemanager/view.php:456
+msgid "No files to upload"
+msgstr "Não há arquivos para upload"
+
+#: ../framework/WDWLibrary.php:64
+msgid "You can't delete default theme"
+msgstr "Você não pode excluir tema padrão"
+
+#: ../framework/WDWLibrary.php:82
+msgid "The item is successfully set as default."
+msgstr "O item é definido com sucesso como padrão."
+
+#: ../framework/WDWLibrary.php:88
+msgid "Options Succesfully Saved."
+msgstr "Opções com sucesso Salvo."
+
+#: ../framework/WDWLibrary.php:124
+msgid "A term with the name provided already exists."
+msgstr "Um termo com o nome fornecido já existe."
+
+#: ../framework/WDWLibrary.php:130
+msgid "Name field is required."
+msgstr "Campo de nome é obrigatório."
+
+#: ../framework/WDWLibrary.php:136
+msgid "The slug must be unique."
+msgstr "A bala deve ser exclusivo."
+
+#: ../framework/WDWLibrary.php:142
+msgid "Changes must be saved."
+msgstr "As mudanças devem ser salvas."
+
+#: ../framework/WDWLibrary.php:188 ../framework/WDWLibrary.php:362 ..
+#: /framework/WDWLibrary.php:725 ../framework/WDWLibrary.php:781
+msgid "Search"
+msgstr "Pesquisar"
+
+#: ../framework/WDWLibrary.php:315 ../framework/WDWLibrary.php:465 ..
+#: /framework/WDWLibrary.php:545
+msgid "of"
+msgstr "de"
+
+#: ../framework/WDWLibrary.php:516
+msgid " item(s)"
+msgstr "item (s)"
+
+#: ../framework/WDWLibrary.php:522
+msgid "Previous"
+msgstr "Anterior"
+
+#: ../framework/WDWLibrary.php:523
+msgid "Next"
+msgstr "Next"
+
+#: ../framework/WDWLibrary.php:542
+msgid "Go to the first page"
+msgstr "Ir para a primeira página"
+
+#: ../framework/WDWLibrary.php:543
+msgid "Go to the previous page"
+msgstr "Vá para a página anterior"
+
+#: ../framework/WDWLibrary.php:549
+msgid "Go to the next page"
+msgstr "Vá para a página seguinte"
+
+#: ../framework/WDWLibrary.php:550
+msgid "Go to the last page"
+msgstr "Ir para a última página"
+
+#: ../framework/WDWLibrary.php:562
+msgid "Load More..."
+msgstr "Carregue mais..."
+
+#: ../framework/WDWLibrary.php:846
+msgid "Order by: "
+msgstr "Ordenar por:"
+
+#: ../frontend/views/BWGViewAlbum_compact_preview.php:151 ..
+#: /frontend/views/BWGViewAlbum_extended_preview.php:96
+#: /frontend/views/BWGViewImage_browser.php:72
+#: ../frontend/views/BWGViewSlideshow. php:46
+#: ../frontend/views/BWGViewSlideshow.php:86
+#: /frontend/views/BWGViewThumbnails.php:153
+msgid "There is no theme selected or the theme was deleted."
+msgstr "Não há tema selecionado ou o tema foi excluído."
+
+#: ../frontend/views/BWGViewAlbum_compact_preview.php:158 ..
+#: /frontend/views/BWGViewAlbum_compact_preview.php:192
+#: /frontend/views/BWGViewAlbum_extended_preview.php:103
+#: /frontend/views/BWGViewAlbum_extended_preview.php:137
+msgid "There is no album selected or the album was deleted."
+msgstr "Não há álbum selecionado ou o álbum foi excluído."
+
+#: ../frontend/views/BWGViewAlbum_compact_preview.php:180 ..
+#: /frontend/views/BWGViewAlbum_extended_preview.php:125
+#: /frontend/views/BWGViewImage_browser.php:83
+#: ../frontend/views/BWGViewSlideshow. php:129
+#: ../frontend/views/BWGViewThumbnails.php:172
+msgid "There are no images in this gallery."
+msgstr "Não há imagens nesta galeria."
+
+#: ../frontend/views/BWGViewAlbum_compact_preview.php:626 ..
+#: /frontend/views/BWGViewAlbum_extended_preview.php:595
+msgid "Album is empty."
+msgstr "Álbum está vazio."
+
+#: ../frontend/views/BWGViewAlbum_compact_preview.php:749 ..
+#: /frontend/views/BWGViewAlbum_extended_preview.php:731
+msgid "Gallery is empty."
+msgstr "Gallery está vazio."
+
+#: ../frontend/views/BWGViewAlbum_compact_preview.php:805 ..
+#: /frontend/views/BWGViewAlbum_extended_preview.php:775
+#: /frontend/views/BWGViewGalleryBox.php:835
+#: ../frontend/views/BWGViewGalleryBox. php:2197
+#: ../frontend/views/BWGViewSlideshow.php:1443
+#: /frontend/views/BWGViewThumbnails.php:457
+msgid "Play"
+msgstr "Reprodução"
+
+#: ../frontend/views/BWGViewAlbum_extended_preview.php:696 ..
+#: /frontend/views/BWGViewAlbum_extended_preview.php:819
+msgid "More"
+msgstr "Mais"
+
+#: ../frontend/views/BWGViewAlbum_extended_preview.php:814
+msgid "Hide"
+msgstr "Esconder"
+
+#: ../frontend/views/BWGViewGalleryBox.php:815
+msgid "The image has been deleted."
+msgstr "A imagem foi apagado."
+
+#: ../frontend/views/BWGViewGalleryBox.php:839 ..
+#: /frontend/views/BWGViewGalleryBox.php:1575
+#: ../frontend/views/BWGViewGalleryBox. php:2029
+#: ../frontend/views/BWGViewGalleryBox.php:2125
+msgid "Maximize"
+msgstr "Maximizar"
+
+#: ../frontend/views/BWGViewGalleryBox.php:843 ..
+#: /frontend/views/BWGViewGalleryBox.php:1577
+#: ../frontend/views/BWGViewGalleryBox. php:2127
+msgid "Fullscreen"
+msgstr "Tela cheia"
+
+#: ../frontend/views/BWGViewGalleryBox.php:845 ..
+#: /frontend/views/BWGViewGalleryBox.php:1915
+msgid "Show info"
+msgstr "Mostrar informações"
+
+#: ../frontend/views/BWGViewGalleryBox.php:851
+msgid "Open image in original size."
+msgstr "Abrir imagem no tamanho original."
+
+#: ../frontend/views/BWGViewGalleryBox.php:872
+msgid "Download original image"
+msgstr "Carregue a imagem original"
+
+#: ../frontend/views/BWGViewGalleryBox.php:1723
+msgid "Show Comments"
+msgstr "Mostrar Comentários"
+
+#: ../frontend/views/BWGViewGalleryBox.php:1766
+msgid "Hide Comments"
+msgstr "Ocultar comentários"
+
+#: ../frontend/views/BWGViewGalleryBox.php:1911
+msgid "Hide info"
+msgstr "Esconder informação"
+
+#: ../frontend/views/BWGViewGalleryBox.php:2066 ..
+#: /frontend/views/BWGViewGalleryBox.php:2266
+msgid "Restore"
+msgstr "Restaurar"
+
+#: ../frontend/views/BWGViewGalleryBox.php:2177
+msgid "Exit Fullscreen"
+msgstr "Exit Fullscreen"
+
+#: ../frontend/views/BWGViewGalleryBox.php:2191 ..
+#: /frontend/views/BWGViewGalleryBox.php:2206
+#: ../frontend/views/BWGViewSlideshow. php:1434
+#: ../frontend/views/BWGViewSlideshow.php:1452
+msgid "Pause"
+msgstr "Pausa"
+
+#: ../frontend/views/BWGViewImage_browser.php:77 ..
+#: /frontend/views/BWGViewSlideshow.php:124
+#: ../frontend/views/BWGViewThumbnails. php:164
+msgid "There is no gallery selected or the gallery was deleted."
+msgstr "Não há galeria selecionada ou a galeria foi excluído."
