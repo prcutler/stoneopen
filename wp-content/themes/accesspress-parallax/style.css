@@ -4,7 +4,7 @@ Theme URI: https://accesspressthemes.com/wordpress-themes/accesspress-parallax/
 Author: AccessPress Themes
 Author URI: https://accesspressthemes.com/
 Description: AccessPress Parallax is a beautiful WordPress theme with Parallax design. Parallax design has become popular and is being adopted because 3D effects are possible with it, you can add some sphere to your product, it is the best way of storytelling, you can draw your visitors in, it is interactive, engaging, makes your visitors curious, fun, surprise, effective to trigger action, invite your visitors in great Call to Action, great conversion rates and many more. This is probably the most beautiful, feature rich and complete free WordPress parallax theme with features like: fully responsive, advance theme option panel, featured slider, advance post settings, services/team/blog/portfolio/testimonial layout, Google map integration, custom logo/fav icon, call to action, CSS animation, SEO friendly, translation ready, RTL support, custom CSS/JS and more! Demo: http://accesspressthemes.com/theme-demos/?theme=accesspress-parallax Support forum: https://accesspressthemes.com/support/ Pro version: https://accesspressthemes.com/wordpress-themes/accesspress-parallax-pro/ 
-Version: 1.24.7
+Version: 1.24.8
 License: GNU General Public License v3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: accesspress-parallax
@@ -1867,4 +1867,51 @@ Responsive grid for pages
     margin-left: 0;
   }
 
+}
+
+/*RTL CSS*/
+.rtl #site-logo{
+	float: right;
+}
+
+.rtl .main-navigation{
+	float: left;
+}
+
+.rtl .main-navigation > ul > li{
+	float: right;
+}
+
+.rtl .blog-list .blog-excerpt .posted-date .fa{
+	margin-right: 0;
+	margin-left: 5px;
+}
+
+.rtl .service-list.even{
+    text-align: left;
+}
+
+.rtl .top-footer h2:after{
+    left:auto;
+    right:0;
+}
+
+.rtl .comment-navigation .nav-next a .fa, 
+.rtl .paging-navigation .nav-next a .fa, 
+.rtl .post-navigation .nav-next a .fa{
+    margin-left: 0;
+    margin-right: 10px;
+}
+
+.rtl .comment-navigation .nav-previous, 
+.rtl .paging-navigation .nav-previous, 
+.rtl .post-navigation .nav-previous{
+    text-align: left;
+}
+
+.rtl .comment-navigation .nav-previous a .fa, 
+.rtl .paging-navigation .nav-previous a .fa, 
+.rtl .post-navigation .nav-previous a .fa{
+    margin-left: 10px;
+    margin-right: 0;
 }

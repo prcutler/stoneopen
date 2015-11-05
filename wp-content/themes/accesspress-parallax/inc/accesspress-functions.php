@@ -199,10 +199,10 @@ function accesspress_bxslidercb(){
 					<img src="<?php echo get_template_directory_uri(); ?>/images/demo/slider1.jpg" alt="slider1">
 					<div class="slider-caption">
 						<div class="mid-content">
-							<h1 class="caption-title"><?php _e('Welcome to AccessPress Parallax!','accesspress_parallax'); ?></h1>
+							<h1 class="caption-title"><?php _e('Welcome to AccessPress Parallax!','accesspress-parallax'); ?></h1>
 							<h2 class="caption-description">
-							<p><?php _e('A full featured parallax theme - and its absolutely free!','accesspress_parallax'); ?></p>
-							<p><a href="#"><?php _e('Read More','accesspress_parallax'); ?></a></p>
+							<p><?php _e('A full featured parallax theme - and its absolutely free!','accesspress-parallax'); ?></p>
+							<p><a href="#"><?php _e('Read More','accesspress-parallax'); ?></a></p>
 							</h2>
 						</div>
 					</div>

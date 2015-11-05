@@ -89,6 +89,9 @@ Images
 ---------------------------------------------
 
 == Changelog ==
+Version 1.24.8
+* Additional CSS added for RTL Support
+
 Version 1.24.7
 * More Theme Page added
 
