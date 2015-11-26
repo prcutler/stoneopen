@@ -89,6 +89,10 @@ Images
 ---------------------------------------------
 
 == Changelog ==
+Version 1.24.9
+* Mimor bug on Slider fixed for RTL
+* Google Map Section content not displaying issue fixed
+
 Version 1.24.8
 * Additional CSS added for RTL Support
 

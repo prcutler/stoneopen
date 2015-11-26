@@ -8,9 +8,20 @@
 
 	<div class="content-area googlemap-section">
 	<div class="googlemap-toggle"><?php _e('Map','accesspress-parallax'); ?></div>
-	<div class="googlemap-content">
-		<?php echo $page->post_content; ?>
-	</div>
+
+		<?php  
+            $query = new WP_Query( 'page_id='.$section['page'] );
+            while ( $query->have_posts() ) : $query->the_post();
+        ?>
+		
+		<div class="googlemap-content">
+			<?php the_content(); ?>
+		</div>
+
+		<?php 
+	        endwhile;    
+	        wp_reset_postdata();
+        ?>
 	</div><!-- #primary -->
 
 
