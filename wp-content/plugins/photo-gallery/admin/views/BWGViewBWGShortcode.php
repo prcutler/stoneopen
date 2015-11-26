@@ -475,7 +475,7 @@ class BWGViewBWGShortcode {
                                                                                                             jQuery('#extended_album_image_thumb_height').hide();
                                                                                                             jQuery('#extended_album_image_thumb_dimensions_x').hide();" <?php echo ($option_row->mosaic == 'vertical') ? 'checked' : ''; ?> /><label for="extended_album_mosaic_ver"><?php _e("Vertical", 'bwg_back'); ?></label>
                       <input disabled="disabled" type="radio" name="extended_album_mosaic_hor_ver" id="extended_album_mosaic_hor" value="horizontal" onclick="bwg_change_label('extended_album_image_column_number', '<?php _e("Max. number of image columns:", 'bwg_back'); ?> ');
-                                                                                                              bwg_change_label('extended_album_image_thumb_dimensions', 'I<?php _e("mage thumbnail height: ", 'bwg_back'); ?>');
+                                                                                                              bwg_change_label('extended_album_image_thumb_dimensions', '<?php _e("Image thumbnail height: ", 'bwg_back'); ?>');
                                                                                                               jQuery('#extended_album_image_thumb_width').hide();
                                                                                                               jQuery('#extended_album_image_thumb_height').show();
                                                                                                               jQuery('#extended_album_image_thumb_dimensions_x').hide();" <?php echo ($option_row->mosaic == 'horizontal') ? 'checked' : ''; ?> /><label for="extended_album_mosaic_hor"><?php _e("Horizontal", 'bwg_back'); ?></label>
@@ -1784,7 +1784,7 @@ class BWGViewBWGShortcode {
             }
             // Watermark parameters.
             tagtext += ' watermark_type="' + jQuery("input[name=watermark_type]:checked").val() + '"';
-            tagtext += ' watermark_link="' + encodeURIComponent(jQuery("#watermark_link").val()) + '"';
+            tagtext += ' watermark_link="' + (jQuery("#watermark_link").val()) + '"';
             if (jQuery("input[name=watermark_type]:checked").val() == 'text') {
               tagtext += ' watermark_text="' + jQuery("#watermark_text").val() + '"';
               tagtext += ' watermark_font_size="' + jQuery("#watermark_font_size").val() + '"';
@@ -1829,10 +1829,10 @@ class BWGViewBWGShortcode {
           jQuery(document).ready(function () {
             bwg_loadmore();
           });
-          var bwg_image_thumb = '<?php _e('Image thumbnail dimensions:', 'bwg_back') ?>';
-          var bwg_image_thumb_width = '<?php _e('Image thumbnail width: ', 'bwg_back') ?>';
-          var bwg_max_column = '<?php _e('Max. number of image columns:', 'bwg_back') ?>';
-          var bwg_image_thumb_height = '<?php _e('Image thumbnail height:', 'bwg_back') ?>';
+          var bwg_image_thumb = '<?php addslashes(__('Image thumbnail dimensions:', 'bwg_back')); ?>';
+          var bwg_image_thumb_width = '<?php addslashes(__('Image thumbnail width: ', 'bwg_back')); ?>';
+          var bwg_max_column = '<?php addslashes(__('Max. number of image columns:', 'bwg_back')); ?>';
+          var bwg_image_thumb_height = '<?php addslashes(__('Image thumbnail height:', 'bwg_back')); ?>';
         </script>
       </body>
     </html>

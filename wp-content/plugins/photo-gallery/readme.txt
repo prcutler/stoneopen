@@ -1,10 +1,10 @@
 === Gallery ===
 Contributors: webdorado
 Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
-Tags: photo, photo gallery, image gallery, video gallery, gallery, galleries,  wordpress gallery plugin, images gallery, album, photo albums, simple gallery, best gallery plugin, free photo gallery, wp gallery, wordpress gallery, website gallery, gallery shortcode, best gallery, picture, pictures, gallery slider, photo album, photogallery, widget gallery, image, images, photos,  gallery lightbox, photoset, wordpress photo gallery plugin, wp gallery plugins, responsive wordpress photo gallery, media, image album, filterable gallery, banner rotator, fullscreen gallery, fotogalerie, galleria, galerie, galeri, responsive gallery, add album,  add gallery, add pictures, fotoalbum, foto, gallery decription, multiple pictures, photoalbum, upload images, upload photos, view images, view pictures, admin, AJAX, comments, gallery image, image lightbox, image rotate, image slideshow, image slider, jquery, jquery gallery, slide show, slideshow, thumbnail, thumbnail view, thumbnails, thumbs, responsive, watermarking, watermarks,fullscreen slider, lightbox, photography, sidebar, slide, youtube, vimeo, videos, instagram, facebook, mosaic, facebook integration, instagram feed, Flickr, Dailymotion
+Tags: photo, photo gallery, image gallery, video gallery, gallery, galleries,  wordpress gallery plugin, images gallery, album, photo albums, simple gallery, best gallery plugin, free photo gallery, wp gallery, wordpress gallery, website gallery, gallery shortcode, best gallery, picture, pictures, gallery slider, photo album, photogallery, widget gallery, image, images, photos,  gallery lightbox, photoset, wordpress photo gallery plugin, wp gallery plugins, responsive wordpress photo gallery, media, image album, filterable gallery, banner rotator, fullscreen gallery, fotogalerie, galleria, galerie, galeri, responsive gallery, add album,  add gallery, add pictures, fotoalbum, foto, gallery decription, multiple pictures, photoalbum, upload images, upload photos, view images, view pictures, admin, AJAX, comments, gallery image, image lightbox, image rotate, image slideshow, image slider, jquery, jquery gallery, slide show, slideshow, thumbnail, thumbnail view, thumbnails, thumbs, responsive, watermarking, watermarks,fullscreen slider, lightbox, photography, sidebar, slide, youtube, vimeo, videos, instagram, facebook, mosaic, facebook integration, instagram feed, Flickr, Dailymotion, widget
 Requires at least: 3.4 
 Tested up to: 4.3 
-Stable tag: 1.2.67    
+Stable tag: 1.2.72    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,7 +54,7 @@ Photo Gallery product in addition to the main plugin includes 4 specific widgets
 *   Photo Gallery (similar to the main plugin option)
 
 ###IMPORTANT:    
-If you think you found a bug in Photo Gallery or have any problem/question concerning the plugin, please check out [Photo Gallery Support Forum](https://web-dorado.com/forum/photo-gallery.html) in our website. If you do not find a solution here, do not hesitate to contact us at [info@web-dorado.com](mailto:info@web-dorado.com).
+If you think you found a bug in Photo Gallery or have any problem/question concerning the plugin, please check out [Photo Gallery Support Forum](https://web-dorado.com/forum/photo-gallery.html) in our website. If you do not find a solution here, do not hesitate to [click here to contact us](https://web-dorado.com/support/contact-us.html).
 
 
 ### The list of the features:
@@ -151,7 +151,7 @@ Russian (ru_RU)
 Romanian (ro_RO)  
 Serbian (sr_RS)  
 Slovak (sk_SK)  
-Spanish (es_ES)  
+Spanish (es_ES) by Alexandro Lacadena       
 Swedish (sv_SE)  
 Tamil (ta)  
 Thai (th)  
@@ -179,7 +179,7 @@ After downloading the ZIP file,
 *Go to your Downloads folder and locate the folder with the gallery plugin. Right-click on the folder and select Compress. Now you have a newly created .zip file which can be installed as described here.*     
 4. Click `Install Now` button.     
 5. Click `Activate Plugin` button for activating the gallery plugin.    
-6. If the installation does not succeed, please contact us at [info@web-dorado.com](mailto:info@web-dorado.com).
+6. If the installation does not succeed, please [click here to contact us](https://web-dorado.com/support/contact-us.html).
 
 == Screenshots ==
 1.  Photo Gallery - Popup View   
@@ -215,6 +215,28 @@ Yes, it is possible to add advertising and/or watermark over the images. In both
 
 == Changelog ==
 
+= 1.2.72 =
+*  Fixed:Bug on options save.
+
+= 1.2.71 = 
+*  Fixed: Quotes in advertisement text.      
+*  Fixed: Reset, edit unsaved image.     
+*  Fixed: Facebook share image sizes.      
+*  Fixed: Images loop when swiping.      
+
+= 1.2.70 =
+*  Changed: Blog style view scroll load.       
+*  Changed: Lightbox buttons responsiveness.      
+*  Fixed: Spanish translation by Alexandro Lacadena.      
+  
+= 1.2.69 =
+*  Fixed: Album view bug.      
+
+= 1.2.68 =
+*  Fixed: Random ordering.      
+*  Changed: Pause embed video on image change.      
+*  Fixed: Translations bug in javascript.       
+  
 = 1.2.67 =
 *  Added: Backend translation.      
 *  Fixed: Pagination on tags page.         
@@ -579,7 +601,7 @@ Go to Plugins Add > New > Upload.
 Click `Choose file` (`Browse`) and select the Photo Gallery zip file.  
 Click `Upload&Install` button.  
 Click `Activate Plugin` button for activating the plugin.  
-If the installation succeeded you will see the success message. If any problem occurs, please contact us  info@web-dorado.com.  
+If the installation succeeded you will see the success message. If any problem occurs, please [click here to contact us](https://web-dorado.com/support/contact-us.html).  
   
   
   

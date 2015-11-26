@@ -28,7 +28,7 @@ class BWGViewEditThumb {
     $image_width = $popup_width - 40;
     $popup_height = ((int) (isset($_GET['height']) ? esc_html($_GET['height']) : '500')) - 50;
     $image_height = $popup_height - 40;
-    $image_id = (isset($_GET['image_id']) ? (int) esc_html($_GET['image_id']) : '0');
+    $image_id = (isset($_GET['image_id']) ? esc_html($_GET['image_id']) : '0');
     ?>
     <div style="display:table; width:100%; height:<?php echo $popup_height; ?>px;">
       <div id='bwg_container_for_media_1' style="display:table-cell; text-align:center; vertical-align:middle;">
@@ -67,7 +67,7 @@ class BWGViewEditThumb {
     $image_width = $popup_width - 40;
     $popup_height = ((int) (isset($_GET['height']) ? esc_html($_GET['height']) : '500')) - 50;
     $image_height = $popup_height - 40;
-    $image_id = (isset($_GET['image_id']) ? (int) esc_html($_GET['image_id']) : '0');
+    $image_id = (isset($_GET['image_id']) ? esc_html($_GET['image_id']) : '0');
     ?>
     <div style="display:table; width:100%; height:<?php echo $popup_height; ?>px;">
       <div style="display:table-cell; text-align:center; vertical-align:middle;">
@@ -91,7 +91,7 @@ class BWGViewEditThumb {
     $image_width = $popup_width - $thumb_width - 70;
     $popup_height = ((int) (isset($_GET['height']) ? esc_html($_GET['height']) : '500')) - 75;
     $image_height = $popup_height - 70;
-    $image_id = (isset($_GET['image_id']) ? (int) esc_html($_GET['image_id']) : '0');
+    $image_id = (isset($_GET['image_id']) ? esc_html($_GET['image_id']) : '0');
     $edit_type = (isset($_POST['edit_type']) ? esc_html($_POST['edit_type']) : '');
     $x = (isset($_POST['x']) ? (int) $_POST['x'] : 0);
     $y = (isset($_POST['y']) ? (int) $_POST['y'] : 0);
@@ -336,6 +336,11 @@ class BWGViewEditThumb {
     global $WD_BWG_UPLOAD_DIR;
     global $wpdb;
     $image_data = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_image WHERE id="%d"', $id));
+    if (!$image_data) {
+      $image_data = new stdClass();
+      $image_data->image_url = (isset($_GET['image_url']) ? esc_html(stripcslashes($_GET['image_url'])) : '');
+      $image_data->thumb_url = (isset($_GET['thumb_url']) ? esc_html(stripcslashes($_GET['thumb_url'])) : '');
+    }
     $filename = htmlspecialchars_decode(ABSPATH . $WD_BWG_UPLOAD_DIR . $image_data->image_url, ENT_COMPAT | ENT_QUOTES);
     $thumb_filename = htmlspecialchars_decode(ABSPATH . $WD_BWG_UPLOAD_DIR . $image_data->thumb_url, ENT_COMPAT | ENT_QUOTES);
     copy(str_replace('/thumb/', '/.original/', $thumb_filename), $filename);
@@ -386,7 +391,7 @@ class BWGViewEditThumb {
     $image_width = $popup_width - 40;
     $popup_height = ((int) (isset($_GET['height']) ? esc_html($_GET['height']) : '500')) - 55;
     $image_height = $popup_height - 70;
-    $image_id = (isset($_GET['image_id']) ? (int) esc_html($_GET['image_id']) : '0');
+    $image_id = (isset($_GET['image_id']) ? esc_html($_GET['image_id']) : '0');
     $edit_type = (isset($_POST['edit_type']) ? esc_html($_POST['edit_type']) : '');
     $brightness_val = (isset($_POST['brightness_val']) ? esc_html($_POST['brightness_val']) : 0);
     $contrast_val = (isset($_POST['contrast_val']) ? esc_html($_POST['contrast_val']) : 0);

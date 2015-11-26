@@ -58,9 +58,7 @@ class BWGControllerOptions_bwg {
 
   public function save() {
     $this->save_db();
-    wp_redirect(( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-    exit;
-    // $this->display();
+    $this->display();
   }
   
   public function save_db() {

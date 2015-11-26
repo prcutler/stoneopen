@@ -86,12 +86,18 @@ class BWGModelAlbum_compact_preview {
     else {
       $where = '';
     }
-    if (isset($_REQUEST['bwg_tag_id_bwg_album_compact_' . $bwg]) && $_REQUEST['bwg_tag_id_bwg_album_compact_' . $bwg]) {
-	    $row = $wpdb->get_results($wpdb->prepare('SELECT image.* FROM ' . $wpdb->prefix . 'bwg_image as image INNER JOIN 
-	   (SELECT GROUP_CONCAT( tag_id SEPARATOR ",") AS tags, image_id FROM  ' . $wpdb->prefix . 'bwg_image_tag WHERE gallery_id="' . $id . '"  GROUP BY image_id) AS tag ON image.id=tag.image_id WHERE image.published=1 ' . $where . ' AND CONCAT(",", tag.tags, ",") REGEXP ",('.implode("|",$_REQUEST['bwg_tag_id_bwg_album_compact_' . $bwg]).')," AND image.gallery_id="%d" ORDER BY image.' . $sort_by . ' ' . $sort_direction . ' ' . $limit_str,$id));
+    if ($sort_by == 'random') {
+      $sort_by = 'RAND()';
     }
     else {
-      $row = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_image WHERE published=1 ' . $where . ' AND gallery_id="%d" ORDER BY `' . $sort_by . '` ' . $sort_direction . $limit_str, $id));
+      $sort_by = 'image.`' . $sort_by . '`';
+    }
+    if (isset($_REQUEST['bwg_tag_id_bwg_album_compact_' . $bwg]) && $_REQUEST['bwg_tag_id_bwg_album_compact_' . $bwg]) {
+	    $row = $wpdb->get_results($wpdb->prepare('SELECT image.* FROM ' . $wpdb->prefix . 'bwg_image AS image INNER JOIN 
+	   (SELECT GROUP_CONCAT( tag_id SEPARATOR ",") AS tags, image_id FROM  ' . $wpdb->prefix . 'bwg_image_tag WHERE gallery_id="' . $id . '"  GROUP BY image_id) AS tag ON image.id=tag.image_id WHERE image.published=1 ' . $where . ' AND CONCAT(",", tag.tags, ",") REGEXP ",('.implode("|",$_REQUEST['bwg_tag_id_bwg_album_compact_' . $bwg]).')," AND image.gallery_id="%d" ORDER BY ' . $sort_by . ' ' . $sort_direction . ' ' . $limit_str,$id));
+    }
+    else {
+      $row = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_image AS image WHERE published=1 ' . $where . ' AND gallery_id="%d" ORDER BY ' . $sort_by . ' ' . $sort_direction . $limit_str, $id));
     }
     return $row;
   }

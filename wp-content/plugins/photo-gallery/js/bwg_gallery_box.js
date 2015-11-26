@@ -45,6 +45,12 @@ function spider_receivedpopup(description, lifetime) {
 	var date = new Date(); 
 	date.setDate(date.getDate() + lifetime);
 	document.cookie = description + "=true;expires=" + date.toUTCString() + ";path=/"; 
+  if (lightbox_ctrl_btn_pos == 'bottom') {
+    jQuery(".bwg_toggle_container").css("bottom", jQuery(".bwg_ctrl_btn_container").height() + "px");
+  }
+  else if (lightbox_ctrl_btn_pos == 'top') {
+    jQuery(".bwg_toggle_container").css("top", jQuery(".bwg_ctrl_btn_container").height() + "px");
+  }
 }
 
 function spider_isunsupporteduseragent() {

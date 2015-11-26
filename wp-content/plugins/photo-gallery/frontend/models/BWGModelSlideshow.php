@@ -40,6 +40,9 @@ class BWGModelSlideshow {
     if ($sort_by == 'size' || $sort_by == 'resolution') {
       $sort_by = ' CAST(' . $sort_by . ' AS SIGNED) ';
     }
+    elseif ($sort_by == 'random') {
+      $sort_by = 'RAND()';
+    }
     elseif (($sort_by != 'alt') && ($sort_by != 'date') && ($sort_by != 'filetype') && ($sort_by != 'filename')) {
       $sort_by = '`order`';
     }

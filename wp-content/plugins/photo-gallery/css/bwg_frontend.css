@@ -208,3 +208,14 @@ div[id^="bwg_container"] a {
   word-wrap: break-word;
   z-index: 11;
 }
+
+@media screen and (max-width: 465px) {
+  .bwg_ctrl_btn {
+    margin-bottom:0 !important;
+  }
+  
+  .bwg_ctrl_btn_container {
+    height:auto !important;
+  }
+}
+

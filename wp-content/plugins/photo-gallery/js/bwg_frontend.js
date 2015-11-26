@@ -72,6 +72,9 @@ function spider_frontend_ajax(form_id, current_view, id, album_gallery_id, cur_a
       }
     }
   ).success(function(jqXHR, textStatus, errorThrown) {
+      jQuery(".blog_style_image_buttons_conteiner_" + current_view).find(jQuery(".bwg_blog_style_img_" + current_view)).load(function(){
+        jQuery(".bwg_blog_style_img_" + current_view).closest(jQuery(".blog_style_image_buttons_conteiner_" + current_view)).show();
+      })
     jQuery("#ajax_loading_" + current_view).css('display', 'none');
     jQuery("#bwg_tags_id_" + id).val(jQuery("#bwg_tag_id_" + id).val());
 
