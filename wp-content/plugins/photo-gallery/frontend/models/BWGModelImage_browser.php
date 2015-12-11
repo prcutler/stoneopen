@@ -20,7 +20,15 @@ class BWGModelImage_browser {
   ////////////////////////////////////////////////////////////////////////////////////////
   public function get_theme_row_data($id) {
     global $wpdb;
-    $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme WHERE id="%d"', $id));
+    if ($id) {
+      $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme WHERE id="%d"', $id));
+    }
+    else {      
+      $row = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme WHERE default_theme=1');
+    }
+    if (isset($row->options)) {
+      $row = json_decode($row->options);
+    }
     return $row;
   }
 

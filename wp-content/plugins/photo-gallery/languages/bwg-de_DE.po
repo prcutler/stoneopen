@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bwg\n"
 "POT-Creation-Date: 2015-04-02 12:15+0400\n"
-"PO-Revision-Date: 2015-04-02 12:15+0400\n"
+"PO-Revision-Date: 2015-12-04 10:25+0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.5\n"
+"X-Generator: Poedit 1.5.4\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: __\n"
@@ -38,11 +38,11 @@ msgstr "Letzte"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/framework/WDWLibrary.php:562
 msgid "Go to the first page"
-msgstr "Gehen Sie auf die erste Seite"
+msgstr "Zur ersten Seite"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/framework/WDWLibrary.php:563
 msgid "Go to the previous page"
-msgstr "Gehen Sie auf die vorherige Seite"
+msgstr "Zur vorherigen Seite"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/framework/WDWLibrary.php:565
 msgid "of"
@@ -50,11 +50,11 @@ msgstr "von"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/framework/WDWLibrary.php:569
 msgid "Go to the next page"
-msgstr "Gehen Sie auf der nächsten Seite"
+msgstr "Zur nächsten Seite"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/framework/WDWLibrary.php:570
 msgid "Go to the last page"
-msgstr "Gehen Sie auf der letzten Seite"
+msgstr "Zur letzten Seite"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/framework/WDWLibrary.php:655
 msgid "Reset"
@@ -74,7 +74,7 @@ msgstr "Default"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/framework/WDWLibrary.php:703
 msgid "Filename"
-msgstr "Dateinamen"
+msgstr "Dateiname"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/framework/WDWLibrary.php:704
 msgid "Size"
@@ -95,7 +95,7 @@ msgstr "zufällig"
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewThumbnails_masonry.php:151
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewThumbnails_mosaic.php:155
 msgid "There is no theme selected or the theme was deleted."
-msgstr "Es gibt kein Thema ausgewählt oder das Thema gelöscht wurde"
+msgstr "Kein Theme ausgewählt, oder das Theme wurde gelöscht."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_compact_preview.php:161
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_compact_preview.php:193
@@ -104,7 +104,7 @@ msgstr "Es gibt kein Thema ausgewählt oder das Thema gelöscht wurde"
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_masonry_preview.php:137
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_masonry_preview.php:169
 msgid "There is no album selected or the album was deleted."
-msgstr "Es gibt kein Album ausgewählt oder das Album gelöscht wurd"
+msgstr "Kein Album ausgewählt, oder das Album wurde gelöscht."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_compact_preview.php:182
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_extended_preview.php:127
@@ -116,7 +116,7 @@ msgstr "Es gibt kein Album ausgewählt oder das Album gelöscht wurd"
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewThumbnails_masonry.php:162
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewThumbnails_mosaic.php:166
 msgid "There are no images in this gallery."
-msgstr "Es sind keine Bilder in dieser Galerie"
+msgstr "Es befinden sich keine Bilder in dieser Galerie."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_compact_preview.php:941
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_extended_preview.php:891
@@ -129,20 +129,20 @@ msgstr "Zurück"
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_extended_preview.php:902
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_masonry_preview.php:518
 msgid "Album is empty."
-msgstr "Album ist leer"
+msgstr "Album ist leer."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_compact_preview.php:1088
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_extended_preview.php:1047
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_masonry_preview.php:598
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/photo-gallery.php:3399
 msgid "There are no images matching your search."
-msgstr "Es gibt keine Bilder, die Ihren Such."
+msgstr "Es gibt keine Bilder, die Ihrer Suche entsprechen."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_compact_preview.php:1093
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_extended_preview.php:1052
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_masonry_preview.php:603
 msgid "Gallery is empty."
-msgstr "Galerie ist leer"
+msgstr "Galerie ist leer."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_compact_preview.php:1157
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_compact_preview.php:1210
@@ -154,7 +154,7 @@ msgstr "Galerie ist leer"
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewThumbnails.php:504
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewThumbnails_mosaic.php:446
 msgid "Play"
-msgstr "Spielen"
+msgstr "Wiedergabe"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_extended_preview.php:1006
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewAlbum_extended_preview.php:1188
@@ -172,7 +172,7 @@ msgstr "Ausblenden"
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewThumbnails_masonry.php:156
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewThumbnails_mosaic.php:160
 msgid "There is no gallery selected or the gallery was deleted."
-msgstr "Es gibt keine Galerie ausgewählt oder die Galerie gelöscht wurde"
+msgstr "Keine Galerie ausgewählt, oder die Galerie wurde gelöscht."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewBlog_style.php:540
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:869
@@ -191,7 +191,7 @@ msgstr "Teilen auf Facebook"
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:886
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:887
 msgid "Share on Twitter"
-msgstr "Teilen Sie auf Twitter"
+msgstr "Teilen auf Twitter"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewBlog_style.php:560
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewBlog_style.php:561
@@ -205,14 +205,14 @@ msgstr "Teilen auf Google+ "
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:900
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:901
 msgid "Share on Pinterest"
-msgstr "Share on Pinterest"
+msgstr "Teilen auf Pinterest"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewBlog_style.php:574
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewBlog_style.php:575
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:907
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:908
 msgid "Share on Tumblr"
-msgstr "Share on Tumblr"
+msgstr "Teilen auf Tumblr"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:837
 msgid "The image has been deleted."
@@ -239,15 +239,15 @@ msgstr "Info anzeigen"
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:871
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:2340
 msgid "Show rating"
-msgstr "Zeigen Bewertung"
+msgstr "Bewertung anzeigen"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:915
 msgid "Open image in original size."
-msgstr "Bild in Originalgröße. "
+msgstr "Bild in Originalgröße öffnen. "
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:923
 msgid "Download original image"
-msgstr "Originalbild"
+msgstr "Originalbild herunterladen"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1033
 msgid "Hits: "
@@ -255,7 +255,7 @@ msgstr "Treffer: "
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1044
 msgid "Rated."
-msgstr "Nenn."
+msgstr "Bewertet."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1048
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1062
@@ -269,7 +269,7 @@ msgstr "Stimmen: "
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1082
 msgid "Cancel your rating."
-msgstr "Abbrechen Ihre Bewertung. "
+msgstr "Bewertung abbrechen."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1084
 msgid "You have already rated."
@@ -277,7 +277,7 @@ msgstr "Sie haben schon bewertet. "
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1183
 msgid "Error. Incorrect Verification Code."
-msgstr "Fehler. Falsche Verifikations-Code. "
+msgstr "Fehler. Falscher Bestätigungs-Code."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1190
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/photo-gallery.php:3398
@@ -293,7 +293,7 @@ msgstr "Kommentare ausblenden "
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1230
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1237
 msgid "Name"
-msgstr "Zu nennen"
+msgstr "Name"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1208
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1230
@@ -313,7 +313,7 @@ msgstr "Bestätigungs-Code"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1243
 msgid "Submit"
-msgstr "Senden"
+msgstr "Absenden"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:1244
 msgid "Your comment is awaiting moderation"
@@ -329,7 +329,7 @@ msgstr "Anmerkungen anzeigen "
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:2325
 msgid "Hide info"
-msgstr "Ausblenden"
+msgstr "Info ausblenden"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:2336
 msgid "Hide rating"
@@ -342,7 +342,7 @@ msgstr "Wiederherstellen"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:2656
 msgid "Exit Fullscreen"
-msgstr "Verlassen Sie Vollbild "
+msgstr "Vollbildmodus beenden"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:2671
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/frontend/views/BWGViewGalleryBox.php:2686
@@ -357,4 +357,4 @@ msgstr "Feld ist erforderlich."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery/photo-gallery.php:3419
 msgid "Photo gallery plugin autoupdate interval."
-msgstr "Foto-Galerie Plugin automatische Aktualisierungsintervall."
+msgstr "Intervall für automatische Aktualisierung von Photo Gallery."

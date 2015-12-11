@@ -24,7 +24,10 @@ class BWGModelAlbum_compact_preview {
       $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme WHERE id="%d"', $id));
     }
     else {      
-      $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme WHERE default_theme="%d"', 1));
+      $row = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme WHERE default_theme=1');
+    }
+    if (isset($row->options)) {
+      $row = json_decode($row->options);
     }
     return $row;
   }

@@ -63,6 +63,7 @@
 #main_featured_plugins_page #featured-plugins-list  li.twitter-widget  .product {background:url("images/twittertools.png") center center no-repeat;}
 #main_featured_plugins_page #featured-plugins-list  li.events-wd  .product {background:url("images/events-wd.png") center center no-repeat;}
 #main_featured_plugins_page #featured-plugins-list  li.faq_wd  .product {background:url("images/faq_wd.png") center center no-repeat;}
+#main_featured_plugins_page #featured-plugins-list  li.instagram_feed  .product {background:url("images/instagram_feed.png") center center no-repeat;}
 
 #main_featured_plugins_page #featured-plugins-list li  .title  .heading {
 	display: block;

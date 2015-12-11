@@ -50,6 +50,10 @@ class BWGModelThemes_bwg {
     global $wpdb;
     if ($id != 0) {
       $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme WHERE id="%d"', $id));
+      $themes = json_decode($row->options);
+      foreach ($themes as $key => $value) {
+        $row->$key = $value;
+      }
       if ($reset) {
         if (!$row->default_theme) {
           $row_id = $row->id;

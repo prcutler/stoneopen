@@ -15,6 +15,16 @@ div[id^="bwg_container"] a {
   text-decoration: none;
 }
 
+div[id^="bwg_container"] div[id^="bwg_container"] .bwg_img_clear {
+  max-height: none !important;
+  max-width: none !important;
+  padding: 0 !important;
+}
+
+.tag_cloud_link {
+  font-size: inherit !important;
+}
+
 @media print {
   #spider_popup_left,
   #spider_popup_right,

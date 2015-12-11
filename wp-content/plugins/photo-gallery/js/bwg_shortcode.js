@@ -422,7 +422,7 @@ function bwg_gallery_type(gallery_type) {
 			jQuery("#tr_show_sort_images").css('display', '');
 			jQuery("#tr_show_tag_box").css('display', '');
       if (jQuery("input[name=masonry_hor_ver]:checked").val() == 'horizontal') {
-        bwg_change_label('image_column_number_label', 'Number of image rows: ');
+        bwg_change_label('image_column_number_label', bwg_number_of_image_rows);
         bwg_change_label('thumb_width_height_label', bwg_image_thumb_height);
         jQuery('#thumb_width').hide();
         jQuery('#thumb_height').show();

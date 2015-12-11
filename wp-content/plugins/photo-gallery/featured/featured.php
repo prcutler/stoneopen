@@ -115,6 +115,12 @@ function spider_featured($current_plugin = '') {
       'content'  => 'Organize and publish your FAQs in an easy and elegant way using FAQ WD.',
       'href'     => 'https://web-dorado.com/products/wordpress-faq-wd.html'
     ),
+    "instagram_feed" => array(
+      'title'    => 'Instagram Feed WD',
+      'text'     => 'WordPress Instagram Feed plugin',
+      'content'  => 'WD Instagram Feed is a user-friendly tool for displaying user or hashtag-based feeds on your website.',
+      'href'     => 'https://web-dorado.com/products/wordpress-instagram-feed-wd.html'
+    ),
   );
   ?>
   <div id="main_featured_plugins_page">

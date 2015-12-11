@@ -43,23 +43,22 @@ class BWGModelUninstall_bwg {
       wp_delete_term($term->term_id, 'bwg_tag');
     }
     // Delete custom pages for galleries.
-    $count_posts = wp_count_posts('bwg_gallery');
-    $published_posts = $count_posts->publish;
-    $posts = get_posts(array('posts_per_page' => $published_posts, 'post_type' => 'bwg_gallery'));
+    $posts = get_posts(array('post_type' => 'bwg_gallery'));
     foreach ($posts as $post) {
       wp_delete_post($post->ID, TRUE);
     }
     // Delete custom pages for albums.
-    $count_posts = wp_count_posts('bwg_album');
-    $published_posts = $count_posts->publish;
-    $posts = get_posts(array('posts_per_page' => $published_posts, 'post_type' => 'bwg_album'));
+    $posts = get_posts(array('post_type' => 'bwg_album'));
     foreach ($posts as $post) {
       wp_delete_post($post->ID, TRUE);
     }
     // Delete custom pages for tags.
-    $count_posts = wp_count_posts('bwg_tag');
-    $published_posts = $count_posts->publish;
-    $posts = get_posts(array('posts_per_page' => $published_posts, 'post_type' => 'bwg_tag'));
+    $posts = get_posts(array('post_type' => 'bwg_tag'));
+    foreach ($posts as $post) {
+      wp_delete_post($post->ID, TRUE);
+    }
+    // Delete custom pages for share.
+    $posts = get_posts(array('post_type' => 'bwg_share'));
     foreach ($posts as $post) {
       wp_delete_post($post->ID, TRUE);
     }

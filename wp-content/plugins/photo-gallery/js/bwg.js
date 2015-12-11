@@ -24,7 +24,7 @@ function save_tag(tag_id) {
         massege = array[0];
       }
       else {
-        massege = "Item Succesfully Saved.";
+        massege = bwg_objectL10B.saved;
         jQuery("#td_check_" + tag_id).attr('class', 'table_small_col check-column');
         td_check='<input id="check_'+tag_id+'" name="check_'+tag_id+'" type="checkbox" />';
         jQuery("#td_check_" + tag_id).html(td_check);
@@ -183,55 +183,55 @@ function spider_ajax_save(form_id, tr_group) {
       spider_run_checkbox();
 
       if (ajax_task == 'ajax_apply') {
-        jQuery('#message_div').html("<strong><p>Items Succesfully Saved.</p></strong>");
+        jQuery('#message_div').html("<strong><p>" + bwg_objectL10B.saved + "</p></strong>");
         jQuery('#message_div').show();
       }
       else if (ajax_task == 'recover') {
-        jQuery('#draganddrop').html("<strong><p>Item Succesfully Recovered.</p></strong>");
+        jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.recoverd + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_publish') {
-        jQuery('#draganddrop').html("<strong><p>Item Succesfully Published.</p></strong>");
+        jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.published + ".</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_unpublish') {
-        jQuery('#draganddrop').html("<strong><p>Item Succesfully Unpublished.</p></strong>");
+        jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.unpublished + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_delete') {
-        jQuery('#draganddrop').html("<strong><p>Item Succesfully Deleted.</p></strong>");
+        jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.deleted + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (!flag && ((ajax_task == 'image_publish_all') || (ajax_task == 'image_unpublish_all') || (ajax_task == 'image_delete_all') || (ajax_task == 'image_set_watermark') || (ajax_task == 'image_recover_all') || (ajax_task == 'image_resize') || (ajax_task == 'resize_image_thumb'))) {
-        jQuery('#draganddrop').html("<strong><p>You must select at least one item.</p></strong>");
+        jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.one_item + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_publish_all') {
-        jQuery('#draganddrop').html("<strong><p>Items Succesfully Published.</p></strong>");
+        jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.published + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_unpublish_all') {
-        jQuery('#draganddrop').html("<strong><p>Items Succesfully Unpublished.</p></strong>");
+        jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.unpublished + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_delete_all') {
-        jQuery('#draganddrop').html("<strong><p>Items Succesfully Deleted.</p></strong>");
+        jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.deleted + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'resize_image_thumb') {
-        jQuery('#draganddrop').html("<strong><p>Items Succesfully resized.</p></strong>");
+        jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.resized + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_set_watermark') {
-        jQuery('#draganddrop').html("<strong><p>Watermarks Succesfully Set.</p></strong>");
+        jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.watermark_set + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_resize') {
-        jQuery('#draganddrop').html("<strong><p>Images Succesfully Resized.</p></strong>");
+        jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.resized + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_recover_all') {
-        jQuery('#draganddrop').html("<strong><p>Items Succesfully Reset.</p></strong>");
+        jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.reset + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'search') {
@@ -240,7 +240,7 @@ function spider_ajax_save(form_id, tr_group) {
        
       }
       else {
-        jQuery('#draganddrop').html("<strong><p>Items Succesfully Saved.</p></strong>");
+        jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.saved + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       if (ajax_task == "ajax_save") {
@@ -414,7 +414,7 @@ function spider_check_all_items_checkbox() {
     var items_count = added_items + saved_items;
     jQuery('#check_all_items').attr('checked', true);
     if (items_count) {
-      jQuery('#draganddrop').html("<strong><p>Selected " + items_count + " item" + (items_count > 1 ? "s" : "") + ".</p></strong>");
+      jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.selected + ' ' + items_count + ' ' + bwg_objectL10B.item + (items_count > 1 ? "s" : "") + ".</p></strong>");
       jQuery('#draganddrop').show();
     }
   }

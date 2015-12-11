@@ -321,6 +321,21 @@ function bwg_update($version) {
 	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `show_hide_custom_post` tinyint(1) NOT NULL DEFAULT 0");
     $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `show_hide_post_meta` tinyint(1) NOT NULL DEFAULT 0");
 	}
+  if (version_compare($version, '1.2.76') == -1) {
+    $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `options` longtext NOT NULL DEFAULT ''");
+    $rows = $wpdb->get_results('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme');
+    foreach ($rows as $row) {
+      $themes = array();
+      foreach ($row as $filed_name => $field_value) {
+        if ($filed_name == 'id' || $filed_name == 'name' || $filed_name == 'default_theme' || $filed_name == 'options') {
+          continue;
+        }
+        $themes[$filed_name] = $field_value;
+      }
+      $themes = json_encode($themes);
+      $wpdb->update($wpdb->prefix . 'bwg_theme', array('options' => $themes), array("id" => $row->id));
+    }
+  }
   return;
 }
 

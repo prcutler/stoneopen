@@ -3,8 +3,8 @@ Contributors: webdorado
 Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
 Tags: photo, photo gallery, image gallery, video gallery, gallery, galleries,  wordpress gallery plugin, images gallery, album, photo albums, simple gallery, best gallery plugin, free photo gallery, wp gallery, wordpress gallery, website gallery, gallery shortcode, best gallery, picture, pictures, gallery slider, photo album, photogallery, widget gallery, image, images, photos,  gallery lightbox, photoset, wordpress photo gallery plugin, wp gallery plugins, responsive wordpress photo gallery, media, image album, filterable gallery, banner rotator, fullscreen gallery, fotogalerie, galleria, galerie, galeri, responsive gallery, add album,  add gallery, add pictures, fotoalbum, foto, gallery decription, multiple pictures, photoalbum, upload images, upload photos, view images, view pictures, admin, AJAX, comments, gallery image, image lightbox, image rotate, image slideshow, image slider, jquery, jquery gallery, slide show, slideshow, thumbnail, thumbnail view, thumbnails, thumbs, responsive, watermarking, watermarks,fullscreen slider, lightbox, photography, sidebar, slide, youtube, vimeo, videos, instagram, facebook, mosaic, facebook integration, instagram feed, Flickr, Dailymotion, widget
 Requires at least: 3.4 
-Tested up to: 4.3 
-Stable tag: 1.2.72    
+Tested up to: 4.4 
+Stable tag: 1.2.77    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -215,8 +215,28 @@ Yes, it is possible to add advertising and/or watermark over the images. In both
 
 == Changelog ==
 
+= 1.2.77 =
+*  Fixed: Themes.
+*  Fixed: Error on uninstall.
+
+= 1.2.76 =
+*  Changed: Theme DB table structure.        
+*  Fixed: Error on facebook share.       
+
+= 1.2.75 =
+*  Fixed: German translation.      
+*  Changed: Featured plugins page.      
+
+= 1.2.74 =
+*  Changed: Share url.     
+*  Fixed: Twitter share.       
+*  Added: Possibility to add custom style for front end thumbnails.      
+  
+= 1.2.73 =  
+*  Fixed: SEO bug.      
+
 = 1.2.72 =
-*  Fixed:Bug on options save.
+*  Fixed:Bug on options save.    
 
 = 1.2.71 = 
 *  Fixed: Quotes in advertisement text.      
