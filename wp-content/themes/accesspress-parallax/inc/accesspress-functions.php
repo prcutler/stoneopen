@@ -140,9 +140,9 @@ function accesspress_bxslidercb(){
 					pager: <?php echo $accesspress_show_pager; ?>,
 					controls: <?php echo $accesspress_show_controls; ?>,
 					mode: '<?php echo $accesspress_slider_transition; ?>',
-					auto : '<?php echo $accesspress_auto_transition; ?>',
-					pause: '<?php echo $accesspress_slider_pause; ?>',
-					speed: '<?php echo $accesspress_slider_speed; ?>'
+					auto : <?php echo $accesspress_auto_transition; ?>,
+					pause: <?php echo $accesspress_slider_pause; ?>,
+					speed: <?php echo $accesspress_slider_speed; ?>
 				});
 
 				<?php if($accesspress_slider_full_window == "yes" && !empty($accesspress_slider_category)) : ?>

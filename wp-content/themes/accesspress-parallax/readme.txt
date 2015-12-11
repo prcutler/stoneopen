@@ -89,8 +89,12 @@ Images
 ---------------------------------------------
 
 == Changelog ==
+Version 1.25.0
+* CSS fixes to make compaltible with the latest release of WordPress 4.4
+* Auto Transition Bug in main slider fixed
+
 Version 1.24.9
-* Mimor bug on Slider fixed for RTL
+* Minor bug on Slider fixed for RTL
 * Google Map Section content not displaying issue fixed
 
 Version 1.24.8

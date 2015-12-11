@@ -13,11 +13,15 @@
   font-weight: 700;
   font-size: 15px;
   line-height: 24px;
+  margin-left: 0;
+  margin-right: 5px;
 }
 #optionsframework h3 {
 	cursor: default;
 	background-color: #f1f1f1;
 	border-bottom: 1px solid #ddd;
+	margin: 0;
+	padding: 10px;
 }
 #optionsframework h4{
 	margin: 0 0 10px;
@@ -305,6 +309,7 @@
 	line-height: 40px;
 	cursor: move;
 	border-bottom: 0;
+	font-size: 14px;
 }
 .section-toggle{
 	float: right;
@@ -411,6 +416,8 @@
 	background: #333;
 	color: #FFF;
 	border:1px solid #333;
+	margin: 0;
+	padding: 10px;
 }
 .pro-feature-title{
 	cursor: pointer;
