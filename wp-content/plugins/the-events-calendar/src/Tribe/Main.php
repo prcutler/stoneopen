@@ -32,7 +32,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 		const VENUE_POST_TYPE     = 'tribe_venue';
 		const ORGANIZER_POST_TYPE = 'tribe_organizer';
 
-		const VERSION           = '4.0.1';
+		const VERSION           = '4.0.4';
 		const MIN_ADDON_VERSION = '4.0';
 		const WP_PLUGIN_URL     = 'http://wordpress.org/extend/plugins/the-events-calendar/';
 
@@ -487,7 +487,12 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 			add_action( 'plugins_loaded', array( 'Tribe__Cache', 'setup' ) );
 			add_action( 'plugins_loaded', array( 'Tribe__Support', 'getInstance' ) );
 			add_action( 'plugins_loaded', array( $this, 'set_meta_factory_global' ) );
-			add_action( 'current_screen', array( $this, 'init_admin_list_screen' ) );
+
+			if ( ! Tribe__Main::instance()->doing_ajax() ) {
+				add_action( 'current_screen', array( $this, 'init_admin_list_screen' ) );
+			} else {
+				add_action( 'admin_init', array( $this, 'init_admin_list_screen' ) );
+			}
 
 			// Load organizer and venue editors
 			add_action( 'admin_menu', array( $this, 'addVenueAndOrganizerEditor' ) );
@@ -764,6 +769,8 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 		 * Run on applied action init
 		 */
 		public function init() {
+			$rewrite = Tribe__Events__Rewrite::instance();
+
 			$this->pluginName = $this->plugin_name            = esc_html__( 'The Events Calendar', 'the-events-calendar' );
 			$this->rewriteSlug                                = $this->getRewriteSlug();
 			$this->rewriteSlugSingular                        = $this->getRewriteSlugSingular();
@@ -785,10 +792,10 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 			$this->singular_event_label                       = $this->get_event_label_singular();
 			$this->plural_event_label                         = $this->get_event_label_plural();
 
-			$this->postTypeArgs['rewrite']['slug']            = sanitize_title( $this->rewriteSlugSingular );
-			$this->postVenueTypeArgs['rewrite']['slug']       = sanitize_title( $this->singular_venue_label );
+			$this->postTypeArgs['rewrite']['slug']            = $rewrite->prepare_slug( $this->rewriteSlugSingular, self::POSTTYPE );
+			$this->postVenueTypeArgs['rewrite']['slug']       = $rewrite->prepare_slug( $this->singular_venue_label, self::VENUE_POST_TYPE );
 			$this->postVenueTypeArgs['show_in_nav_menus']     = class_exists( 'Tribe__Events__Pro__Main' ) ? true : false;
-			$this->postOrganizerTypeArgs['rewrite']['slug']   = sanitize_title( $this->singular_organizer_label );
+			$this->postOrganizerTypeArgs['rewrite']['slug']   = $rewrite->prepare_slug( $this->singular_organizer_label, self::ORGANIZER_POST_TYPE );
 			$this->postOrganizerTypeArgs['show_in_nav_menus'] = class_exists( 'Tribe__Events__Pro__Main' ) ? true : false;
 			$this->postVenueTypeArgs['public']                = class_exists( 'Tribe__Events__Pro__Main' ) ? true : false;
 			$this->postOrganizerTypeArgs['public']            = class_exists( 'Tribe__Events__Pro__Main' ) ? true : false;
@@ -1636,11 +1643,11 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 		public function displayEventVenueDropdown( $post_id ) {
 			$venue_id = get_post_meta( $post_id, '_EventVenueID', true );
 
-			if (
-				( ! $post_id || get_post_status( $post_id ) === 'auto-draft' ) &&
-				! $venue_id &&
-				tribe_is_community_edit_event_page()
-			) {
+			// Strange but true: the following func lives in core so is safe to call without a func_exists check
+			$new_community_post = tribe_is_community_edit_event_page() && ! $post_id;
+			$new_admin_post     = 'auto-draft' === get_post_status( $post_id );
+
+			if ( ! $venue_id && ( $new_admin_post || $new_community_post ) ) {
 				$venue_id = $this->defaults()->venue_id();
 			}
 
@@ -2322,12 +2329,15 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 		 * @param WP_Screen $screen WP Admin screen object for the current page
 		 */
 		public function init_admin_list_screen( $screen ) {
-			if ( 'edit' !== $screen->base ) {
-				return;
-			}
+			// If we are dealing with a AJAX call just drop these checks
+			if ( ! Tribe__Main::instance()->doing_ajax() ) {
+				if ( 'edit' !== $screen->base ) {
+					return;
+				}
 
-			if ( self::POSTTYPE !== $screen->post_type ) {
-				return;
+				if ( self::POSTTYPE !== $screen->post_type ) {
+					return;
+				}
 			}
 
 			Tribe__Events__Admin_List::init();
@@ -2651,12 +2661,10 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 				if ( ! is_wp_error( $term_link ) ) {
 					$event_url = trailingslashit( $term_link );
 				}
-			} else {
-				if ( $term ) {
-					$term_link = get_term_link( (int) $term, self::TAXONOMY );
-					if ( ! is_wp_error( $term_link ) ) {
-						$event_url = trailingslashit( $term_link );
-					}
+			} elseif ( $term && is_numeric( $term ) ) {
+				$term_link = get_term_link( (int) $term, self::TAXONOMY );
+				if ( ! is_wp_error( $term_link ) ) {
+					$event_url = trailingslashit( $term_link );
 				}
 			}
 
@@ -3909,17 +3917,113 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 		}
 
 		/**
-		 * Get a "previous/next post" link for events. Ordered by start date instead of ID.
+		 * Modify the WHERE clause of query when fetching next/prev posts so events with identical times are not excluded
+		 *
+		 * This method ensures that when viewing single events that occur at a given time, other events
+		 * that occur at the exact same time are are not excluded from the prev/next links
+		 *
+		 * @since 4.0.2
+		 *
+		 * @param string $where_sql WHERE SQL statement
+		 * @param WP_Query $query WP_Query object
+		 *
+		 * return string
+		 */
+		public function get_closest_event_where( $where_sql ) {
+			// if we are in this method, we KNOW there is a section of the SQL that looks like this:
+			//     ( table.meta_key = '_EventStartDate' AND CAST( table.meta_value AS DATETIME ) [<|>] '2015-01-01 00:00:00' )
+			// What we want to do is to extract all the portions of the WHERE BEFORE that section, all the
+			// portions AFTER that section, and then rebuild that section to be flexible enough to include
+			// events that have the SAME datetime as the event we're comparing against.  Sadly, this requires
+			// some regex-fu.
+			//
+			// The end-game is to change the known SQL line (from above) into the following:
+			//
+			//  (
+			//    ( table.meta_key = '_EventStartDate' AND CAST( table.meta_value AS DATETIME ) [<|>] '2015-01-01 00:00:00' )
+			//    OR (
+			//      ( table.meta_key = '_EventStartDate' AND CAST( table.meta_value AS DATETIME ) = '2015-01-01 00:00:00' )
+			//      AND
+			//      table.post_id [<|>] POST_ID
+			//    )
+			//  )
+			//
+
+			// Here's the regex portion that matches the part that we know. From that line, we want to
+			// have a few capture groups.
+			//     1) We need the whole thing
+			//     2) We need the meta table alias
+			//     3) We need the < or > sign
+
+			// Here's the regex for getting the meta table alias
+			$meta_table_regex = '([^\.]+)\.meta_key\s*=\s*';
+
+			// Here's the regex for the middle section of the know line
+			$middle_regex = '[\'"]_EventStartDate[\'"]\s+AND\s+CAST[^\)]+AS DATETIME\s*\)\s*';
+
+			// Here's the regex for the < and > sign
+			$gt_lt_regex = '(\<|\>)';
+
+			// Let's put that line together, making sure we are including the wrapping parens and the
+			// characters that make up the rest of the line - spacing in front, non paren characters at
+			// the end
+			$known_sql_regex = "\(\s*{$meta_table_regex}{$middle_regex}{$gt_lt_regex}[^\)]+\)";
+
+			// The known SQL line will undoubtedly be included amongst other WHERE statements. We need
+			// to generically grab the SQL before and after the known line so we can rebuild our nice new
+			// where statement. Here's the regex that brings it all together.
+			//   Note: We are using the 'm' modifier so that the regex looks over multiple lines as well
+			//         as the 's' modifier so that '.' includes linebreaks
+			$full_regex = "/(.*)($known_sql_regex)(.*)/ms";
+
+			// here's a regex to grab the post ID from a portion of the WHERE statement
+			$post_id_regex = '/NOT IN\s*\(([0-9]+)\)/';
+
+			if ( preg_match( $full_regex, $where_sql, $matches ) ) {
+				// place capture groups into vars that are easier to read
+				$before = $matches[1];
+				$known = $matches[2];
+				$alias = $matches[3];
+				$gt_lt = $matches[4];
+				$after = $matches[5];
+
+				// copy the known line but replace the < or > symbol with an =
+				$equal = preg_replace( '/(\<|\>)/', '=', $known );
+
+				// extract the post ID from the extra "before" or "after" WHERE
+				if (
+					preg_match( $post_id_regex, $before, $post_id )
+					|| preg_match( $post_id_regex, $after, $post_id )
+				) {
+					$post_id = absint( $post_id[1] );
+				} else {
+					// if we can't find the post ID, then let's bail
+					return $where_sql;
+				}
+
+				// rebuild the WHERE clause
+				$where_sql = "{$before} (
+					{$known}
+					OR (
+						{$equal}
+						AND {$alias}.post_id {$gt_lt} {$post_id}
+					)
+				) {$after} ";
+			}
+
+			return $where_sql;
+		}
+
+		/**
+		 * Get the prev/next post for a given event. Ordered by start date instead of ID.
 		 *
 		 * @param WP_Post $post The post/event.
 		 * @param string  $mode Either 'next' or 'previous'.
-		 * @param mixed   $anchor
 		 *
-		 * @return string The link (with <a> tags).
+		 * @return null|WP_Post
 		 */
-		public function get_event_link( $post, $mode = 'next', $anchor = false ) {
+		public function get_closest_event( $post, $mode = 'next' ) {
 			global $wpdb;
-			$link = '';
 
 			if ( 'previous' === $mode ) {
 				$order      = 'DESC';
@@ -3956,15 +4060,44 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 			 *
 			 * @var array   $args
 			 * @var WP_Post $post
-			 * @var boolean $anchor
 			 */
-			$args = (array) apply_filters( "tribe_events_get_{$mode}_event_link", $args, $post, $anchor );
+			$args = (array) apply_filters( "tribe_events_get_{$mode}_event_link", $args, $post );
+			add_filter( 'posts_where', array( $this, 'get_closest_event_where' ) );
 			$results = tribe_get_events( $args );
+			remove_filter( 'posts_where', array( $this, 'get_closest_event_where' ) );
+
+			$event = null;
 
 			// If we successfully located the next/prev event, we should have precisely one element in $results
 			if ( 1 === count( $results ) ) {
 				$event = current( $results );
+			}
 
+			/**
+			 * Affords an opportunity to modify the event used to generate the event link (typically for
+			 * the next or previous event in relation to $post).
+			 *
+			 * @var WP_Post $post
+			 * @var string  $mode (typically "previous" or "next")
+			 */
+			return apply_filters( 'tribe_events_get_closest_event', $event, $post, $mode );
+		}
+
+		/**
+		 * Get a "previous/next post" link for events. Ordered by start date instead of ID.
+		 *
+		 * @param WP_Post $post The post/event.
+		 * @param string  $mode Either 'next' or 'previous'.
+		 * @param mixed   $anchor
+		 *
+		 * @return string The link (with <a> tags).
+		 */
+		public function get_event_link( $post, $mode = 'next', $anchor = false ) {
+			$link = null;
+			$event = $this->get_closest_event( $post, $mode );
+
+			// If we successfully located the next/prev event, we should have precisely one element in $results
+			if ( $event ) {
 				if ( ! $anchor ) {
 					$anchor = apply_filters( 'the_title', $event->post_title );
 				} elseif ( strpos( $anchor, '%title%' ) !== false ) {
@@ -4229,7 +4362,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 				$link = add_query_arg( array( 'post_type' => self::POSTTYPE ), $link );
 			}
 
-			return esc_url( $link );
+			return esc_url_raw( $link );
 		}
 
 		/**

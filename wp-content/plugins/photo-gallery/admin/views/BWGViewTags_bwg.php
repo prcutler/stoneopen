@@ -50,7 +50,7 @@ class BWGViewTags_bwg {
       </div>
     </div>
     <div id="wordpress_message_1" style="width:99%;display:none"><div id="wordpress_message_2" class="updated"><p><strong><?php _e("Item Succesfully Saved.", 'bwg_back'); ?></strong></p></div></div>
-    <form class="wrap" id="tags_form" method="post" action="admin.php?page=tags_bwg" style="float:left; width: 99%;">
+    <form class="wrap bwg_form" id="tags_form" method="post" action="admin.php?page=tags_bwg" style="float:left; width: 99%;">
       <?php wp_nonce_field( 'tags_bwg', 'bwg_nonce' ); ?>
       <span class="tag_icon"></span>
       <h2><?php _e("Tags", 'bwg_back'); ?></h2>

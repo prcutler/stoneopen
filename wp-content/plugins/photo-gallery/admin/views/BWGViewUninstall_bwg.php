@@ -26,7 +26,7 @@ class BWGViewUninstall_bwg {
     global $wpdb;
     $prefix = $wpdb->prefix;
     ?>
-    <form method="post" action="admin.php?page=uninstall_bwg" style="width:99%;">
+    <form class="bwg_form" method="post" action="admin.php?page=uninstall_bwg" style="width:99%;">
       <?php wp_nonce_field( 'uninstall_bwg', 'bwg_nonce' ); ?>
       <div class="wrap">
         <span class="uninstall_icon"></span>

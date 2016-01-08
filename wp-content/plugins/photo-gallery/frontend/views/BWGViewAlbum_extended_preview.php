@@ -834,7 +834,7 @@ class BWGViewAlbum_extended_preview {
     <script>
       function bwg_gallery_box_<?php echo $bwg; ?>(gallery_id, image_id) {
         var filterTags = jQuery("#bwg_tags_id_bwg_album_extended_<?php echo $bwg; ?>" ).val() ? jQuery("#bwg_tags_id_bwg_album_extended_<?php echo $bwg; ?>" ).val() : 0;
-        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&gallery_id=' + gallery_id + '&image_id=' + image_id + "&filter_tag_<?php echo $bwg; ?>=" +  filterTags, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5);
+        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&gallery_id=' + gallery_id + '&image_id=' + image_id + "&filter_tag_<?php echo $bwg; ?>=" +  filterTags, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5, "<?php echo $theme_row->lightbox_ctrl_btn_pos ;?>");
       }
       function bwg_document_ready_<?php echo $bwg; ?>() {
         var bwg_touch_flag = false;

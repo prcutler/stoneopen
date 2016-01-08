@@ -17,7 +17,7 @@
 		if($query->have_posts()):
 			$i = 0;
 			while($query->have_posts()): $query->the_post();
-			$i = $i + 0.25;
+			$i = $i + 0.15;
 		?>
 
 		<a href="<?php the_permalink(); ?>" class="portfolio-list wow fadeInUp" data-wow-delay="<?php echo $i; ?>s">

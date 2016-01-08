@@ -4,7 +4,7 @@ Contributors: ModernTribe, borkweb, zbtirrell, barry.hughes, bordoni, brianjesse
 Tags: events, add-on, ticket sales, tickets, calendar, community, registration, api, dates, date, posts, workshop, conference, meeting, seminar, concert, summit, The Events Calendar, Events Calendar PRO, ticket integration, event ticketing, RSVP, Event Tickets, Event Tickets Plus
 Requires at least: 3.9
 Tested up to: 4.4
-Stable tag: 4.0.1
+Stable tag: 4.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,7 +60,7 @@ Looking for something else?
 
 = SUBMITTING PATCHES =
 
-If you’ve identified a bug and want to submit a patch, we’d welcome it at our <a href="https://github.com/moderntribe/events-tickets" target="_blank">GitHub page for Event Tickets.</a> Simply cue up your proposed patch as a pull request, and we’ll review as part of our release cycle and merge into the codebase if appropriate from there. (If a pull request is rejected, we’ll do our best to tell you why). Users whose pull requests are accepted will receive credit in the plugin’s changelog. For more information, check out the readme at our GitHub page. Happy coding!
+If you’ve identified a bug and want to submit a patch, we’d welcome it at our <a href="https://github.com/moderntribe/event-tickets" target="_blank">GitHub page for Event Tickets.</a> Simply cue up your proposed patch as a pull request, and we’ll review as part of our release cycle and merge into the codebase if appropriate from there. (If a pull request is rejected, we’ll do our best to tell you why). Users whose pull requests are accepted will receive credit in the plugin’s changelog. For more information, check out the readme at our GitHub page. Happy coding!
 
 == Installation ==
 
@@ -178,6 +178,19 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/18v2" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [4.0.4] 2015-12-23 =
+
+* Fix - Resolved issue with stock calculations on the Attendees report
+
+= [4.0.3] 2015-12-22 =
+
+* Tweak - Leverage the original_stock() method when rendering ticket availability to avoid funky math problems with different Event Tickets Plus commerce providers (Thank you liblogger for reporting this issue!)
+
+= [4.0.2] 2015-12-16 =
+
+* Tweak - Removing dates from ticket emails when those tickets are attached to non The Events Calendar event posts
+* Fix - Fixed a settings page URL (Thanks for the tip Kristy!)
 
 = [4.0.1] 2015-12-10 =
 

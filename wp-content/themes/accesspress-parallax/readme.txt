@@ -89,6 +89,10 @@ Images
 ---------------------------------------------
 
 == Changelog ==
+Version 1.25.1
+* Fixes for the compatibility with Polylang Plugin
+* Post Navigation in the single post shows the post with same term only
+
 Version 1.25.0
 * CSS fixes to make compaltible with the latest release of WordPress 4.4
 * Auto Transition Bug in main slider fixed

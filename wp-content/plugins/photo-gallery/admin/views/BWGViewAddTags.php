@@ -40,7 +40,7 @@ class BWGViewAddTags {
     <?php } ?>
     <link media="all" type="text/css" href="<?php echo WD_BWG_URL . '/css/bwg_tables.css?ver='.wd_bwg_version(); ?>" id="bwg_tables-css" rel="stylesheet">
     <script src="<?php echo WD_BWG_URL . '/js/bwg.js?ver='.wd_bwg_version(); ?>" type="text/javascript"></script>
-    <form class="wrap wp-core-ui" id="tags_form" method="post" action="<?php echo add_query_arg(array('action' => 'addTags', 'width' => '650', 'height' => '500', 'bwg_items_per_page'=>$per_page , 'TB_iframe' => '1'), admin_url('admin-ajax.php')); ?>" style="width:99%; margin: 0 auto;">
+    <form class="wrap wp-core-ui bwg_form" id="tags_form" method="post" action="<?php echo add_query_arg(array('action' => 'addTags', 'width' => '650', 'height' => '500', 'bwg_items_per_page'=>$per_page , 'TB_iframe' => '1'), admin_url('admin-ajax.php')); ?>" style="width:99%; margin: 0 auto;">
       <?php wp_nonce_field( 'addTags', 'bwg_nonce' ); ?>
       <h2 style="width:200px; float:left;"><?php _e("Tags", 'bwg_back'); ?></h2>
       <a href="" class="thickbox thickbox-preview" id="content-add_media" title="Add Tag" onclick="bwg_get_tags('<?php echo $image_id; ?>', event);" style="float:right; padding: 9px 0px 4px 0">

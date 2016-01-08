@@ -1,3 +1,11 @@
+.bwg_form h2 {
+  font-size: 23px;
+  font-weight: normal;
+  line-height: 29px;
+  margin: 0;
+  padding: 9px 15px 4px 0;
+}
+
 .spider_ajax_loading {
   border: none !important;
   -webkit-animation: spin 2.5s infinite linear;

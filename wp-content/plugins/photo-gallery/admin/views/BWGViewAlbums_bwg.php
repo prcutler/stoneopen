@@ -46,7 +46,7 @@ class BWGViewAlbums_bwg {
         </a>
       </div>
     </div>
-    <form class="wrap" id="albums_form" method="post" action="admin.php?page=albums_bwg" style="float: left; width:99%;">
+    <form class="wrap bwg_form" id="albums_form" method="post" action="admin.php?page=albums_bwg" style="float: left; width:99%;">
     <?php wp_nonce_field( 'albums_bwg', 'bwg_nonce' ); ?>
       <span class="album-icon"></span>
       <h2>
@@ -263,7 +263,7 @@ class BWGViewAlbums_bwg {
         tb_remove();
       }
     </script>
-    <form class="wrap" method="post" action="admin.php?page=albums_bwg" style="float: left; width:99%;">
+    <form class="wrap bwg_form" method="post" action="admin.php?page=albums_bwg" style="float: left; width:99%;">
       <?php wp_nonce_field( 'albums_bwg', 'bwg_nonce' ); ?>
       <span class="album-icon"></span>
       <h2><?php echo $page_title; ?></h2>

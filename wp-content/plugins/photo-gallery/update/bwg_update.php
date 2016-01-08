@@ -336,6 +336,10 @@ function bwg_update($version) {
       $wpdb->update($wpdb->prefix . 'bwg_theme', array('options' => $themes), array("id" => $row->id));
     }
   }
+	// Instagram api update (change instagram_client_id to instragram_access_token)
+  if (version_compare($version, '1.2.80') == -1) {
+	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option CHANGE `instagram_client_id` `instagram_access_token` varchar(128) NOT NULL DEFAULT ''");
+	}
   return;
 }
 

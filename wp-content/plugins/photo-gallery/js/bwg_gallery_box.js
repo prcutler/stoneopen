@@ -1,6 +1,6 @@
 var isPopUpOpened = false;
 
-function spider_createpopup(url, current_view, width, height, duration, description, lifetime) {
+function spider_createpopup(url, current_view, width, height, duration, description, lifetime, lightbox_ctrl_btn_pos) {
   url = url.replace(/&#038;/g, '&');
   if (isPopUpOpened) { return };
   isPopUpOpened = true;
@@ -22,16 +22,16 @@ function spider_createpopup(url, current_view, width, height, duration, descript
     '</div>')
 			.hide()
 			.appendTo("body");
-		spider_showpopup(description, lifetime, popup, duration);
+		spider_showpopup(description, lifetime, popup, duration, lightbox_ctrl_btn_pos);
 	}).success(function(jqXHR, textStatus, errorThrown) {
     jQuery("#spider_popup_loading_" + current_view).css({display: "none !important;"});
   });
 }
 
-function spider_showpopup(description, lifetime, popup, duration) {
+function spider_showpopup(description, lifetime, popup, duration, lightbox_ctrl_btn_pos) {
   isPopUpOpened = true;
   popup.show();
-	spider_receivedpopup(description, lifetime);
+	spider_receivedpopup(description, lifetime, lightbox_ctrl_btn_pos);
 }
 
 function spider_hasalreadyreceivedpopup(description) {
@@ -41,7 +41,7 @@ function spider_hasalreadyreceivedpopup(description) {
 	return false; 
 }
 
-function spider_receivedpopup(description, lifetime) { 
+function spider_receivedpopup(description, lifetime, lightbox_ctrl_btn_pos) { 
 	var date = new Date(); 
 	date.setDate(date.getDate() + lifetime);
 	document.cookie = description + "=true;expires=" + date.toUTCString() + ";path=/"; 

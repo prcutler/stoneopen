@@ -27,7 +27,7 @@ class BWGModelGalleryBox {
       $row = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme WHERE default_theme=1');
     }
     if (isset($row->options)) {
-      $row = json_decode($row->options);
+      $row = (object) array_merge((array) $row, (array) json_decode($row->options));
     }
     return $row;
   }

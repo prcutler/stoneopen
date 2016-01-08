@@ -41,8 +41,8 @@ if ( ! function_exists( 'accesspress_parallax_post_nav' ) ) :
  */
 function accesspress_parallax_post_nav() {
 	// Don't print empty markup if there's nowhere to navigate.
-	$previous = ( is_attachment() ) ? get_post( get_post()->post_parent ) : get_adjacent_post( false, '', true );
-	$next     = get_adjacent_post( false, '', false );
+	$previous = ( is_attachment() ) ? get_post( get_post()->post_parent ) : get_adjacent_post( true, '', true );
+	$next     = get_adjacent_post( true, '', false );
 
 	if ( ! $next && ! $previous ) {
 		return;
@@ -52,8 +52,8 @@ function accesspress_parallax_post_nav() {
 		<h1 class="screen-reader-text"><?php _e( 'Post navigation', 'accesspress-parallax' ); ?></h1>
 		<div class="nav-links">
 			<?php
-				previous_post_link( '<div class="nav-previous">%link</div>', _x( '<i class="fa fa-hand-o-left"></i>%title', 'Previous post link', 'accesspress-parallax' ) );
-				next_post_link(     '<div class="nav-next">%link</div>',     _x( '%title<i class="fa fa-hand-o-right"></i>', 'Next post link',     'accesspress-parallax' ) );
+				previous_post_link( '<div class="nav-previous">%link</div>', '<i class="fa fa-hand-o-left"></i>%title', TRUE  );
+				next_post_link(     '<div class="nav-next">%link</div>', '%title<i class="fa fa-hand-o-right"></i>' , TRUE );
 			?>
 		</div><!-- .nav-links -->
 	</nav><!-- .navigation -->

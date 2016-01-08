@@ -85,7 +85,7 @@ class BWGViewOptions_bwg {
       'random' => 'Random',
     );
     ?>
-    <form method="post" class="wrap" action="admin.php?page=options_bwg" style="float: left; width: 99%;">      
+    <form method="post" class="wrap bwg_form" action="admin.php?page=options_bwg" style="float: left; width: 99%;">      
       <?php wp_nonce_field( 'options_bwg', 'bwg_nonce' ); ?>
       <span class="option-icon"></span>
       <h2><?php _e("Edit options", 'bwg_back'); ?></h2>
@@ -1500,7 +1500,7 @@ class BWGViewOptions_bwg {
               
               <tr>
                 <td class="spider_label_options spider_free_version_label">
-                  <label>Instagram CLIENT ID:</label>
+                  <label>Instagram Access Token:</label>
                 </td>
                 <td class="spider_free_version_label">
                   <input id="instagram_client_id" type="text" disabled="disabled" style="display:inline-block; width:100%;" value="" />

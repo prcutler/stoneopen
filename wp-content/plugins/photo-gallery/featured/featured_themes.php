@@ -4,6 +4,16 @@ function spider_featured_themes() {
   <div id="main_featured_themes_page">
     <h3>Featured Themes</h3>
 		<ul id="featured-plugins-list">
+      <li class="portfolio_gallery">
+        <div class="product"></div>
+        <div class="title">
+          <strong class="heading">Portfolio Gallery Theme</strong>
+        </div>
+        <div class="description">
+          <p>Portfolio Gallery is an elegant image and portfolio display theme.</p>
+        </div>
+        <a target="_blank" href="https://web-dorado.com/wordpress-themes/portfolio-gallery.html" class="download">Download plugin >></a>
+      </li>
 			<li class="business_elite">
 				<div class="product"></div>
 				<div class="title">

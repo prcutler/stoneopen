@@ -2338,7 +2338,6 @@ class BWGViewGalleryBox {
         event_stack = [];
         window.clearInterval(bwg_playInterval);
       });
-      var lightbox_ctrl_btn_pos = "<?php echo $theme_row->lightbox_ctrl_btn_pos ;?>";
     </script>
     <?php
     die();

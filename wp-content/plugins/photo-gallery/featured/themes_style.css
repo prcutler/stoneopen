@@ -51,6 +51,7 @@
 #main_featured_themes_page #featured-plugins-list  li.weddings  .product {background:url("images/wedding.jpg") left center no-repeat;}
 #main_featured_themes_page #featured-plugins-list  li.exclusive  .product {background:url("images/exclusive.jpg") left center no-repeat;}
 #main_featured_themes_page #featured-plugins-list  li.expert .product {background:url("images/expert.jpg") left center no-repeat;}
+#main_featured_themes_page #featured-plugins-list  li.portfolio_gallery .product {background:url("images/portfolio_gallery.png") left center no-repeat;}
 
 #main_featured_themes_page #featured-plugins-list li  .title  .heading {
 	display: block;

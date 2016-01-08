@@ -46,7 +46,7 @@ class BWGViewGalleries_bwg {
         </a>
       </div>
     </div>
-    <form class="wrap" id="galleries_form" method="post" action="admin.php?page=galleries_bwg" style="float: left; width: 99%;">
+    <form class="wrap bwg_form" id="galleries_form" method="post" action="admin.php?page=galleries_bwg" style="float: left; width: 99%;">
       <?php wp_nonce_field( 'galleries_bwg', 'bwg_nonce' ); ?>
       <span class="gallery-icon"></span>
       <h2>
@@ -523,7 +523,7 @@ class BWGViewGalleries_bwg {
       }
     </script>
     <script language="javascript" type="text/javascript" src="<?php echo WD_BWG_URL . '/js/bwg_embed.js?ver='; ?><?php echo get_option("wd_bwg_version"); ?>"></script>
-    <form class="wrap" method="post" id="galleries_form" action="admin.php?page=galleries_bwg" style="float: left; width: 99%;">
+    <form class="wrap bwg_form" method="post" id="galleries_form" action="admin.php?page=galleries_bwg" style="float: left; width: 99%;">
       <?php wp_nonce_field( 'galleries_bwg', 'bwg_nonce' ); ?>
       <span class="gallery-icon"></span>
       <h2><?php echo $page_title; ?></h2>

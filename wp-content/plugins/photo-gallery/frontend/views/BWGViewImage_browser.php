@@ -604,7 +604,7 @@ class BWGViewImage_browser {
         bwg_image_browser_<?php echo $bwg; ?>();
       });
       function bwg_gallery_box_<?php echo $bwg; ?>(image_id) {
-        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&image_id=' + image_id, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5);
+        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&image_id=' + image_id, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5, "<?php echo $theme_row->lightbox_ctrl_btn_pos ;?>");
       }
       function bwg_document_ready_<?php echo $bwg; ?>() {
         var bwg_touch_flag = false;

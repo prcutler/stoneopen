@@ -5,7 +5,7 @@ Tags: events, calendar, event, venue, organizer, dates, date, google maps, confe
 Donate link: http://m.tri.be/29
 Requires at least: 3.9
 Tested up to: 4.4
-Stable tag: 4.0.1
+Stable tag: 4.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -308,6 +308,33 @@ Patch = 1
 At no point during the 3.0 lifecycle will the major version change. But you can expect that either minor version and/or patch will change with each release.
 
 == Changelog ==
+
+= [4.0.4] 2015-12-23 =
+
+* Tweak - Including the latest embedded Event Tickets release for backward compatibility
+
+= [4.0.3] 2015-12-22 =
+
+* Tweak - Adjust single-event.php template to allow the "Time" title and content to be filterable (Props to Sitecrafting for highlighting this issue!)
+* Fix - Resolved issue with an overly escaped Event Category edit URL that prevented editing categories (Thanks to Ian for the first report of this issue!)
+* Fix - Fixed issue where clicking on columns on the Events listed in the Admin Dashboard were ALWAYS sorted by Event start/end date before sorting by the column selected (Cheers to Corrado for bringing this to our attention!)
+
+= [4.0.2] 2015-12-16 =
+
+* Tweak - Adding better support for non-numeric cost values on events (Props to Mirja for highlighting this!)
+* Tweak - Avoid notice level errors when advanced events list widget settings are saved (Thank you Johan for reporting the issue!)
+* Tweak - Improve messaging in the same-slug warning message (Thanks to Simon for bringing this to our attention!)
+* Tweak - Hook to Event Tickets to inject event dates into ticket emails
+* Tweak - Adding better support for default venues (Props to Karly for noting this!)
+* Tweak - Improve handling of internationalized slugs (Cheers to Oliver for the help!)
+* Fix - Ensure the past events list displays the correct events when accessed via ajax (Thank you Jesse for highlighting this!)
+* Fix - Support ordering by venue/organizer within event queries (Thank you Doug for bringing this to our attention!)
+* Fix - Fixed issue where events with the same date/time would sometimes be excluded from single-event navigation (Cheers to JeremyEnglert for the tip!)
+* Fix - Resolved issue where events set with the explicit cost of 0 were not showing as "Free" (Thank you terrizsolo for reporting this!)
+* Fix - Fixed bug where the datepicker in Twenty Sixteen was really ugly
+* Fix - Fixed bug where using Quick Edit on events caused the table columns in the event list to become jumbled on save (Props to A K for the report!)
+* Fix - Resolved bug where category links sometimes included event category 1 (Thank you Anthony for the original report of this problem!)
+* Fix - Fixed a settings page URL (Props to Kristy for the heads up!)
 
 = [4.0.1] 2015-12-10 =
 

@@ -784,6 +784,7 @@ class BWGControllerGalleries_bwg {
     $slug = $this->bwg_get_unique_slug($slug, $id);
     $description = (isset($_POST['description']) ? stripslashes($_POST['description']) : '');
     $preview_image = (isset($_POST['preview_image']) ? esc_html(stripslashes($_POST['preview_image'])) : '');
+    $random_preview_image = '';
     if ($preview_image == '') {
       if ($id != 0) {
         $random_preview_image = $wpdb->get_var($wpdb->prepare("SELECT random_preview_image FROM " . $wpdb->prefix . "bwg_gallery WHERE id='%d'", $id));

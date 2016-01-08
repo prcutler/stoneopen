@@ -198,7 +198,7 @@ class BWGControllerOptions_bwg {
     $autoupdate_interval = (isset($_POST['autoupdate_interval_hour']) && isset($_POST['autoupdate_interval_min']) ? ((int) $_POST['autoupdate_interval_hour'] * 60 + (int) $_POST['autoupdate_interval_min']) : 30);
     /*minimum autoupdate interval is 1 min*/
     $autoupdate_interval = ($autoupdate_interval >= 1 ? $autoupdate_interval : 1 );
-    $instagram_client_id = (isset($_POST['instagram_client_id']) ? esc_html(stripslashes($_POST['instagram_client_id'])) : '');
+    $instagram_access_token = (isset($_POST['instagram_access_token']) ? esc_html(stripslashes($_POST['instagram_access_token'])) : '');
     $showthumbs_name = (isset($_POST['thumb_name']) ? esc_html(stripslashes($_POST['thumb_name'])) : 1);
     $show_album_name = (isset($_POST['show_album_name_enable']) ? esc_html(stripslashes($_POST['show_album_name_enable'])) : 1);
     $show_image_counts = (isset($_POST['show_image_counts']) ? esc_html(stripslashes($_POST['show_image_counts'])) : 0);
@@ -337,7 +337,7 @@ class BWGControllerOptions_bwg {
       'popup_hit_counter' => $popup_hit_counter,
       'enable_ML_import' => $enable_ML_import,
       'autoupdate_interval' => $autoupdate_interval,
-      'instagram_client_id' => $instagram_client_id,
+      'instagram_access_token' => $instagram_access_token,
       'showthumbs_name' => $showthumbs_name,
       'show_album_name' => $show_album_name,
       'show_image_counts' => $show_image_counts,
