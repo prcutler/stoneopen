@@ -340,6 +340,15 @@ function bwg_update($version) {
   if (version_compare($version, '1.2.80') == -1) {
 	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option CHANGE `instagram_client_id` `instagram_access_token` varchar(128) NOT NULL DEFAULT ''");
 	}
+  if (version_compare($version, '1.2.84') == -1) {
+	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `placeholder` varchar(32) NOT NULL DEFAULT ''");
+	}
+      // Ecommerce update 
+  if (version_compare($version, '1.2.86') == -1) {
+	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_image ADD `pricelist_id` int(16) NOT NULL DEFAULT 0");
+	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `ecommerce_icon_show_hover` varchar(32) NOT NULL DEFAULT 0");
+	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `popup_enable_ecommerce` tinyint(1) NOT NULL DEFAULT 0");
+  }
   return;
 }
 

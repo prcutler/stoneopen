@@ -64,7 +64,7 @@ function optionsframework_options() {
     $about_content .= "<hr/><br />";
     
     $about_content .= "<h4>".__('Other products by AccessPressThemes','accesspress-parallax')."</h4>";
-    $about_content .=  __('Our Themes - ','accesspress-parallax'). "<a href='https://accesspressthemes.com/themes' target='_blank'>https://accesspressthemes.com/themes</a><br/><br />" ;
+    $about_content .=  __('Our Themes - ','accesspress-parallax'). "<a href='https://accesspressthemes.com/wordpress-themes/' target='_blank'>https://accesspressthemes.com/themes</a><br/><br />" ;
     $about_content .= __('Our Plugins - ','accesspress-parallax'). "<a href='https://accesspressthemes.com/plugins' target='_blank'>https://accesspressthemes.com/plugins</a><br/><br />" ;
 
     $about_content .= "<hr/><br />";

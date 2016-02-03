@@ -92,7 +92,7 @@ class BWGViewOptions_bwg {
       <div style="display: inline-block; width: 100%;">
         <div style="float: right;">
           <input class="button-primary" type="submit" onclick="if (spider_check_required('title', 'Title')) {return false;}; spider_set_input_value('task', 'save')" value="<?php _e("Save", 'bwg_back'); ?>" />
-          <input class="button-secondary" type="submit" onclick="if (confirm('<?php _e("Do you want to reset to default?", 'bwg_back'); ?>')) {
+          <input class="button-secondary" type="submit" onclick="if (confirm('<?php echo addslashes(__("Do you want to reset to default?", 'bwg_back')); ?>')) {
                                                                  spider_set_input_value('task', 'reset');
                                                                } else {
                                                                  return false;
@@ -180,12 +180,21 @@ class BWGViewOptions_bwg {
               </tr>
               <tr>
                 <td class="spider_label_options">
-                  <label><?php _e('Show search box:', 'bwg_back'); ?></label>
+                  <label><?php echo __('Show search box:', 'bwg_back'); ?></label>
                 </td>
                 <td>
-                  <input type="radio" name="show_search_box" id="show_search_box_1" value="1" <?php if ($row->show_search_box) echo 'checked="checked"'; ?> onClick="bwg_enable_disable('', 'tr_search_box_width', 'show_search_box_1')" /><label for="show_search_box_1"><?php _e('Yes', 'bwg_back'); ?></label>
-                  <input type="radio" name="show_search_box" id="show_search_box_0" value="0" <?php if (!$row->show_search_box) echo 'checked="checked"'; ?> onClick="bwg_enable_disable('none', 'tr_search_box_width', 'show_search_box_0')" /><label for="show_search_box_0"><?php _e('No', 'bwg_back'); ?></label>
+                  <input type="radio" name="show_search_box" id="show_search_box_1" value="1" <?php if ($row->show_search_box) echo 'checked="checked"'; ?> onClick="bwg_enable_disable('', 'tr_search_box_width', 'show_search_box_1'); bwg_enable_disable('', 'tr_search_box_placeholder', 'show_search_box_1')" /><label for="show_search_box_1"><?php echo __('Yes', 'bwg_back'); ?></label>
+                  <input type="radio" name="show_search_box" id="show_search_box_0" value="0" <?php if (!$row->show_search_box) echo 'checked="checked"'; ?> onClick="bwg_enable_disable('none', 'tr_search_box_width', 'show_search_box_0'); bwg_enable_disable('none', 'tr_search_box_placeholder', 'show_search_box_0')" /><label for="show_search_box_0"><?php echo __('No', 'bwg_back'); ?></label>
                  <div class="spider_description"></div>
+                </td>
+              </tr>
+	      <tr id="tr_search_box_placeholder">
+                <td class="spider_label_options">
+                  <label for="placeholder"><?php echo __('Add placeholder to search:', 'bwg_back'); ?> </label>
+                </td>
+                <td>
+                  <input type="text" name="placeholder" id="placeholder" value="<?php echo $row->placeholder; ?>"  /> 
+                  <div class="spider_description"></div>
                 </td>
               </tr>
               <tr id="tr_search_box_width">
@@ -1636,6 +1645,7 @@ class BWGViewOptions_bwg {
         window.onload = bwg_built_in_watermark('watermark_type_<?php echo $row->built_in_watermark_type ?>');
         window.onload = bwg_popup_fullscreen(<?php echo $row->popup_fullscreen; ?>);
         window.onload = bwg_enable_disable(<?php echo $row->show_search_box ? "'', 'tr_search_box_width', 'show_search_box_1'" : "'none', 'tr_search_box_width', 'show_search_box_0'" ?>);
+        window.onload = bwg_enable_disable(<?php echo $row->show_search_box ? "'', 'tr_search_box_placeholder', 'show_search_box_1'" : "'none', 'tr_search_box_placeholder', 'show_search_box_0'" ?>);
         window.onload = bwg_enable_disable(<?php echo $row->preload_images ? "'', 'tr_preload_images_count', 'preload_images_1'" : "'none', 'tr_preload_images_count', 'preload_images_0'" ?>);
         window.onload = bwg_enable_disable(<?php echo $row->popup_enable_ctrl_btn ? "'', 'tr_popup_fullscreen', 'popup_enable_ctrl_btn_1'" : "'none', 'tr_popup_fullscreen', 'popup_enable_ctrl_btn_0'" ?>);
         window.onload = bwg_enable_disable(<?php echo $row->popup_enable_ctrl_btn ? "'', 'tr_popup_info', 'popup_enable_ctrl_btn_1'" : "'none', 'tr_popup_info', 'popup_enable_ctrl_btn_0'" ?>);

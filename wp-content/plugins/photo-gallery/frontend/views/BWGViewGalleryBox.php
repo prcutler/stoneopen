@@ -500,7 +500,7 @@ class BWGViewGalleryBox {
         height: <?php echo $image_filmstrip_height; ?>px;
         position: absolute;
         width: <?php echo $image_width; ?>px;
-        z-index: 10105;
+        z-index: 10150;
         <?php echo $theme_row->lightbox_filmstrip_pos; ?>: 0;
       }
       .bwg_filmstrip {

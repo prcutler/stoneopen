@@ -4,7 +4,7 @@
  * Plugin Name: Photo Gallery
  * Plugin URI: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
- * Version: 1.2.82
+ * Version: 1.2.86
  * Author: WebDorado
  * Author URI: https://web-dorado.com/
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
@@ -630,6 +630,7 @@ function bwg_activate() {
     `rate_count` bigint(20) NOT NULL,
     `hit_count` bigint(20) NOT NULL,
     `redirect_url` varchar(255) NOT NULL,
+    `pricelist_id` bigint(20) NOT NULL,
     PRIMARY KEY (`id`)
   ) DEFAULT CHARSET=utf8;";
   $wpdb->query($bwg_image);
@@ -658,7 +659,7 @@ function bwg_activate() {
     `upload_thumb_height` int(4) NOT NULL,
     `image_enable_page` tinyint(1) NOT NULL,
     `image_title_show_hover` varchar(20) NOT NULL,
-
+    `ecommerce_icon_show_hover` varchar(20) NOT NULL,
     `album_column_number` int(4) NOT NULL,
     `albums_per_page` int(4) NOT NULL,
     `album_title_show_hover` varchar(8) NOT NULL,
@@ -712,7 +713,7 @@ function bwg_activate() {
     `popup_enable_facebook` tinyint(1) NOT NULL,
     `popup_enable_twitter` tinyint(1) NOT NULL,
     `popup_enable_google` tinyint(1) NOT NULL,
-
+    `popup_enable_ecommerce` tinyint(1) NOT NULL,
     `watermark_type` varchar(8) NOT NULL,
     `watermark_position` varchar(16) NOT NULL,
     `watermark_width` int(4) NOT NULL,
@@ -790,6 +791,7 @@ function bwg_activate() {
     `show_tag_box` tinyint(1) NOT NULL,
     `show_hide_custom_post` tinyint(1) NOT NULL,
     `show_hide_post_meta` tinyint(1) NOT NULL,
+    `placeholder` varchar(32) NOT NULL,
     PRIMARY KEY (`id`)
   ) DEFAULT CHARSET=utf8;";
   $wpdb->query($bwg_option);
@@ -978,6 +980,7 @@ function bwg_activate() {
       'show_tag_box' => 0,
       'show_hide_custom_post' => 0,
       'show_hide_post_meta' => 0,
+      'placeholder' => '',
     ));
   }
   $exists_default = $wpdb->get_var('SELECT count(id) FROM ' . $wpdb->prefix . 'bwg_theme');
@@ -1900,7 +1903,7 @@ function bwg_activate() {
     ));
   }
   $version = get_option("wd_bwg_version");
-  $new_version = '1.2.82';
+  $new_version = '1.2.86';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -1948,7 +1951,7 @@ wp_oembed_add_provider( '#https://instagr(\.am|am\.com)/p/.*#i', 'https://api.in
 
 function bwg_update_hook() {
 	$version = get_option("wd_bwg_version");
-  $new_version = '1.2.82';
+  $new_version = '1.2.86';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);

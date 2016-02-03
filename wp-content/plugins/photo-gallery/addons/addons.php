@@ -22,6 +22,13 @@ function bwg_addons_display() {
       'icon'        => '',
       'image'       => WD_BWG_URL . '/addons/images/import_export.png',
     ),
+    'photo-gallery-ecomerce'   => array(
+      'name'        => __('Photo Gallery Ecommerce', 'bwg'),
+      'url'         => 'https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/gallery-ecommerce.html',
+      'description' => __('Using Photo Gallery Ecommerce you can sell images included in galleries either as digital downloads or products/prints via Paypal or Stripe.', 'bwg'),
+      'icon'        => '',
+      'image'       => WD_BWG_URL . '/addons/images/ecommerce.png',
+    ),
   );
   ?>
   <div class="wrap">

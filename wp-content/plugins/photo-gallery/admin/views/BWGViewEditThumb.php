@@ -739,7 +739,7 @@ class BWGViewEditThumb {
          </div>
         </div>		
         <div class="reset_cont">
-          <a class="reset_img" onclick="if (confirm('<?php _e("Do you want to reset the image?", 'bwg_back'); ?>')) spider_rotate('recover', 'bwg_rotate_image'); else return false; "><?php _e("Reset image", 'bwg_back'); ?></a>
+          <a class="reset_img" onclick="if (confirm('<?php echo addslashes(__("Do you want to reset the image?", 'bwg_back')); ?>')) spider_rotate('recover', 'bwg_rotate_image'); else return false; "><?php _e("Reset image", 'bwg_back'); ?></a>
         </div>
         <div class="flip_cont" >		  
           <img title="Flip Both" class="effect" onclick="spider_rotate('both', 'bwg_rotate_image')" src="<?php echo WD_BWG_URL . '/images/effects/flip_both.png'; ?>"/>

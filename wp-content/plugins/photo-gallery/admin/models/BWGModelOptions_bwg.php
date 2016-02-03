@@ -173,6 +173,7 @@ class BWGModelOptions_bwg {
       $row->show_tag_box = 0;
       $row->show_hide_custom_post = 0;
       $row->show_hide_post_meta = 0;
+      $row->placeholder = '';
     }
     return $row;
   }

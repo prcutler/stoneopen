@@ -64,7 +64,7 @@ class BWGViewGalleries_bwg {
         <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'save_order')" value="<?php _e("Save Order", 'bwg_back'); ?>" />
         <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'publish_all')" value="<?php _e("Publish", 'bwg_back'); ?>" />
         <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'unpublish_all')" value="<?php _e("Unpublish", 'bwg_back'); ?>" />
-        <input class="button-secondary" type="submit" onclick="if (confirm('<?php _e("Do you want to delete selected items?", 'bwg_back'); ?>')) {
+        <input class="button-secondary" type="submit" onclick="if (confirm('<?php echo addslashes(__("Do you want to delete selected items?", 'bwg_back')); ?>')) {
                                                        spider_set_input_value('task', 'delete_all');
                                                      } else {
                                                        return false;
@@ -367,7 +367,7 @@ class BWGViewGalleries_bwg {
             span_edit_recover.setAttribute('class', "edit_thumb");
             div_edit.appendChild(span_edit_recover);
             var a_recover = document.createElement('a');
-            a_recover.setAttribute('onclick', 'if (confirm("<?php _e("Do you want to reset the image?", 'bwg_back'); ?>")) { spider_set_input_value("ajax_task", "recover"); spider_set_input_value("image_current_id", "' + bwg_j + '"); spider_ajax_save("galleries_form");} return false;');
+            a_recover.setAttribute('onclick', 'if (confirm("<?php echo addslashes(__("Do you want to reset the image?", 'bwg_back')); ?>")) { spider_set_input_value("ajax_task", "recover"); spider_set_input_value("image_current_id", "' + bwg_j + '"); spider_ajax_save("galleries_form");} return false;');
             a_recover.innerHTML = "<?php _e("Reset", 'bwg_back'); ?>";
             span_edit_recover.appendChild(a_recover);
           }
@@ -744,7 +744,7 @@ class BWGViewGalleries_bwg {
         <input class="button-secondary" type="submit" onclick="spider_set_input_value('ajax_task', 'image_unpublish_all');
                                                      spider_ajax_save('galleries_form');
                                                      return false;" value="<?php _e("Unpublish", 'bwg_back'); ?>" />
-                <input class="button-secondary spider_delete_button" type="submit" onclick="if (confirm('<?php _e("Do you want to delete selected items?", 'bwg_back'); ?>')) {
+                <input class="button-secondary spider_delete_button" type="submit" onclick="if (confirm('<?php echo addslashes(__("Do you want to delete selected items?", 'bwg_back')); ?>')) {
                                                        spider_set_input_value('ajax_task', 'image_delete_all');
                                                        spider_ajax_save('galleries_form');
                                                        return false;
@@ -922,7 +922,7 @@ class BWGViewGalleries_bwg {
                     $query_url = add_query_arg(array('TB_iframe' => '1'), $query_url);
                     ?>
                     <span class="edit_thumb"><a class="thickbox thickbox-preview" href="<?php echo $query_url; ?>"><?php _e("Edit", 'bwg_back'); ?></a></span> | 
-                    <span class="edit_thumb"><a onclick="if (confirm('<?php _e("Do you want to reset the image?", 'bwg_back'); ?>')) {
+                    <span class="edit_thumb"><a onclick="if (confirm('<?php echo addslashes(__("Do you want to reset the image?", 'bwg_back')); ?>')) {
                                                           spider_set_input_value('ajax_task', 'recover');
                                                           spider_set_input_value('image_current_id', '<?php echo $row_data->id; ?>');
                                                           spider_ajax_save('galleries_form');

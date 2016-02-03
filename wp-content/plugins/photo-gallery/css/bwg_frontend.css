@@ -63,6 +63,9 @@ div[id^="bwg_container"] div[id^="bwg_container"] .bwg_img_clear {
   -webkit-animation: spin 2.5s infinite linear;
 }
 
+.bwg_filmstrip_thumbnail_img {
+  max-width: none;
+}
 .spider_ajax_loading {
   border: none !important;
   animation: spin 2.5s infinite linear;

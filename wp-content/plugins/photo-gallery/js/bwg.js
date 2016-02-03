@@ -159,7 +159,7 @@ function spider_ajax_save(form_id, tr_group) {
   jQuery('#loading_div').show();
 
   jQuery.post(
-    jQuery('#' + form_id).action,
+    jQuery('#' + form_id).attr('action'),
     post_data,
 
     function (data) {

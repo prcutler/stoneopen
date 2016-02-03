@@ -80,7 +80,7 @@ class BWGViewUninstall_bwg {
         </p>
         <p style="text-align: center;">
           <input type="submit" value="UNINSTALL" class="button-primary" onclick="if (check_yes.checked) { 
-                                                                                    if (confirm('<?php _e("You are About to Uninstall Photo Gallery from WordPress. This Action Is Not Reversible.", 'bwg_back'); ?>')) {
+                                                                                    if (confirm('<?php echo addslashes(__("You are About to Uninstall Photo Gallery from WordPress. This Action Is Not Reversible.", 'bwg_back')); ?>')) {
                                                                                         spider_set_input_value('task', 'uninstall');
                                                                                     } else {
                                                                                         return false;

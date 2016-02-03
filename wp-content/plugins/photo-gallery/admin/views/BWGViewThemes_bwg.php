@@ -80,7 +80,7 @@ class  BWGViewThemes_bwg {
                                                spider_form_submit(event, 'themes_form')"><?php _e("Add new", 'bwg_back'); ?></a>
       </h2>
       <div class="buttons_div">
-        <input class="button-secondary" type="submit" onclick="if (confirm('<?php echo __('Do you want to delete selected items?', 'bwg_back'); ?>')) {
+        <input class="button-secondary" type="submit" onclick="if (confirm('<?php echo addslashes(__('Do you want to delete selected items?', 'bwg_back')); ?>')) {
                                                        spider_set_input_value('task', 'delete_all');
                                                      } else {
                                                        return false;
@@ -264,7 +264,7 @@ class  BWGViewThemes_bwg {
         <input class="button-secondary" type="submit" onclick="if (spider_check_required('name', 'Name')) {return false;}; spider_set_input_value('task', 'save')" value="<?php _e("Save", 'bwg_back'); ?>"/>
         <input class="button-secondary" type="submit" onclick="if (spider_check_required('name', 'Name')) {return false;}; spider_set_input_value('task', 'apply')" value="<?php _e("Apply", 'bwg_back'); ?>"/>
         <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'cancel')" value="<?php _e("Cancel", 'bwg_back'); ?>"/>
-        <input title="Reset to default theme" class="button-primary" type="submit" onclick="if (confirm('<?php _e("Do you want to reset to default?", 'bwg_back'); ?>')) {
+        <input title="Reset to default theme" class="button-primary" type="submit" onclick="if (confirm('<?php echo addslashes(__("Do you want to reset to default?", 'bwg_back')); ?>')) {
                                                                  spider_set_input_value('task', 'reset');
                                                                } else {
                                                                  return false;

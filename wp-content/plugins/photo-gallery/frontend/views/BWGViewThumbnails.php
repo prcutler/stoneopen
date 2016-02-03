@@ -58,7 +58,7 @@ class BWGViewThumbnails {
     if (!isset($params['popup_info_always_show'])) {
       $params['popup_info_always_show'] = 0;
     }
-	if (!isset($params['popup_info_full_width'])) {
+    if (!isset($params['popup_info_full_width'])) {
       $params['popup_info_full_width'] = 0;
     }
     if (!isset($params['popup_enable_rate'])) {
@@ -85,6 +85,7 @@ class BWGViewThumbnails {
     $from = (isset($params['from']) ? esc_html($params['from']) : 0);
     $sort_direction = ' ' . $params['order_by'] . ' ';
     $options_row = $this->model->get_options_row_data();
+    $placeholder = isset($options_row->placeholder) ? $options_row->placeholder : '';
     $play_icon = $options_row->play_icon;
     if ($from) {
       $params['gallery_id'] = $params['id'];
@@ -373,7 +374,7 @@ class BWGViewThumbnails {
         <form id="gal_front_form_<?php echo $bwg; ?>" method="post" action="#">
           <?php
           if ($params['show_search_box']) {
-            WDWLibrary::ajax_html_frontend_search_box('gal_front_form_' . $bwg, $bwg, 'bwg_standart_thumbnails_' . $bwg, $images_count, $params['search_box_width']);
+            WDWLibrary::ajax_html_frontend_search_box('gal_front_form_' . $bwg, $bwg, 'bwg_standart_thumbnails_' . $bwg, $images_count, $params['search_box_width'], $placeholder);
           }
           if (isset($params['show_sort_images']) && $params['show_sort_images']) {
             WDWLibrary::ajax_html_frontend_sort_box('gal_front_form_' . $bwg, $bwg, 'bwg_standart_thumbnails_' . $bwg, $params['sort_by'], $params['search_box_width']);
@@ -409,10 +410,8 @@ class BWGViewThumbnails {
                   $image_thumb_width = $params['thumb_width'];
                   if($image_row->resolution != ''){
                     $resolution_arr = explode(" ",$image_row->resolution);
-                    
                     $resolution_w = intval($resolution_arr[0]);
                     $resolution_h = intval($resolution_arr[2]);
-
                     if($resolution_w != 0 && $resolution_h != 0){
                       $scale = $scale = max($params['thumb_width'] / $resolution_w, $params['thumb_height'] / $resolution_h);
                       $image_thumb_width = $resolution_w * $scale;
@@ -553,7 +552,8 @@ class BWGViewThumbnails {
       ?>
       function bwg_gallery_box_<?php echo $bwg; ?>(image_id) {
         var filterTags = jQuery("#bwg_tags_id_bwg_standart_thumbnails_<?php echo $bwg; ?>" ).val() ? jQuery("#bwg_tags_id_bwg_standart_thumbnails_<?php echo $bwg; ?>" ).val() : 0;
-        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&image_id=' + image_id + "&filter_tag_<?php echo $bwg; ?>=" +  filterTags, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5, "<?php echo $theme_row->lightbox_ctrl_btn_pos ;?>");
+        var filtersearchname = jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() ? jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() : '';
+        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&image_id=' + image_id + "&filter_tag_<?php echo $bwg; ?>=" +  filterTags + "&filter_search_name_<?php echo $bwg; ?>=" +  filtersearchname, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5, "<?php echo $theme_row->lightbox_ctrl_btn_pos ;?>");
       }
       function bwg_document_ready_<?php echo $bwg; ?>() {
         var bwg_touch_flag = false;

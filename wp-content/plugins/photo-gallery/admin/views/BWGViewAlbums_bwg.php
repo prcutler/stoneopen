@@ -64,7 +64,7 @@ class BWGViewAlbums_bwg {
         <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'save_order')" value="<?php _e("Save Order", 'bwg_back'); ?>" />
         <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'publish_all')" value="<?php _e("Publish", 'bwg_back'); ?>" />
         <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'unpublish_all')" value="<?php _e("Unpublish", 'bwg_back'); ?>" />
-        <input class="button-secondary" type="submit" onclick="if (confirm('<?php _e("Do you want to delete selected items?", 'bwg_back'); ?>')) {
+        <input class="button-secondary" type="submit" onclick="if (confirm('<?php echo addslashes(__("Do you want to delete selected items?", 'bwg_back')); ?>')) {
                                                        spider_set_input_value('task', 'delete_all');
                                                      } else {
                                                        return false;

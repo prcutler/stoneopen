@@ -89,6 +89,7 @@ class BWGViewImage_browser {
     $image_title = $params['image_browser_title_enable'];
     $enable_image_description = $params['image_browser_description_enable'];
     $option_row = $this->model->get_option_row_data();
+    $placeholder = isset($option_row->placeholder) ? $option_row->placeholder : '';
     $image_right_click = $option_row->image_right_click;
     if (!isset($params['popup_fullscreen'])) {
       $params['popup_fullscreen'] = 0;
@@ -443,7 +444,7 @@ class BWGViewImage_browser {
         <form id="gal_front_form_<?php echo $bwg; ?>" method="post" action="#">
           <?php
           if ($params['show_search_box']) {
-            WDWLibrary::ajax_html_frontend_search_box('gal_front_form_' . $bwg, $bwg, 'bwg_standart_thumbnails_' . $bwg, $images_count, $params['search_box_width']);
+            WDWLibrary::ajax_html_frontend_search_box('gal_front_form_' . $bwg, $bwg, 'bwg_standart_thumbnails_' . $bwg, $images_count, $params['search_box_width'], $placeholder);
           }
           ?>
           <div class="image_browser_images_conteiner_<?php echo $bwg; ?>">
@@ -604,7 +605,8 @@ class BWGViewImage_browser {
         bwg_image_browser_<?php echo $bwg; ?>();
       });
       function bwg_gallery_box_<?php echo $bwg; ?>(image_id) {
-        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&image_id=' + image_id, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5, "<?php echo $theme_row->lightbox_ctrl_btn_pos ;?>");
+        var filtersearchname = jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() ? jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() : '';
+        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&image_id=' + image_id + "&filter_search_name_<?php echo $bwg; ?>=" +  filtersearchname, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5, "<?php echo $theme_row->lightbox_ctrl_btn_pos ;?>");
       }
       function bwg_document_ready_<?php echo $bwg; ?>() {
         var bwg_touch_flag = false;

@@ -644,7 +644,7 @@ class WDWLibrary {
     <?php
   }
 
-  public static function ajax_html_frontend_search_box($form_id, $current_view, $cur_gal_id, $images_count, $search_box_width = 180) {
+  public static function ajax_html_frontend_search_box($form_id, $current_view, $cur_gal_id, $images_count, $search_box_width = 180, $placeholder = '') {
     $bwg_search = ((isset($_POST['bwg_search_' . $current_view]) && esc_html($_POST['bwg_search_' . $current_view]) != '') ? esc_html($_POST['bwg_search_' . $current_view]) : '');	
     $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : 'album');
     $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : 0);
@@ -725,7 +725,7 @@ class WDWLibrary {
           <i title="<?php echo __('Search', 'bwg'); ?>" class="bwg_search fa fa-search" onclick="spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1)"></i>
         </span>
         <span class="bwg_search_input_container">
-          <input id="bwg_search_input_<?php echo $current_view; ?>" class="bwg_search_input_<?php echo $current_view; ?>" type="text" onkeypress="return check_enter_key(event)" name="bwg_search_<?php echo $current_view; ?>" value="<?php echo $bwg_search; ?>" >
+          <input id="bwg_search_input_<?php echo $current_view; ?>" class="bwg_search_input_<?php echo $current_view; ?>" type="text" onkeypress="return check_enter_key(event)" name="bwg_search_<?php echo $current_view; ?>" value="<?php echo $bwg_search; ?>" placeholder="<?php echo $placeholder; ?>" />
           <input id="bwg_images_count_<?php echo $current_view; ?>" class="bwg_search_input" type="hidden" name="bwg_images_count_<?php echo $current_view; ?>" value="<?php echo $images_count; ?>" >
         </span>
       </div>
