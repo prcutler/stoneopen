@@ -162,6 +162,8 @@ class BWGViewGalleryBox {
     $rgb_bwg_image_info_bg_color = WDWLibrary::spider_hex2rgb($theme_row->lightbox_info_bg_color);
     $rgb_bwg_image_hit_bg_color = WDWLibrary::spider_hex2rgb($theme_row->lightbox_hit_bg_color);
     $rgb_lightbox_ctrl_cont_bg_color = WDWLibrary::spider_hex2rgb($theme_row->lightbox_ctrl_cont_bg_color);
+    $lightbox_bg_transparent = (isset($theme_row->lightbox_bg_transparent)) ? $theme_row->lightbox_bg_transparent : 100;
+    $lightbox_bg_color = WDWLibrary::spider_hex2rgb($theme_row->lightbox_bg_color); 
 
     $current_filename = '';
 
@@ -173,7 +175,7 @@ class BWGViewGalleryBox {
         box-sizing: border-box;
       }
       .spider_popup_wrap {
-        background-color: #<?php echo $theme_row->lightbox_bg_color; ?>;
+        background-color: rgba(<?php echo $lightbox_bg_color['red']; ?>, <?php echo $lightbox_bg_color['green']; ?>, <?php echo $lightbox_bg_color['blue']; ?>, <?php echo number_format($lightbox_bg_transparent/ 100, 2, ".", ""); ?>);
         display: inline-block;
         left: 50%;
         outline: medium none;
@@ -1369,7 +1371,7 @@ class BWGViewGalleryBox {
         });
         if (typeof data[key] != 'undefined') {
           if (typeof data[current_key] != 'undefined') {
-            if (jQuery(".bwg_play_pause") && !jQuery(".bwg_play_pause").hasClass("fa-play")) {
+            if (jQuery(".bwg_play_pause").length && !jQuery(".bwg_play_pause").hasClass("fa-play")) {
               bwg_play();
             }
             if (!from_effect) {
@@ -2191,7 +2193,7 @@ class BWGViewGalleryBox {
         });
         /* Play/pause.*/
         jQuery(".bwg_play_pause, .bwg_popup_image").on(bwg_click, function () {
-          if (jQuery(".bwg_play_pause") && jQuery(".bwg_play_pause").hasClass("fa-play")) {
+          if (jQuery(".bwg_play_pause").length && jQuery(".bwg_play_pause").hasClass("fa-play")) {
             /* Play.*/
             bwg_play();
             jQuery(".bwg_play_pause").attr("title", "<?php echo __('Pause', 'bwg'); ?>");
@@ -2323,7 +2325,7 @@ class BWGViewGalleryBox {
       }
       jQuery(window).focus(function() {
         /* event_stack = [];*/
-          if (jQuery(".bwg_play_pause") && !jQuery(".bwg_play_pause").hasClass("fa-play")) {
+          if (jQuery(".bwg_play_pause").length && !jQuery(".bwg_play_pause").hasClass("fa-play")) {
             bwg_play();
           }
         /*var i = 0;

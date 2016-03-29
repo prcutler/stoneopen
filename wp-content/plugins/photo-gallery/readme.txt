@@ -1,9 +1,10 @@
 === Gallery ===
 Contributors: webdorado
 Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
-Tags: photo, photo gallery, image gallery, video gallery, gallery, galleries,  wordpress gallery plugin, images gallery, album, photo albums, simple gallery, best gallery plugin, free photo gallery, wp gallery, wordpress gallery, website gallery, gallery shortcode, best gallery, picture, pictures, gallery slider, photo album, photogallery, widget gallery, image, images, photos,  gallery lightbox, photoset, wordpress photo gallery plugin, wp gallery plugins, responsive wordpress photo gallery, media, image album, filterable gallery, banner rotator, fullscreen gallery, fotogalerie, galleria, galerie, galeri, responsive gallery, add album,  add gallery, add pictures, fotoalbum, foto, gallery decription, multiple pictures, photoalbum, upload images, upload photos, view images, view pictures, admin, AJAX, comments, gallery image, image lightbox, image rotate, image slideshow, image slider, jquery, jquery gallery, slide show, slideshow, thumbnail, thumbnail view, thumbnails, thumbs, responsive, watermarking, watermarks,fullscreen slider, lightbox, photography, sidebar, slide, youtube, vimeo, videos, instagram, facebook, mosaic, facebook integration, instagram feed, Flickr, Dailymotion, widget, youtube gallery, ecommerce
+Tags: photo, photo gallery, image gallery, video gallery, gallery, galleries,  wordpress gallery plugin, images gallery, album, photo albums, simple gallery, best gallery plugin, free photo gallery, wp gallery, wordpress gallery, website gallery, gallery shortcode, best gallery, picture, pictures, gallery slider, photo album, photogallery, widget gallery, image, images, photos,  gallery lightbox, photoset, wordpress photo gallery plugin, wp gallery plugins, responsive wordpress photo gallery, media, image album, filterable gallery, banner rotator, fullscreen gallery, responsive gallery, add album,  add gallery, add pictures, fotoalbum, foto, gallery decription, multiple pictures, photoalbum, upload images, upload photos, view images, view pictures, admin, AJAX, comments, gallery image, image lightbox, image rotate, image slideshow, image slider, jquery, jquery gallery, slide show, slideshow, thumbnail, thumbnail view, thumbnails, thumbs, responsive, watermarking, watermarks,fullscreen slider, lightbox, photography, sidebar, slide, youtube, vimeo, videos, instagram, facebook, mosaic, facebook integration, instagram feed, Flickr, Dailymotion, widget, youtube gallery, ecommerce
+Requires at least: 3.4
 Tested up to: 4.4 
-Stable tag: 1.2.86    
+Stable tag: 1.2.94    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,6 +29,10 @@ https://www.youtube.com/watch?v=4Mxg0FsFZZE&index=5&list=PLnxWPiY5tLFUsFI67acGEP
 
 
 Photo Gallery is an advanced plugin with a list of tools and options for adding and editing images for different views. It is fully responsive. The product includes plugin for adding image galleries and albums to posts and pages, as well as multiple widgets. You can add images, providing detailed descriptions and tags, organize the galleries into different albums.  
+
+From now on  Photo Gallery E-commerce add-on enables users to sell digital images and prints. You can create your online store straightaway and manage the store with advanced and functional options.      
+Create unlimited price list and connect them with galleries and images. Specify the resolutions for digital downloads. Sell your images with Stripe or PayPal payment systems with ability to email buyers and give immediate access to downloaded content.     
+
 
 The plugin allows displaying galleries/albums within the following views: 
 
@@ -212,8 +217,49 @@ Yes, the Photo Gallery is responsive and displays resized image for the mobile d
 = 7. Is it possible to add advertising or watermark over the images with free version? =
 Yes, it is possible to add advertising and/or watermark over the images. In both cases it can be only a single ad/watermark for all images. 
 
+= 8. What are the best dimensions to set for Photo Gallery Images? =
+We recommend to use images with the width of 1200px to 1600px. In order to speed up the load time of one's site, please use images with size of 500-700 KB or less.    
+
+= 9. Can I add images to my galleries which had already been uploaded to WordPress Media Library? =
+To enable the feature of adding Media Library images, go to Photo Gallery > Options > Global Options and set Import from Media Library option to Yes. After that you will be able to import photos from Media Library to Photo Gallery.     
 
 == Changelog ==
+
+= 1.2.94 =
+* Fixed: Gallery media uploader files with withespaces in name.     
+
+= 1.2.93 =
+* Added: Introduction tour.   
+
+= 1.2.92 =
+* Fixed: Autoplay in lightbox.   
+
+= 1.2.91 =
+* Fixed: Sort randomly in album views.     
+* Added: Ligthbox background transparency.     
+
+= 1.2.90 =
+* Fixed: Ecommerce loading div.   
+* Fixed: Albums mosaic view.     
+* Changed: Featured plugins page.   
+  
+= 1.2.89 =
+* Fixed: Possibility to set featured image for gallery custom post types.     
+* Fixed: Masonry album thumbnail container transparency.     
+* Fixed: Share conflict with Jetpack.     
+* Fixed: Load more.    
+
+= 1.2.88 =
+*  Fixed: Prevent javascript errors with empty options.      
+*  Changed: Dutch translation (Thanks to Gerben H. Dijkstra).     
+*  Changed: Italian translation (Thanks to Fabio Massimo Pari).     
+*  Changed: Gallery/Album author do not change on update.     
+*  Improved: Filemanager load time.    
+
+= 1.2.87 =
+*  Changed: User Manual links.    
+*  Fixed: Facebook add-on autoupdate bug.    
+*  Added: Ecommerce add-on notice.       
 
 = 1.2.86 =
 *  Added: Ecommerce add-on.      

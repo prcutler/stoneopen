@@ -493,6 +493,9 @@ class WDWLibrary {
       else {
         $items_county = ($count_items - $count_items % $limit) / $limit;
       }
+      if ($pagination == 2) {
+        $items_county++;
+      }
     }
     else {
       $items_county = 1;

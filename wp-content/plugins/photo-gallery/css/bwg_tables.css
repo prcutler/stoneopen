@@ -252,7 +252,7 @@
   border: none;
   float: left;
   height: 32px;
-  margin: 7px 8px 0 0;
+  margin: 42px 8px 0 0;
   width: 32px;
 }
 
@@ -584,4 +584,37 @@
 
 .widefat  .check-column {
   text-align: center;
+}
+.select_all_album {
+  margin-left:300px;
+  width:300px !important;
+}
+
+#ed_options {
+  width:180px;
+  padding: 45px 10px 20px 0; 
+}
+.wp-pointer.wp-pointer-aligned-right .wp-pointer-arrow {
+  left: auto; 
+  right: 50px;
+}
+.bwg_album_save,
+.bwg_gallery_save {
+ margin-left: -40px;
+}
+.bwg_add_gallery_album {
+  margin-left: 10px;
+  margin-top: 101px;
+}
+.bwg_add_album_bwg {
+  margin: 10px 0 0 20px;
+}
+.bwg_add_img {
+  margin: 118px 0 0 -20px;
+}
+.show_page {
+  margin-left:50px;
+}
+.bwg_gallery_album ,.bwg_photo_galleries {
+  margin-left:22px;
 }

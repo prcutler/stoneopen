@@ -54,9 +54,11 @@ class FilemanagerView {
       $sort_icon = $icons_dir_url . '/' . $sort_order;
       wp_print_scripts('jquery');
       wp_print_scripts('jquery-ui-widget');
+      wp_print_scripts('wp-pointer');
       ?>
       <script src="<?php echo WD_BWG_URL; ?>/filemanager/js/jq_uploader/jquery.iframe-transport.js"></script>
       <script src="<?php echo WD_BWG_URL; ?>/filemanager/js/jq_uploader/jquery.fileupload.js"></script>
+      <link media="all" type="text/css" href="<?php echo get_admin_url(); ?>load-styles.php?c=1&amp;dir=ltr&amp;load=admin-bar,dashicons,wp-admin,buttons,wp-auth-check,wp-pointer" rel="stylesheet">
       <script>
         var DS = "<?php echo addslashes('/'); ?>";
 
@@ -125,7 +127,7 @@ class FilemanagerView {
                 <a class="ctrl_bar_btn btn_remove_items" onclick="onBtnRemoveItemsClick(event, this);" title="<?php echo __('Remove items', 'bwg_back'); ?>"></a>
                 <span class="ctrl_bar_divider"></span>
                 <span class="ctrl_bar_btn btn_primary">
-                  <a class="ctrl_bar_btn btn_upload_files" onclick="onBtnShowUploaderClick(event, this);"><?php echo __('Upload files', 'bwg_back'); ?></a>
+                  <a class="ctrl_bar_btn btn_upload_files" id='upload_images' onclick="onBtnShowUploaderClick(event, this);"><?php echo __('Upload files', 'bwg_back'); ?></a>
                 </span>
                 <?php if ($bwg_options->enable_ML_import) { ?>
                 <span class="ctrl_bar_divider"></span>
@@ -205,7 +207,7 @@ class FilemanagerView {
                 <div id="explorer_body_container">
                   <div id="explorer_body">
                     <?php
-                    foreach ($file_manager_data['files'] as $file) {
+                    foreach ($file_manager_data['files'] as $key => $file) {
                       $file['name'] = esc_html($file['name']);
                       $file['filename'] = esc_html($file['filename']);
                       $file['thumb'] = esc_html($file['thumb']);
@@ -241,7 +243,7 @@ class FilemanagerView {
                             isDir="<?php echo $file['is_dir'] == true ? 'true' : 'false'; ?>">
                         <span class="item_numbering"><?php echo ++$i; ?></span>
                         <span class="item_thumb">
-                          <img src="<?php echo $file['thumb']; ?>"/>
+                          <img src="<?php echo $file['thumb']; ?>" <?php echo $key == 24 ? 'onload="loaded()"' : ''; ?> />
                         </span>
                         <span class="item_icon">
                           <img src="<?php echo $file['icon']; ?>"/>
@@ -265,14 +267,14 @@ class FilemanagerView {
             </div>
             <div class="ctrls_bar ctrls_bar_footer">
               <div class="ctrls_left">
-                <a class="ctrl_bar_btn btn_open btn_primary none_select" onclick="onBtnSelectAllClick();"><?php echo __('Select All', 'bwg_back'); ?></a>
+                <a class="ctrl_bar_btn btn_open btn_primary none_select" id='select_all_images' onclick="onBtnSelectAllClick();"><?php echo __('Select All', 'bwg_back'); ?></a>
               </div>
               <div class="ctrls_right">
                 <span id="file_names_span">
                   <span>
                   </span>
                 </span>
-                <a class="ctrl_bar_btn btn_open btn_primary none_select" onclick="onBtnOpenClick(event, this);"><?php echo ((isset($_REQUEST['callback']) && esc_html($_REQUEST['callback']) == 'bwg_add_image') ? __('Add selected images to gallery', 'bwg_back') : __('Add', 'bwg_back')); ?></a>
+                <a class="ctrl_bar_btn btn_open btn_primary none_select" id='add_selectid_img' onclick="onBtnOpenClick(event, this);"><?php echo ((isset($_REQUEST['callback']) && esc_html($_REQUEST['callback']) == 'bwg_add_image') ? __('Add selected images to gallery', 'bwg_back') : __('Add', 'bwg_back')); ?></a>
                 <span class="ctrl_bar_empty_devider"></span>
                 <a class="ctrl_bar_btn btn_cancel btn_secondary none_select" onclick="onBtnCancelClick(event, this);"><?php echo 'Cancel'; ?></a>
               </div>
@@ -299,7 +301,7 @@ class FilemanagerView {
               <div id="importer_body_container">
                 <div id="importer_body">
                   <?php
-                  foreach ($file_manager_data['media_library_files'] as $file) {
+                  foreach ($file_manager_data['media_library_files'] as $key => $file) {
                     $file['name'] = esc_html($file['name']);
                     $file['filename'] = esc_html($file['filename']);
                     $file['thumb'] = esc_html($file['thumb']);
@@ -327,7 +329,7 @@ class FilemanagerView {
                          isDir="<?php echo $file['is_dir'] == true ? 'true' : 'false'; ?>">
                       <span class="item_numbering"><?php echo ++$i; ?></span>
                       <span class="item_thumb">
-                        <img src="<?php echo $file['thumb']; ?>"/>
+                        <img src="<?php echo $file['thumb']; ?>" <?php echo $key == 24 ? 'onload="loaded()"' : ''; ?> />
                       </span>
                       <span class="item_icon">
                         <img src="<?php echo $file['icon']; ?>"/>
@@ -438,10 +440,6 @@ class FilemanagerView {
                       jQuery("#loading_div").hide();
                     }
                   });
-                  jQuery(window).load(function () {
-                    jQuery("#opacity_div").hide();
-                    jQuery("#loading_div").hide();
-                  })
                 </script>
               </div>
             </label>
@@ -476,6 +474,8 @@ class FilemanagerView {
         <input type="hidden" name="clipboard_dest" value="<?php echo $clipboard_dest; ?>"/>
       </form>
       <?php
+      include_once (WD_BWG_DIR .'/includes/bwg_pointers.php');
+      new BWG_pointers();
       die();
     }
 

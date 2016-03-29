@@ -1,120 +1,89 @@
 <?php
-function spider_featured_themes() {
+function spider_featured_themes($current_plugin = '') {
+ $themes = array(
+    "portfolio_gallery" => array(
+      'title'    => 'Portfolio Gallery Theme',
+      'content'  => 'Portfolio Gallery helps to display images using various color schemes and layouts combined with elegant fonts and content parts.',
+      'href'     => 'https://web-dorado.com/wordpress-themes/portfolio-gallery.html'
+    ),
+     "business_elite" => array(
+      'title'    => 'Business Elite Theme',
+      'content'  => 'Business Elite is a robust parallax theme for business websites. The theme uses smooth transitions and many functional sections.',
+      'href'     => 'https://web-dorado.com/wordpress-themes/business-elite.html'
+    ),
+    "sauron" => array(
+      'title'    => 'Sauron Theme',
+      'content'  => 'Sauron is a multipurpose parallax theme, which uses multiple interactive sections designed for the client-engagement.',
+      'href'     => 'https://web-dorado.com/wordpress-themes/sauron.html'
+    ),
+    "mottomag" => array(
+      'title'    => 'MottoMag Theme',
+      'content'  => 'MottoMag is a vibrant, responsive theme which is a perfect choice for the combination of textual content with videos and images.',
+      'href'     => 'https://web-dorado.com/wordpress-themes/mottomag.html'
+    ),
+     "business_world" => array(
+      'title'    => 'Business World Theme',
+      'content'  => 'Business World is an innovative WordPress theme great for Business websites.',
+      'href'     => 'https://web-dorado.com/wordpress-themes/business-world.html'
+    ),
+    "best_magazine" => array(
+      'title'    => 'Best Magazine Theme',
+      'content'  => 'Best Magazine is an ultimate selection when you are dealing with multi-category news websites.',
+      'href'     => 'https://web-dorado.com/wordpress-themes/best-magazine.html'
+    ),
+    "wedding_style" => array(
+      'title'    => 'Wedding Style Theme',
+      'content'  => 'Wedding style is a responsive theme designed for the organization and maintenance of wedding websites and blogs.',
+      'href'     => 'https://web-dorado.com/wordpress-themes/wedding-style.html'
+    ),
+    "magazine" => array(
+      'title'    => 'Magazine Theme',
+      'content'  => 'Magazine theme is a perfect solution when creating news and informational websites. It comes with a wide range of layout options.',
+      'href'     => 'https://web-dorado.com/wordpress-themes/news-magazine.html'
+    ),
+    "weddings" => array(
+      'title'    => 'Weddings Theme',
+      'content'  => 'Weddings is an elegant, responsive WordPress theme designed for wedding websites. The theme includes multiple pages, homepage slider and gallery support.',
+      'href'     => 'https://web-dorado.com/wordpress-themes/wedding.html'
+    ),
+    "exclusive" => array(
+      'title'    => 'Exclusive Theme',
+      'content'  => 'Exclusive is a unique theme designed to best fit business style websites. It comes with a large list of customizable features.',
+      'href'     => 'https://web-dorado.com/wordpress-themes/exclusive.html'
+    ),
+    "expert" => array(
+      'title'    => 'Expert Theme',
+      'content'  => 'WordPress Expert is a modern, user-friendly and stylish theme. It has a list of customizable layout, style, colors and fonts.',
+      'href'     => 'https://web-dorado.com/wordpress-themes/business-responsive.html'
+    ),
+  );
   ?>
   <div id="main_featured_themes_page">
     <h3>Featured Themes</h3>
-		<ul id="featured-plugins-list">
-      <li class="portfolio_gallery">
-        <div class="product"></div>
-        <div class="title">
-          <strong class="heading">Portfolio Gallery Theme</strong>
-        </div>
-        <div class="description">
-          <p>Portfolio Gallery is an elegant image and portfolio display theme.</p>
-        </div>
-        <a target="_blank" href="https://web-dorado.com/wordpress-themes/portfolio-gallery.html" class="download">Download plugin >></a>
-      </li>
-			<li class="business_elite">
+    <div class="featured_header">
+      <a href="https://web-dorado.com/wordpress-themes.html?source=<?php echo $current_plugin; ?>" target="_blank">
+        <h1>WORDPRESS THEMES</h1>
+        <h1 class="get_plugins">ALL FOR $40 ONLY <span>- SAVE 80%</span></h1>
+      </a>
+	 </div>
+    <ul id="featured-plugins-list">
+      <?php
+      foreach ($themes as $key => $themes) {
+        ?>
+      <li class="<?php echo $key; ?>">
 				<div class="product"></div>
 				<div class="title">
-					<strong class="heading">Business Elite Theme</strong>
+					<strong class="heading"><?php echo $themes['title']; ?></strong>
 				</div>
 				<div class="description">
-					<p>Business Elite is a robust parallax theme for business websites. The theme uses smooth transitions and many functional sections.</p>
+					<p><?php echo $themes['content']; ?></p>
 				</div>
-				<a target="_blank" href="https://web-dorado.com/wordpress-themes/business-elite.html" class="download">Download plugin >></a>
+				<a target="_blank" href="<?php echo $themes['href']; ?>" class="download">Download theme  &#9658;</a>
 			</li>
-			<li class="sauron">
-				<div class="product"></div>
-				<div class="title">
-					<strong class="heading">Sauron Theme</strong>
-				</div>
-				<div class="description">
-					 <p>Sauron is a multipurpose parallax theme, which uses multiple interactive sections designed for the client-engagement.</p>		
-				</div>
-				<a target="_blank" href="https://web-dorado.com/wordpress-themes/sauron.html" class="download">Download</a>
-			</li>
-			<li class="mottomag">
-				<div class="product"></div>
-				<div class="title">
-					<strong class="heading">MottoMag Theme</strong>
-				</div>
-				<div class="description">
-					<p>MottoMag is a vibrant, responsive theme which is a perfect choice for the combination of textual content with videos and images.</p>	
-				</div>
-				<a target="_blank" href="https://web-dorado.com/wordpress-themes/mottomag.html" class="download">Download</a>
-			</li>
-			<li class="business_world">
-				<div class="product"></div>
-				<div class="title">
-					<strong class="heading">Business World Theme</strong>
-				</div>
-				<div class="description">
-					<p>Business World is an innovative WordPress theme great for Business websites.</p>		 
-				</div>
-				<a target="_blank" href="https://web-dorado.com/wordpress-themes/business-world.html" class="download">Download</a>
-			</li>
-			<li class="best_magazine">
-				<div class="product"></div>
-				<div class="title">
-					<strong class="heading">Best Magazine Theme</strong>
-				</div>
-				<div class="description">
-					<p>Best Magazine is an ultimate selection when you are dealing with multi-category news websites.</p>
-				</div>
-				<a target="_blank" href="https://web-dorado.com/wordpress-themes/best-magazine.html" class="download">Download</a>
-			</li>
-			<li class="wedding_style">
-				<div class="product"></div>
-				<div class="title">
-					<strong class="heading">Wedding Style Theme</strong>
-				</div>
-				<div class="description">
-					<p>Wedding style is a responsive theme designed for the organization and maintenance of wedding websites and blogs.</p>
-				</div>
-				<a target="_blank" href="https://web-dorado.com/wordpress-themes/wedding-style.html" class="download">Download</a>
-			</li>
-			<li class="magazine">
-				<div class="product"></div>
-				<div class="title">
-					<strong class="heading">Magazine Theme</strong>
-				</div>
-				<div class="description">
-					<p>Magazine theme is a perfect solution when creating news and informational websites. It comes with a wide range of layout options.</p>	
-				</div>
-				<a target="_blank" href="https://web-dorado.com/wordpress-themes/news-magazine.html" class="download">Download</a>
-			</li>
-			<li class="weddings">
-				<div class="product"></div>
-				<div class="title">
-					<strong class="heading">Weddings Theme</strong>
-				</div>
-				<div class="description">
-					<p>Weddings is an elegant, responsive WordPress theme designed for wedding websites. The theme includes multiple pages, homepage slider and gallery support.</p>
-				</div>
-				<a target="_blank" href="https://web-dorado.com/wordpress-themes/wedding.html" class="download">Download</a>
-			</li>
-			<li class="exclusive">
-				<div class="product"></div>
-				<div class="title">
-					<strong class="heading">Exclusive Theme</strong>
-				</div>
-				<div class="description">
-					<p>Exclusive is a unique theme designed to best fit business style websites. It comes with a large list of customizable features.</p>
-				</div>
-				<a target="_blank" href="https://web-dorado.com/wordpress-themes/exclusive.html" class="download">Download</a>
-			</li>
-			<li class="expert">
-				<div class="product"></div>
-				<div class="title">
-					<strong class="heading">Expert Theme</strong>
-				</div>
-				<div class="description">
-					<p>WordPress Expert is a modern, user-friendly and stylish theme. It has a list of customizable layout, style, colors and fonts.</p>
-				</div>
-				<a target="_blank" href="https://web-dorado.com/wordpress-themes/business-responsive.html" class="download">Download</a>
-			</li>
-		</ul>
-  </div>	
+        <?php
+      }
+      ?>
+    </ul>
+  </div>
   <?php
 }

@@ -163,7 +163,6 @@ class BWGControllerAlbums_bwg {
       'slug' => $slug,
       'description' => $description,
       'preview_image' => $preview_image,
-      'author' => $author,
       'published' => $published), array('id' => $id));
 
       /* Update data in corresponding posts.*/

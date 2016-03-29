@@ -76,7 +76,9 @@ class BWGViewBWGShortcode {
     wp_print_scripts('jquery-ui-widget');
     wp_print_scripts('jquery-ui-position');
     wp_print_scripts('jquery-ui-tooltip');
+    wp_print_scripts('wp-pointer');
     ?>
+        <link media="all" type="text/css" href="<?php echo get_admin_url(); ?>load-styles.php?c=1&amp;dir=ltr&amp;load=dashicons,wp-pointer" rel="stylesheet">
         <link rel="stylesheet" href="<?php echo WD_BWG_URL . '/css/bwg_shortcode.css?ver='.wd_bwg_version(); ?>">
         <link rel="stylesheet" href="<?php echo WD_BWG_URL . '/css/jquery-ui-1.10.3.custom.css'; ?>">
         <script language="javascript" type="text/javascript" src="<?php echo WD_BWG_URL . '/js/bwg_shortcode.js?ver='.wd_bwg_version(); ?>"></script>
@@ -114,7 +116,7 @@ class BWGViewBWGShortcode {
               <div style="text-align:center; height:100px;">
                 <span class="gallery_type" onClick="bwg_gallery_type('thumbnails')">
                   <div style="text-align: center;"><input type="radio" id="thumbnails" name="gallery_type" value="thumbnails"/><label for="thumbnails"><?php _e("Thumbnails", 'bwg_back'); ?></label></div>
-                  <label for="thumbnails"><img src="<?php echo WD_BWG_URL . '/images/thumbnails.jpg'; ?>" /></label>
+                  <label for="thumbnails"><img id="display_thumb" src="<?php echo WD_BWG_URL . '/images/thumbnails.jpg'; ?>" /></label>
                 </span>
                 <span title="<?php _e("This view is disabled in free version.", 'bwg_back'); ?>" class="gallery_type">
                   <div style="text-align: center;"><input disabled="disabled" type="radio" id="thumbnails_masonry" name="gallery_type" value="thumbnails_masonry" /><label class="spider_free_version_label" for="thumbnails_masonry"><?php _e("Masonry", 'bwg_back'); ?></label></div>
@@ -1634,6 +1636,7 @@ class BWGViewBWGShortcode {
             return short_code_attr;
           }
           function bwg_insert_shortcode(content) {
+            window.parent.window.jQuery(window.parent.document).trigger("onOpenShortcode");
             var gallery_type = jQuery("input[name=gallery_type]:checked").val();
             var theme = jQuery("#theme").val();
             var title = "";
@@ -1837,6 +1840,8 @@ class BWGViewBWGShortcode {
       </body>
     </html>
     <?php
+    include_once (WD_BWG_DIR .'/includes/bwg_pointers.php');
+    new BWG_pointers();
     die();
   }
 

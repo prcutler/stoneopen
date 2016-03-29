@@ -4,7 +4,7 @@
  * Plugin Name: Photo Gallery
  * Plugin URI: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
- * Version: 1.2.86
+ * Version: 1.2.94
  * Author: WebDorado
  * Author URI: https://web-dorado.com/
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
@@ -130,7 +130,7 @@ function bwg_featured_themes() {
   require_once(WD_BWG_DIR . '/featured/featured_themes.php');
   wp_register_style('bwg_featured_themes', WD_BWG_URL . '/featured/themes_style.css', array(), wd_bwg_version());
   wp_print_styles('bwg_featured_themes');
-  spider_featured_themes();
+  spider_featured_themes('photo-gallery');
 }
 
 function bwg_addons() {
@@ -559,6 +559,12 @@ if (class_exists('WP_Widget')) {
   require_once(WD_BWG_DIR . '/admin/controllers/BWGControllerWidgetSlideshow.php');
   add_action('widgets_init', create_function('', 'return register_widget("BWGControllerWidgetSlideshow");'));
 }
+// Intro tour
+function bwg_pointer_init() {
+    include_once (WD_BWG_DIR .'/includes/bwg_pointers.php');
+    new BWG_pointers();
+}
+add_action('admin_init', 'bwg_pointer_init');
 
 // Activate plugin.
 function bwg_activate() {
@@ -1106,6 +1112,7 @@ function bwg_activate() {
       'lightbox_filmstrip_thumb_active_border_color' => 'FFFFFF',
       'lightbox_rl_btn_style' => 'fa-chevron',
       'lightbox_rl_btn_transparent' => 80,
+      'lightbox_bg_transparent' => 100,
 
       'album_compact_back_font_color' => '000000',
       'album_compact_back_font_style' => 'segoe ui',
@@ -1556,6 +1563,7 @@ function bwg_activate() {
       'lightbox_filmstrip_thumb_active_border_color' => 'FFFFFF',
       'lightbox_rl_btn_style' => 'fa-chevron',
       'lightbox_rl_btn_transparent' => 80,
+      'lightbox_bg_transparent' => 100,
 
       'album_compact_back_font_color' => '000000',
       'album_compact_back_font_style' => 'segoe ui',
@@ -1903,11 +1911,17 @@ function bwg_activate() {
     ));
   }
   $version = get_option("wd_bwg_version");
-  $new_version = '1.2.86';
+  $new_version = '1.2.94';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
     update_option("wd_bwg_version", $new_version);
+    delete_user_meta(get_current_user_id(), 'bwg_photo_gallery');
+  }
+  elseif (!$version) {
+    update_user_meta(get_current_user_id(),'bwg_photo_gallery', '1');
+    add_option("wd_bwg_version", $new_version, '', 'no');
+    add_option("wd_bwg_theme_version", '1.0.0', '', 'no');
   }
   else {
     add_option("wd_bwg_version", $new_version, '', 'no');
@@ -1950,8 +1964,8 @@ add_action('wpmu_new_blog', 'bwg_new_blog_added', 10, 6);
 wp_oembed_add_provider( '#https://instagr(\.am|am\.com)/p/.*#i', 'https://api.instagram.com/oembed', true );
 
 function bwg_update_hook() {
-	$version = get_option("wd_bwg_version");
-  $new_version = '1.2.86';
+  $version = get_option("wd_bwg_version");
+  $new_version = '1.2.94';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -2181,10 +2195,10 @@ function bwg_create_post_type() {
   $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_option WHERE id="%d"', 1));
  
   if ($row->show_hide_post_meta == 1) {
-     $show_hide_post_meta = array('editor', 'comments');
+     $show_hide_post_meta = array('editor', 'comments', 'thumbnail', 'title');
   }
   else {
-     $show_hide_post_meta = array();
+     $show_hide_post_meta = array('thumbnail', 'title');
   }
   if ($row->show_hide_custom_post == 0) {
      $show_hide_custom_post = false;

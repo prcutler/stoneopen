@@ -693,7 +693,6 @@ class BWGControllerGalleries_bwg {
             'size' => $size,
             'filetype' => $filetype,
             'resolution' => $resolution,
-            'author' => $author,
             'order' => $order,
             'redirect_url' => $redirect_url), array('id' => $image_id));
         }
@@ -817,7 +816,6 @@ class BWGControllerGalleries_bwg {
         'description' => $description,
         'preview_image' => $preview_image,
         'random_preview_image' => $random_preview_image,
-        'author' => get_current_user_id(),
         'gallery_type' => $gallery_type,
         'gallery_source' => $gallery_source,
         'autogallery_image_number' => $autogallery_image_number,

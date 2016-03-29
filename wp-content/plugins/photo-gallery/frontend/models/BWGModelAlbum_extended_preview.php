@@ -83,7 +83,7 @@ class BWGModelAlbum_extended_preview {
     else {
       $limit_str = '';
     }
-    if ($sort_by == 'random') {
+    if ($sort_by == 'random' || $sort_by == 'RAND()') {
       $sort_by = 'RAND()';
     }
     else {

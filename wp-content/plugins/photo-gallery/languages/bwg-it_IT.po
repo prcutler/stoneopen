@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bwg\n"
 "POT-Creation-Date: 2016-01-08 10:04+0400\n"
-"PO-Revision-Date: 2016-01-08 10:04+0400\n"
+"PO-Revision-Date: 2016-02-12 18:09+0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -39,7 +39,7 @@ msgstr "Non c'è tema selezionato o il tema è stato eliminato."
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_masonry_preview.php:142
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_masonry_preview.php:176
 msgid "There is no album selected or the album was deleted."
-msgstr "Non vi è alcun album selezionato o l'album è stato eliminato."
+msgstr "Non hai selezionato un album o l'album scelto è stato eliminato."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_compact_preview.php:189
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_extended_preview.php:134
@@ -77,7 +77,7 @@ msgstr "Non ci sono immagini corrispondenti alla tua ricerca."
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_extended_preview.php:1029
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_masonry_preview.php:588
 msgid "Gallery is empty."
-msgstr "Gallery è vuoto."
+msgstr "La galleria è vuota."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_compact_preview.php:1097
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_compact_preview.php:1147
@@ -99,7 +99,7 @@ msgstr "Di più"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_extended_preview.php:1153
 msgid "Hide"
-msgstr "Hide"
+msgstr "Nascondi"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewBlog_style.php:98
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewCarousel.php:74
@@ -109,7 +109,7 @@ msgstr "Hide"
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewThumbnails_masonry.php:161
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewThumbnails_mosaic.php:166
 msgid "There is no gallery selected or the gallery was deleted."
-msgstr "Non vi è alcuna galleria selezionata o la galleria è stata eliminata."
+msgstr "Non hai selezionato una galleria o quella scelta è stata eliminata."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewBlog_style.php:547
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:933
@@ -175,7 +175,7 @@ msgstr "Massimizzare"
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:2091
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:2747
 msgid "Fullscreen"
-msgstr "Fullscreen"
+msgstr "Schermo intero"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:931
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:2484
@@ -197,11 +197,11 @@ msgstr "Apri l'immagine originale"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:1108
 msgid "Hits: "
-msgstr "Hits: "
+msgstr "Click: "
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:1119
 msgid "Rated."
-msgstr "Nominale."
+msgstr "Valutato."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:1123
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:1140
@@ -278,7 +278,7 @@ msgstr "Nascondi informazioni"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:2491
 msgid "Hide rating"
-msgstr "Hide valutazione"
+msgstr "Nascondi valutazione"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:2686
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:2895
@@ -287,82 +287,82 @@ msgstr "Ripristina"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:2800
 msgid "Exit Fullscreen"
-msgstr "Uscire a schermo intero"
+msgstr "Uscita a schermo intero"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:46
 msgid "Item Succesfully Saved."
-msgstr ""
+msgstr "Oggeto salvato"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:52
 msgid "Error. Please install plugin again."
-msgstr ""
+msgstr "Errore. Per favore, reinstalla il plugin."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:58
 msgid "Item Succesfully Deleted."
-msgstr ""
+msgstr "Oggetto rimosso."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:64
 msgid "You can't delete default theme"
-msgstr ""
+msgstr "Non puoi cancellare il tema di default"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:70
 msgid "Items Succesfully Deleted."
-msgstr ""
+msgstr "Oggetti cancellati."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:76
 msgid "You must select at least one item."
-msgstr ""
+msgstr "devi selezionare almeno un oggetto."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:82
 msgid "The item is successfully set as default."
-msgstr ""
+msgstr "Oggetto impostato come default."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:88
 msgid "Options Succesfully Saved."
-msgstr ""
+msgstr "Opzioni salvate."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:94
 msgid "Item Succesfully Published."
-msgstr ""
+msgstr "Oggetto pubblicato."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:100
 msgid "Items Succesfully Published."
-msgstr ""
+msgstr "Oggetti pubblicati."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:106
 msgid "Item Succesfully Unpublished."
-msgstr ""
+msgstr "Oggetto non più pubblicato."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:112
 msgid "Items Succesfully Unpublished."
-msgstr ""
+msgstr "Oggetti non pubblicati."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:118
 msgid "Ordering Succesfully Saved."
-msgstr ""
+msgstr "Ordinamento salvato."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:124
 msgid "A term with the name provided already exists."
-msgstr ""
+msgstr "C’è già un oggetto con questo nome."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:130
 msgid "Name field is required."
-msgstr " "
+msgstr "Il nome è richiesto."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:136
 msgid "The slug must be unique."
-msgstr ""
+msgstr "Lo slug deve essere unico."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:142
 msgid "Changes must be saved."
-msgstr ""
+msgstr "Modifiche salvate."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:188
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:362
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:725
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:781
 msgid "Search"
-msgstr "Ricerca"
+msgstr "Cerca"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:189
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:363
@@ -379,11 +379,11 @@ msgstr "di"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:436
 msgid "item"
-msgstr ""
+msgstr "Oggetto"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:516
 msgid " item(s)"
-msgstr "articolo"
+msgstr " oggetti"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:521
 msgid "First"
@@ -419,7 +419,7 @@ msgstr "Vai all'ultima pagina"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:562
 msgid "Load More..."
-msgstr ""
+msgstr "Carica altro…"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:846
 msgid "Order by: "
@@ -427,11 +427,11 @@ msgstr "Ordina per"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:848
 msgid "Default"
-msgstr "difetto"
+msgstr "Default"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:849
 msgid "Filename"
-msgstr "Nome Del File"
+msgstr "Nome del file"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\framework/WDWLibrary.php:850
 msgid "Size"

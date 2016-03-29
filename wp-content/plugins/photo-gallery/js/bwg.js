@@ -244,7 +244,20 @@ function spider_ajax_save(form_id, tr_group) {
         jQuery('#draganddrop').show();
       }
       if (ajax_task == "ajax_save") {
-        jQuery('#' + form_id).submit();
+        
+        var $form = jQuery('#' + form_id),
+          formAction = $form.attr( "action" );
+          
+        if ( formAction.indexOf( "?" ) != -1 ) {
+          formAction += "&show_pointer=true";
+        }
+        else {
+          formAction += "?show_pointer=true";
+        }
+        
+        $form.attr( "action", formAction );
+        
+        $form.submit();
       }
       jQuery('#opacity_div').hide();
       jQuery('#loading_div').hide();

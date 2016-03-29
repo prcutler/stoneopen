@@ -72,3 +72,15 @@
 #bwg_shortcode {
   margin: 10px 0 0;
 }
+.bwg_insert_short,
+.wp-pointer.wp-pointer-aligned-right .wp-pointer-arrow {
+  left: auto;
+  right: 50px;
+  margin-top:-15px;
+}
+
+.wp-pointer.wp-pointer-aligned-left .wp-pointer-arrow {
+  left: 33px;
+  right: auto;
+}
+

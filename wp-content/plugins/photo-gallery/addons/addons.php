@@ -1,6 +1,13 @@
 <?php
 function bwg_addons_display() {
   $addons = array(
+    'photo-gallery-ecomerce'   => array(
+      'name'        => __('Photo Gallery Ecommerce', 'bwg'),
+      'url'         => 'https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/gallery-ecommerce.html',
+      'description' => __('Using Photo Gallery Ecommerce you can sell images included in galleries either as digital downloads or products/prints via Paypal or Stripe.', 'bwg'),
+      'icon'        => '',
+      'image'       => WD_BWG_URL . '/addons/images/ecommerce.png',
+    ),
     'photo-gallery-facebook'   => array(
       'name'        => __('Photo Gallery Facebook', 'bwg'),
       'url'         => 'https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/facebook.html',
@@ -21,13 +28,6 @@ function bwg_addons_display() {
       'description' => __('Photo Gallery Export/Import helps to move created galleries and albums from one site to another. This way you can save the gallery/album options and manual modifications.', 'bwg'),
       'icon'        => '',
       'image'       => WD_BWG_URL . '/addons/images/import_export.png',
-    ),
-    'photo-gallery-ecomerce'   => array(
-      'name'        => __('Photo Gallery Ecommerce', 'bwg'),
-      'url'         => 'https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/gallery-ecommerce.html',
-      'description' => __('Using Photo Gallery Ecommerce you can sell images included in galleries either as digital downloads or products/prints via Paypal or Stripe.', 'bwg'),
-      'icon'        => '',
-      'image'       => WD_BWG_URL . '/addons/images/ecommerce.png',
     ),
   );
   ?>

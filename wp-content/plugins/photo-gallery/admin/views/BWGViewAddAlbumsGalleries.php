@@ -33,8 +33,9 @@ class BWGViewAddAlbumsGalleries {
     $per_page = $this->model->per_page();
 	$pager = 0;
     wp_print_scripts('jquery');
+    wp_print_scripts('wp-pointer');
     ?>
-    <link media="all" type="text/css" href="<?php echo get_admin_url(); ?>load-styles.php?c=1&amp;dir=ltr&amp;load=admin-bar,dashicons,wp-admin,buttons,wp-auth-check" rel="stylesheet">
+    <link media="all" type="text/css" href="<?php echo get_admin_url(); ?>load-styles.php?c=1&amp;dir=ltr&amp;load=admin-bar,dashicons,wp-admin,buttons,wp-auth-check,wp-pointer" rel="stylesheet">
     <?php if (get_bloginfo('version') < '3.9') { ?>
     <link media="all" type="text/css" href="<?php echo get_admin_url(); ?>css/colors<?php echo ((get_bloginfo('version') < '3.8') ? '-fresh' : ''); ?>.min.css" id="colors-css" rel="stylesheet">
     <?php } ?>
@@ -44,7 +45,7 @@ class BWGViewAddAlbumsGalleries {
       <?php wp_nonce_field( 'addAlbumsGalleries', 'bwg_nonce' ); ?>
       <h2 style="width:200px;float:left"><?php _e("Albums/Galleries", 'bwg_back'); ?></h2>
       <a href="" class="thickbox thickbox-preview" id="content-add_media" title="Add Album/Gallery" onclick="spider_get_items(event);" style="float:right; padding: 9px 0px 4px 0">
-        <img src="<?php echo WD_BWG_URL . '/images/add_but.png'; ?>" style="border:none;" />
+        <img id='add_albums' src="<?php echo WD_BWG_URL . '/images/add_but.png'; ?>" style="border:none;" />
       </a>
       <div class="tablenav top">
         <?php
@@ -113,6 +114,8 @@ class BWGViewAddAlbumsGalleries {
     </form>
     <script src="<?php echo get_admin_url(); ?>load-scripts.php?c=1&load%5B%5D=common,admin-bar" type="text/javascript"></script>
     <?php
+      include_once (WD_BWG_DIR .'/includes/bwg_pointers.php');
+      new BWG_pointers();
     die();
   }
   

@@ -37,7 +37,7 @@ class  BWGViewThemes_bwg {
     <div style="clear: both; float: left; width: 99%;">
       <div style="float:left; font-size: 14px; font-weight: bold;">
         <?php _e("This section allows you to create, edit and delete themes.", 'bwg_back'); ?>
-        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery-guide-step-6/6-1.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
+        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery/editing-themes/thumbnails.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
         <?php
         if (get_option("wd_bwg_theme_version")) {
           ?>
@@ -248,7 +248,7 @@ class  BWGViewThemes_bwg {
    <div style="clear: both; float: left; width: 99%;">
       <div style="float:left; font-size: 14px; font-weight: bold;">
         <?php _e("This section allows you to add/edit theme.", 'bwg_back'); ?>
-        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery-guide-step-6/6-1.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
+        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery/editing-themes/thumbnails.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
       </div>
       <div style="float: right; text-align: right;">
         <a style="text-decoration: none;" target="_blank" href="https://web-dorado.com/files/fromPhotoGallery.php">
@@ -2265,6 +2265,13 @@ class  BWGViewThemes_bwg {
                   <td class="spider_label"><label for="lightbox_bg_color"><?php _e("Lightbox background color:", 'bwg_back'); ?> </label></td>
                   <td>
                     <input type="text" name="lightbox_bg_color" id="lightbox_bg_color" value="<?php echo $row->lightbox_bg_color; ?>" class="color"/>
+                  </td>
+                </tr>
+                <tr id="lightbox_transparency">
+                  <td class="spider_label"><label for="lightbox_bg_transparent"><?php echo __('Lightbox background transparency:', 'bwg_back'); ?> </label></td>
+                  <td>
+                    <input type="text" name="lightbox_bg_transparent" id="lightbox_bg_transparent" value="<?php echo $row->lightbox_bg_transparent; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> %
+                    <div class="spider_description"><?php echo __('Value must be between 0 to 100.', 'bwg_back'); ?></div>
                   </td>
                 </tr>
                 <tr id="lightbox_cntrl1">

@@ -1,3 +1,10 @@
+jQuery(window).load(function(){
+  window.bwgDocumentReady = true;
+  if (window.bwgTinymceRendered) {
+    jQuery(document).trigger("onUploadImg");
+  }
+    jQuery('.add_short_gall').css({'marginLeft': -50});
+});
 (function () {
   tinymce.create('tinymce.plugins.bwg_mce', {
     init:function (ed, url) {
@@ -23,9 +30,16 @@
         f = d.edit("[" + ed.dom.getAttrib(e, "title") + "]");
       });
       ed.addButton('bwg_mce', {
+        id:'mceu_bwg_shorcode',
         title:'Insert Photo Gallery',
         cmd:'mcebwg_mce',
         image: url + '/images/bwg_edit_but.png'
+      });
+      ed.onPostRender.add(function(ed, cm) {
+         window.bwgTinymceRendered = true;
+         if ( window.bwgDocumentReady ) {
+            jQuery(document).trigger("onUploadImg");
+         }
       });
       ed.onMouseDown.add(function (d, f) {
         if (f.target.nodeName == "IMG" && d.dom.hasClass(f.target, "bwg_shortcode")) {

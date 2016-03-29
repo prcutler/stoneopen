@@ -220,7 +220,8 @@ class BWGControllerThemes_bwg {
     $lightbox_overlay_bg_transparent = (isset($_POST['lightbox_overlay_bg_transparent']) ? (int) esc_html(stripslashes( $_POST['lightbox_overlay_bg_transparent'])) : 80);
     $lightbox_bg_color = (isset($_POST['lightbox_bg_color']) ? esc_html(stripslashes( $_POST['lightbox_bg_color'])) : '000000');
     $lightbox_overlay_bg_color = (isset($_POST['lightbox_overlay_bg_color']) ? esc_html(stripslashes( $_POST['lightbox_overlay_bg_color'])) : '000000');			
-    $lightbox_rl_btn_style = (isset($_POST['lightbox_rl_btn_style']) ? esc_html(stripslashes( $_POST['lightbox_rl_btn_style'])) : 'fa-chevron');			
+    $lightbox_rl_btn_style = (isset($_POST['lightbox_rl_btn_style']) ? esc_html(stripslashes( $_POST['lightbox_rl_btn_style'])) : 'fa-chevron');
+    $lightbox_bg_transparent = (isset($_POST['lightbox_bg_transparent']) ? (int) esc_html(stripslashes( $_POST['lightbox_bg_transparent'])) : 100);
 	
     $blog_style_margin = (isset($_POST['blog_style_margin']) ? esc_html(stripslashes( $_POST['blog_style_margin'])) : '');
     $blog_style_padding = (isset($_POST['blog_style_padding']) ?  esc_html(stripslashes( $_POST['blog_style_padding'])) : '');
@@ -668,6 +669,7 @@ class BWGControllerThemes_bwg {
       'lightbox_bg_color' => $lightbox_bg_color,
       'lightbox_overlay_bg_color' => $lightbox_overlay_bg_color,
       'lightbox_rl_btn_style' => $lightbox_rl_btn_style,
+      'lightbox_bg_transparent' => $lightbox_bg_transparent, 
 
       'blog_style_margin' => $blog_style_margin,
       'blog_style_padding' => $blog_style_padding,

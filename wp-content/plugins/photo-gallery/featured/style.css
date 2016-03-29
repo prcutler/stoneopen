@@ -1,46 +1,54 @@
+@import url(http://fonts.googleapis.com/css?family=Oswald);
+
+#main_featured_plugins_page {
+	font-family: Oswald;
+  width: 90%;
+  margin: 15px auto 0px auto;
+}
+
 #main_featured_plugins_page h3 {
-  border-bottom: 2px solid rgb(111, 111, 111);
-	color: rgb(111, 111, 111); 
-	font-family: Segoe UI;
-	font-size: 30px;
-	margin: 0px;
-	padding: 20px 0;
-  width: 99%;
+    border-bottom: 2px solid #CECECE;
+  color: rgb(111, 111, 111);
+  font-family: Segoe UI;
+  font-size: 18px;
+  margin: 0px auto 15px auto;
+  padding: 20px 0;
 }
 
 #main_featured_plugins_page #featured-plugins-list {
 	position:relative;
 	margin:0px auto;
-	width: 95.4%;
 	height:auto;
 	display:table;
 	list-style:none;
-	margin-left: 38px;
+	text-align: center;
+	width: 100%;
 }
 
 #main_featured_plugins_page #featured-plugins-list li {
-	float: left;
-	width: 17%;
-	margin: 20px 0px 0px 25px;
-	background: #FFFFFF;
-	border: 1px solid #B8B8B8;
-	height: 354px;
+  display: inline-table;
+  width: 200px;
+  margin: 20px 10px 0px 10px;
+  background: #FFFFFF;
+  border-right: 3px solid #E5E5E5;
+  height: 335px;
+  border-bottom: 3px solid #E5E5E5;
+	position: relative;
 }
 
-#main_featured_plugins_page #featured-plugins-list li  .product {
+#main_featured_plugins_page #featured-plugins-list li .product {
 	position:relative;
 	height:113px;
-	background-color: #F1F1F1 !important;
+	background-color: transparent !important;
 	background-position-x: 50% !important;
 	margin: 7px;
-	border: 1px solid #DEDCDC;
 	border-radius: 3px;
+  background-size: 115px !important;
 }
 
-#main_featured_plugins_page #featured-plugins-list li  .title {
+#main_featured_plugins_page #featured-plugins-list li .title {
 	width: 90%;
 	text-align: center;
-	border-bottom: 1px solid #cacaca;
 	margin: 0 auto;
 }
 
@@ -65,38 +73,116 @@
 #main_featured_plugins_page #featured-plugins-list  li.faq_wd  .product {background:url("images/faq_wd.png") center center no-repeat;}
 #main_featured_plugins_page #featured-plugins-list  li.instagram_feed  .product {background:url("images/instagram_feed.png") center center no-repeat;}
 
-#main_featured_plugins_page #featured-plugins-list li  .title  .heading {
+#main_featured_plugins_page #featured-plugins-list li .title .heading {
 	display: block;
-	position: relative;
-	font-size: 16px;
-	color: #23282C;
-	margin: 13px 0px 13px 0px;
+  position: relative;
+  font-size: 17px;
+  color: #767676;
+  margin: 13px 0px 13px 0px;
+  text-transform: uppercase;
 }
 
-#main_featured_plugins_page #featured-plugins-list li  .title  p {
-	font-size: 14px;
-	color: #444;
-	margin-left: 20px;
+#main_featured_plugins_page #featured-plugins-list li .title p {
+	font-size:14px;
+	color:#444;
+	margin-left:20px;
 }
 
-#main_featured_plugins_page #featured-plugins-list li  .description {
+#main_featured_plugins_page #featured-plugins-list li .description {
 	height: 127px;
 	width: 90%;
 	margin: 0 auto;
 }
 
-#main_featured_plugins_page #featured-plugins-list li  .description  p {
+#main_featured_plugins_page #featured-plugins-list li .description  p {
 	text-align: center;
 	width: 100%;
+	color: #9A9A9A;
+	font-family: Segoe UI Light;
 }
 
 #featured-plugins-list li a.download {
 	display: block;
-	height: 32px;
-	text-indent: -9999px;
-	background: url("images/download_plugins.png") center 17px no-repeat;
-	border-top: 1px solid #CACACA;
-	outline: none;
-	width: 90%;
-	margin: 0 auto;
+  border-top: 1px solid #CACACA;
+  outline: none;
+  width: 90%;
+  margin: 0 auto;
+  font-size: 14px;
+  line-height: 40px;
+  text-decoration: none;
+  font-weight: bolder;
+  text-align: center;
+  color: #134D68;
+  position: absolute;
+  text-transform: uppercase;
+  bottom: 0;
+  left: 10px;
+  font-family: Segoe UI Black;
+  text-shadow: 1px 0;
+}
+	
+#featured-plugins-list li a.download:hover {
+	color: #F47629;
+}
+
+.featured_header{
+  background: #FFFFFF;
+  border-right: 3px solid #E5E5E5;
+  border-bottom: 3px solid #E5E5E5;
+  position: relative;
+  padding: 20px 0;
+}
+
+.featured_header .old_price {
+  color: rgba(180, 180, 180, 0.3);
+  text-decoration: line-through;
+  font-family: Oswald;
+}
+
+.featured_header h1.get_plugins {
+  color: #FFFFFF;
+  background:url("images/featured_plugins_bg.png") no-repeat;
+  height: 85px;
+  margin: 0;
+  background-size: 85% 100%;
+  background-position: center;
+  line-height: 60px;
+}
+	
+.featured_header h1 {
+	font-size: 50px;
+  text-align: center;
+	color: #F47629;
+	letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.featured_header a {
+	text-decoration: none;
+}
+
+@media screen and (max-width: 1105px) {
+  .featured_header h1 {
+		font-size: 37px;
+		line-height: 0;
+	}
+}
+
+@media screen and (max-width: 835px) {
+	.get_plugins span {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 700px) {
+	.featured_header h1 {
+		line-height: 40px;
+	}
+}
+
+@media screen and (max-width: 435px) {	
+	.featured_header h1 {
+		font-size: 20px;
+		line-height: 25px;
+	}
 }

@@ -38,7 +38,7 @@ class BWGViewGalleries_bwg {
     <div style="clear: both; float: left; width: 99%;">
       <div style="float:left; font-size: 14px; font-weight: bold;">
         <?php _e("This section allows you to create, edit and delete galleries.", 'bwg_back'); ?>
-        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery-guide-step-2.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
+        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery/creating-editing-galleries.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
       </div>
       <div style="float: right; text-align: right;">
         <a style="text-decoration: none;" target="_blank" href="https://web-dorado.com/files/fromPhotoGallery.php">
@@ -51,7 +51,7 @@ class BWGViewGalleries_bwg {
       <span class="gallery-icon"></span>
       <h2>
         <?php _e("Galleries", 'bwg_back'); ?>
-        <a href="" class="add-new-h2" onclick="spider_set_input_value('task', 'add');
+        <a href="" id="galleries_id" class="add-new-h2" onclick="spider_set_input_value('task', 'add');
                                                spider_form_submit(event, 'galleries_form')"><?php _e("Add new", 'bwg_back'); ?></a>
       </h2>
       <div id="draganddrop" class="updated" style="display:none;"><strong><p><?php _e("Changes made in this table should be saved.", 'bwg_back'); ?></p></strong></div>
@@ -216,7 +216,7 @@ class BWGViewGalleries_bwg {
       <div id="message_div" class="updated" style="display: none;"></div>
       <div style="float:left; font-size: 14px; font-weight: bold;">
         <?php _e("This section allows you to add/edit gallery.", 'bwg_back'); ?>
-        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery-guide-step-2.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
+        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery/creating-editing-galleries.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
       </div>
       <div style="float: right; text-align: right;">
         <a style="text-decoration: none;" target="_blank" href="https://web-dorado.com/files/fromPhotoGallery.php">
@@ -245,6 +245,7 @@ class BWGViewGalleries_bwg {
       var j_int = 0;
       var bwg_j = 'pr_' + j_int;
       function bwg_add_image(files) {
+        jQuery(document).trigger("bwgImagesAdded");
         var tbody = document.getElementById('tbody_arr');
         for (var i in files) {
           var is_direct_url = files[i]['filetype'].indexOf("DIRECT_URL_") > -1 ? true : false;
@@ -528,7 +529,7 @@ class BWGViewGalleries_bwg {
       <span class="gallery-icon"></span>
       <h2><?php echo $page_title; ?></h2>
       <div style="float:right;">
-        <input class="button-secondary" type="button" onclick="if (spider_check_required('name', 'Name')) {return false;};
+        <input class="button-secondary" id='save_gall' type="button" onclick="if (spider_check_required('name', 'Name')) {return false;};
                                                      spider_set_input_value('page_number', '1');
                                                      spider_set_input_value('ajax_task', 'ajax_save');
                                                      spider_ajax_save('galleries_form');
@@ -704,7 +705,7 @@ class BWGViewGalleries_bwg {
         $query_url = wp_nonce_url( $query_url, 'addImages', 'bwg_nonce' );
         $query_url = add_query_arg(array( 'TB_iframe' => '1'), $query_url);
         ?>
-        <a href="<?php echo  $query_url;  ?>" class="button-primary thickbox thickbox-preview" id="content-add_media" title="<?php _e("Add Images", 'bwg_back'); ?>" onclick="return false;" style="margin-bottom:5px; <?php if($gallery_type !='') {echo 'display:none';} ?>" >
+        <a href="<?php echo  $query_url;  ?>" id="add_image_bwg" class="button-primary thickbox thickbox-preview" id="content-add_media" title="<?php _e("Add Images", 'bwg_back'); ?>" onclick="return false;" style="margin-bottom:5px; <?php if($gallery_type !='') {echo 'display:none';} ?>" >
           <?php _e("Add Images", 'bwg_back'); ?>
         </a>
         <?php

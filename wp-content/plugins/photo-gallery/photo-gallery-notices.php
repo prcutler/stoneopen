@@ -8,6 +8,7 @@ class BWG_Notices {
   protected $plugin_url = WD_BWG_URL;
   protected $plugin_version = "wd_bwg_version";
   protected $plugin_name = 'Photo Gallery';
+  protected $promo_link = 'https://web-dorado.com/products/wordpress-photo-gallery-plugin.html';
 
 	public $notice_spam = 0;
 	public $notice_spam_max = 1;
@@ -84,14 +85,25 @@ class BWG_Notices {
         if ($admin_display_check == 0 && strtotime($admin_display_start) <= strtotime($current_date)) {
 					// Get remaining query string
 					$query_str = (isset($admin_notices[$slug]['later_link']) ? $admin_notices[$slug]['later_link'] : esc_url(add_query_arg($this->prefix . '_admin_notice_ignore', $slug)));
-					// Admin notice display output
-					echo '<div class="update-nag wd-admin-notice">
-                  <div class="' . $this->prefix . '-notice-logo"></div>
-                  <p class="wd-notice-title">' . $admin_display_title . '</p>
-                  <p class="wd-notice-body">' . $admin_display_msg . '</p>
-                  <ul class="wd-notice-body wd-blue">' . $admin_display_link . '</ul>
-                  <a href="' . $query_str . '" class="dashicons dashicons-dismiss"></a>
-                </div>';
+          if (strpos($slug, 'promo') === FALSE) {
+            // Admin notice display output
+            echo '<div class="update-nag wd-admin-notice">
+                    <div class="' . $this->prefix . '-notice-logo"></div>
+                    <p class="wd-notice-title">' . $admin_display_title . '</p>
+                    <p class="wd-notice-body">' . $admin_display_msg . '</p>
+                    <ul class="wd-notice-body wd-blue">' . $admin_display_link . '</ul>
+                    <a href="' . $query_str . '" class="dashicons dashicons-dismiss"></a>
+                  </div>';
+          }
+          else {
+            echo '<div class="admin-notice-promo">';
+            echo $admin_display_msg;
+            echo '<ul class="notice-body-promo blue">
+                        ' . $admin_display_link . '
+                      </ul>';
+            echo '<a href="' . $query_str . '" class="dashicons dashicons-dismiss close-promo"></a>';
+            echo '</div>';
+          }
 					$this->notice_spam += 1;
 					$output_css = true;
 				}
@@ -183,7 +195,16 @@ class BWG_Notices {
 
   public function wd_admin_notices() {
     $two_week_review_ignore = add_query_arg(array($this->prefix . '_admin_notice_ignore' => 'two_week_review'));
-    $two_week_review_temp = add_query_arg(array($this->prefix . '_admin_notice_temp_ignore' => 'two_week_review', 'int' => 14));
+    $two_week_review_temp = add_query_arg(array($this->prefix . '_admin_notice_temp_ignore' => 'two_week_review', 'int' => 14));    
+    $promo_close = add_query_arg(array($this->prefix . '_admin_notice_ignore' => 'ecommerce_promo'));
+    
+    $notices['ecommerce_promo'] = array(
+      'title' => __('Hey! How\'s It Going?', $this->prefix),
+      'msg' => '<div class="promo" style="background-image: url(' . $this->plugin_url . '/images/Gallery-E-Commerce-banner.png);"><a href="' . $this->promo_link . '" target="_blank"></a></div>',
+      'link' => '<li><span class="dashicons dashicons-dismiss"></span><a href="' . $promo_close . '">' . __('Never show again', $this->prefix) . '</a></li>',
+      'int' => 3
+    );    
+    
     $notices['two_week_review'] = array(
       'title' => __('Leave A Review?', $this->prefix),
       'msg' => sprintf(__('We hope you\'ve enjoyed using WordPress %s! Would you consider leaving us a review on WordPress.org?', $this->prefix), $this->plugin_name),

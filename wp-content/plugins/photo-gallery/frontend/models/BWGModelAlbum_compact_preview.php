@@ -89,7 +89,7 @@ class BWGModelAlbum_compact_preview {
     else {
       $where = '';
     }
-    if ($sort_by == 'random') {
+    if ($sort_by == 'random' || $sort_by == 'RAND()') {
       $sort_by = 'RAND()';
     }
     else {

@@ -122,7 +122,7 @@ class FilemanagerModel {
           $file = array();
           $file['is_dir'] = TRUE;
           $file['name'] = $file_name;
-          $file['filename'] = $file_name;
+          $file['filename'] = str_replace("_", " ", $file_name);
           $file['type'] = '';
           $file['thumb'] = $icons_dir_url . '/dir.png';
           $file['icon'] = $icons_dir_url . '/dir.png';
@@ -135,7 +135,8 @@ class FilemanagerModel {
           $file = array();
           $file['is_dir'] = FALSE;
           $file['name'] = $file_name;
-          $file['filename'] = substr($file_name, 0, strrpos($file_name, '.'));
+          $filename = substr($file_name, 0, strrpos($file_name, '.'));
+          $file['filename'] = str_replace("_", " ", $filename);
           $file_extension = explode('.', $file_name);
           $file['type'] = strtolower(end($file_extension));
           $icon = $icons_dir_url . '/' . $file['type'] . '.png';

@@ -1,4 +1,5 @@
 function bwg_shortcode_load() {
+  jQuery(document).trigger("onUploadShortcode");
   jQuery(".spider_int_input").keypress(function (event) {
     var chCode1 = event.which || event.paramlist_keyCode;
     if (chCode1 > 31 && (chCode1 < 48 || chCode1 > 57) && (chCode1 != 46)) {

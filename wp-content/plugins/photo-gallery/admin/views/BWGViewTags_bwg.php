@@ -41,7 +41,7 @@ class BWGViewTags_bwg {
     <div style="clear: both; float: left; width: 99%;">
       <div style="float:left; font-size: 14px; font-weight: bold;">
         <?php _e("This section allows you to create, edit and delete tags.", 'bwg_back'); ?>
-        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery-guide-step-3.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
+        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery/creating-editing-tag.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
       </div>
       <div style="float: right; text-align: right;">
         <a style="text-decoration: none;" target="_blank" href="https://web-dorado.com/files/fromPhotoGallery.php">

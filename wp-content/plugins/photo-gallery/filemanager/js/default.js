@@ -29,6 +29,17 @@ var isUploading;
 // Public Methods                                                                     //
 ////////////////////////////////////////////////////////////////////////////////////////
 jQuery(document).ready(function () {
+  var all_images_count = jQuery(".item_thumb img").length;
+  if(!all_images_count) {
+    setTimeout(function(){jQuery(document).trigger("onUpload")});
+  }
+  else {
+    setTimeout(function(){jQuery(document).trigger("onSelectAllImage")});
+  }
+  if (all_images_count == 0 || all_images_count <= 24) {
+    jQuery("#opacity_div").hide();
+    jQuery("#loading_div").hide();
+  }
   filesSelected = [];
   filesSelectedML = [];
   dragFiles = [];
@@ -51,13 +62,17 @@ jQuery(document).ready(function () {
   });
 });
 
-
 ////////////////////////////////////////////////////////////////////////////////////////
 // Getters & Setters                                                                  //
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 // Private Methods                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////
+function loaded() {
+  jQuery("#opacity_div").hide();
+  jQuery("#loading_div").hide();
+}
+
 function getClipboardFiles() {
   return jQuery("form[name=adminForm]").find("input[name=clipboard_file]").val();
 }
@@ -288,6 +303,7 @@ function onBtnRemoveItemsClick(event, obj) {
 }
 
 function onBtnShowUploaderClick(event, obj) {
+  jQuery(document).trigger("onUploadFilesPressed");
   jQuery("#uploader").fadeIn();
 }
 

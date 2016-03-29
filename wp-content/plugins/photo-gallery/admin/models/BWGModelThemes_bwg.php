@@ -54,6 +54,9 @@ class BWGModelThemes_bwg {
       foreach ($themes as $key => $value) {
         $row->$key = $value;
       }
+      if (!isset($row->lightbox_bg_transparent)) {
+        $row->lightbox_bg_transparent = 100;
+      }
       if ($reset) {
         if (!$row->default_theme) {
           $row_id = $row->id;
@@ -185,6 +188,7 @@ class BWGModelThemes_bwg {
           $row->lightbox_filmstrip_thumb_active_border_color = 'FFFFFF';
           $row->lightbox_rl_btn_style = 'fa-chevron';
           $row->lightbox_rl_btn_transparent = 80;
+          $row->lightbox_bg_transparent = 100;
 
           $row->album_compact_back_font_color = '000000';
           $row->album_compact_back_font_style = 'segoe ui';
