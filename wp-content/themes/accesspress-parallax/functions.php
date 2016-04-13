@@ -158,6 +158,7 @@ function accesspress_parallax_scripts() {
 	wp_enqueue_style( 'accesspress-parallax-bx-slider', get_template_directory_uri() . '/css/jquery.bxslider.css' );
 	wp_enqueue_style( 'accesspress-parallax-nivo-lightbox', get_template_directory_uri() . '/css/nivo-lightbox.css' );
 	wp_enqueue_style( 'accesspress-parallax-animate', get_template_directory_uri() . '/css/animate.css' );
+    wp_enqueue_style('accesspress-parallax-woocommerce',get_template_directory_uri().'/woocommerce/ap-parallax-style.css');
 	wp_enqueue_style( 'accesspress-parallax-style', get_stylesheet_uri() );
 	if(of_get_option('enable_responsive') == 1) :
 		wp_enqueue_style( 'accesspress-parallax-responsive', get_template_directory_uri() . '/css/responsive.css' );
@@ -226,6 +227,11 @@ require get_template_directory() . '/inc/options-framework/options-framework.php
  */
 require get_template_directory() . '/inc/more-themes.php';
 
+/**
+ * Load woocommerce function
+ * */
+ require get_template_directory().'/woocommerce/ap-parallax-woocommerce-function.php';
+ 
 define( 'OPTIONS_FRAMEWORK_DIRECTORY', get_template_directory_uri() . '/inc/options-framework/' );
 
 function accesspress_ajax_script()

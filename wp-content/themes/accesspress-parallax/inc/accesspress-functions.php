@@ -380,6 +380,13 @@ function accesspress_required_plugins() {
             'required'  => false,
             'force_activation'   => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
             'force_deactivation' => false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins.
+        ),   
+        array(
+            'name'      => 'AccessPress Twitter Feed',
+            'slug'      => 'accesspress-twitter-feed',
+            'required'  => false,
+            'force_activation'   => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
+            'force_deactivation' => false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins.
         ),      
     );
 

@@ -89,6 +89,12 @@ Images
 ---------------------------------------------
 
 == Changelog ==
+Version 1.25.5
+*Woocommerce Compatible
+Version 1.25.4
+* Plugin Recommended via TGM
+* Screenshot changed
+
 Version 1.25.3
 * Indonesian Translation Added
 Contributer - Rio Bermano <riobermano92@gmail.com>
