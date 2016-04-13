@@ -23,8 +23,6 @@ class BWGViewThumbnails {
   // Public Methods                                                                     //
   ////////////////////////////////////////////////////////////////////////////////////////
   public function display($params, $from_shortcode = 0, $bwg = 0) {
-    global $wp;
-    $current_url = $wp->query_string;
     global $WD_BWG_UPLOAD_DIR;
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
 
@@ -530,8 +528,7 @@ class BWGViewThumbnails {
           'enable_image_google' => $params['popup_enable_google'],
           'enable_image_pinterest' => $params['popup_enable_pinterest'],
           'enable_image_tumblr' => $params['popup_enable_tumblr'],
-          'watermark_type' => $params['watermark_type'],
-          'current_url' => urlencode($current_url)
+          'watermark_type' => $params['watermark_type']
         );
         if ($params['watermark_type'] != 'none') {
           $params_array['watermark_link'] = urlencode($params['watermark_link']);

@@ -770,7 +770,7 @@ class BWGViewSlideshow {
                   }
                   elseif ($watermark_type == 'text') {
                   ?>
-                  <a class="bwg_none_selectable_<?php echo $bwg; ?> bwg_slideshow_watermark_text_<?php echo $bwg; ?> bwg_slideshow_watermark_<?php echo $bwg; ?>" target="_blank" href="<?php echo $watermark_link; ?>"><?php echo $watermark_text; ?></a>
+                  <a class="bwg_none_selectable_<?php echo $bwg; ?> bwg_slideshow_watermark_text_<?php echo $bwg; ?> bwg_slideshow_watermark_<?php echo $bwg; ?>" target="_blank" href="<?php echo urldecode($watermark_link); ?>"><?php echo $watermark_text; ?></a>
                   <?php
                   }
                   ?>

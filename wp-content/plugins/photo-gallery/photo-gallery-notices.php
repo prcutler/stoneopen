@@ -8,7 +8,7 @@ class BWG_Notices {
   protected $plugin_url = WD_BWG_URL;
   protected $plugin_version = "wd_bwg_version";
   protected $plugin_name = 'Photo Gallery';
-  protected $promo_link = 'https://web-dorado.com/products/wordpress-photo-gallery-plugin.html';
+  protected $promo_link = ' https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/gallery-ecommerce.html?source=gallery_ecommerce_promo';
 
 	public $notice_spam = 0;
 	public $notice_spam_max = 1;

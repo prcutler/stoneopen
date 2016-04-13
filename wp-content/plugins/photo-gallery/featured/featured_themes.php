@@ -63,9 +63,12 @@ function spider_featured_themes($current_plugin = '') {
     <div class="featured_header">
       <a href="https://web-dorado.com/wordpress-themes.html?source=<?php echo $current_plugin; ?>" target="_blank">
         <h1>WORDPRESS THEMES</h1>
-        <h1 class="get_plugins">ALL FOR $40 ONLY <span>- SAVE 80%</span></h1>
+        <h1 class="get_plugins">FOR $40 ONLY <span>- SAVE 80%</span></h1>
+        <div class="try-now">
+					<span>TRY NOW</span>
+				</div>
       </a>
-	 </div>
+    </div>
     <ul id="featured-plugins-list">
       <?php
       foreach ($themes as $key => $themes) {
@@ -78,7 +81,7 @@ function spider_featured_themes($current_plugin = '') {
 				<div class="description">
 					<p><?php echo $themes['content']; ?></p>
 				</div>
-				<a target="_blank" href="<?php echo $themes['href']; ?>" class="download">Download theme  &#9658;</a>
+				<a target="_blank" href="<?php echo $themes['href']; ?>?source=<?php echo $current_plugin; ?>" class="download">Download theme  &#9658;</a>
 			</li>
         <?php
       }

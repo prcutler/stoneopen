@@ -22,9 +22,7 @@ class BWGViewGalleryBox {
   ////////////////////////////////////////////////////////////////////////////////////////
   public function display() {
     global $WD_BWG_UPLOAD_DIR;
-    global $wp;
     require_once(WD_BWG_DIR . '/framework/WDWLibraryEmbed.php');
-    $current_url = (isset($_GET['current_url']) ? add_query_arg(esc_html($_GET['current_url']), '', home_url($wp->request)) : '');
     $tag_id = (isset($_GET['tag_id']) ? esc_html($_GET['tag_id']) : 0);
     $gallery_id = (isset($_GET['gallery_id']) ? esc_html($_GET['gallery_id']) : 0);
     $bwg = (isset($_GET['current_view']) ? esc_html($_GET['current_view']) : 0);
@@ -90,57 +88,6 @@ class BWGViewGalleryBox {
       $image_rows = $this->model->get_image_rows_data($gallery_id, $bwg, $sort_by, $order_by);
     }
     $image_id = (isset($_POST['image_id']) ? (int) $_POST['image_id'] : $current_image_id);
-    $comment_rows = $this->model->get_comment_rows_data($image_id);
-
-    $params_array = array(
-      'action' => 'GalleryBox',
-      'image_id' => $current_image_id,
-      'gallery_id' => $gallery_id,
-      'theme_id' => $theme_id,
-      'thumb_width' => $thumb_width,
-      'thumb_height' => $thumb_height,
-      'open_with_fullscreen' => $open_with_fullscreen,
-      'image_width' => $image_width,
-      'image_height' => $image_height,
-      'image_effect' => $image_effect,
-      'wd_sor' => $sort_by,
-      'wd_ord' => $order_by,
-      'enable_image_filmstrip' => $enable_image_filmstrip,
-      'image_filmstrip_height' => $image_filmstrip_height,
-      'enable_image_ctrl_btn' => $enable_image_ctrl_btn,
-      'enable_image_fullscreen' => $enable_image_fullscreen,
-      'popup_enable_info' => $popup_enable_info,
-      'popup_info_always_show' => $popup_info_always_show,
-      'popup_info_full_width' => $popup_info_full_width,
-      'popup_hit_counter' => $popup_hit_counter,
-      'popup_enable_rate' => $popup_enable_rate,
-      'slideshow_interval' => $slideshow_interval,
-      'enable_comment_social' => $enable_comment_social,
-      'enable_image_facebook' => $enable_image_facebook,
-      'enable_image_twitter' => $enable_image_twitter,
-      'enable_image_google' => $enable_image_google,
-      'enable_image_pinterest' => $enable_image_pinterest,
-      'enable_image_tumblr' => $enable_image_tumblr,
-      'watermark_type' => $watermark_type,
-      'current_url' => $current_url
-    );
-    if ($watermark_type != 'none') {
-      $params_array['watermark_link'] = $watermark_link;
-      $params_array['watermark_opacity'] = $watermark_opacity;
-      $params_array['watermark_position'] = $watermark_position;
-    }
-    if ($watermark_type == 'text') {
-      $params_array['watermark_text'] = $watermark_text;
-      $params_array['watermark_font_size'] = $watermark_font_size;
-      $params_array['watermark_font'] = $watermark_font;
-      $params_array['watermark_color'] = $watermark_color;
-    }
-    elseif ($watermark_type == 'image') {
-      $params_array['watermark_url'] = $watermark_url;
-      $params_array['watermark_width'] = $watermark_width;
-      $params_array['watermark_height'] = $watermark_height;
-    }
-    $popup_url = add_query_arg(array($params_array), admin_url('admin-ajax.php'));
     $filmstrip_thumb_margin = $theme_row->lightbox_filmstrip_thumb_margin;
     $margins_split = explode(" ", $filmstrip_thumb_margin);
     $filmstrip_thumb_margin_right = 0;
@@ -695,7 +642,7 @@ class BWGViewGalleryBox {
         border: <?php echo $theme_row->lightbox_info_border_width; ?>px <?php echo $theme_row->lightbox_info_border_style; ?> #<?php echo $theme_row->lightbox_info_border_color; ?>;
         border-radius: <?php echo $theme_row->lightbox_info_border_radius; ?>;
         <?php echo ((!$enable_image_filmstrip || $theme_row->lightbox_filmstrip_pos != 'bottom') && $theme_row->lightbox_ctrl_btn_pos == 'bottom' && $theme_row->lightbox_info_pos == 'bottom') ? 'bottom: ' . ($theme_row->lightbox_ctrl_btn_height + 2 * $theme_row->lightbox_ctrl_btn_margin_top) . 'px;' : '' ?>
-        <?php if($params_array['popup_info_full_width']) { ?>
+        <?php if ($popup_info_full_width) { ?>
         width: 100%;
         <?php } else { ?>
         width: 33%;

@@ -618,3 +618,15 @@
 .bwg_gallery_album ,.bwg_photo_galleries {
   margin-left:22px;
 }
+
+.goodbye-text {
+  font-size: 16px;
+  font-weight: bold;
+  background: #fff;
+  padding: 15px;
+  line-height: 22px;
+}
+
+.goodbye-text a {
+	font-size: 15px;
+}

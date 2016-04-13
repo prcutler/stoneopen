@@ -175,10 +175,14 @@ class BWGViewGalleries_bwg {
                                                       spider_set_input_value('asc_or_desc', 'asc');
                                                       spider_set_input_value('order_by', 'order');
                                                       spider_set_input_value('current_id', '<?php echo $row_data->id; ?>');
-                                                      spider_form_submit(event, 'galleries_form')" href=""><?php _e("Edit", 'bwg_back'); ?></a></td>
-                <td class="table_big_col"><a onclick="spider_set_input_value('task', 'delete');
+                                                      spider_form_submit(event, 'galleries_form')" href=""><?php echo __('Edit', 'bwg_back'); ?></a></td>
+                <td class="table_big_col"><a onclick="if (confirm('<?php echo addslashes(__('Do you want to delete selected items?', 'bwg_back')); ?>')) {
+                                                      spider_set_input_value('task', 'delete');
                                                       spider_set_input_value('current_id', '<?php echo $row_data->id; ?>');
-                                                      spider_form_submit(event, 'galleries_form')" href=""><?php _e("Delete", 'bwg_back'); ?></a></td>
+                                                      spider_form_submit(event, 'galleries_form')
+                                                      } else {
+                                                       return false;
+                                                      }" href=""><?php echo __('Delete', 'bwg_back'); ?></a></td>
               </tr>
               <?php
               $ids_string .= $row_data->id . ',';
@@ -976,9 +980,13 @@ class BWGViewGalleries_bwg {
                 <td class="table_big_col"><a onclick="spider_set_input_value('ajax_task', 'image_<?php echo $published; ?>');
                                                       spider_set_input_value('image_current_id', '<?php echo $row_data->id; ?>');
                                                       spider_ajax_save('galleries_form');"><img src="<?php echo WD_BWG_URL . '/images/' . $published_image . '.png'; ?>"></img></a></td>
-                <td class="table_big_col spider_delete_button" ><a onclick="spider_set_input_value('ajax_task', 'image_delete');
+                <td class="table_big_col spider_delete_button" ><a onclick="if (confirm('<?php echo addslashes(__('Do you want to delete selected items?', 'bwg_back')); ?>')) {
+                                                      spider_set_input_value('ajax_task', 'image_delete');
                                                       spider_set_input_value('image_current_id', '<?php echo $row_data->id; ?>');
-                                                      spider_ajax_save('galleries_form');"><?php _e("Delete", 'bwg_back'); ?></a></td>
+                                                      spider_ajax_save('galleries_form');
+                                                      } else {
+                                                       return false;
+                                                      }"><?php echo __('Delete', 'bwg_back'); ?></a></td>
               </tr>
               <?php
               $ids_string .= $row_data->id . ',';

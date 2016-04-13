@@ -31,6 +31,13 @@ class BWGViewUninstall_bwg {
       <div class="wrap">
         <span class="uninstall_icon"></span>
         <h2><?php _e("Uninstall Photo Gallery", 'bwg_back'); ?></h2>
+        <div class="goodbye-text">
+          <?php
+          $support_team = '<a href="https://web-dorado.com/support/contact-us.html?source=photo-gallery" target="_blank">' . __('support team', 'bwg_back') . '</a>';
+          $contact_us = '<a href="https://web-dorado.com/support/contact-us.html?source=photo-gallery" target="_blank">' . __('Contact us', 'bwg_back') . '</a>';
+          echo sprintf(__("Before uninstalling the plugin, please Contact our %s. We'll do our best to help you out with your issue. We value each and every user and value what's right for our users in everything we do.<br />
+          However, if anyway you have made a decision to uninstall the plugin, please take a minute to %s and tell what you didn't like for our plugins further improvement and development. Thank you !!!", "bwg_back"), $support_team, $contact_us); ?>
+        </div>
         <p>
           <?php _e("Deactivating Photo Gallery plugin does not remove any data that may have been created. To completely remove this plugin, you can uninstall it here.", 'bwg_back'); ?>
         </p>

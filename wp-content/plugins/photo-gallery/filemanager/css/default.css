@@ -264,7 +264,7 @@ html, body, div, span, th, td, a {
   box-sizing: border-box;
   cursor: pointer;
   white-space: nowrap;
-  padding: 0 10px;
+  padding: 0 5px;
   font-size: 14px !important;
 }
 
