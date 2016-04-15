@@ -89,8 +89,12 @@ Images
 ---------------------------------------------
 
 == Changelog ==
+Version 1.25.6
+*Woocommerce Compatible bug fixed
+
 Version 1.25.5
 *Woocommerce Compatible
+
 Version 1.25.4
 * Plugin Recommended via TGM
 * Screenshot changed

@@ -14,19 +14,19 @@ jQuery(document).ready(function($){
         }
     });
 
-	$('.home .single-page-nav.nav').onePageNav({
-		currentClass: 'current',
-    	changeHash: false,
-    	scrollSpeed: 1500,
-    	scrollOffset: headerHeight,
-    	scrollThreshold: 0.5,
-	});
+    $('.home .single-page-nav.nav').onePageNav({
+        currentClass: 'current',
+        changeHash: false,
+        scrollSpeed: 1500,
+        scrollOffset: headerHeight,
+        scrollThreshold: 0.5,
+    });
 
     $('.single-page-nav.nav a').click(function(){
         $('.single-page-nav.nav').hide();
     });
 
-	$(window).resize(function(){
+    $(window).resize(function(){
     var headerHeight = $('#masthead').outerHeight();
     $('.parallax-on #content').css('padding-top', headerHeight);
 
@@ -118,5 +118,14 @@ jQuery(document).ready(function($){
         $(this).parallax('50%',0.3, true);
         });
     });
+    
+    // *only* if we have anchor on the url
+    if(window.location.hash) {
+
+        $('html, body').animate({
+            scrollTop: $(window.location.hash).offset().top-headerHeight
+        }, 1000 );
+           
+    }
     
 });

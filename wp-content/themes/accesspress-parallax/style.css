@@ -4,7 +4,7 @@ Theme URI: https://accesspressthemes.com/wordpress-themes/accesspress-parallax/
 Author: AccessPress Themes
 Author URI: https://accesspressthemes.com/
 Description: AccessPress Parallax is a beautiful WordPress theme with Parallax design. Parallax design has become popular and is being adopted because 3D effects are possible with it, you can add some sphere to your product, it is the best way of storytelling, you can draw your visitors in, it is interactive, engaging, makes your visitors curious, fun, surprise, effective to trigger action, invite your visitors in great Call to Action, great conversion rates and many more. This is probably the most beautiful, feature rich and complete free WordPress parallax theme with features like: fully responsive, advance theme option panel, featured slider, advance post settings, services/team/blog/portfolio/testimonial layout, Google map integration, custom logo/fav icon, call to action, CSS animation, SEO friendly, translation ready, RTL support, custom CSS/JS and more! Demo: http://accesspressthemes.com/theme-demos/?theme=accesspress-parallax Support forum: https://accesspressthemes.com/support/ Pro version: https://accesspressthemes.com/wordpress-themes/accesspress-parallax-pro/ 
-Version: 1.25.5
+Version: 1.25.6
 License: GNU General Public License v3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: accesspress-parallax
@@ -106,8 +106,8 @@ textarea {
 	font-size: 16px;
 }
 h1, h2, h3, h4, h5, h6 {
-	clear: both;
 	font-family: 'Oxygen', sans-serif;
+	margin-bottom: 10px;
 }
 h1{
 	font-size: 24px;
@@ -228,14 +228,6 @@ th {
 Forms
 --------------------------------------------------------------*/
 button,
-input,
-select,
-textarea {
-	font-size: 100%; /* Corrects font size not being inherited in all browsers */
-	margin: 0; /* Addresses margins set differently in IE6/7, F3/4, S5, Chrome */
-	vertical-align: baseline; /* Improves appearance and consistency in all browsers */
-}
-button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
@@ -243,7 +235,7 @@ input[type="submit"] {
 	background: #E66432;
 	display: inline-block;
 	line-height: 1;
-	padding: 12px 20px;
+	padding: 0 20px;
 	text-decoration: none;
 	color: #ffffff;
 	-webkit-transition: all 0.3s ease 0s;
@@ -251,13 +243,10 @@ input[type="submit"] {
 	transition: all 0.3s ease 0s;
     cursor: pointer;
     border:none;
+    line-height: 36px;
+    height: 36px;
 }
-button:hover,
-input[type="button"]:hover,
-input[type="reset"]:hover,
-input[type="submit"]:hover {
 
-}
 button:focus,
 input[type="button"]:focus,
 input[type="reset"]:focus,
@@ -266,43 +255,79 @@ button:active,
 input[type="button"]:active,
 input[type="reset"]:active,
 input[type="submit"]:active {
+    outline: 0;
+}
 
-}
-input[type="checkbox"],
-input[type="radio"] {
-	padding: 0; /* Addresses excess padding in IE8/9 */
-}
-button::-moz-focus-inner,
-input::-moz-focus-inner { /* Corrects inner padding and border displayed oddly in FF3/4 www.sitepen.com/blog/2008/05/14/the-devils-in-the-details-fixing-dojos-toolbar-buttons/ */
-	border: 0;
-	padding: 0;
-}
 input[type="text"],
 input[type="email"],
 input[type="url"],
 input[type="password"],
 input[type="search"],
-textarea {
+input[type="number"],
+input[type="tel"],
+input[type="range"],
+input[type="date"],
+input[type="month"],
+input[type="week"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="color"],
+textarea  {
 	color: #333;
 	border: 1px solid #DDD;
 	border-radius: 1px;
 	max-width: 100%;
 }
+
+select {
+    color: #333;
+	border: 1px solid #DDD;
+	border-radius: 1px;
+	max-width: 100%;
+    height: 36px;
+}
+
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="url"]:focus,
 input[type="password"]:focus,
 input[type="search"]:focus,
-textarea:focus {
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="range"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="week"]:focus,
+input[type="time"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="color"]:focus,
+textarea:focus,
+select:focus {
 	color: #111;
+	outline: 0;
 }
+
 input[type="text"],
 input[type="email"],
 input[type="url"],
 input[type="password"],
-input[type="search"] {
+input[type="search"],
+input[type="number"],
+input[type="tel"],
+input[type="range"],
+input[type="date"],
+input[type="month"],
+input[type="week"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="color"] {
 	padding: 3px;
+	height: 36px;
 }
+
 textarea {
 	overflow: auto; /* Removes default vertical scrollbar in IE6/7/8/9 */
 	padding: 5px 10px;
@@ -315,6 +340,7 @@ Links
 --------------------------------------------------------------*/
 a {
 	color: #E66432;
+	text-decoration: none;
 }
 
 /*--------------------------------------------------------------
@@ -419,7 +445,7 @@ Widgets
 
 #secondary .widget{
 	background: #FFF;
-	padding: 10px;
+	padding: 15px;
 }
 
 #secondary .widget:last-child{
@@ -481,6 +507,10 @@ Content
 	margin: 0 0 40px;
 }
 
+.parallax-section .page-content:last-child{
+    margin-bottom: 0;
+}
+
 #content > .mid-content{
 	margin-top: 30px;
 }
@@ -529,6 +559,7 @@ Posts and pages
 	font-weight: bold;
 	text-transform: uppercase;
 	white-space: nowrap;
+	margin-bottom: 0;
 }
 .site-title a{
 	text-decoration: none;
@@ -536,6 +567,7 @@ Posts and pages
 .site-description{
 	font-size: 14px;
 	font-style: italic;
+	margin-bottom: 0;
 }
 .hentry {
 	margin: 0 0 20px;
@@ -681,7 +713,7 @@ Comments
 --------------------------------------------------------------*/
 #comments{
 	background: #FFF;
-	padding: 10px;
+	padding: 15px;
 	margin-bottom: 15px;
 	font-size: 16px;
 }
@@ -695,6 +727,7 @@ Comments
     padding: 8px 10px;
     font-size: 18px;
     line-height: 1.2;
+    margin-bottom: 0;
 }
 #commentform{
 	border-top:2px solid #333;
@@ -947,6 +980,10 @@ body.parallax-on #masthead{
 }
 body.logged-in.parallax-on #masthead{
 	top: auto;
+}
+#content{
+    position: relative;
+    z-index: 99;
 }
 body.parallax-on .wpcf7-not-valid-tip{
 	text-align: center;
@@ -1422,6 +1459,7 @@ Portfolio Section
 	color: #FFF;
 	background: url(images/portfolio-text-bg.png) repeat-x top left;
 	font-size: 16px;
+    margin: 0;
 }
 .portfolio-list:hover h3{
 	display: none;

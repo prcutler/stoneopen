@@ -41,6 +41,9 @@ function accesspress_parallax_setup() {
 	 */
 	add_theme_support( 'title-tag' );
 
+	// Add Support WooCommerce
+	add_theme_support( 'woocommerce' );
+
 	/**
 	 * Add callback for custom TinyMCE editor stylesheets. (editor-style.css)
 	 * @see http://codex.wordpress.org/Function_Reference/add_editor_style
@@ -178,7 +181,6 @@ function accesspress_parallax_scripts() {
 	wp_enqueue_script( 'accesspress-parallax-fit-vid', get_template_directory_uri() . '/js/jquery.fitvids.js', array('jquery'), '1.0', true );
 	wp_enqueue_script( 'accesspress-parallax-actual', get_template_directory_uri() . '/js/jquery.actual.min.js', array('jquery'), '1.0.16', true );
 	wp_enqueue_script( 'accesspress-parallax-nivo-lightbox', get_template_directory_uri() . '/js/nivo-lightbox.min.js', array('jquery'), '1.2.0', true );
-	wp_enqueue_script( 'accesspress-parallax-skip-link-focus-fix', get_template_directory_uri() . '/js/skip-link-focus-fix.js', array(), '20130115', true );
 	wp_enqueue_script( 'accesspress-parallax-custom', get_template_directory_uri() . '/js/custom.js', array('jquery'), '1.0', true );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
