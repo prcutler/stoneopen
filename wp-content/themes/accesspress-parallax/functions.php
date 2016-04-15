@@ -55,14 +55,14 @@ function accesspress_parallax_setup() {
 	add_theme_support( 'post-thumbnails' );
 	add_image_size( 'blog-header', 900, 300, array('center','center')); //blog Image
 	add_image_size( 'portfolio-thumbnail', 560, 450, array('center','center')); //Portfolio Image
-    add_image_size( 'blog-thumbnail', 480, 300, array('center','center')); //Blog Image
+    add_image_size( 'blog-thumbnail', 480, 300, array('center','center')); //Blog Image	
 	add_image_size( 'team-thumbnail', 380, 380, array('top','center')); //Portfolio Image
 
 	// This theme uses wp_nav_menu() in one location.
 	register_nav_menus( array(
 		'primary' => __( 'Primary Menu', 'accesspress-parallax' ),
 	) );
-
+	
 	/*
 	 * Switch default core markup for search form, comment form, and comments
 	 * to output valid HTML5.
@@ -163,7 +163,7 @@ function accesspress_parallax_scripts() {
 	if(of_get_option('enable_responsive') == 1) :
 		wp_enqueue_style( 'accesspress-parallax-responsive', get_template_directory_uri() . '/css/responsive.css' );
 	endif;
-
+	
 	if (of_get_option('enable_animation') == '1' && is_front_page()) :
         wp_enqueue_script('accesspress-parallax-wow', get_template_directory_uri() . '/js/wow.js', array('jquery'), '1.0', true);
     endif;
@@ -231,7 +231,7 @@ require get_template_directory() . '/inc/more-themes.php';
  * Load woocommerce function
  * */
  require get_template_directory().'/woocommerce/ap-parallax-woocommerce-function.php';
-
+ 
 define( 'OPTIONS_FRAMEWORK_DIRECTORY', get_template_directory_uri() . '/inc/options-framework/' );
 
 function accesspress_ajax_script()
@@ -249,11 +249,3 @@ function accesspress_parallax_get_my_option()
 }
 
 add_action("wp_ajax_get_my_option", "accesspress_parallax_get_my_option");
-
-add_action( 'woocommerce_cart_calculate_fees','endo_handling_fee' );
-function endo_handling_fee() {
-     global $woocommerce;
-     if ( is_admin() && ! defined( 'DOING_AJAX' ) )
-          return;
-     $fee = 5.00;
-     $woocommerce->cart->add_fee( 'Handling', $fee, true, 'standard' );
