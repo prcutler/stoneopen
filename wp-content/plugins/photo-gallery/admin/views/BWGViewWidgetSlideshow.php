@@ -35,6 +35,8 @@ class BWGViewWidgetSlideshow {
     $interval = (isset($instance['interval']) ? $instance['interval'] : 5);
     $shuffle = (isset($instance['shuffle']) ? $instance['shuffle'] : 0);
     $theme_id = (isset($instance['theme_id']) ? $instance['theme_id'] : 0);
+    $enable_ctrl_btn = (isset($instance['enable_ctrl_btn']) ? $instance['enable_ctrl_btn'] : 0);
+    $enable_autoplay = (isset($instance['enable_autoplay']) ? $instance['enable_autoplay'] : 0);
     // Before widget.
     echo $before_widget;
     // Title of widget.
@@ -55,7 +57,9 @@ class BWGViewWidgetSlideshow {
       'effect' => $effect, 
       'interval' => $interval, 
       'shuffle' => $shuffle,
-      'theme_id' => $theme_id);
+      'theme_id' => $theme_id,
+      'enable_ctrl_btn' => $enable_ctrl_btn,
+      'enable_autoplay' => $enable_autoplay);
     $controller->execute($params, 1, $bwg);
     $bwg++;
     // After widget.
@@ -63,7 +67,7 @@ class BWGViewWidgetSlideshow {
   }
   
   // Widget Control Panel.
-  function form($instance, $id_title, $name_title, $id_gallery_id, $name_gallery_id, $id_width, $name_width, $id_height, $name_height, $id_effect, $name_effect, $id_interval, $name_interval, $id_shuffle, $name_shuffle, $id_theme_id, $name_theme_id) {
+  function form($instance, $id_title, $name_title, $id_gallery_id, $name_gallery_id, $id_width, $name_width, $id_height, $name_height, $id_effect, $name_effect, $id_interval, $name_interval, $id_shuffle, $name_shuffle, $id_theme_id, $name_theme_id, $id_enable_ctrl_btn, $name_enable_ctrl_btn, $id_enable_autoplay, $name_enable_autoplay) {
     $defaults = array(
       'title' => 'Photo Gallery Slideshow',
       'gallery_id' => 0,
@@ -73,6 +77,8 @@ class BWGViewWidgetSlideshow {
       'interval' => 5,
       'shuffle' => 0,
       'theme_id' => 0,
+      'enable_ctrl_btn' => 0,
+      'enable_autoplay' => 0,
     );
     $slideshow_effects = array(
       'none' => 'None',
@@ -143,6 +149,18 @@ class BWGViewWidgetSlideshow {
       <input type="radio" name="<?php echo $name_shuffle; ?>" id="<?php echo $id_shuffle . "_1"; ?>" value="1" <?php if ($instance['shuffle']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "1");' /><label for="<?php echo $id_shuffle . "_1"; ?>"><?php _e("Yes", 'bwg_back'); ?></label>
       <input type="radio" name="<?php echo $name_shuffle; ?>" id="<?php echo $id_shuffle . "_0"; ?>" value="0" <?php if (!$instance['shuffle']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "0");' /><label for="<?php echo $id_shuffle . "_0"; ?>"><?php _e("No", 'bwg_back'); ?></label>
       <input type="hidden" name="<?php echo $name_shuffle; ?>" id="<?php echo $id_shuffle; ?>" value="<?php echo $instance['shuffle']; ?>" class="bwg_hidden" />
+    </p>
+    <p>
+      <label><?php echo __('Enable autoplay:', 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_enable_autoplay; ?>" id="<?php echo $id_enable_autoplay . "_1"; ?>" value="1" <?php if ($instance['enable_autoplay']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "1");' /><label for="<?php echo $id_enable_autoplay . "_1"; ?>"><?php echo __('Yes', 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_enable_autoplay; ?>" id="<?php echo $id_enable_autoplay . "_0"; ?>" value="0" <?php if (!$instance['enable_autoplay']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "0");' /><label for="<?php echo $id_enable_autoplay . "_0"; ?>"><?php echo __('No', 'bwg_back'); ?></label>
+      <input type="hidden" name="<?php echo $name_enable_autoplay; ?>" id="<?php echo $id_enable_autoplay; ?>" value="<?php echo $instance['enable_autoplay']; ?>" class="bwg_hidden" />
+    </p>
+     <p>
+      <label><?php echo __('Enable control buttons:', 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_enable_ctrl_btn; ?>" id="<?php echo $id_enable_ctrl_btn . "_1"; ?>" value="1" <?php if ($instance['enable_ctrl_btn']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "1");' /><label for="<?php echo $id_enable_ctrl_btn . "_1"; ?>"><?php echo __('Yes', 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_enable_ctrl_btn; ?>" id="<?php echo $id_enable_ctrl_btn . "_0"; ?>" value="0" <?php if (!$instance['enable_ctrl_btn']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "0");' /><label for="<?php echo $id_enable_ctrl_btn . "_0"; ?>"><?php echo __('No', 'bwg_back'); ?></label>
+      <input type="hidden" name="<?php echo $name_enable_ctrl_btn; ?>" id="<?php echo $id_enable_ctrl_btn; ?>" value="<?php echo $instance['enable_ctrl_btn']; ?>" class="bwg_hidden" />
     </p>
     <p>
       <select name="<?php echo $name_theme_id; ?>" id="<?php echo $id_theme_id; ?>" class="widefat" <?php echo (get_option("wd_bwg_theme_version") ? 'title="'.__("This option is disabled in free version.", "bwg_back").'"  disabled="disabled"' : ''); ?>>

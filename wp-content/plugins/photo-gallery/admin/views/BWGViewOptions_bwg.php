@@ -1347,6 +1347,7 @@ class BWGViewOptions_bwg {
                 <td>
                   <input type="text" name="upload_thumb_width" id="upload_thumb_width" value="<?php echo $row->upload_thumb_width; ?>" class="spider_int_input" /> x 
                   <input type="text" name="upload_thumb_height" id="upload_thumb_height" value="<?php echo $row->upload_thumb_height; ?>" class="spider_int_input" /> px
+                  <input type="submit" class="button-secondary" onclick="spider_set_input_value('task', 'save'); spider_set_input_value('recreate', 'resize_image_thumb');" value="<?php echo __('Recreate', 'bwg_back'); ?>" />
                   <div class="spider_description"><?php _e("The maximum size of the generated thumbnail. Its dimensions should be larger than the ones of the frontend thumbnail.", 'bwg_back'); ?></div>
                 </td>
               </tr>
@@ -1646,12 +1647,11 @@ class BWGViewOptions_bwg {
               </td>
             </tr>
           </table>
-	  <div class="spider_description spider_free_version"><?php _e("Carousel view is disabled in free version.", 'bwg_back'); ?></div>
+          <div class="spider_description spider_free_version"><?php _e("Carousel view is disabled in free version.", 'bwg_back'); ?></div>
         </div>
-
       </div>
-              
       <input id="task" name="task" type="hidden" value="" />
+      <input id="recreate" name="recreate" type="hidden" value="" />
       <input id="current_id" name="current_id" type="hidden" value="<?php echo $row->id; ?>" />
       <script>
         window.onload = bwg_change_option_type('<?php echo isset($_POST['type']) ? esc_html($_POST['type']) : '1'; ?>');

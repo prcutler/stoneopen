@@ -45,7 +45,7 @@ class FilemanagerModel {
       $data = array();
       $data['session_data'] = $session_data;
       $data['path_components'] = $this->get_path_components();
-      $data['dir'] = (isset($_REQUEST['dir']) ? esc_html($_REQUEST['dir']) : '');
+      $data['dir'] = $this->controller->get_uploads_dir() . (isset($_REQUEST['dir']) ? esc_html($_REQUEST['dir']) : '');
       $data['files'] = $this->get_files($session_data['sort_by'], $session_data['sort_order']);
       $data['media_library_files'] = ($this->controller->get_options_data()->enable_ML_import ? $this->get_media_library_files($session_data['sort_by'], $session_data['sort_order']) : array());
       $data['extensions'] = (isset($_REQUEST['extensions']) ? esc_html($_REQUEST['extensions']) : '');

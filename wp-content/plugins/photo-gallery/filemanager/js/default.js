@@ -29,7 +29,12 @@ var isUploading;
 // Public Methods                                                                     //
 ////////////////////////////////////////////////////////////////////////////////////////
 jQuery(document).ready(function () {
-  var all_images_count = jQuery(".item_thumb img").length;
+  if (jQuery("#importer").css("display") != 'none') {
+    var all_images_count = jQuery("#importer .item_thumb img").length;
+  }
+  else {
+    var all_images_count = jQuery("#file_manager .item_thumb img").length;
+  }
   if(!all_images_count) {
     setTimeout(function(){jQuery(document).trigger("onUpload")});
   }

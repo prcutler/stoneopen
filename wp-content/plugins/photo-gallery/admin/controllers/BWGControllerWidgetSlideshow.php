@@ -39,7 +39,7 @@ class BWGControllerWidgetSlideshow extends WP_Widget {
 	}
 
  	public function form( $instance ) {
-    $this->view->form($instance, parent::get_field_id('title'), parent::get_field_name('title'), parent::get_field_id('gallery_id'), parent::get_field_name('gallery_id'), parent::get_field_id('width'), parent::get_field_name('width'), parent::get_field_id('height'), parent::get_field_name('height'), parent::get_field_id('effect'), parent::get_field_name('effect'), parent::get_field_id('interval'), parent::get_field_name('interval'), parent::get_field_id('shuffle'), parent::get_field_name('shuffle'), parent::get_field_id('theme_id'), parent::get_field_name('theme_id'));    
+    $this->view->form($instance, parent::get_field_id('title'), parent::get_field_name('title'), parent::get_field_id('gallery_id'), parent::get_field_name('gallery_id'), parent::get_field_id('width'), parent::get_field_name('width'), parent::get_field_id('height'), parent::get_field_name('height'), parent::get_field_id('effect'), parent::get_field_name('effect'), parent::get_field_id('interval'), parent::get_field_name('interval'), parent::get_field_id('shuffle'), parent::get_field_name('shuffle'), parent::get_field_id('theme_id'), parent::get_field_name('theme_id'), parent::get_field_id('enable_ctrl_btn'), parent::get_field_name('enable_ctrl_btn'), parent::get_field_id('enable_autoplay'), parent::get_field_name('enable_autoplay'));    
 	}
 
 	// Update Settings.
@@ -52,6 +52,8 @@ class BWGControllerWidgetSlideshow extends WP_Widget {
     $instance['interval'] = $new_instance['interval'];
     $instance['shuffle'] = $new_instance['shuffle'];
     $instance['theme_id'] = $new_instance['theme_id'];
+    $instance['enable_ctrl_btn'] = $new_instance['enable_ctrl_btn'];
+    $instance['enable_autoplay'] = $new_instance['enable_autoplay'];
     return $instance;
   }
 

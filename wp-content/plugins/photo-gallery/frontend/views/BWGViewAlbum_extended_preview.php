@@ -213,6 +213,7 @@ class BWGViewAlbum_extended_preview {
       $params_array['watermark_height'] = $params['watermark_height'];
     }
     $tags_rows = $this->model->get_tags_rows_data($album_gallery_id);
+    $image_right_click = $options_row->image_right_click;
     ?>
     <style>
       #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_extended_thumbnails_<?php echo $bwg; ?> * {
@@ -853,6 +854,17 @@ class BWGViewAlbum_extended_preview {
             return false;
           }
         });
+         <?php 
+        if ($image_right_click) {
+          ?>
+          /* Disable right click.*/
+          jQuery('div[id^="bwg_container"]').bind("contextmenu", function () {
+            return false;
+          });
+          jQuery('div[id^="bwg_container"]').css('webkitTouchCallout','none');
+          <?php
+        }
+        ?>
       }
       jQuery(document).ready(function () {
         bwg_document_ready_<?php echo $bwg; ?>();

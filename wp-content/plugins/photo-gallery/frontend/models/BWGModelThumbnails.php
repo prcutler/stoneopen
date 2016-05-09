@@ -46,7 +46,7 @@ class BWGModelThumbnails {
     $bwg_search = ((isset($_POST['bwg_search_' . $bwg]) && esc_html($_POST['bwg_search_' . $bwg]) != '') ? esc_html($_POST['bwg_search_' . $bwg]) : '');
     if  ($type == 'tag') {
       if ($bwg_search != '') {
-        $where = 'AND image.alt LIKE "%%' . $bwg_search . '%%"'; 
+        $where = 'AND (image.alt LIKE "%%' . $bwg_search . '%%" OR image.description LIKE "%%' . $bwg_search . '%%")';  
       }
       else {
         $where = '';
@@ -54,7 +54,7 @@ class BWGModelThumbnails {
     }
     else {
       if ($bwg_search != '') {
-        $where = 'AND alt LIKE "%%' . $bwg_search . '%%"';  
+        $where = 'AND (alt LIKE "%%' . $bwg_search . '%%" OR description LIKE "%%' . $bwg_search . '%%")';        
       }
       else {
         $where = '';
@@ -104,7 +104,7 @@ class BWGModelThumbnails {
     $bwg_search = ((isset($_POST['bwg_search_' . $bwg]) && esc_html($_POST['bwg_search_' . $bwg]) != '') ? esc_html($_POST['bwg_search_' . $bwg]) : '');
     if ($type == 'tag') {
       if ($bwg_search != '') {
-        $where = 'AND image.alt LIKE "%%' . $bwg_search . '%%"';
+        $where = 'AND (image.alt LIKE "%%' . $bwg_search . '%%" OR image.description LIKE "%%' . $bwg_search . '%%")'; 
       }
       else {
         $where = '';
@@ -112,7 +112,7 @@ class BWGModelThumbnails {
     }
     else {
       if ($bwg_search != '') {
-        $where = 'AND alt LIKE "%%' . $bwg_search . '%%"';
+        $where = 'AND (alt LIKE "%%' . $bwg_search . '%%" OR description LIKE "%%' . $bwg_search . '%%")';  
       }
       else {
         $where = '';

@@ -55,6 +55,12 @@ class FilemanagerView {
       wp_print_scripts('jquery');
       wp_print_scripts('jquery-ui-widget');
       wp_print_scripts('wp-pointer');
+      wp_print_styles('admin-bar');
+      wp_print_styles('dashicons');
+      wp_print_styles('wp-admin');
+      wp_print_styles('buttons');
+      wp_print_styles('wp-auth-check');
+      wp_print_styles('wp-pointer');
       ?>
       <script src="<?php echo WD_BWG_URL; ?>/filemanager/js/jq_uploader/jquery.iframe-transport.js"></script>
       <script src="<?php echo WD_BWG_URL; ?>/filemanager/js/jq_uploader/jquery.fileupload.js"></script>
@@ -388,7 +394,7 @@ class FilemanagerView {
                 <div id="btnBrowseContainer">
                 <?php
                 $query_url = wp_nonce_url( admin_url('admin-ajax.php'), 'bwg_UploadHandler', 'bwg_nonce' );
-                $query_url = add_query_arg(array('action' => 'bwg_UploadHandler', 'dir' => $this->controller->get_uploads_dir() . '/' . (isset($_REQUEST['dir']) ? esc_html($_REQUEST['dir']) : '') . '/'), $query_url);
+                $query_url = add_query_arg(array('action' => 'bwg_UploadHandler', 'dir' => (isset($_REQUEST['dir']) ? esc_html($_REQUEST['dir']) : '') . '/'), $query_url);
                 
 
                 ?>

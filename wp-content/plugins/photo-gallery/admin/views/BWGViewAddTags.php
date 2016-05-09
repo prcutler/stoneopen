@@ -33,9 +33,12 @@ class BWGViewAddTags {
     $per_page = $this->model->per_page();
 	$pager = 0;
     wp_print_scripts('jquery');
-    ?>
-    <link media="all" type="text/css" href="<?php echo get_admin_url(); ?>load-styles.php?c=1&amp;dir=ltr&amp;load=admin-bar,wp-admin,dashicons,buttons,wp-auth-check" rel="stylesheet">
-    <?php if (get_bloginfo('version') < '3.9') { ?>
+    wp_print_styles('admin-bar');
+    wp_print_styles('wp-admin');
+    wp_print_styles('dashicons');
+    wp_print_styles('buttons');
+    wp_print_styles('wp-auth-check');
+    if (get_bloginfo('version') < '3.9') { ?>
     <link media="all" type="text/css" href="<?php echo get_admin_url(); ?>css/colors<?php echo ((get_bloginfo('version') < '3.8') ? '-fresh' : ''); ?>.min.css" id="colors-css" rel="stylesheet">
     <?php } ?>
     <link media="all" type="text/css" href="<?php echo WD_BWG_URL . '/css/bwg_tables.css?ver='.wd_bwg_version(); ?>" id="bwg_tables-css" rel="stylesheet">

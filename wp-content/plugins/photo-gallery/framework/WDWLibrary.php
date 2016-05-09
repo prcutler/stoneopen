@@ -925,6 +925,22 @@ class WDWLibrary {
     )%xs', '', $string);    
   }
 
+  public static function esc_script($method = '', $index = '', $default = '', $type = 'string') {
+    if ($method == 'post') {
+      $escaped_value = ((isset($_POST[$index]) && preg_match("/^[A-Za-z0-9_]+$/", $_POST[$index])) ? esc_js($_POST[$index]) : $default);
+    }
+    elseif ($method == 'get') {
+      $escaped_value = ((isset($_GET[$index]) && preg_match("/^[A-Za-z0-9_]+$/", $_GET[$index])) ? esc_js($_GET[$index]) : $default);
+    }
+    else {
+      $escaped_value = (preg_match("/^[a-zA-Z0-9]", $index) ? esc_js($index) : $default);
+    }
+    if ($type == 'int') {
+      $escaped_value = (int) $escaped_value;
+    }
+    return $escaped_value;
+  }
+
   ////////////////////////////////////////////////////////////////////////////////////////
   // Private Methods                                                                    //
   ////////////////////////////////////////////////////////////////////////////////////////

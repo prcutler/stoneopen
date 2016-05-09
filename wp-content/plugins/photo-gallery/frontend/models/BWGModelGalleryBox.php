@@ -59,7 +59,7 @@ class BWGModelGalleryBox {
     $filter_tags = (isset($_REQUEST['filter_tag_'. $bwg]) && $_REQUEST['filter_tag_'. $bwg]  ) ? explode(",",$_REQUEST['filter_tag_'. $bwg]) : array();
     $filter_search_name = (isset($_REQUEST['filter_search_name_'. $bwg])) ? esc_html($_REQUEST['filter_search_name_'. $bwg]) : '';
     if ($filter_search_name != '') {
-      $where = ' AND t1.alt LIKE "%%' . $filter_search_name . '%%"'; 
+     $where = ' AND (t1.alt LIKE "%%' . $filter_search_name . '%%" OR t1.description LIKE "%%' . $filter_search_name . '%%")';
     }
     else {
       $where = '';

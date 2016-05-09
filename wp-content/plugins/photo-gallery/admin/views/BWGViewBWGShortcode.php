@@ -77,8 +77,9 @@ class BWGViewBWGShortcode {
     wp_print_scripts('jquery-ui-position');
     wp_print_scripts('jquery-ui-tooltip');
     wp_print_scripts('wp-pointer');
-    ?>
-        <link media="all" type="text/css" href="<?php echo get_admin_url(); ?>load-styles.php?c=1&amp;dir=ltr&amp;load=dashicons,wp-pointer" rel="stylesheet">
+    wp_print_styles('wp-pointer');
+    wp_print_styles('dashicons');
+    ?> 
         <link rel="stylesheet" href="<?php echo WD_BWG_URL . '/css/bwg_shortcode.css?ver='.wd_bwg_version(); ?>">
         <link rel="stylesheet" href="<?php echo WD_BWG_URL . '/css/jquery-ui-1.10.3.custom.css'; ?>">
         <script language="javascript" type="text/javascript" src="<?php echo WD_BWG_URL . '/js/bwg_shortcode.js?ver='.wd_bwg_version(); ?>"></script>

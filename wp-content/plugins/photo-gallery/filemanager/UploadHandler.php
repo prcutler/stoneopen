@@ -19,8 +19,11 @@ else {
   die('Access Denied');
 }
 
+require_once(WD_BWG_DIR . '/filemanager/controller.php');
+$controller = new FilemanagerController();
+
 $upload_handler = new UploadHandler(array(
-    'upload_dir' => (isset($_GET['dir']) ? esc_html($_GET['dir']) : ''),
+    'upload_dir' => $controller->uploads_dir . (isset($_GET['dir']) ? esc_html($_GET['dir']) : ''),
     'accept_file_types' => '/\.(gif|jpe?g|png|bmp|mp4|flv|webm|ogg|mp3|wav|pdf|zip)$/i'
 ));
 

@@ -176,6 +176,7 @@ class BWGViewThumbnails {
     $rgb_page_nav_font_color = WDWLibrary::spider_hex2rgb($theme_row->page_nav_font_color);
     $rgb_thumbs_bg_color = WDWLibrary::spider_hex2rgb($theme_row->thumbs_bg_color);
     $tags_rows = $this->model->get_tags_rows_data($params['gallery_id']);
+    $image_right_click = $options_row->image_right_click;
     ?>
     <style>
       #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_standart_thumbnails_<?php echo $bwg; ?> * {
@@ -562,6 +563,17 @@ class BWGViewThumbnails {
             return false;
           }
         });
+         <?php 
+        if ($image_right_click) {
+          ?>
+          /* Disable right click.*/
+          jQuery('div[id^="bwg_container"]').bind("contextmenu", function () {
+            return false;
+          });
+          jQuery('div[id^="bwg_container"]').css('webkitTouchCallout','none');
+          <?php
+        }
+        ?>
       }
       jQuery(document).ready(function () {
         bwg_document_ready_<?php echo $bwg; ?>();

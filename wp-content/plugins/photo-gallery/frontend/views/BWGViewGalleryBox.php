@@ -24,17 +24,17 @@ class BWGViewGalleryBox {
     global $WD_BWG_UPLOAD_DIR;
     require_once(WD_BWG_DIR . '/framework/WDWLibraryEmbed.php');
     $tag_id = (isset($_GET['tag_id']) ? esc_html($_GET['tag_id']) : 0);
-    $gallery_id = (isset($_GET['gallery_id']) ? esc_html($_GET['gallery_id']) : 0);
+    $gallery_id = WDWLibrary::esc_script('get', 'gallery_id', 0, 'int');
     $bwg = (isset($_GET['current_view']) ? esc_html($_GET['current_view']) : 0);
-    $current_image_id = (isset($_GET['image_id']) ? esc_html($_GET['image_id']) : 0);
+    $current_image_id = WDWLibrary::esc_script('get', 'image_id', 0, 'int');
     $theme_id = (isset($_GET['theme_id']) ? esc_html($_GET['theme_id']) : 1);
     $thumb_width = (isset($_GET['thumb_width']) ? esc_html($_GET['thumb_width']) : 120);
     $thumb_height = (isset($_GET['thumb_height']) ? esc_html($_GET['thumb_height']) : 90);
-    $open_with_fullscreen = (isset($_GET['open_with_fullscreen']) ? esc_html($_GET['open_with_fullscreen']) : 0);
-    $open_with_autoplay = (isset($_GET['open_with_autoplay']) ? esc_html($_GET['open_with_autoplay']) : 0);
-    $image_width = (isset($_GET['image_width']) ? esc_html($_GET['image_width']) : 800);
-    $image_height = (isset($_GET['image_height']) ? esc_html($_GET['image_height']) : 500);
-    $image_effect = ((isset($_GET['image_effect']) && esc_html($_GET['image_effect'])) ? esc_html($_GET['image_effect']) : 'fade');
+    $open_with_fullscreen = WDWLibrary::esc_script('get', 'open_with_fullscreen', 0, 'int');
+    $open_with_autoplay = WDWLibrary::esc_script('get', 'open_with_autoplay', 0, 'int');
+    $image_width = WDWLibrary::esc_script('get', 'image_width', 800, 'int');
+    $image_height = WDWLibrary::esc_script('get', 'image_height', 500, 'int');
+    $image_effect = WDWLibrary::esc_script('get', 'image_effect', 'fade');
     $sort_by = (isset($_GET['wd_sor']) ? esc_html($_GET['wd_sor']) : 'order');
     $order_by = (isset($_GET['wd_ord']) ? esc_html($_GET['wd_ord']) : 'asc');
     $enable_image_filmstrip = FALSE;
@@ -42,19 +42,8 @@ class BWGViewGalleryBox {
     $popup_enable_info = (isset($_GET['popup_enable_info']) ? esc_html($_GET['popup_enable_info']) : 1);
     $popup_info_always_show = (isset($_GET['popup_info_always_show']) ? esc_html($_GET['popup_info_always_show']) : 0);
     $popup_info_full_width = (isset($_GET['popup_info_full_width']) ? esc_html($_GET['popup_info_full_width']) : 0);
-    $popup_enable_rate = (isset($_GET['popup_enable_rate']) ? esc_html($_GET['popup_enable_rate']) : 0);
+    $popup_enable_rate = WDWLibrary::esc_script('get', 'popup_enable_rate', 0, 'int');
     $popup_hit_counter = (isset($_GET['popup_hit_counter']) ? esc_html($_GET['popup_hit_counter']) : 0);
-    $show_tag_box = (isset($_GET['show_tag_box']) ? esc_html($_GET['show_tag_box']) : 0);
-
-    if ($enable_image_filmstrip) {
-      $image_filmstrip_height = (isset($_GET['image_filmstrip_height']) ? esc_html($_GET['image_filmstrip_height']) : '20');
-      $thumb_ratio = $thumb_width / $thumb_height;
-      $image_filmstrip_width = round($thumb_ratio * $image_filmstrip_height);
-    }
-    else {
-      $image_filmstrip_height = 0;
-      $image_filmstrip_width = 0;
-    }
 
     $slideshow_interval = (isset($_GET['slideshow_interval']) ? (int) $_GET['slideshow_interval'] : 5);
     $enable_image_ctrl_btn = (isset($_GET['enable_image_ctrl_btn']) ? esc_html($_GET['enable_image_ctrl_btn']) : 0);
@@ -80,6 +69,8 @@ class BWGViewGalleryBox {
     $theme_row = $this->model->get_theme_row_data($theme_id);
     $option_row = $this->model->get_option_row_data();
     $image_right_click = $option_row->image_right_click;
+    $image_filmstrip_height = 0;
+    $image_filmstrip_width = 0;	
 
     if ($tag_id != 0) {
       $image_rows = $this->model->get_image_rows_data_tag($tag_id, $sort_by, $order_by);

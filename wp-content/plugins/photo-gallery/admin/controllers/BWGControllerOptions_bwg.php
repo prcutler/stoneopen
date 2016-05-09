@@ -381,12 +381,88 @@ class BWGControllerOptions_bwg {
       if (!is_dir(ABSPATH . $images_directory . '/photo-gallery')) {
         mkdir(ABSPATH . $images_directory . '/photo-gallery', 0777);
       }
-      echo WDWLibrary::message(__('Item Succesfully Saved.', 'bwg_back'), 'updated');
-
+      if (isset($_POST['recreate']) && $_POST['recreate'] == "resize_image_thumb") {
+        $this->resize_image_thumb();
+        echo WDWLibrary::message(__('All thumbnails are successfully recreated.', 'bwg_back'), 'updated');
+      }
+      else {
+        echo WDWLibrary::message(__('Item Succesfully Saved.', 'bwg_back'), 'updated');
+      }
     }
     else {
       echo WDWLibrary::message('Error. Please install plugin again.', 'error');
     }
+  }
+
+   public function resize_image_thumb() {
+    global $WD_BWG_UPLOAD_DIR;
+    global $wpdb;
+    $img_ids = $wpdb->get_results('SELECT id, thumb_url FROM ' . $wpdb->prefix . 'bwg_image');
+    $options = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'bwg_option');
+    foreach ($img_ids as $img_id) {
+        $file_path = str_replace("thumb", ".original", htmlspecialchars_decode(ABSPATH . $WD_BWG_UPLOAD_DIR . $img_id->thumb_url, ENT_COMPAT | ENT_QUOTES));
+	      $new_file_path = htmlspecialchars_decode(ABSPATH . $WD_BWG_UPLOAD_DIR . $img_id->thumb_url, ENT_COMPAT | ENT_QUOTES);
+        list($img_width, $img_height, $type) = @getimagesize(htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES));
+        if (!$img_width || !$img_height) {
+          continue;
+        }
+        $max_width = $options->upload_thumb_width;
+        $max_height = $options->upload_thumb_height;
+        $scale = min(
+          $max_width / $img_width,
+          $max_height / $img_height
+        );
+        @ini_set('memory_limit', '-1');
+        if (!function_exists('imagecreatetruecolor')) {
+          error_log('Function not found: imagecreatetruecolor');
+          return FALSE;
+        }
+        $new_width = $img_width * $scale;
+        $new_height = $img_height * $scale;
+        $dst_x = 0;
+        $dst_y = 0;
+        $new_img = @imagecreatetruecolor($new_width, $new_height);
+        switch ($type) {
+          case 2:
+            $src_img = @imagecreatefromjpeg($file_path);
+            $write_image = 'imagejpeg';
+            $image_quality = isset($options->jpeg_quality) ? $options->jpeg_quality : 75;
+            break;
+          case 1:
+            @imagecolortransparent($new_img, @imagecolorallocate($new_img, 0, 0, 0));
+            $src_img = @imagecreatefromgif($file_path);
+            $write_image = 'imagegif';
+            $image_quality = null;
+            break;
+          case 3:
+            @imagecolortransparent($new_img, @imagecolorallocate($new_img, 0, 0, 0));
+            @imagealphablending($new_img, false);
+            @imagesavealpha($new_img, true);
+            $src_img = @imagecreatefrompng($file_path);
+            $write_image = 'imagepng';
+            $image_quality = isset($options->png_quality) ? $options->png_quality : 9;
+            break;
+          default:
+            $src_img = null;
+            break;
+        }
+        $success = $src_img && @imagecopyresampled(
+          $new_img,
+          $src_img,
+          $dst_x,
+          $dst_y,
+          0,
+          0,
+          $new_width,
+          $new_height,
+          $img_width,
+          $img_height
+        ) && $write_image($new_img, $new_file_path, $image_quality);
+        // Free up memory (imagedestroy does not delete files):
+        @imagedestroy($src_img);
+        @imagedestroy($new_img);
+        @ini_restore('memory_limit');
+	  }
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////

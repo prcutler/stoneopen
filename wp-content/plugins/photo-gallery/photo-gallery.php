@@ -4,7 +4,7 @@
  * Plugin Name: Photo Gallery
  * Plugin URI: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
- * Version: 1.2.96
+ * Version: 1.2.102
  * Author: WebDorado
  * Author URI: https://web-dorado.com/
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
@@ -1911,7 +1911,7 @@ function bwg_activate() {
     ));
   }
   $version = get_option("wd_bwg_version");
-  $new_version = '1.2.96';
+  $new_version = '1.2.102';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -1965,7 +1965,7 @@ wp_oembed_add_provider( '#https://instagr(\.am|am\.com)/p/.*#i', 'https://api.in
 
 function bwg_update_hook() {
   $version = get_option("wd_bwg_version");
-  $new_version = '1.2.96';
+  $new_version = '1.2.102';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -2215,7 +2215,7 @@ function bwg_create_post_type() {
     'show_in_nav_menus' => FALSE,
     'permalink_epmask' => TRUE,
     'rewrite' => TRUE,
-    'label'  => 'bwg_gallery',
+    'label'  => __('Galleries', 'bwg_back'),
     'supports' => $show_hide_post_meta
   );
   register_post_type( 'bwg_gallery', $args );
@@ -2229,7 +2229,7 @@ function bwg_create_post_type() {
     'show_in_nav_menus' => FALSE,
     'permalink_epmask' => TRUE,
     'rewrite' => TRUE,
-    'label'  => 'bwg_album',
+    'label'  => __('Albums', 'bwg_back'),
     'supports' => $show_hide_post_meta
   );
   register_post_type( 'bwg_album', $args );
@@ -2243,7 +2243,7 @@ function bwg_create_post_type() {
     'show_in_nav_menus' => FALSE,
     'permalink_epmask' => TRUE,
     'rewrite' => TRUE,
-    'label'  => 'bwg_tag',
+    'label'  => __('Gallery tags', 'bwg_back'),
     'supports' => $show_hide_post_meta
   );
   register_post_type( 'bwg_tag', $args );
