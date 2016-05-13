@@ -89,11 +89,15 @@ Images
 ---------------------------------------------
 
 == Changelog ==
+Version 1.25.7
+* Section Files Compatibility with Child Theme
+* CSS bug on bottom margin of the Google Map Section fixed
+
 Version 1.25.6
-*Woocommerce Compatible bug fixed
+* Woocommerce Compatible bug fixed
 
 Version 1.25.5
-*Woocommerce Compatible
+* Woocommerce Compatible
 
 Version 1.25.4
 * Plugin Recommended via TGM

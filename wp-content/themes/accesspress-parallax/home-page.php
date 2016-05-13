@@ -93,7 +93,7 @@ get_header();
 						}
 					?>
 
-					<?php include($template."-section.php");?>
+					<?php include(locate_template($template."-section.php"));?>
         		
 			<?php if($layout != "googlemap_template") :?>
 			</div>
