@@ -1729,7 +1729,7 @@ class BWGViewGalleryBox {
           }
         }
       }
-      jQuery(document).ready(function () {
+      /* jQuery(document).ready(function () { */
       	<?php
         if ($image_right_click) {
           ?>
@@ -2169,7 +2169,7 @@ class BWGViewGalleryBox {
         ?>
         jQuery(".bwg_popup_image").removeAttr("width");
         jQuery(".bwg_popup_image").removeAttr("height");
-      });
+     /*  }); */
       /* Open with fullscreen.*/
       function bwg_open_with_fullscreen() {
         jQuery(".bwg_watermark").css({display: 'none'});

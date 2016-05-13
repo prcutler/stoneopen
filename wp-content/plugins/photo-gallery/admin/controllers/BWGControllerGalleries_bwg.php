@@ -475,7 +475,7 @@ class BWGControllerGalleries_bwg {
     $watermark_color = $this->bwg_hex2rgb($watermark_color);
     $watermark_color = imagecolorallocatealpha($watermark_image, $watermark_color[0], $watermark_color[1], $watermark_color[2], $watermark_transparency);
     $watermark_font = WD_BWG_DIR . '/fonts/' . $watermark_font;
-    $watermark_font_size = ($height * $watermark_font_size / 500) . 'px';
+    $watermark_font_size = (($height > $width ? $width : $height) * $watermark_font_size / 500) . 'px';
     $watermark_position = explode('-', $watermark_position);
     $watermark_sizes = $this->bwg_imagettfbboxdimensions($watermark_font_size, 0, $watermark_font, $watermark_text);
 

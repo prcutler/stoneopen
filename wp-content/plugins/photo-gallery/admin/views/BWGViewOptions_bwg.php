@@ -454,6 +454,12 @@ class BWGViewOptions_bwg {
                             </tr>
                           </tbody>
                         </table>
+                        <input type="submit" class="button-secondary" title="<?php _e('Set watermark', 'bwg_back'); ?>" style="margin-top: 5px;"
+                               onclick="spider_set_input_value('task', 'save'); spider_set_input_value('watermark', 'image_set_watermark');"
+                               value="<?php _e('Set Watermark', 'bwg_back'); ?>"/>
+                        <input type="submit" class="button-secondary" title="<?php _e('Reset watermark', 'bwg_back'); ?>" style="margin-top: 5px;"
+                               onclick="spider_set_input_value('task', 'image_recover_all');"
+                               value="<?php echo __('Reset Watermark', 'bwg_back'); ?>"/>
                         <div class="spider_description"></div>
                       </td>
                     </tr>
@@ -1653,6 +1659,7 @@ class BWGViewOptions_bwg {
       <input id="task" name="task" type="hidden" value="" />
       <input id="recreate" name="recreate" type="hidden" value="" />
       <input id="current_id" name="current_id" type="hidden" value="<?php echo $row->id; ?>" />
+      <input id="watermark" name="watermark" type="hidden" value="" />
       <script>
         window.onload = bwg_change_option_type('<?php echo isset($_POST['type']) ? esc_html($_POST['type']) : '1'; ?>');
         window.onload = bwg_inputs();

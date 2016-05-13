@@ -4,7 +4,7 @@ Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
 Tags: photo, photo gallery, image gallery, video gallery, gallery, galleries,  wordpress gallery plugin, images gallery, album, photo albums, simple gallery, best gallery plugin, free photo gallery, wp gallery, wordpress gallery, website gallery, gallery shortcode, best gallery, picture, pictures, gallery slider, photo album, photogallery, widget gallery, image, images, photos,  gallery lightbox, photoset, wordpress photo gallery plugin, wp gallery plugins, responsive wordpress photo gallery, media, image album, filterable gallery, banner rotator, fullscreen gallery, responsive gallery, add album,  add gallery, add pictures, fotoalbum, foto, gallery decription, multiple pictures, photoalbum, upload images, upload photos, view images, view pictures, admin, AJAX, comments, gallery image, image lightbox, image rotate, image slideshow, image slider, jquery, jquery gallery, slide show, slideshow, thumbnail, thumbnail view, thumbnails, thumbs, responsive, watermarking, watermarks,fullscreen slider, lightbox, photography, sidebar, slide, youtube, vimeo, videos, instagram, facebook, mosaic, facebook integration, instagram feed, Flickr, Dailymotion, widget, youtube gallery, ecommerce
 Requires at least: 3.4
 Tested up to: 4.5 
-Stable tag: 1.2.102    
+Stable tag: 1.2.103    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -224,6 +224,11 @@ We recommend to use images with the width of 1200px to 1600px. In order to speed
 To enable the feature of adding Media Library images, go to Photo Gallery > Options > Global Options and set Import from Media Library option to Yes. After that you will be able to import photos from Media Library to Photo Gallery.     
 
 == Changelog ==
+
+= 1.2.103 =
+* Fixed: Text watermark responsivness.   
+* Added: Set/Reset watermark to all images at once.   
+* Fixed: Description for masonry album views.   
 
 = 1.2.102 =
 * Fixed: Search also in description.   
@@ -728,18 +733,23 @@ This vulnerability was discovered by Fortinet's FortiGuard Labs.
 ==Wordpress Photo Gallery Step by step guide==    
   
 = Step 1: Installing the Gallery =   
-1.1 Minimum requirements.  
-Wordpress 3.4+  
-PHP 5.x  
-MySQL 5.x  
-  
-1.2 Perform a new installation.  
-Log in to the administrator panel.  
-Go to Plugins Add > New > Upload.  
-Click `Choose file` (`Browse`) and select the Photo Gallery zip file.  
-Click `Upload&Install` button.  
-Click `Activate Plugin` button for activating the plugin.  
-If the installation succeeded you will see the success message. If any problem occurs, please [click here to contact us](https://web-dorado.com/support/contact-us.html).  
+1.1 Minimal requirements.
+
+WordPress 3.4+
+PHP 5.x
+MySQL 5.x
+
+1.2 Installation.
+
+Log-in to your WordPress administrator panel.
+Select Plugins page from toolbar menu, click Add New.
+Search for  Photo Gallery in the right-top search bar if you want to download the Free version or click Upload Plugin button > "Choose file" ("Browse") and select the  Photo Gallery zip file if you are installing the Professional version of  Photo Gallery.
+
+For Mac Users
+Go to your Downloads folder and locate the folder with the  Photo Gallery. Right-click on the folder and select Compress. This will create a .zip file which can be installed as described below:
+Click "Upload & Install" button.
+Click "Activate Plugin" button for activating the plugin.
+If any problem occurs with installation of  Photo Gallery, please let us know using ["Contact Us"](https://web-dorado.com/support/contact-us.html) form. 
   
   
   

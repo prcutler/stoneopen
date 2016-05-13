@@ -121,6 +121,12 @@ function spider_featured($current_plugin = '') {
       'content'  => 'Post Slider WD is designed to show off the selected posts of your website in a slider.',
       'href'     => 'https://web-dorado.com/products/wordpress-post-slider-plugin.html'
     ),
+    "google-maps" => array(
+      'title'    => 'Google Map',
+      'text'     => 'WordPress Google Maps Plugin',
+      'content'  => 'Google Maps WD is an intuitive tool for creating Google maps with advanced markers, custom layers and overlays for your website.',
+      'href'     => 'https://web-dorado.com/products/wordpress-google-maps-plugin.html'
+    ),
   );
   ?>
   <div id="main_featured_plugins_page">

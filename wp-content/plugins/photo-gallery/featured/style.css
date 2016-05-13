@@ -1,5 +1,4 @@
 @import url(http://fonts.googleapis.com/css?family=Oswald);
-
 #main_featured_plugins_page {
 	font-family: Oswald;
   width: 90%;
@@ -73,6 +72,7 @@
 #main_featured_plugins_page #featured-plugins-list  li.faq_wd  .product {background:url("images/faq_wd.png") center center no-repeat;}
 #main_featured_plugins_page #featured-plugins-list  li.instagram_feed  .product {background:url("images/instagram_feed.png") center center no-repeat;}
 #main_featured_plugins_page #featured-plugins-list  li.post-slider  .product {background:url("images/post-slider.png") center center no-repeat;}
+#main_featured_plugins_page #featured-plugins-list  li.google-maps  .product {background:url("images/google-maps.png") center center no-repeat;}
 
 #main_featured_plugins_page #featured-plugins-list li .title .heading {
 	display: block;
