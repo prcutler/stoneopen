@@ -78,6 +78,7 @@ class BWGViewSlideshow {
       $watermark_url = (isset($params['watermark_url']) ? esc_html($params['watermark_url']) : '');
       $watermark_width = (isset($params['watermark_width']) ? esc_html($params['watermark_width']) : 90);
       $watermark_height = (isset($params['watermark_height']) ? esc_html($params['watermark_height']) : 90);
+      $slideshow_effect_duration = (isset($params['slideshow_effect_duration']) ? esc_html($params['slideshow_effect_duration']) : 1);
     }
     else {      
       $theme_id = (isset($params['theme_id']) ? esc_html($params['theme_id']) : 0);
@@ -102,6 +103,7 @@ class BWGViewSlideshow {
       $slideshow_description_position = explode('-', $options_row->slideshow_description_position);
       $enable_slideshow_music = $options_row->slideshow_enable_music;
       $slideshow_music_url = $options_row->slideshow_audio_url;
+      $slideshow_effect_duration = isset($options_row->slideshow_effect_duration) ? $options_row->slideshow_effect_duration : 1;
 
       $image_width = (isset($params['width']) ? esc_html($params['width']) : '800');
       $image_height = (isset($params['height']) ? esc_html($params['height']) : '600');
@@ -822,7 +824,7 @@ class BWGViewSlideshow {
 
     <script>
       var bwg_trans_in_progress_<?php echo $bwg; ?> = false;
-      var bwg_transition_duration_<?php echo $bwg; ?> = <?php echo (($slideshow_interval < 4) && ($slideshow_interval != 0)) ? ($slideshow_interval * 1000) / 4 : 800; ?>;
+      var bwg_transition_duration_<?php echo $bwg; ?> = <?php echo (($slideshow_interval < 4) && ($slideshow_interval != 0)) ? ($slideshow_interval * 1000) / 4 : ($slideshow_effect_duration * 1000); ?>;
       var bwg_playInterval_<?php echo $bwg; ?>;
       /* Stop autoplay.*/
       window.clearInterval(bwg_playInterval_<?php echo $bwg; ?>);

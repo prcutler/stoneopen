@@ -4,7 +4,7 @@
  * Plugin Name: Photo Gallery
  * Plugin URI: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
- * Version: 1.2.103
+ * Version: 1.2.104
  * Author: WebDorado
  * Author URI: https://web-dorado.com/
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
@@ -368,6 +368,7 @@ function bwg_shortcode($params) {
         'slideshow_description_position' => 'bottom-right',
         'enable_slideshow_music' => 0,
         'slideshow_music_url' => '',
+        'slideshow_effect_duration' => 1,
       ), $params);
       break;
 
@@ -466,7 +467,8 @@ function bwg_shortcode($params) {
         'popup_enable_google' => 1,
         'popup_enable_pinterest' => 0,
         'popup_enable_tumblr' => 0,
-        'watermark_type' => 'none'
+        'watermark_type' => 'none',
+        'popup_effect_duration' => 1,
       ), $params);
   }
 
@@ -699,6 +701,7 @@ function bwg_activate() {
     `slideshow_description_position` varchar(16) NOT NULL,
     `slideshow_enable_music` tinyint(1) NOT NULL,
     `slideshow_audio_url` varchar(255) NOT NULL,
+    `slideshow_effect_duration` int(4) NOT NULL,
 
     `popup_width` int(4) NOT NULL,
     `popup_height` int(4) NOT NULL,
@@ -720,6 +723,8 @@ function bwg_activate() {
     `popup_enable_twitter` tinyint(1) NOT NULL,
     `popup_enable_google` tinyint(1) NOT NULL,
     `popup_enable_ecommerce` tinyint(1) NOT NULL,
+    `popup_effect_duration` int(4) NOT NULL,
+    
     `watermark_type` varchar(8) NOT NULL,
     `watermark_position` varchar(16) NOT NULL,
     `watermark_width` int(4) NOT NULL,
@@ -888,6 +893,7 @@ function bwg_activate() {
       'slideshow_description_position' => 'bottom-right',
       'slideshow_enable_music' => 0,
       'slideshow_audio_url' => '',
+      'slideshow_effect_duration' => 1,
 
       'popup_width' => 800,
       'popup_height' => 500,
@@ -905,6 +911,7 @@ function bwg_activate() {
       'popup_enable_facebook' => 1,
       'popup_enable_twitter' => 1,
       'popup_enable_google' => 1,
+      'popup_effect_duration' => 1,
 
       'watermark_type' => 'none',
       'watermark_position' => 'bottom-left',
@@ -987,6 +994,10 @@ function bwg_activate() {
       'show_hide_custom_post' => 0,
       'show_hide_post_meta' => 0,
       'placeholder' => '',
+      'ecommerce_icon_show_hover' => '',
+      'popup_enable_ecommerce' => 0,
+      'slideshow_effect_duration' => 1,
+      'popup_effect_duration' => 1,
     ));
   }
   $exists_default = $wpdb->get_var('SELECT count(id) FROM ' . $wpdb->prefix . 'bwg_theme');
@@ -1911,7 +1922,7 @@ function bwg_activate() {
     ));
   }
   $version = get_option("wd_bwg_version");
-  $new_version = '1.2.103';
+  $new_version = '1.2.104';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -1965,7 +1976,7 @@ wp_oembed_add_provider( '#https://instagr(\.am|am\.com)/p/.*#i', 'https://api.in
 
 function bwg_update_hook() {
   $version = get_option("wd_bwg_version");
-  $new_version = '1.2.103';
+  $new_version = '1.2.104';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);

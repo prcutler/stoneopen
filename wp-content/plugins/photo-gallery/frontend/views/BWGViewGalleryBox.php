@@ -44,6 +44,8 @@ class BWGViewGalleryBox {
     $popup_info_full_width = (isset($_GET['popup_info_full_width']) ? esc_html($_GET['popup_info_full_width']) : 0);
     $popup_enable_rate = WDWLibrary::esc_script('get', 'popup_enable_rate', 0, 'int');
     $popup_hit_counter = (isset($_GET['popup_hit_counter']) ? esc_html($_GET['popup_hit_counter']) : 0);
+    $slideshow_effect_duration = (isset($_GET['slideshow_effect_duration']) ? (int) $_GET['slideshow_effect_duration'] : 1);
+
 
     $slideshow_interval = (isset($_GET['slideshow_interval']) ? (int) $_GET['slideshow_interval'] : 5);
     $enable_image_ctrl_btn = (isset($_GET['enable_image_ctrl_btn']) ? esc_html($_GET['enable_image_ctrl_btn']) : 0);
@@ -926,7 +928,7 @@ class BWGViewGalleryBox {
     <script language="javascript" type="text/javascript" src="<?php echo WD_BWG_URL . '/js/bwg_embed.js?ver='.wd_bwg_version(); ?>"></script>
     <script>
       var bwg_trans_in_progress = false;
-      var bwg_transition_duration = <?php echo (($slideshow_interval < 4) && ($slideshow_interval != 0)) ? ($slideshow_interval * 1000) / 4 : 800; ?>;
+      var bwg_transition_duration = <?php echo (($slideshow_interval < 4) && ($slideshow_interval != 0)) ? ($slideshow_interval * 1000) / 4 : ($slideshow_effect_duration * 1000); ?>;
       var bwg_playInterval;
       if ((jQuery("#spider_popup_wrap").width() >= jQuery(window).width()) || (jQuery("#spider_popup_wrap").height() >= jQuery(window).height())) {
         jQuery(".spider_popup_close").attr("class", "bwg_ctrl_btn spider_popup_close_fullscreen");

@@ -134,6 +134,7 @@ class BWGViewThumbnails {
       $params['watermark_height'] = $options_row->watermark_height;
       $params['thumb_click_action'] = $options_row->thumb_click_action;
       $params['thumb_link_target'] = $options_row->thumb_link_target;
+      $params['popup_effect_duration'] = isset($options_row->popup_effect_duration) ? $options_row->popup_effect_duration : 1;
     }
     if (isset($_POST['sortImagesByValue_' . $bwg])) {
 			$sort_by = esc_html($_POST['sortImagesByValue_' . $bwg]);
@@ -529,7 +530,8 @@ class BWGViewThumbnails {
           'enable_image_google' => $params['popup_enable_google'],
           'enable_image_pinterest' => $params['popup_enable_pinterest'],
           'enable_image_tumblr' => $params['popup_enable_tumblr'],
-          'watermark_type' => $params['watermark_type']
+          'watermark_type' => $params['watermark_type'],
+          'slideshow_effect_duration' => isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1
         );
         if ($params['watermark_type'] != 'none') {
           $params_array['watermark_link'] = urlencode($params['watermark_link']);

@@ -671,6 +671,15 @@ class BWGViewOptions_bwg {
                         <div class="spider_description"></div>
                       </td>
                     </tr>
+                    <tr>
+                      <td class="spider_label_options">
+                        <label for="popup_effect_duration"><?php echo __('Effect duration:', 'bwg_back'); ?> </label>
+                      </td>
+                      <td>
+                        <input type="text" name="popup_effect_duration" id="popup_effect_duration" value="<?php echo $row->popup_effect_duration; ?>" class="spider_int_input" /> sec.
+                        <div class="spider_description"></div>
+                      </td>
+                    </tr>
                     <tr id="tr_popup_autoplay">
                       <td class="spider_label_options">
                         <label><?php _e('Lightbox autoplay:', 'bwg_back'); ?> </label>
@@ -1089,6 +1098,15 @@ class BWGViewOptions_bwg {
                           }
                           ?>
                         </select>
+                        <div class="spider_description"></div>
+                      </td>
+                    </tr>
+                     <tr>
+                      <td class="spider_label_options">
+                        <label for="slideshow_effect_duration"><?php echo __('Effect duration:', 'bwg_back'); ?> </label>
+                      </td>
+                      <td>
+                        <input type="text" name="slideshow_effect_duration" id="slideshow_effect_duration" value="<?php echo $row->slideshow_effect_duration; ?>" class="spider_int_input" /> sec.
                         <div class="spider_description"></div>
                       </td>
                     </tr>

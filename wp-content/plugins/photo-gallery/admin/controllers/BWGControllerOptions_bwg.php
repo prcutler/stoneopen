@@ -227,12 +227,14 @@ class BWGControllerOptions_bwg {
     $carousel_play_pause_butt = (isset($_POST['carousel_play_pause_butt']) ? esc_html(stripslashes($_POST['carousel_play_pause_butt'])) : 1);
     $bwg_permissions = (isset($_POST['permissions']) ? esc_html(stripslashes($_POST['permissions'])) : 'manage_options');
     $facebook_app_id = (isset($_POST['facebook_app_id']) ? esc_html(stripslashes($_POST['facebook_app_id'])) : '');
-	$facebook_app_secret = (isset($_POST['facebook_app_secret']) ? esc_html(stripslashes($_POST['facebook_app_secret'])) : '');
-	$show_tag_box = (isset($_POST['show_tag_box']) ? esc_html(stripslashes($_POST['show_tag_box'])) : 0);
-  $show_hide_custom_post = (isset($_POST['show_hide_custom_post']) ? esc_html(stripslashes($_POST['show_hide_custom_post'])) : 0);
-  $show_hide_post_meta = (isset($_POST['show_hide_post_meta']) ? esc_html(stripslashes($_POST['show_hide_post_meta'])) : 0);
-  $placeholder = (isset($_POST['placeholder']) ? esc_html(stripslashes($_POST['placeholder'])) : '');
-
+    $facebook_app_secret = (isset($_POST['facebook_app_secret']) ? esc_html(stripslashes($_POST['facebook_app_secret'])) : '');
+    $show_tag_box = (isset($_POST['show_tag_box']) ? esc_html(stripslashes($_POST['show_tag_box'])) : 0);
+    $show_hide_custom_post = (isset($_POST['show_hide_custom_post']) ? esc_html(stripslashes($_POST['show_hide_custom_post'])) : 0);
+    $show_hide_post_meta = (isset($_POST['show_hide_post_meta']) ? esc_html(stripslashes($_POST['show_hide_post_meta'])) : 0);
+    $placeholder = (isset($_POST['placeholder']) ? esc_html(stripslashes($_POST['placeholder'])) : '');
+    $slideshow_effect_duration = (isset($_POST['slideshow_effect_duration']) ? esc_html(stripslashes($_POST['slideshow_effect_duration'])) : 1);
+    $popup_effect_duration = (isset($_POST['popup_effect_duration']) ? esc_html(stripslashes($_POST['popup_effect_duration'])) : 1);
+    
     $save = $wpdb->update($wpdb->prefix . 'bwg_option', array(
       'images_directory' => $images_directory,
       'masonry' => $masonry,
@@ -367,11 +369,13 @@ class BWGControllerOptions_bwg {
       'carousel_play_pause_butt' => $carousel_play_pause_butt,
       'permissions' => $bwg_permissions,
       'facebook_app_id' => $facebook_app_id,
-	  'facebook_app_secret' => $facebook_app_secret,
-	  'show_tag_box' => $show_tag_box,
-    'show_hide_custom_post' => $show_hide_custom_post,
-    'show_hide_post_meta' => $show_hide_post_meta,
-    'placeholder' => $placeholder,
+      'facebook_app_secret' => $facebook_app_secret,
+      'show_tag_box' => $show_tag_box,
+      'show_hide_custom_post' => $show_hide_custom_post,
+      'show_hide_post_meta' => $show_hide_post_meta,
+      'placeholder' => $placeholder,
+      'slideshow_effect_duration' => $slideshow_effect_duration,
+      'popup_effect_duration' => $popup_effect_duration,
       ), array('id' => 1));
       
        if(isset($_POST['watermark']) && $_POST['watermark'] == "image_set_watermark"){

@@ -123,7 +123,8 @@ class BWGViewImage_browser {
       'enable_image_google' => $params['popup_enable_google'],
       'enable_image_pinterest' => $params['popup_enable_pinterest'],
       'enable_image_tumblr' => $params['popup_enable_tumblr'],
-      'watermark_type' => $params['watermark_type']
+      'watermark_type' => $params['watermark_type'],
+      'slideshow_effect_duration' => isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1
     );
     $items_per_page = array('images_per_page' => 1, 'load_more_image_count' => 1);
     if ($params['watermark_type'] == 'none') {

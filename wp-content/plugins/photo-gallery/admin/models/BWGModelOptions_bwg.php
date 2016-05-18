@@ -78,7 +78,8 @@ class BWGModelOptions_bwg {
       $row->slideshow_description_position = 'bottom-right';
       $row->slideshow_enable_music = 0;
       $row->slideshow_audio_url = '';
-
+      $row->slideshow_effect_duration = 1;
+      
       $row->popup_width = 800;
       $row->popup_height = 500;
       $row->popup_type = 'fade';
@@ -97,6 +98,7 @@ class BWGModelOptions_bwg {
       $row->popup_enable_google = 1;
       $row->popup_enable_pinterest = 0;
       $row->popup_enable_tumblr = 0;
+      $row->popup_effect_duration = 1;
 
       $row->watermark_type = 'none';
       $row->watermark_position = 'bottom-left';

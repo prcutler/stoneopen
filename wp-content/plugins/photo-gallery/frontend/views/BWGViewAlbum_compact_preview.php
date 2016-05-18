@@ -143,6 +143,7 @@ class BWGViewAlbum_compact_preview {
       $params['watermark_url'] = urlencode($options_row->watermark_url);
       $params['watermark_width'] = $options_row->watermark_width;
       $params['watermark_height'] = $options_row->watermark_height;
+      $params['popup_effect_duration'] = isset($options_row->popup_effect_duration) ? $options_row->popup_effect_duration : 1;
     }
 
     $theme_row = $this->model->get_theme_row_data($params['theme_id']);
@@ -249,7 +250,8 @@ class BWGViewAlbum_compact_preview {
       'enable_image_google' => $params['popup_enable_google'],
       'enable_image_pinterest' => $params['popup_enable_pinterest'],
       'enable_image_tumblr' => $params['popup_enable_tumblr'],
-      'watermark_type' => $params['watermark_type']
+      'watermark_type' => $params['watermark_type'],
+      'slideshow_effect_duration' => isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1
     );
     if ($params['watermark_type'] != 'none') {
       $params_array['watermark_link'] = urlencode($params['watermark_link']);

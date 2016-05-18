@@ -4,7 +4,7 @@ Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
 Tags: photo, photo gallery, image gallery, video gallery, gallery, galleries,  wordpress gallery plugin, images gallery, album, photo albums, simple gallery, best gallery plugin, free photo gallery, wp gallery, wordpress gallery, website gallery, gallery shortcode, best gallery, picture, pictures, gallery slider, photo album, photogallery, widget gallery, image, images, photos,  gallery lightbox, photoset, wordpress photo gallery plugin, wp gallery plugins, responsive wordpress photo gallery, media, image album, filterable gallery, banner rotator, fullscreen gallery, responsive gallery, add album,  add gallery, add pictures, fotoalbum, foto, gallery decription, multiple pictures, photoalbum, upload images, upload photos, view images, view pictures, admin, AJAX, comments, gallery image, image lightbox, image rotate, image slideshow, image slider, jquery, jquery gallery, slide show, slideshow, thumbnail, thumbnail view, thumbnails, thumbs, responsive, watermarking, watermarks,fullscreen slider, lightbox, photography, sidebar, slide, youtube, vimeo, videos, instagram, facebook, mosaic, facebook integration, instagram feed, Flickr, Dailymotion, widget, youtube gallery, ecommerce
 Requires at least: 3.4
 Tested up to: 4.5 
-Stable tag: 1.2.103    
+Stable tag: 1.2.104    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -224,6 +224,11 @@ We recommend to use images with the width of 1200px to 1600px. In order to speed
 To enable the feature of adding Media Library images, go to Photo Gallery > Options > Global Options and set Import from Media Library option to Yes. After that you will be able to import photos from Media Library to Photo Gallery.     
 
 == Changelog ==
+
+
+= 1.2.104 =
+* Fixed: Search in gallery from widget.     
+* Added: Effect duration option.    
 
 = 1.2.103 =
 * Fixed: Text watermark responsivness.   
