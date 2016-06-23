@@ -262,6 +262,10 @@ class  BWGViewThemes_bwg {
       <h2><?php echo $page_title; ?></h2>
       <div style="float: right; margin: 0 5px 0 0;">
         <input class="button-secondary" type="submit" onclick="if (spider_check_required('name', 'Name')) {return false;}; spider_set_input_value('task', 'save')" value="<?php _e("Save", 'bwg_back'); ?>"/>
+        <?php if ($id) { ?>
+        <input class="button-secondary" type="submit" onclick="if (spider_check_required('name', 'Name')) {return false;}; spider_set_input_value('task', 'save');
+                                                                  spider_set_input_value('save_as_copy', 1)" value="<?php echo __('Save as Copy', 'bwg_back'); ?>" />
+        <?php } ?>
         <input class="button-secondary" type="submit" onclick="if (spider_check_required('name', 'Name')) {return false;}; spider_set_input_value('task', 'apply')" value="<?php _e("Apply", 'bwg_back'); ?>"/>
         <input class="button-secondary" type="submit" onclick="spider_set_input_value('task', 'cancel')" value="<?php _e("Cancel", 'bwg_back'); ?>"/>
         <input title="Reset to default theme" class="button-primary" type="submit" onclick="if (confirm('<?php echo addslashes(__("Do you want to reset to default?", 'bwg_back')); ?>')) {

@@ -98,13 +98,17 @@ function spider_frontend_ajax(form_id, current_view, id, album_gallery_id, cur_a
     });
     jQuery(".blog_style_images_conteiner_" + current_view + " .bwg_embed_frame_instapost_" + current_view).each(function (e) {
       jQuery(this).width(jQuery(this).parent().width());
-      jQuery(this).height(jQuery(this).width() +88);
+      /* 16 is 2*padding inside iframe */
+      /* 96 is 2*padding(top) + 1*padding(bottom) + 40(footer) + 32(header) */
+      jQuery(this).height((jQuery(this).width() - 16) * jQuery(this).attr('data-height') / jQuery(this).attr('data-width') + 96);
     });
     /* For Image browser view.*/
-    jQuery('#bwg_embed_frame_16x9_'+current_view).width(jQuery('#bwg_embed_frame_16x9_'+current_view).parent().width());
-    jQuery('#bwg_embed_frame_16x9_'+current_view).height(jQuery('#bwg_embed_frame_16x9_'+current_view).width() * 0.5625);
-    jQuery('#bwg_embed_frame_instapost_'+current_view).width(jQuery('#bwg_embed_frame_16x9_'+current_view).parent().width());
-    jQuery('#bwg_embed_frame_instapost_'+current_view).height(jQuery('#bwg_embed_frame_instapost_'+current_view).width() +88);
+    jQuery('#bwg_embed_frame_16x9_' + current_view).width(jQuery('#bwg_embed_frame_16x9_' + current_view).parent().width());
+    jQuery('#bwg_embed_frame_16x9_' + current_view).height(jQuery('#bwg_embed_frame_16x9_' + current_view).width() * 0.5625);
+    jQuery('#bwg_embed_frame_instapost_' + current_view).width(jQuery('#bwg_embed_frame_16x9_' + current_view).parent().width());
+    /* 16 is 2*padding inside iframe */
+    /* 96 is 2*padding(top) + 1*padding(bottom) + 40(footer) + 32(header) */
+    jQuery('.bwg_embed_frame_instapost_' + current_view).height((jQuery('.bwg_embed_frame_instapost_' + current_view).width() - 16) * jQuery('.bwg_embed_frame_instapost_' + current_view).attr('data-height') / jQuery('.bwg_embed_frame_instapost_' + current_view).attr('data-width') + 96);
   });
   // if (event.preventDefault) {
     // event.preventDefault();

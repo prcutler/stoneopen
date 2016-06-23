@@ -144,6 +144,18 @@ class WDWLibrary {
           break;
 
         }
+         case 18: {
+          $message = __('Theme successfully copied.', 'bwg_back');
+          $type = 'updated';
+          break;
+
+        }
+        case 19: {
+          $message = __('Failed.', 'bwg_back');
+          $type = 'error';
+          break;
+
+        }
       }
       return '<div style="width:99%"><div class="' . $type . '"><p><strong>' . $message . '</strong></p></div></div>';
     }
@@ -622,25 +634,23 @@ class WDWLibrary {
         }
         spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $id; ?>', '<?php echo $album_gallery_id; ?>', '', '<?php echo $type; ?>', 0, '', '', load_more);
       }
-      jQuery(document).ready(function() {
-        jQuery('.<?php echo $first_page; ?>').on('click', function() {
-          spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, -2);
-        });
-        jQuery('.<?php echo $prev_page; ?>').on('click', function() {
-          spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, -1);
-          return false;
-        });
-        jQuery('.<?php echo $next_page; ?>').on('click', function() {
-          spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, 1);
-          return false;
-        });
-        jQuery('.<?php echo $last_page; ?>').on('click', function() {
-          spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, 2);
-        });
-        jQuery('.bwg_load_btn_<?php echo $current_view; ?>').on('click', function() {
-          spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, 1, true);
-          return false;
-        });
+      jQuery('.<?php echo $first_page; ?>').on('click', function() {
+        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, -2);
+      });
+      jQuery('.<?php echo $prev_page; ?>').on('click', function() {
+        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, -1);
+        return false;
+      });
+      jQuery('.<?php echo $next_page; ?>').on('click', function() {
+        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, 1);
+        return false;
+      });
+      jQuery('.<?php echo $last_page; ?>').on('click', function() {
+        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, 2);
+      });
+      jQuery('.bwg_load_btn_<?php echo $current_view; ?>').on('click', function() {
+        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, 1, true);
+        return false;
       });
     </script>
     </span>

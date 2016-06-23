@@ -145,8 +145,7 @@ class WDWLibraryEmbed {
         if(empty($result)){
           return json_encode(array("error", wp_remote_retrieve_body($get_embed_data)));
         }              
-        
-
+        list($img_width, $img_height) = @getimagesize('https://instagram.com/p/' . $filename . '/media/?size=l');
         $embedData = array(
           'name' => htmlspecialchars($result->title),
           'description' => htmlspecialchars($result->title),
@@ -158,7 +157,7 @@ class WDWLibraryEmbed {
           'size' => '',
           'filetype' => $embed_type,
           'date_modified' => date('d F Y, H:i'),
-          'resolution' => $result->thumbnail_width." x ".$result->thumbnail_height." px",
+          'resolution' => $img_width . " x " . $img_height . " px",
           'redirect_url' => ''
           );
         
@@ -217,8 +216,8 @@ class WDWLibraryEmbed {
         $result  = json_decode(wp_remote_retrieve_body($get_embed_data));
         if(empty($result)){
           return json_encode(array("error", wp_remote_retrieve_body($get_embed_data)));
-        }  
-                      
+        }
+        list($img_width, $img_height) = @getimagesize('https://instagram.com/p/' . $filename . '/media/?size=l');
         $embedData = array(
           'name' => htmlspecialchars($result->title),
           'description' => htmlspecialchars($result->title),
@@ -230,7 +229,7 @@ class WDWLibraryEmbed {
           'size' => '',
           'filetype' => $embed_type,
           'date_modified' => date('d F Y, H:i'),
-          'resolution' => $result->width." x ".$result->width." px",
+          'resolution' => $img_width . " x " . $img_height . " px",
           'redirect_url' => '');
  
         return json_encode($embedData);      
@@ -485,7 +484,7 @@ class WDWLibraryEmbed {
           if(preg_match('/src/i', $attr)===0){
             if($attr != '' && $value != ''){
               $oembed_instagram_html .= ' '. $attr . '="'. $value . '"';
-              if($attr == 'class' || $attr =='CLASS' || $attr =='Class'){
+              if(strtolower($attr) == 'class') {
                 $class = $value;
               }
             }

@@ -895,9 +895,22 @@ class BWGViewGalleries_bwg {
                 <td class="table_small_col"><?php echo ++$i; ?></td>
                 <td class="table_extra_large_col">
                   <?php
-                  $query_url = add_query_arg(array('action' => 'editThumb', 'type' => 'display'/*thumb_display*/, 'image_id' => $row_data->id, 'width' => '800', 'height' => '500'), admin_url('admin-ajax.php'));
+                $is_embed_instagram_post = preg_match('/INSTAGRAM_POST/', $row_data->filetype) == 1 ? true :false;
+                $instagram_post_width = 0;
+                $instagram_post_height = 0;
+                if ($is_embed_instagram_post) {
+                  $image_resolution = explode(' x ', $row_data->resolution);
+                  if (is_array($image_resolution)) {
+                    $instagram_post_width = $image_resolution[0];
+                    $instagram_post_height = explode(' ', $image_resolution[1]);
+                    $instagram_post_height = $instagram_post_height[0];
+                  }
+                }
+                
+                  $query_url = add_query_arg(array('action' => 'editThumb', 'type' => 'display'/*thumb_display*/, 'image_id' => $row_data->id, 'width' => '800', 'height' => '500', 'instagram_post_width' => $instagram_post_width, 'instagram_post_height' => $instagram_post_height), admin_url('admin-ajax.php'));
                   $query_url = wp_nonce_url( $query_url, 'editThumb', 'bwg_nonce' );
                   $query_url = add_query_arg(array('TB_iframe' => '1'), $query_url);
+                $is_embed_instagram_post = preg_match('/INSTAGRAM_POST/',$row_data->filetype) == 1 ? true : false;
                   ?>
                   <a class="thickbox thickbox-preview" title="<?php echo $row_data->alt; ?>" href="<?php echo $query_url; ?>">
                     <img id="image_thumb_<?php echo $row_data->id; ?>" class="thumb" src="<?php echo (!$is_embed ? site_url() . '/' . $WD_BWG_UPLOAD_DIR : "") . $row_data->thumb_url . ($is_embed ? '' : '?date=' . date('Y-m-y H:i:s')); ?>" />

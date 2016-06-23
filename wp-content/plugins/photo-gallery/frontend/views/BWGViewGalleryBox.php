@@ -738,6 +738,16 @@ class BWGViewGalleryBox {
         data["<?php echo $key; ?>"]["id"] = "<?php echo $image_row->id; ?>";
         data["<?php echo $key; ?>"]["alt"] = "<?php echo str_replace(array("\r\n", "\n", "\r"), esc_html('<br />'), $image_row->alt); ?>";
         data["<?php echo $key; ?>"]["description"] = "<?php echo str_replace(array("\r\n", "\n", "\r"), esc_html('<br />'), $image_row->description); ?>";
+        <?php
+        $image_resolution = explode(' x ', $image_row->resolution);
+        if (is_array($image_resolution)) {
+          $instagram_post_width = $image_resolution[0];
+          $instagram_post_height = explode(' ', $image_resolution[1]);
+          $instagram_post_height = $instagram_post_height[0];
+        }
+        ?>
+        data["<?php echo $key; ?>"]["image_width"] = "<?php echo $instagram_post_width; ?>";
+        data["<?php echo $key; ?>"]["image_height"] = "<?php echo $instagram_post_height; ?>";
         data["<?php echo $key; ?>"]["image_url"] = "<?php echo $image_row->image_url; ?>";
         data["<?php echo $key; ?>"]["thumb_url"] = "<?php echo $image_row->thumb_url; ?>";
         data["<?php echo $key; ?>"]["date"] = "<?php echo $image_row->date; ?>";
@@ -887,16 +897,26 @@ class BWGViewGalleryBox {
                       else {  /*$is_embed*/ ?>
                         <span class="bwg_popup_embed bwg_popup_watermark" style="diplay: table; table-layout: fixed;">
                         <?php
-                        if($is_embed_instagram_post){
-                          $post_width = $image_width - ($filmstrip_direction == 'vertical' ? $image_filmstrip_width : 0);
-                          $post_height = $image_height - ($filmstrip_direction == 'horizontal' ? $image_filmstrip_height : 0);
-                          if($post_height <$post_width +88 ){
-                            $post_width =$post_height -88; 
+                        if ($is_embed_instagram_post) {
+                          $post_width = $image_width;
+                          $post_height = $image_height;
+                          if ($post_height < $post_width + 88) {
+                            $post_width = $post_height - 88;
                           }
-                          else{
-                           $post_height =$post_width +88;  
+                          else {
+                           $post_height = $post_width + 88;
                           }
-                          WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('class'=>"bwg_embed_frame", 'frameborder'=>"0", 'style'=>"width:".$post_width."px; height:".$post_height."px; vertical-align:middle; display:inline-block; position:relative;"));
+
+                          $instagram_post_width = $post_width;
+                          $instagram_post_height = $post_height;
+                          $image_resolution = explode(' x ', $image_row->resolution);
+                          if (is_array($image_resolution)) {
+                            $instagram_post_width = $image_resolution[0];
+                            $instagram_post_height = explode(' ', $image_resolution[1]);
+                            $instagram_post_height = $instagram_post_height[0];
+                          }
+                          
+                          WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('class' => "bwg_embed_frame", 'data-width' => $instagram_post_width, 'data-height' => $instagram_post_height, 'frameborder' => "0", 'style' => "width:" . $post_width . "px; height:" . $post_height . "px; vertical-align:middle; display:inline-block; position:relative;"));
                         }
                         else{
                         WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('class'=>"bwg_embed_frame", 'frameborder'=>"0", 'allowfullscreen'=>"allowfullscreen", 'style'=>"width:inherit; height:inherit; vertical-align:middle; display:table-cell;"));
@@ -1371,18 +1391,18 @@ class BWGViewGalleryBox {
           else { /*is_embed*/
 
             innhtml += '<span style="height: ' + cur_height + 'px; width: ' + cur_width + 'px;" class="bwg_popup_embed bwg_popup_watermark">';
-            if(is_embed_instagram_post){
+            if (is_embed_instagram_post) {
               var post_width = 0;
               var post_height = 0;
-              if(cur_height <cur_width +88 ){
+              if (cur_height < cur_width + 88) {
                 post_height = cur_height;
-                post_width = post_height -88; 
+                post_width = post_height - 88;
               }
-              else{
+              else {
                 post_width = cur_width;
-                post_height = post_width +88 ;  
+                post_height = post_width + 88;
               }
-              innhtml += spider_display_embed(data[key]['filetype'], data[key]['filename'], {class:"bwg_embed_frame",  frameborder:"0", allowfullscreen:"allowfullscreen", style:"width:"+post_width+"px; height:"+post_height+"px; vertical-align:middle; display:inline-block; position:relative; top: "+0.5*(cur_height-post_height)+ "px; " });
+              innhtml += spider_display_embed(data[key]['filetype'], data[key]['filename'], {class:"bwg_embed_frame", 'data-width': data[key]['image_width'], 'data-height': data[key]['image_height'], frameborder: "0", allowfullscreen: "allowfullscreen", style: "width:" + post_width + "px; height:" + post_height + "px; vertical-align:middle; display:inline-block; position:relative;"});
             }
             else{
               innhtml += spider_display_embed(data[key]['filetype'], data[key]['filename'], {class:"bwg_embed_frame", frameborder:"0", allowfullscreen:"allowfullscreen", style:"width:inherit; height:inherit; vertical-align:middle; display:table-cell;" });
@@ -1448,6 +1468,7 @@ class BWGViewGalleryBox {
               <?php
             }
             ?>
+            bwg_resize_instagram_post();
           }
           if (!is_embed) {
             var cur_img = jQuery(next_image_class).find('img');
@@ -1548,7 +1569,6 @@ class BWGViewGalleryBox {
           jQuery(".bwg_popup_embed").css({
             height: <?php echo $image_height - $image_filmstrip_height; ?>
           });
-          bwg_resize_instagram_post();
           bwg_popup_current_height = <?php echo $image_height; ?>;
         }
         else {
@@ -1565,7 +1585,6 @@ class BWGViewGalleryBox {
           jQuery(".bwg_popup_embed").css({
             height: jQuery(window).height() - <?php echo $image_filmstrip_height; ?>
           });
-          bwg_resize_instagram_post();
           bwg_popup_current_height = jQuery(window).height();
         }
         if (!(!(jQuery(window).width() >= <?php echo $image_width; ?>) || !(<?php echo $open_with_fullscreen; ?> != 1))) {
@@ -1576,13 +1595,13 @@ class BWGViewGalleryBox {
             zIndex: 100000
           });
           jQuery(".bwg_image_wrap").css({width: <?php echo $image_width; ?> - comment_container_width});
+          jQuery(".bwg_image_container").css({width: <?php echo $image_width; ?> - comment_container_width});
           jQuery(".bwg_popup_image").css({
             maxWidth: <?php echo $image_width; ?> - comment_container_width
           });
           jQuery(".bwg_popup_embed").css({
             width: <?php echo $image_width; ?> - comment_container_width
           });
-          bwg_resize_instagram_post();
           jQuery(".bwg_filmstrip_container").css({width: <?php echo $image_width; ?> - comment_container_width});
           jQuery(".bwg_filmstrip").css({width: (<?php echo $image_width; ?>  - comment_container_width- 40)});
           bwg_popup_current_width = <?php echo $image_width; ?>;
@@ -1595,18 +1614,19 @@ class BWGViewGalleryBox {
             zIndex: 100000
           });
           jQuery(".bwg_image_wrap").css({width: (jQuery(window).width() - comment_container_width)});
+          jQuery(".bwg_image_container").css({width: jQuery(window).width() - comment_container_width});
           jQuery(".bwg_popup_image").css({
             maxWidth: jQuery(window).width() - comment_container_width
           });
           jQuery(".bwg_popup_embed").css({
             width: jQuery(window).width() - comment_container_width
           });
-          bwg_resize_instagram_post();
           jQuery(".bwg_filmstrip_container").css({width: (jQuery(window).width() - comment_container_width)});
           jQuery(".bwg_filmstrip").css({width: (jQuery(window).width() - comment_container_width - 40)});
           bwg_popup_current_width = jQuery(window).width();
         }
         /* Set watermark container size.*/
+        bwg_resize_instagram_post();
         bwg_change_watermark_container();
         if (!(!(jQuery(window).height() > <?php echo $image_height - 2 * $theme_row->lightbox_close_btn_top; ?>) || !(jQuery(window).width() >= <?php echo $image_width - 2 * $theme_row->lightbox_close_btn_right; ?>) || !(<?php echo $open_with_fullscreen; ?> != 1))) {
           jQuery(".spider_popup_close_fullscreen").attr("class", "spider_popup_close");
@@ -1939,7 +1959,7 @@ class BWGViewGalleryBox {
               zIndex: 100000
             }, 500);
             jQuery(".bwg_image_wrap").animate({width: bwg_popup_current_width - comment_container_width}, 500);
-            jQuery(".bwg_image_container").animate({height: bwg_popup_current_height - <?php echo $image_filmstrip_height; ?>}, 500);
+            jQuery(".bwg_image_container").animate({height: bwg_popup_current_height - <?php echo $image_filmstrip_height; ?>, width: bwg_popup_current_width - comment_container_width}, 500);
             jQuery(".bwg_popup_image").animate({
                 maxWidth: bwg_popup_current_width - comment_container_width,
                 maxHeight: bwg_popup_current_height - <?php echo $image_filmstrip_height; ?>
@@ -1989,7 +2009,7 @@ class BWGViewGalleryBox {
               zIndex: 100000
             }, 500);
             jQuery(".bwg_image_wrap").animate({width: (jQuery(window).width() - comment_container_width)}, 500);
-            jQuery(".bwg_image_container").animate({height: (bwg_popup_current_height - <?php echo $image_filmstrip_height; ?>)}, 500);
+            jQuery(".bwg_image_container").animate({height: (bwg_popup_current_height - <?php echo $image_filmstrip_height; ?>), width: bwg_popup_current_width - comment_container_width}, 500);
             jQuery(".bwg_popup_image").animate({
                 maxWidth: jQuery(window).width() - comment_container_width,
                 maxHeight: jQuery(window).height() - <?php echo $image_filmstrip_height; ?>
@@ -2050,7 +2070,7 @@ class BWGViewGalleryBox {
                 zIndex: 100000
               });
               jQuery(".bwg_image_wrap").css({width: bwg_popup_current_width - comment_container_width});
-              jQuery(".bwg_image_container").css({height: bwg_popup_current_height - <?php echo $image_filmstrip_height; ?>});
+              jQuery(".bwg_image_container").css({height: bwg_popup_current_height - <?php echo $image_filmstrip_height; ?>, width: bwg_popup_current_width - comment_container_width});
               /*jQuery(".bwg_slide_bg").css({height: bwg_popup_current_height - <?php echo $image_filmstrip_height; ?>});
               jQuery(".bwg_popup_image_spun1").css({height: bwg_popup_current_height - <?php echo $image_filmstrip_height; ?>});*/
               jQuery(".bwg_popup_image").css({
@@ -2103,7 +2123,7 @@ class BWGViewGalleryBox {
                   zIndex: 100000
                 });
                 jQuery(".bwg_image_wrap").css({width: screen_width - comment_container_width});
-                jQuery(".bwg_image_container").css({height: (screen_height - <?php echo $image_filmstrip_height; ?>)});
+                jQuery(".bwg_image_container").css({height: (screen_height - <?php echo $image_filmstrip_height; ?>), width: screen_width - comment_container_width});
                 /* jQuery(".bwg_slide_bg").css({height: screen_height - <?php echo $image_filmstrip_height; ?>});*/
                 jQuery(".bwg_popup_image").css({
                   maxWidth: (screen_width - comment_container_width),
@@ -2215,37 +2235,23 @@ class BWGViewGalleryBox {
         jQuery(".spider_popup_close").attr("class", "bwg_ctrl_btn spider_popup_close_fullscreen");         
       }
 
-      function bwg_resize_instagram_post(){
-        jQuery('.bwg_embed_frame').css({'width':'inherit', 'height':'inherit', 'vertical-align':'middle', 'display':'inline-block'});
-        /*jQuery.fn.exists = function(){return this.length>0;}*/
+      function bwg_resize_instagram_post() {
         if (jQuery('.inner_instagram_iframe_bwg_embed_frame').length) {
-          var w = jQuery(".bwg_popup_embed").width();
-          var h = jQuery(".bwg_popup_embed").height();
-          var post_width = 0;
-          var post_height = 0;
-
-          if(h <w +88 ){
-            post_height = h;
-            post_width = h -88; 
-          }
-          else{
-            post_width = w;
-            post_height = w +88 ;  
-          }
+          var post_width = jQuery(".bwg_image_container").width();
+          var post_height = jQuery(".bwg_image_container").height();
           
-          jQuery('.inner_instagram_iframe_bwg_embed_frame').each(function(){
-          
-          post_height = post_height;
-          post_width = post_width;
-          var top_pos = (0.5 *( h-post_height));
-            jQuery(this).parent().css({
-              height: post_height,
-              width: post_width,
-              top:  top_pos
-            });
+          jQuery('.inner_instagram_iframe_bwg_embed_frame').each(function() {
+            var parent_container = jQuery(this).parent();
+            if (post_height / (parseInt(parent_container.attr('data-height')) + 96) < post_width / parseInt(parent_container.attr('data-width'))) {
+              parent_container.height(post_height);
+              parent_container.width((parent_container.height() - 96) * parent_container.attr('data-width') / parent_container.attr('data-height') + 16);
+            }
+            else {
+              parent_container.width(post_width);
+              parent_container.height((parent_container.width() - 16) * parent_container.attr('data-height') / parent_container.attr('data-width') + 96);
+            }
+            parent_container.css({top: 0.5 * (post_height - parent_container.height())});
           });
-
-
           bwg_change_watermark_container();
         }
       }

@@ -23,8 +23,8 @@ require_once(WD_BWG_DIR . '/filemanager/controller.php');
 $controller = new FilemanagerController();
 
 $upload_handler = new UploadHandler(array(
-    'upload_dir' => $controller->uploads_dir . (isset($_GET['dir']) ? esc_html($_GET['dir']) : ''),
-    'accept_file_types' => '/\.(gif|jpe?g|png|bmp|mp4|flv|webm|ogg|mp3|wav|pdf|zip)$/i'
+  'upload_dir' => $controller->uploads_dir . (isset($_GET['dir']) ? str_replace('\\', '', ($_GET['dir'])) : ''),
+  'accept_file_types' => '/\.(gif|jpe?g|png|bmp|mp4|flv|webm|ogg|mp3|wav|pdf|zip)$/i'
 ));
 
 class UploadHandler {
@@ -510,7 +510,7 @@ class UploadHandler {
       // into different directories or replacing hidden system files.
       // Also remove control characters and spaces (\x00..\x20) around the filename:
       $name = trim(stripslashes($name), ".\x00..\x20");
-      $name = str_replace(' ', '_', $name);
+      $name = str_replace(" ", "_", $name);
       // Use a timestamp for empty filenames:
       if (!$name) {
         $name = str_replace('.', '-', microtime(true));

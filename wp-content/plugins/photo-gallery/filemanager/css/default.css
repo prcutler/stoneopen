@@ -529,6 +529,7 @@ html, body, div, span, th, td, a {
   -ms-user-select: none;
   user-select: none;
 }
+
 .wp-pointer.wp-pointer-aligned-left .wp-pointer-arrow {
   left: 88px; 
   right: auto;

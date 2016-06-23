@@ -4,7 +4,7 @@ Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
 Tags: photo, photo gallery, image gallery, video gallery, gallery, galleries,  wordpress gallery plugin, images gallery, album, photo albums, simple gallery, best gallery plugin, free photo gallery, wp gallery, wordpress gallery, website gallery, gallery shortcode, best gallery, picture, pictures, gallery slider, photo album, photogallery, widget gallery, image, images, photos,  gallery lightbox, photoset, wordpress photo gallery plugin, wp gallery plugins, responsive wordpress photo gallery, media, image album, filterable gallery, banner rotator, fullscreen gallery, responsive gallery, add album,  add gallery, add pictures, fotoalbum, foto, gallery decription, multiple pictures, photoalbum, upload images, upload photos, view images, view pictures, admin, AJAX, comments, gallery image, image lightbox, image rotate, image slideshow, image slider, jquery, jquery gallery, slide show, slideshow, thumbnail, thumbnail view, thumbnails, thumbs, responsive, watermarking, watermarks,fullscreen slider, lightbox, photography, sidebar, slide, youtube, vimeo, videos, instagram, facebook, mosaic, facebook integration, instagram feed, Flickr, Dailymotion, widget, youtube gallery, ecommerce
 Requires at least: 3.4
 Tested up to: 4.5 
-Stable tag: 1.2.104    
+Stable tag: 1.2.108    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -225,6 +225,25 @@ To enable the feature of adding Media Library images, go to Photo Gallery > Opti
 
 == Changelog ==
 
+= 1.2.108 =
+* Added: Save as copy themes.    
+* Fixed: Delete folder with single quote in name.    
+* Fixed: Add facebook album with images more than 100.    
+
+= 1.2.107 =
+* Fixed: Responsiveness   
+* Fixed: Bug on full-size and fullscreen lightbox     
+
+= 1.2.106 =
+IMPORTANT: Instagram changed the API. You need to get a new access token by using "Sign in with Instagram" button on the Options page in order to keep your Instagram Gallery functioning after June 1.
+* Changed: Instagram new API.
+* Changed: Increase get_options count.
+
+= 1.2.105 =
+* Changed: Deleted themes old fields.    
+* Changed: Check if file exist on set watermark.    
+* Fixed: Remove box shadow from navigation buttons.     
+* Fixed: Deactivate after uninstall, when folder name is different from photo-gallery.    
 
 = 1.2.104 =
 * Fixed: Search in gallery from widget.     

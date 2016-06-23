@@ -522,6 +522,13 @@ class BWGModelThemes_bwg {
       $row->id = 0;
       $row->name = '';
       $row->default_theme = 0;
+      $themes = json_decode($row->options);
+      foreach ($themes as $key => $value) {
+        $row->$key = $value;
+      }
+      if (!isset($row->lightbox_bg_transparent)) {
+        $row->lightbox_bg_transparent = 100;
+      }
     }
     return $row;
   }

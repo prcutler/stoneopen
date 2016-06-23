@@ -134,7 +134,7 @@ class BWGViewUninstall_bwg {
     global $wpdb;
     $this->model->delete_db_tables();
     $prefix = $wpdb->prefix;
-    $deactivate_url = wp_nonce_url('plugins.php?action=deactivate&amp;plugin=photo-gallery/photo-gallery.php', 'deactivate-plugin_photo-gallery/photo-gallery.php');
+    $deactivate_url = wp_nonce_url('plugins.php?action=deactivate&amp;plugin=' . WD_BWG_NAME . '/photo-gallery.php', 'deactivate-plugin_' . WD_BWG_NAME . '/photo-gallery.php');
     ?>
     <div id="message" class="updated fade">
       <p><?php _e("The following Database Tables successfully deleted:", 'bwg_back'); ?></p>

@@ -751,24 +751,32 @@ class BWGViewAlbum_compact_preview {
                   }
                 }
                 foreach ($image_rows as $image_row) {
-                  $is_embed = preg_match('/EMBED/',$image_row->filetype)==1 ? true :false;
-                  $is_embed_video = preg_match('/VIDEO/',$image_row->filetype)==1 ? true :false;
+                  $is_embed = preg_match('/EMBED/', $image_row->filetype) == 1 ? true : false;
+                  $is_embed_video = preg_match('/VIDEO/', $image_row->filetype) == 1 ? true : false;
+                  $is_embed_instagram = preg_match('/EMBED_OEMBED_INSTAGRAM/', $image_row->filetype) == 1 ? true : false;
                   if (!$is_embed) {
                     list($image_thumb_width, $image_thumb_height) = getimagesize(htmlspecialchars_decode(ABSPATH . $WD_BWG_UPLOAD_DIR . $image_row->thumb_url, ENT_COMPAT | ENT_QUOTES));
                   }
                   else {
                     if ($image_row->resolution != '') {
-                      $resolution_arr = explode(" ",$image_row->resolution);
-                      $resolution_w = intval($resolution_arr[0]);
-                      $resolution_h = intval($resolution_arr[2]);
-                      if($resolution_w != 0 && $resolution_h != 0){
-                        $scale = $scale = max($params['compuct_album_image_thumb_width'] / $resolution_w, $params['compuct_album_image_thumb_height'] / $resolution_h);
-                        $image_thumb_width = $resolution_w * $scale;
-                        $image_thumb_height = $resolution_h * $scale;
+                      if (!$is_embed_instagram) {
+                        $resolution_arr = explode(" ", $image_row->resolution);
+                        $resolution_w = intval($resolution_arr[0]);
+                        $resolution_h = intval($resolution_arr[2]);
+                        if($resolution_w != 0 && $resolution_h != 0){
+                          $scale = $scale = max($params['compuct_album_image_thumb_width'] / $resolution_w, $params['compuct_album_image_thumb_height'] / $resolution_h);
+                          $image_thumb_width = $resolution_w * $scale;
+                          $image_thumb_height = $resolution_h * $scale;
+                        }
+                        else{
+                          $image_thumb_width = $params['compuct_album_image_thumb_width'];
+                          $image_thumb_height = $params['compuct_album_image_thumb_height'];
+                        }
                       }
-                      else{
-                      $image_thumb_width = $params['compuct_album_image_thumb_width'];
-                      $image_thumb_height = $params['compuct_album_image_thumb_height'];
+                      else {
+                        // this will be ok while instagram thumbnails width and height are the same
+                        $image_thumb_width = min($params['compuct_album_image_thumb_width'], $params['compuct_album_image_thumb_height']);
+                        $image_thumb_height = $image_thumb_width;
                       }
                     }
                     else{

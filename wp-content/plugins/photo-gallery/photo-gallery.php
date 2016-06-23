@@ -4,7 +4,7 @@
  * Plugin Name: Photo Gallery
  * Plugin URI: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
- * Version: 1.2.104
+ * Version: 1.2.108
  * Author: WebDorado
  * Author URI: https://web-dorado.com/
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
@@ -12,7 +12,9 @@
 
 define('WD_BWG_DIR', WP_PLUGIN_DIR . "/" . plugin_basename(dirname(__FILE__)));
 define('WD_BWG_URL', plugins_url(plugin_basename(dirname(__FILE__))));
+define('WD_BWG_NAME', plugin_basename(dirname(__FILE__)));
 define('WD_BWG_PRO', false);
+define('WD_BWG_VERSION', get_option('wd_bwg_version'));
 
 function bwg_use_home_url() {
   $home_url = str_replace("http://", "", home_url());
@@ -1901,7 +1903,6 @@ function bwg_activate() {
       'carousel_caption_p_color' => 'white',
       'carousel_title_opacity' => 100,
       'carousel_title_border_radius' => '5px',
-      'default_theme' => 0,
       'mosaic_thumb_transition' => 1
     );
     $theme1 = json_encode($theme1);
@@ -1921,8 +1922,8 @@ function bwg_activate() {
       'default_theme' => 0
     ));
   }
-  $version = get_option("wd_bwg_version");
-  $new_version = '1.2.104';
+  $version = WD_BWG_VERSION;
+  $new_version = '1.2.108';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -1975,8 +1976,8 @@ add_action('wpmu_new_blog', 'bwg_new_blog_added', 10, 6);
 wp_oembed_add_provider( '#https://instagr(\.am|am\.com)/p/.*#i', 'https://api.instagram.com/oembed', true );
 
 function bwg_update_hook() {
-  $version = get_option("wd_bwg_version");
-  $new_version = '1.2.104';
+  $version = WD_BWG_VERSION;
+  $new_version = '1.2.108';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -2330,7 +2331,7 @@ function bwg_captcha() {
 }
 
 function wd_bwg_version() {
-  $version = get_option("wd_bwg_version");
+  $version = WD_BWG_VERSION;
   if ($version) {
     if (WD_BWG_PRO) {
       $version = substr_replace($version, '2', 0, 1);

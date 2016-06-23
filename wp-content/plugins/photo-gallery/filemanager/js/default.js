@@ -329,7 +329,14 @@ function onBtnBackClick(event, obj) {
 }
 
 
-function onPathComponentClick(event, obj, path) {
+function onPathComponentClick(event, obj, key) {
+  if (typeof key != "undefined" && key == 0) {
+    path = "";
+  }
+  else {
+    path = jQuery(obj).html();
+    path = path.trim();
+  }
   submit("", null, null, null, path, null, null, null, null, null, null);
 }
 

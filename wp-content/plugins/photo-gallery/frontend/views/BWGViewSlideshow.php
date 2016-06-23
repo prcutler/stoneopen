@@ -677,16 +677,26 @@ class BWGViewSlideshow {
                             else{  /*$is_embed*/?>
                             <span id="bwg_slideshow_image_<?php echo $bwg; ?>" class="bwg_slideshow_embed_<?php echo $bwg; ?>" image_id="<?php echo $image_row->id; ?>">
                             <?php
-                              if($is_embed_instagram_post){
-                                $post_width = $image_width - ($filmstrip_direction == 'vertical' ? $slideshow_filmstrip_width : 0);
-                                $post_height = $image_height - ($filmstrip_direction == 'horizontal' ? $slideshow_filmstrip_height : 0);
-                                if($post_height <$post_width +88 ){
-                                  $post_width =$post_height -88; 
+                              if($is_embed_instagram_post) {
+                                $post_width = $image_width;
+                                $post_height = $image_height;
+                                if ($post_height < $post_width + 88) {
+                                  $post_width = $post_height - 88;
                                 }
-                                else{
-                                 $post_height =$post_width +88;  
+                                else {
+                                  $post_height = $post_width + 88;
                                 }
-                                WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('class'=>"bwg_embed_frame_".$bwg, 'frameborder'=>"0", 'style'=>"width:".$post_width."px; height:".$post_height."px; vertical-align:middle; display:inline-block; position:relative;"));
+                                
+                                $instagram_post_width = $post_width;
+                                $instagram_post_height = $post_height;
+                                $image_resolution = explode(' x ', $image_row->resolution);
+                                if (is_array($image_resolution)) {
+                                  $instagram_post_width = $image_resolution[0];
+                                  $instagram_post_height = explode(' ', $image_resolution[1]);
+                                  $instagram_post_height = $instagram_post_height[0];
+                                }
+                                
+                                WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('class' => "bwg_embed_frame_" . $bwg, 'data-width' => $instagram_post_width, 'data-height' => $instagram_post_height, 'frameborder' => "0", 'style' => "width:" . $post_width . "px; height:" . $post_height . "px; vertical-align:middle; display:inline-block; position:relative;"));
                               }
                               else{
                               WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('class'=>"bwg_embed_frame_".$bwg, 'frameborder'=>"0", 'allowfullscreen'=>"allowfullscreen", 'style'=>"width:inherit; height:inherit; vertical-align:middle; display:table-cell;"));
@@ -717,15 +727,25 @@ class BWGViewSlideshow {
                             <span class="bwg_slideshow_embed_<?php echo $bwg; ?>">
                                 <?php
                               if($is_embed_instagram_post){
-                                $post_width = $image_width - ($filmstrip_direction == 'vertical' ? $slideshow_filmstrip_width : 0);
-                                $post_height = $image_height - ($filmstrip_direction == 'horizontal' ? $slideshow_filmstrip_height : 0);
-                                if($post_height < $post_width +88 ){
-                                  $post_width = $post_height - 88; 
+                                $post_width = $image_width;
+                                $post_height = $image_height;
+                                if($post_height < $post_width + 88) {
+                                  $post_width = $post_height - 88;
                                 }
                                 else{
-                                 $post_height =$post_width +88;  
+                                  $post_height = $post_width + 88;
                                 }
-                                WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('class'=>"bwg_embed_frame_".$bwg, 'frameborder'=>"0", 'style'=>"width:".$post_width."px; height:".$post_height."px; vertical-align:middle; display:inline-block; position:relative;"));
+                                
+                                $instagram_post_width = $post_width;
+                                $instagram_post_height = $post_height;
+                                $image_resolution = explode(' x ', $image_row->resolution);
+                                if (is_array($image_resolution)) {
+                                  $instagram_post_width = $image_resolution[0];
+                                  $instagram_post_height = explode(' ', $image_resolution[1]);
+                                  $instagram_post_height = $instagram_post_height[0];
+                                }
+                                
+                                WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('class'=>"bwg_embed_frame_".$bwg, 'data-width' => $instagram_post_width, 'data-height' => $instagram_post_height, 'frameborder'=>"0", 'style'=>"width:".$post_width."px; height:".$post_height."px; vertical-align:middle; display:inline-block; position:relative;"));
                               }
                               else{
                               WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('class'=>"bwg_embed_frame_".$bwg, 'frameborder'=>"0", 'allowfullscreen'=>"allowfullscreen", 'style'=>"width:inherit; height:inherit; vertical-align:middle; display:table-cell;"));
@@ -1460,37 +1480,20 @@ class BWGViewSlideshow {
         jQuery(".bwg_slideshow_image_<?php echo $bwg; ?>").removeAttr("width");
         jQuery(".bwg_slideshow_image_<?php echo $bwg; ?>").removeAttr("height");
       });
-      function bwg_resize_instagram_post_<?php echo $bwg?>(){
-        
-        /*jQuery.fn.exists = function(){return this.length>0;};*/
+      function bwg_resize_instagram_post_<?php echo $bwg?>() {
         if (jQuery('.inner_instagram_iframe_bwg_embed_frame_<?php echo $bwg?>').length) {
-          
-          var w = jQuery('.bwg_slideshow_embed_<?php echo $bwg?>').width();
-          var h = jQuery('.bwg_slideshow_embed_<?php echo $bwg?>').height();
-          var post_width = 0;
-          var post_height = 0;
-          if(h <w +88 ){
-            post_height = h;
-            post_width = h -88; 
-          }
-          else{
-            post_width = w;
-            post_height = w +88 ;  
-          }
-           jQuery('.inner_instagram_iframe_bwg_embed_frame_<?php echo $bwg?>').each(function(){
-          post_height = post_height;
-          post_width = post_width;
-          var top_pos = (0.5 *( h-post_height));
-          jQuery(this).parent().parent().css({
-              height: post_height,
-              width: post_width,
-              top:  top_pos
-            });
-            jQuery(this).parent().css({
-              height: post_height,
-              width: post_width,
-              top:  top_pos
-            });
+          var post_width = jQuery('.bwg_slideshow_embed_<?php echo $bwg?>').width();
+          var post_height = jQuery('.bwg_slideshow_embed_<?php echo $bwg?>').height();
+          jQuery('.inner_instagram_iframe_bwg_embed_frame_<?php echo $bwg?>').each(function() {
+            var parent_container = jQuery(this).parent();
+            if (post_height / (parseInt(parent_container.attr('data-height')) + 96) < post_width / parseInt(parent_container.attr('data-width'))) {
+              parent_container.height(post_height);
+              parent_container.width((parent_container.height() - 96) * parent_container.attr('data-width') / parent_container.attr('data-height') + 16);
+            }
+            else {
+              parent_container.width(post_width);
+              parent_container.height((parent_container.width() - 16) * parent_container.attr('data-height') / parent_container.attr('data-width') + 96);
+            }
           });
         }
         bwg_change_watermark_container_<?php echo $bwg; ?>();
