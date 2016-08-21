@@ -56,16 +56,19 @@ class  BWGViewThemes_bwg {
     <?php
     if (get_option("wd_bwg_theme_version")) {
       ?>
-      <div style="clear: both; float: left; width: 97%;">
+      <div style="clear: both; float: left; width: 99%;">
         <img style="max-width: 100%;" src="<?php echo WD_BWG_URL . '/images/theme_thumbnails.png'; ?>" />
         <img style="max-width: 100%;" src="<?php echo WD_BWG_URL . '/images/theme_masonry.png'; ?>" />
+        <img style="max-width: 100%;" src="<?php echo WD_BWG_URL . '/images/theme_mosaic.png'; ?>" />
         <img style="max-width: 100%;" src="<?php echo WD_BWG_URL . '/images/theme_slideshow.png'; ?>" />
         <img style="max-width: 100%;" src="<?php echo WD_BWG_URL . '/images/theme_image_browser.png'; ?>" />
         <img style="max-width: 100%;" src="<?php echo WD_BWG_URL . '/images/theme_compact_album.png'; ?>" />
+        <img style="max-width: 100%;" src="<?php echo WD_BWG_URL . '/images/theme_masonry_album.png'; ?>" />
         <img style="max-width: 100%;" src="<?php echo WD_BWG_URL . '/images/theme_extended_album.png'; ?>" />
         <img style="max-width: 100%;" src="<?php echo WD_BWG_URL . '/images/theme_blog_style.png'; ?>" />
         <img style="max-width: 100%;" src="<?php echo WD_BWG_URL . '/images/theme_lightbox.png'; ?>" />
         <img style="max-width: 100%;" src="<?php echo WD_BWG_URL . '/images/theme_page_navigation.png'; ?>" />
+        <img style="max-width: 100%;" src="<?php echo WD_BWG_URL . '/images/theme_carousel.png'; ?>" />
       </div>
       <?php
       die();

@@ -45,8 +45,6 @@ class BWGViewGalleryBox {
     $popup_enable_rate = WDWLibrary::esc_script('get', 'popup_enable_rate', 0, 'int');
     $popup_hit_counter = (isset($_GET['popup_hit_counter']) ? esc_html($_GET['popup_hit_counter']) : 0);
     $slideshow_effect_duration = (isset($_GET['slideshow_effect_duration']) ? (int) $_GET['slideshow_effect_duration'] : 1);
-
-
     $slideshow_interval = (isset($_GET['slideshow_interval']) ? (int) $_GET['slideshow_interval'] : 5);
     $enable_image_ctrl_btn = (isset($_GET['enable_image_ctrl_btn']) ? esc_html($_GET['enable_image_ctrl_btn']) : 0);
     $enable_comment_social = FALSE;
@@ -764,7 +762,7 @@ class BWGViewGalleryBox {
     </script>
     <?php
     if (!$image_id_exist) {
-      echo WDWLibrary::message(__('The image has been deleted.', 'bwg'), 'error');
+      echo WDWLibrary::message(__('The image has been deleted.', 'bwg'), 'wd_error');
       die();
     }
     ?>

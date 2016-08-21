@@ -44,103 +44,103 @@ class WDWLibrary {
       switch($message_id) {
         case 1: {
           $message = __('Item Succesfully Saved.', 'bwg_back');
-          $type = 'updated';
+          $type = 'wd_updated';
           break;
 
         }
         case 2: {
           $message = __('Error. Please install plugin again.', 'bwg_back');
-          $type = 'error';
+          $type = 'wd_error';
           break;
 
         }
         case 3: {
           $message = __('Item Succesfully Deleted.', 'bwg_back');
-          $type = 'updated';
+          $type = 'wd_updated';
           break;
 
         }
         case 4: {
           $message = __("You can't delete default theme", 'bwg_back');
-          $type = 'error';
+          $type = 'wd_error';
           break;
 
         }
         case 5: {
           $message = __('Items Succesfully Deleted.', 'bwg_back');
-          $type = 'updated';
+          $type = 'wd_updated';
           break;
 
         }
         case 6: {
           $message = __('You must select at least one item.', 'bwg_back');
-          $type = 'error';
+          $type = 'wd_error';
           break;
 
         }
         case 7: {
           $message = __('The item is successfully set as default.', 'bwg_back');
-          $type = 'updated';
+          $type = 'wd_updated';
           break;
 
         }
         case 8: {
           $message = __('Options Succesfully Saved.', 'bwg_back');
-          $type = 'updated';
+          $type = 'wd_updated';
           break;
 
         }
         case 9: {
           $message = __('Item Succesfully Published.', 'bwg_back');
-          $type = 'updated';
+          $type = 'wd_updated';
           break;
 
         }
         case 10: {
           $message = __('Items Succesfully Published.', 'bwg_back');
-          $type = 'updated';
+          $type = 'wd_updated';
           break;
 
         }
         case 11: {
           $message = __('Item Succesfully Unpublished.', 'bwg_back');
-          $type = 'updated';
+          $type = 'wd_updated';
           break;
 
         }
         case 12: {
           $message = __('Items Succesfully Unpublished.', 'bwg_back');
-          $type = 'updated';
+          $type = 'wd_updated';
           break;
 
         }
         case 13: {
           $message = __('Ordering Succesfully Saved.', 'bwg_back');
-          $type = 'updated';
+          $type = 'wd_updated';
           break;
 
         }
         case 14: {
           $message = __('A term with the name provided already exists.', 'bwg_back');
-          $type = 'error';
+          $type = 'wd_error';
           break;
 
         }
         case 15: {
           $message = __('Name field is required.', 'bwg_back');
-          $type = 'error';
+          $type = 'wd_error';
           break;
 
         }
         case 16: {
           $message = __('The slug must be unique.', 'bwg_back');
-          $type = 'error';
+          $type = 'wd_error';
           break;
 
         }
         case 17: {
           $message = __('Changes must be saved.', 'bwg_back');
-          $type = 'error';
+          $type = 'wd_error';
           break;
 
         }
@@ -165,9 +165,17 @@ class WDWLibrary {
     return '<div style="width:99%"><div class="' . $type . '"><p><strong>' . $message . '</strong></p></div></div>';
   }
 
-  public static function search($search_by, $search_value, $form_id) {
+  public static function search($search_by, $search_value, $form_id, $position_search) {
+    if($position_search != ''){
+      $position_search = 'alignleft';
+      $margin_right = 0;
+    }
+    else {
+      $position_search = 'alignright';
+      $margin_right = 5;
+    }
     ?>
-    <div class="alignleft actions" style="clear:both;">
+    <div class="<?php echo  $position_search; ?>  actions" style="clear:both;">
       <script>
         function spider_search() {
           document.getElementById("page_number").value = "1";
@@ -194,11 +202,11 @@ class WDWLibrary {
       </script>
       <div class="alignleft actions" style="">
         <label for="search_value" style="font-size:14px; width:50px; display:inline-block;"><?php echo $search_by; ?>:</label>
-        <input type="text" id="search_value" name="search_value" class="spider_search_value" onkeypress="return check_search_key(event, this);" value="<?php echo esc_html($search_value); ?>" style="width: 150px;<?php echo (get_bloginfo('version') > '3.7') ? ' height: 28px;' : ''; ?>" />
+        <input type="text" id="search_value" name="search_value" class="spider_search_value" onkeypress="return check_search_key(event, this);" value="<?php echo esc_html($search_value); ?>" style="width: 150px; margin-right:<?php echo $margin_right; ?>px; <?php echo (get_bloginfo('version') > '3.7') ? ' height: 33px;' : ''; ?>" />
       </div>
       <div class="alignleft actions">
-        <input type="button" value="<?php echo __('Search', 'bwg_back'); ?>" onclick="spider_search()" class="button-secondary action">
-        <input type="button" value="<?php echo __('Reset', 'bwg_back'); ?>" onclick="spider_reset()" class="button-secondary action">
+        <input type="button" value="" onclick="spider_search()" title="<?php echo __('Reset', 'bwg'); ?>" class="wd-search-btn  action">
+        <input type="button" value="" onclick="spider_reset()" title="<?php echo __('Search', 'bwg'); ?>" class="wd-reset-btn action">
       </div>
     </div>
     <?php
@@ -291,14 +299,15 @@ class WDWLibrary {
       }
     </script>
     <?php } ?>
-    <div class="tablenav-pages">
-      <span class="displaying-num">
+    
+    <div class="alignright tablenav-pages">
+    <span class="displaying-num">
         <?php
         if ($count_items != 0) {
           echo $count_items; ?> item<?php echo (($count_items == 1) ? '' : 's');
         }
         ?>
-      </span>
+     </span>
       <?php
       if ($count_items > $items_per_page) {
         $first_page = "first-page";
@@ -344,7 +353,7 @@ class WDWLibrary {
   }
   public static function ajax_search($search_by, $search_value, $form_id) {
     ?>
-    <div class="alignleft actions" style="clear:both;">
+    <div class="alignright actions" style="clear:both;">
       <script>
         function spider_search() {
           document.getElementById("page_number").value = "1";
@@ -368,11 +377,11 @@ class WDWLibrary {
       </script>
       <div class="alignleft actions" style="">
         <label for="search_value" style="font-size:14px; width:60px; display:inline-block;"><?php echo $search_by; ?>:</label>
-        <input type="text" id="search_value" name="search_value" class="spider_search_value" onkeypress="return check_search_key(event, this);" value="<?php echo esc_html($search_value); ?>" style="width: 150px;<?php echo (get_bloginfo('version') > '3.7') ? ' height: 28px;' : ''; ?>" />
+        <input type="text" id="search_value" name="search_value" class="spider_search_value" onkeypress="return check_search_key(event, this);" value="<?php echo esc_html($search_value); ?>" style="width: 150px;margin-right:5px; <?php echo (get_bloginfo('version') > '3.7') ? ' height: 33px;' : ''; ?>" />
       </div>
       <div class="alignleft actions">
-        <input type="button" value="<?php echo __('Search', 'bwg_back'); ?>" onclick="spider_search()" class="button-secondary action">
-        <input type="button" value="<?php echo __('Reset', 'bwg_back'); ?>" onclick="spider_reset()" class="button-secondary action">
+        <input type="button" value="" title="<?php echo __('Reset', 'bwg'); ?>" onclick="spider_search()" class="wd-search-btn action">
+        <input type="button" value="" title="<?php echo __('Search', 'bwg'); ?>" onclick="spider_reset()" class="wd-reset-btn action">
       </div>
     </div>
     <?php
@@ -441,8 +450,9 @@ class WDWLibrary {
       }
     </script>
     <?php } ?>
-    <div id="tablenav-pages" class="tablenav-pages">
-      <span class="displaying-num">
+      
+    <div id="tablenav-pages" class="alignright tablenav-pages">
+      <span class=" displaying-num">
         <?php
         if ($count_items != 0) {
           echo $count_items; ?> <?php echo __('item', 'bwg_back'); ?><?php echo (($count_items == 1) ? '' : 's');
@@ -555,13 +565,13 @@ class WDWLibrary {
       ?>
       <span class="pagination-links_<?php echo $current_view; ?>">
         <a class="<?php echo $first_page; ?>" title="<?php echo __('Go to the first page', 'bwg'); ?>"><?php echo $first_button; ?></a>
-        <a class="<?php echo $prev_page; ?>" title="<?php echo __('Go to the previous page', 'bwg'); ?>" <?php echo  $page_number > 1 && $enable_seo ? 'href="' . add_query_arg(array("page_number_" . $current_view => $page_number - 1), $_SERVER['REQUEST_URI']) . '"' : ""; ?>><?php echo $previous_button; ?></a>
+        <a class="<?php echo $prev_page; ?>" title="<?php echo __('Go to the previous page', 'bwg'); ?>" <?php echo  $page_number > 1 && $enable_seo ? 'href="' . esc_url(add_query_arg(array("page_number_" . $current_view => $page_number - 1), $_SERVER['REQUEST_URI'])) . '"' : ""; ?>><?php echo $previous_button; ?></a>
         <span class="paging-input_<?php echo $current_view; ?>">
           <span class="total-pages_<?php echo $current_view; ?>"><?php echo $page_number; ?></span> <?php echo __('of', 'bwg'); ?> <span class="total-pages_<?php echo $current_view; ?>">
             <?php echo $items_county; ?>
           </span>
         </span>
-        <a class="<?php echo $next_page ?>" title="<?php echo __('Go to the next page', 'bwg'); ?>" <?php echo  $page_number + 1 <= $items_county && $enable_seo ? 'href="' . add_query_arg(array("page_number_" . $current_view => $page_number + 1), $_SERVER['REQUEST_URI']) . '"' : ""; ?>><?php echo $next_button; ?></a>
+        <a class="<?php echo $next_page ?>" title="<?php echo __('Go to the next page', 'bwg'); ?>" <?php echo  $page_number + 1 <= $items_county && $enable_seo ? 'href="' . esc_url(add_query_arg(array("page_number_" . $current_view => $page_number + 1), $_SERVER['REQUEST_URI'])) . '"' : ""; ?>><?php echo $next_button; ?></a>
         <a class="<?php echo $last_page ?>" title="<?php echo __('Go to the last page', 'bwg'); ?>"><?php echo $last_button; ?></a>
       </span>
       <?php

@@ -8,7 +8,7 @@ function spider_createpopup(url, current_view, width, height, duration, descript
     return;
   }
   jQuery("html").attr("style", "overflow:hidden !important;");
-  jQuery("#spider_popup_loading_" + current_view).css({display: "block"});
+  jQuery("#bwg_spider_popup_loading_" + current_view).css({display: "block"});
   jQuery("#spider_popup_overlay_" + current_view).css({display: "block"});
 
   jQuery.get(url, function(data) {
@@ -24,7 +24,7 @@ function spider_createpopup(url, current_view, width, height, duration, descript
 			.appendTo("body");
 		spider_showpopup(description, lifetime, popup, duration, lightbox_ctrl_btn_pos);
 	}).success(function(jqXHR, textStatus, errorThrown) {
-    jQuery("#spider_popup_loading_" + current_view).css({display: "none !important;"});
+    jQuery("#bwg_spider_popup_loading_" + current_view).css({display: "none !important;"});
   });
 }
 
@@ -69,7 +69,7 @@ function spider_destroypopup(duration) {
     }
     setTimeout(function () {
       jQuery(".spider_popup_wrap").remove();
-      jQuery(".spider_popup_loading").css({display: "none"});
+      jQuery(".bwg_spider_popup_loading").css({display: "none"});
       jQuery(".spider_popup_overlay").css({display: "none"});
       jQuery(document).off("keydown");
       jQuery("html").attr("style", "overflow:auto !important");

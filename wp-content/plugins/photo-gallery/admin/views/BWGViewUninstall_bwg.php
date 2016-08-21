@@ -86,7 +86,7 @@ class BWGViewUninstall_bwg {
           <input type="checkbox" name="Photo Gallery" id="check_yes" value="yes" />&nbsp;<label for="check_yes"><?php _e("Yes", 'bwg_back'); ?></label>
         </p>
         <p style="text-align: center;">
-          <input type="submit" value="UNINSTALL" class="button-primary" onclick="if (check_yes.checked) { 
+          <input type="submit" value="<?php echo __('UNINSTALL','bwg_back'); ?>" class="wd-btn wd-btn-primary wd-not-image" onclick="if (check_yes.checked) { 
                                                                                     if (confirm('<?php echo addslashes(__("You are About to Uninstall Photo Gallery from WordPress. This Action Is Not Reversible.", 'bwg_back')); ?>')) {
                                                                                         spider_set_input_value('task', 'uninstall');
                                                                                     } else {
@@ -136,7 +136,7 @@ class BWGViewUninstall_bwg {
     $prefix = $wpdb->prefix;
     $deactivate_url = wp_nonce_url('plugins.php?action=deactivate&amp;plugin=' . WD_BWG_NAME . '/photo-gallery.php', 'deactivate-plugin_' . WD_BWG_NAME . '/photo-gallery.php');
     ?>
-    <div id="message" class="updated fade">
+    <div id="message" class="wd_updated fade">
       <p><?php _e("The following Database Tables successfully deleted:", 'bwg_back'); ?></p>
       <p><?php echo $prefix; ?>bwg_album,</p>
       <p><?php echo $prefix; ?>bwg_album_gallery,</p>
@@ -152,7 +152,7 @@ class BWGViewUninstall_bwg {
     <?php
     if (isset($_POST['bwg_delete_files'])) {
     ?>
-    <div class="<?php echo ($flag) ? 'updated' : 'error'?>">
+    <div class="<?php echo ($flag) ? 'wd_updated' : 'wd_error'?>">
       <p><?php echo ($flag) ? __("The folder was successfully deleted.", 'bwg_back') : __("An error occurred when deleting the folder.", 'bwg_back')?></p>
     </div>
     <?php

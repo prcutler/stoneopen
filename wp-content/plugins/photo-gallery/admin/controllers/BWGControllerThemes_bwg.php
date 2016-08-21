@@ -73,7 +73,7 @@ class BWGControllerThemes_bwg {
     require_once WD_BWG_DIR . "/admin/views/BWGViewThemes_bwg.php";
     $view = new BWGViewThemes_bwg($model);
     $id = WDWLibrary::get('current_id', 0);
-    echo WDWLibrary::message('Changes must be saved.', 'error');
+    echo WDWLibrary::message('Changes must be saved.', 'wd_error');
     $view->edit($id, TRUE);
   }
 
@@ -1026,12 +1026,12 @@ class BWGControllerThemes_bwg {
     global $wpdb;
     $isDefault = $wpdb->get_var('SELECT default_theme FROM ' . $wpdb->prefix . 'bwg_theme WHERE id=' . $id);
     if ($isDefault) {
-      echo WDWLibrary::message("You can't delete default theme", 'error');
+      echo WDWLibrary::message("You can't delete default theme", 'wd_error');
     }
     else {
       $query = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_theme WHERE id="%d"', $id);
       if ($wpdb->query($query)) {
-        echo WDWLibrary::message('Item Succesfully Deleted.', 'updated');
+        echo WDWLibrary::message('Item Succesfully Deleted.', 'wd_updated');
         $message = 3;
       }
       else {

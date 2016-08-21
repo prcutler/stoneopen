@@ -66,7 +66,7 @@ function spider_frontend_ajax(form_id, current_view, id, album_gallery_id, cur_a
         var bwg_images_count = jQuery('#bwg_images_count_' + current_view).val();
         if (bwg_images_count == 0) {
           var cont = jQuery("#" + id).parent().html();
-          var error_msg = '<div style="width:95%"><div class="error"><p><strong>' + bwg_objectL10n.bwg_search_result + '</strong></p></div></div>';
+          var error_msg = '<div style="width:95%"><div class="wd_error"><p><strong>' + bwg_objectL10n.bwg_search_result + '</strong></p></div></div>';
           jQuery("#" + id).parent().html(error_msg + cont)
         }
       }

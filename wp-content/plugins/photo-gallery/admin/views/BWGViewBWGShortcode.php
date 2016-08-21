@@ -163,7 +163,7 @@ class BWGViewBWGShortcode {
                   <tr id="tr_theme">
                     <td <?php echo (get_option("wd_bwg_theme_version") ? 'title="This option is disabled in free version." class="spider_label spider_free_version_label"' : 'class="spider_label"'); ?>><label for="theme"><?php _e("Theme:", 'bwg_back'); ?> </label></td>
                     <td>
-                      <select name="theme" id="theme" style="width:150px;" <?php echo (get_option("wd_bwg_theme_version") ? 'disabled="disabled"' : ''); ?>>
+                      <select name="theme" class="select_icon" id="theme" style="width:150px;" <?php echo (get_option("wd_bwg_theme_version") ? 'disabled="disabled"' : ''); ?>>
                         <option value="0" selected="selected"><?php _e("Select Theme", 'bwg_back'); ?></option>
                         <?php
                         foreach ($theme_rows as $theme_row) {
@@ -178,7 +178,7 @@ class BWGViewBWGShortcode {
                   <tr id="tr_gallery">
                     <td class="spider_label"><label for="gallery"><?php _e("Gallery:", 'bwg_back'); ?> </label></td>
                     <td>
-                      <select name="gallery" id="gallery" style="width:150px;">
+                      <select name="gallery" class="select_icon" id="gallery" style="width:150px;">
                         <option value="0" selected="selected"><?php _e("Select Gallery", 'bwg_back'); ?></option>
                         <?php
                         foreach ($gallery_rows as $gallery_row) {
@@ -193,7 +193,7 @@ class BWGViewBWGShortcode {
                   <tr id="tr_album">
                     <td title="<?php _e('The selected album expanded content will be displayed.', 'bwg_back'); ?>" class="spider_label"><label for="album"><?php _e("Album:", 'bwg_back'); ?> </label></td>
                     <td>
-                      <select name="album" id="album" style="width:150px;">
+                      <select name="album" class="select_icon" id="album" style="width:150px;">
                         <option value="0" selected="selected"><?php _e("Select Album", 'bwg_back'); ?></option>
                         <?php
                         foreach ($album_rows as $album_row) {
@@ -208,7 +208,7 @@ class BWGViewBWGShortcode {
                   <tr id="tr_sort_by">
                     <td class="spider_label"><label for="sort_by"><?php _e("Sort images by:", 'bwg_back'); ?> </label></td>
                     <td>
-                      <select name="sort_by" id="sort_by" style="width:150px;">
+                      <select name="sort_by" class="select_icon" id="sort_by" style="width:150px;">
                         <option value="order" selected="selected"><?php _e("Order", 'bwg_back'); ?></option>
                         <option value="alt"><?php _e("Title", 'bwg_back'); ?></option>
                         <option value="date"><?php _e("Date", 'bwg_back'); ?></option>
@@ -598,7 +598,7 @@ class BWGViewBWGShortcode {
                   <tr id="tr_slideshow_effect">
                     <td class="spider_label"><label for="slideshow_effect"><?php _e("Slideshow Effect:", 'bwg_back'); ?> </label></td>
                     <td>
-                      <select name="slideshow_effect" id="slideshow_effect" style="width:150px;">
+                      <select name="slideshow_effect" class="select_icon" id="slideshow_effect" style="width:150px;">
                         <?php
                         foreach ($effects as $key => $effect) {
                           ?>
@@ -789,7 +789,7 @@ class BWGViewBWGShortcode {
                   <tr id="tr_popup_effect">
                     <td title="<?php _e("Lightbox slideshow effect.", 'bwg_back'); ?>" class="spider_label"><label for="popup_effect"><?php _e("Lightbox effect:", 'bwg_back'); ?> </label></td>
                     <td>
-                      <select name="popup_effect" id="popup_effect" style="width:150px;">
+                      <select name="popup_effect" class="select_icon" id="popup_effect" style="width:150px;">
                         <?php
                         foreach ($effects as $key => $effect) {
                           ?>
@@ -973,7 +973,7 @@ class BWGViewBWGShortcode {
                   <tr id="tr_watermark_font">
                     <td class="spider_label"><label for="watermark_font"><?php _e("Advertisement font style:", 'bwg_back'); ?> </label></td>
                     <td>
-                      <select name="watermark_font" id="watermark_font" style="width:150px;">
+                      <select name="watermark_font" class="select_icon" id="watermark_font" style="width:150px;">
                         <?php
                         foreach ($watermark_fonts as $watermark_font) {
                           ?>
@@ -1030,7 +1030,7 @@ class BWGViewBWGShortcode {
           </div>
           <div class="mceActionPanel">
             <div style="float:left;">
-              <a id="bwg_pro_version_link" class="button button-primary" target="_blank" style="line-height: 25px; padding: 0 5px; text-decoration: none; vertical-align: middle; width: inherit; float: left;" href="http://wpdemo.web-dorado.com/thumbnails-view-2/"><?php _e("Please see Pro ", 'bwg_back'); ?><span id="bwg_pro_version"><?php _e("Thumbnail", 'bwg_back'); ?></span> <?php _e("View", 'bwg_back'); ?></a>
+              <a id="bwg_pro_version_link" class="wd-btn wd-btn-primary-blue wd-not-image" target="_blank" style="line-height: 25px; padding: 0 5px; text-decoration: none; vertical-align: middle; width: inherit; float: left;" href="http://wpdemo.web-dorado.com/thumbnails-view-2/"><?php _e("Please see Pro ", 'bwg_back'); ?><span id="bwg_pro_version"><?php _e("Thumbnail", 'bwg_back'); ?></span> <?php _e("View", 'bwg_back'); ?></a>
             </div>
             <div style="float:right;">
               <input type="button" id="insert" name="insert" value="<?php _e("Insert", 'bwg_back'); ?>" onClick="bwg_insert_shortcode('');" />
@@ -1051,9 +1051,9 @@ class BWGViewBWGShortcode {
             ?>
             <hr style="float: left; width: 100%;" />
             <span style="float: left; width: 100%;">
-              <a id="bwg_pro_version_link" class="button button-primary" target="_blank" style="display: table; margin-bottom: 5px;" href="https://web-dorado.com/files/fromPhotoGallery.php"><?php _e("Please see Pro", 'bwg_back'); ?> <span id="bwg_pro_version"><?php _e("Thumbnail", 'bwg_back'); ?></span> <?php _e("View", 'bwg_back'); ?></a>
-              <input type="button" class="button-primary" id="insert" name="insert" value="<?php echo __("Generate", 'bwg_back'); ?>" onclick="bwg_insert_shortcode('');" />
-              <input type="button" class="button-secondary" id="import" name="import" value="<?php echo __("Import", 'bwg_back'); ?>" onclick="bwg_update_shortcode()" />
+              <a id="bwg_pro_version_link" class="wd-btn wd-btn-primary-blue wd-not-image" target="_blank" style="display: table; margin-bottom: 5px;" href="https://web-dorado.com/files/fromPhotoGallery.php"><?php _e("Please see Pro", 'bwg_back'); ?> <span id="bwg_pro_version"><?php _e("Thumbnail", 'bwg_back'); ?></span> <?php _e("View", 'bwg_back'); ?></a>
+              <input type="button" class="wd-btn wd-btn-primary-blue wd-not-image" id="insert" name="insert" value="<?php echo __("Generate", 'bwg_back'); ?>" onclick="bwg_insert_shortcode('');" />
+              <input type="button" class="wd-btn wd-btn-primary wd-btn-icon wd-btn-import" id="import" name="import" value="<?php echo __("Import", 'bwg_back'); ?>" onclick="bwg_update_shortcode()" />
               <div>
                 <input type="text" size="55" id="bwg_shortcode" name="bwg_shortcode" value='<?php echo $tagtext; ?>' onclick="bwg_onKeyDown(event)" />
                 <b><?php _e("Shortcode", 'bwg_back'); ?></b>
@@ -1402,7 +1402,7 @@ class BWGViewBWGShortcode {
                   jQuery("#extended_album_image_thumb_width").val(short_code['extended_album_image_thumb_width']);
                   jQuery("#extended_album_image_thumb_height").val(short_code['extended_album_image_thumb_height']);
                   jQuery("#extended_albums_per_page_load_more").val(short_code['extended_albums_per_page_load_more']);
-		  jQuery("#extended_album_load_more_image_count").val(short_code['extended_album_load_more_image_count']);
+		              jQuery("#extended_album_load_more_image_count").val(short_code['extended_album_load_more_image_count']);
                   if (short_code['extended_album_enable_page'] == 1) {
                     jQuery("#extended_album_page_yes").attr('checked', 'checked');
                   }
@@ -1819,7 +1819,7 @@ class BWGViewBWGShortcode {
             short_code += ' id="' + shortcode_id + '"' + title + ']';
             var short_id = ' id="' + shortcode_id + '"' + title;
             short_code = short_code.replace(/\[Best_Wordpress_Gallery([^\]]*)\]/g, function(d, c) {
-              return "<img src='<?php echo WD_BWG_URL; ?>/images/bwg_shortcode.png' class='bwg_shortcode mceItem' title='Best_Wordpress_Gallery" + short_id + "' />";
+              return "<img src='<?php echo WD_BWG_URL; ?>/images/icons/bwg_shortcode.png' class='bwg_shortcode mceItem' title='Best_Wordpress_Gallery" + short_id + "' />";
             });
             jQuery("#task").val("save");
             jQuery("#tagtext").val(tagtext);

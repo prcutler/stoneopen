@@ -67,18 +67,18 @@ class BWGViewImage_browser {
       $params['popup_hit_counter'] = 0;
     }
     if (!$theme_row) {
-      echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'error');
+      echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
       return;
     }
     $gallery_row = $this->model->get_gallery_row_data($params['gallery_id']);
     if (!$gallery_row) {
-      echo WDWLibrary::message(__('There is no gallery selected or the gallery was deleted.', 'bwg'), 'error');
+      echo WDWLibrary::message(__('There is no gallery selected or the gallery was deleted.', 'bwg'), 'wd_error');
       return;
     }
     $image_rows = $this->model->get_image_rows_data($params['gallery_id'], 1, $params['sort_by'], $order_by, $bwg);
     $images_count = count($image_rows); 
     if (!$image_rows) {
-      echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'error');
+      echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
     }
     $page_nav = $this->model->page_nav($params['gallery_id'], 1, $bwg);
     $rgb_page_nav_font_color = WDWLibrary::spider_hex2rgb($theme_row->page_nav_font_color);
@@ -449,7 +449,7 @@ class BWGViewImage_browser {
             <div id="ajax_loading_<?php echo $bwg; ?>" style="position:absolute;width: 100%; z-index: 115; text-align: center; height: 100%; vertical-align: middle; display:none;">
               <div style="display: table; vertical-align: middle; width: 100%; height: 100%; background-color: #FFFFFF; opacity: 0.7; filter: Alpha(opacity=70);">
                 <div style="display: table-cell; text-align: center; position: relative; vertical-align: middle;" >
-                  <div id="loading_div_<?php echo $bwg; ?>" class="spider_ajax_loading" style="display: inline-block; text-align:center; position:relative; vertical-align:middle; background-image:url(<?php echo WD_BWG_URL . '/images/ajax_loader.png'; ?>); float: none; width:50px;height:50px;background-size:50px 50px;">
+                  <div id="loading_div_<?php echo $bwg; ?>" class="bwg_spider_ajax_loading" style="display: inline-block; text-align:center; position:relative; vertical-align:middle; background-image:url(<?php echo WD_BWG_URL . '/images/ajax_loader.gif'; ?>); float: none; width:30px;height:30px;background-size:30px 30px;">
                   </div>
                 </div>
               </div>
@@ -591,7 +591,7 @@ class BWGViewImage_browser {
             </div>
           </div>
         </form>
-        <div id="spider_popup_loading_<?php echo $bwg; ?>" class="spider_popup_loading"></div>
+        <div id="bwg_spider_popup_loading_<?php echo $bwg; ?>" class="bwg_spider_popup_loading"></div>
         <div id="spider_popup_overlay_<?php echo $bwg; ?>" class="spider_popup_overlay" onclick="spider_destroypopup(1000)"></div>
       </div>
     </div>

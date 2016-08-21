@@ -4,7 +4,7 @@
  * Plugin Name: Photo Gallery
  * Plugin URI: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
- * Version: 1.2.108
+ * Version: 1.3.6
  * Author: WebDorado
  * Author URI: https://web-dorado.com/
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
@@ -51,7 +51,7 @@ else {
 
 // Plugin menu.
 function bwg_options_panel() {
-  $galleries_page = add_menu_page('Photo Gallery', 'Photo Gallery', 'manage_options', 'galleries_bwg', 'bwg_gallery', WD_BWG_URL . '/images/best-wordpress-gallery.png');
+  $galleries_page = add_menu_page('Photo Gallery', 'Photo Gallery', 'manage_options', 'galleries_bwg', 'bwg_gallery', WD_BWG_URL . '/images/icons/best-wordpress-gallery.png');
 
   $galleries_page = add_submenu_page('galleries_bwg', __('Add Galleries/Images', 'bwg_back'), __('Add Galleries/Images', 'bwg_back'), 'manage_options', 'galleries_bwg', 'bwg_gallery');
   add_action('admin_print_styles-' . $galleries_page, 'bwg_styles');
@@ -1923,7 +1923,7 @@ function bwg_activate() {
     ));
   }
   $version = WD_BWG_VERSION;
-  $new_version = '1.2.108';
+  $new_version = '1.3.6';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -1946,14 +1946,13 @@ function bwg_global_activate($networkwide) {
     // Check if it is a network activation - if so, run the activation function for each blog id.
     if ($networkwide) {
       global $wpdb;
-      $old_blog = $wpdb->blogid;
       // Get all blog ids.
       $blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
       foreach ($blogids as $blog_id) {
         switch_to_blog($blog_id);
         bwg_activate();
+        restore_current_blog();
       }
-      switch_to_blog($old_blog);
       return;
     }
   }
@@ -1964,10 +1963,9 @@ register_activation_hook(__FILE__, 'bwg_global_activate');
 function bwg_new_blog_added($blog_id, $user_id, $domain, $path, $site_id, $meta ) {
   if (is_plugin_active_for_network('photo-gallery/photo-gallery.php')) {
     global $wpdb;
-    $old_blog = $wpdb->blogid;
     switch_to_blog($blog_id);
     bwg_activate();
-    switch_to_blog($old_blog);
+    restore_current_blog();
   }
 }
 add_action('wpmu_new_blog', 'bwg_new_blog_added', 10, 6);
@@ -1977,7 +1975,7 @@ wp_oembed_add_provider( '#https://instagr(\.am|am\.com)/p/.*#i', 'https://api.in
 
 function bwg_update_hook() {
   $version = WD_BWG_VERSION;
-  $new_version = '1.2.108';
+  $new_version = '1.3.6';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -1988,14 +1986,13 @@ function bwg_update_hook() {
 function bwg_global_update() {
   if (function_exists('is_multisite') && is_multisite()) {
     global $wpdb;
-    $old_blog = $wpdb->blogid;
     // Get all blog ids.
     $blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
     foreach ($blogids as $blog_id) {
       switch_to_blog($blog_id);
       bwg_update_hook();
+      restore_current_blog();
     }
-    switch_to_blog($old_blog);
     return;
   }
   bwg_update_hook();
@@ -2039,6 +2036,11 @@ function bwg_scripts() {
     'resized'  => __('Items Succesfully resized.', 'bwg_back'),
     'watermark_set'  => __('Watermarks Succesfully Set.', 'bwg_back'),
     'reset'  => __('Items Succesfully Reset.', 'bwg_back'),
+    'save_tag' => __('Save Tag', 'bwg_back'),
+    'delete_alert' => __('Do you want to delete selected items?', 'bwg_back'),
+    'default_warning' => __('This action will reset gallery type to mixed and will save that choice. You cannot undo it.', 'bwg_back'),
+    'change_warning' => __('After pressing save/apply buttons, you cannot change gallery type back to Instagram!', 'bwg_back'),
+    'other_warning' => __('This action will reset gallery type to mixed and will save that choice. You cannot undo it.', 'bwg_back')
   ));
 
   global $wp_scripts;
@@ -2158,6 +2160,31 @@ function bwg_options_scripts() {
   }
   wp_enqueue_script('jquery');
   wp_enqueue_script('jscolor', WD_BWG_URL . '/js/jscolor/jscolor.js', array(), '1.3.9');
+  wp_localize_script('bwg_admin', 'bwg_objectL10B', array(
+    'bwg_field_required'  => __('field is required.', 'bwg_back'),
+    'bwg_select_image'  => __('You must select an image file.', 'bwg_back'),
+    'bwg_select_audio'  => __('You must select an audio file.', 'bwg_back'),
+    'bwg_access_token'  => __('You do not have Instagram access token. Sign in with Instagram in Options->Social options. ', 'bwg_back'),
+    'bwg_post_number'  => __('Instagram recent post number must be between 1 and 33.', 'bwg_back'),
+    'bwg_not_empty'  => __('The gallery is not empty. Please delete all the images first.', 'bwg_back'),
+    'bwg_enter_url'  => __('Please enter url to embed.', 'bwg_back'),
+    'bwg_cannot_response'  => __('Error: cannot get response from the server.', 'bwg_back'),
+    'bwg_something_wrong'  => __('Error: something wrong happened at the server.', 'bwg_back'),
+    'bwg_error'  => __('Error', 'bwg_back'),
+    'bwg_show_order'  => __('Show order column', 'bwg_back'),
+    'bwg_hide_order'  => __('Hide order column', 'bwg_back'),
+    'selected'  => __('Selected', 'bwg_back'),
+    'item'  => __('item', 'bwg_back'),
+    'saved'  => __('Items Succesfully Saved.', 'bwg_back'),
+    'recovered'  => __('Item Succesfully Recovered.', 'bwg_back'),
+    'published'  => __('Item Succesfully Published.', 'bwg_back'),
+    'unpublished'  => __('Item Succesfully Unpublished.', 'bwg_back'),
+    'deleted'  => __('Item Succesfully Deleted.', 'bwg_back'),
+    'one_item'  => __('You must select at least one item.', 'bwg_back'),
+    'resized'  => __('Items Succesfully resized.', 'bwg_back'),
+    'watermark_set'  => __('Watermarks Succesfully Set.', 'bwg_back'),
+    'reset'  => __('Items Succesfully Reset.', 'bwg_back'),
+  ));
 }
 
 function bwg_front_end_scripts() {

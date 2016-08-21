@@ -2,7 +2,7 @@ function edit_tag(m) {
   var name, slug, tr;
   name = jQuery("#name" + m).html();
   slug = jQuery("#slug" + m).html();
-  tr = ' <td id="td_check_'+m+'" ></td> <td id="td_id_'+m+'" ></td> <td id="td_name_'+m+'" class="edit_input"><input id="edit_tagname" name="tagname'+m+'" class="input_th2" type="text" value="'+name+'"></td> <td id="td_slug_'+m+'" class="edit_input"><input id="edit_slug" class="input_th2"  name="slug'+m+'" type="text" value="'+slug+'"></td> <td id="td_count_'+m+'" ></td> <td id="td_edit_'+m+'" class="table_big_col"><a class="button-primary button button-small" onclick="save_tag('+m+')" >Save Tag </a></td><td id="td_delete_'+m+'" class="table_big_col" ></td> ';
+  tr = ' <td id="td_check_'+m+'" ></td> <td id="td_id_'+m+'" ></td> <td id="td_name_'+m+'" class="edit_input"><input id="edit_tagname" name="tagname'+m+'" class="input_th2" type="text" value="'+name+'"></td> <td id="td_slug_'+m+'" class="edit_input"><input id="edit_slug" class="input_th2"  name="slug'+m+'" type="text" value="'+slug+'"></td> <td id="td_count_'+m+'" ></td> <td id="td_edit_'+m+'" class="table_big_col"><a class="wd-btn wd-btn-primary wd-btn-icon wd-btn-save button-small" title="'+ bwg_objectL10B.save_tag +'" onclick="save_tag('+m+')" >'+bwg_objectL10B.save_tag+' </a></td><td id="td_delete_'+m+'" class="table_big_col" ></td> ';
   jQuery("#tr_" + m).html(tr);
   jQuery("#td_id_" + m).attr('class', 'table_big_col');
 }
@@ -39,23 +39,24 @@ function save_tag(tag_id) {
         jQuery("#td_count_" + tag_id).attr('class', 'table_big_col');
         td_count='<a class="pointer" id="count'+tag_id+'" onclick="edit_tag('+tag_id+')"  title="Edit">'+array[2]+'</a>';
         jQuery("#td_count_" + tag_id).html(td_count);
-        td_edit='<a class="pointer" onclick="edit_tag('+tag_id+')" >Edit</a>';
+        td_edit='<a class="pointer bwg_img_edit" title="Edit" onclick="edit_tag('+tag_id+')" ></a>';
         jQuery("#td_edit_" + tag_id).html(td_edit);
 
         var func1="spider_set_input_value('task', 'delete');";
         var func2="spider_set_input_value('current_id', "+tag_id+");";
         var func3="spider_form_submit('event', 'tags_form')";
-        td_delete='<a class="pointer" onclick="'+func1+func2+func3+'" >Delete</a>';
+        td_delete='<a class="pointer bwg_img_remove" title="Delete" onclick="'+func1+func2+func3+'" ></a>';
         jQuery("#td_delete_" + tag_id).html(td_delete);
       }
-      if ((jQuery( ".updated" ) && jQuery( ".updated" ).attr("id")!='wordpress_message_2' ) || (jQuery( ".error" ) && jQuery( ".error" ).css("display")=="block")) {
-        if (jQuery( ".updated" ) && jQuery( ".updated" ).attr("id")!='wordpress_message_2' ){
-          jQuery(".updated").html("<strong><p>"+massege+"</p></strong>"); 
+      if ((jQuery(".wd_updated" ) && jQuery(".wd_updated" ).attr("id")!='wordpress_message_2' ) || (jQuery( ".wd_error" ) && jQuery( ".wd_error" ).css("display")=="block")) {
+        if (jQuery( ".wd_updated" ) && jQuery(".wd_updated" ).attr("id")!='wordpress_message_2' ){
+          jQuery(".wd_updated").html("<strong><p>"+massege+"</p></strong>"); 
         }
         else {
-          jQuery(".error").html("<strong><p>"+massege+"</p></strong>"); 
-          jQuery(".error").attr('class', 'updated');
+          jQuery(".wd_error").html("<strong><p>"+massege+"</p></strong>"); 
+          jQuery(".wd_error").attr('class', 'wd_updated');
         }
+       
       }
       else {
         jQuery("#wordpress_message_1").css("display", "block");
@@ -126,6 +127,11 @@ function spider_ajax_save(form_id, tr_group) {
   post_data["image_current_id"] = image_current_id;
   post_data["image_width"] = jQuery("#image_width").val();
   post_data["image_height"] = jQuery("#image_height").val();
+  post_data["bulk_edit"] = jQuery("#bulk_edit").val();
+  post_data["title"] = jQuery("#title").val();
+  post_data["redirecturl"] = jQuery("#redirecturl").val();
+  post_data["desc"] = jQuery("#desc").val();
+
   var flag = false;
   if (jQuery("#check_all_items").attr('checked') == 'checked') {
     post_data["check_all_items"] = jQuery("#check_all_items").val();
@@ -187,59 +193,71 @@ function spider_ajax_save(form_id, tr_group) {
         jQuery('#message_div').show();
       }
       else if (ajax_task == 'recover') {
+        jQuery('#draganddrop').attr('class','wd_updated');
         jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.recoverd + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_publish') {
+        jQuery('#draganddrop').attr('class','wd_updated');
         jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.published + ".</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_unpublish') {
+        jQuery('#draganddrop').attr('class','wd_updated');
         jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.unpublished + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_delete') {
+        jQuery('#draganddrop').attr('class','wd_updated');
         jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.deleted + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (!flag && ((ajax_task == 'image_publish_all') || (ajax_task == 'image_unpublish_all') || (ajax_task == 'image_delete_all') || (ajax_task == 'image_set_watermark') || (ajax_task == 'image_recover_all') || (ajax_task == 'image_resize') || (ajax_task == 'resize_image_thumb'))) {
+        jQuery('#draganddrop').attr('class','wd_error');
         jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.one_item + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_publish_all') {
+        jQuery('#draganddrop').attr('class','wd_updated');
         jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.published + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_unpublish_all') {
+        jQuery('#draganddrop').attr('class','wd_updated');
         jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.unpublished + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_delete_all') {
+        jQuery('#draganddrop').attr('class','wd_updated');
         jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.deleted + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'resize_image_thumb') {
+        jQuery('#draganddrop').attr('class','wd_updated');
         jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.resized + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_set_watermark') {
+        jQuery('#draganddrop').attr('class','wd_updated');
         jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.watermark_set + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_resize') {
+        jQuery('#draganddrop').attr('class','wd_updated');
         jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.resized + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'image_recover_all') {
+        jQuery('#draganddrop').attr('class','wd_updated');
         jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.reset + "</p></strong>");
         jQuery('#draganddrop').show();
       }
       else if (ajax_task == 'search') {
         jQuery('#message_div').html("");
         jQuery('#message_div').hide();
-       
       }
       else {
+        jQuery('#draganddrop').attr('class','wd_updated');
         jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.saved + "</p></strong>");
         jQuery('#draganddrop').show();
       }
@@ -370,9 +388,11 @@ function spider_show_hide_weights() {
   if (jQuery("#show_hide_weights").val() == bwg_objectL10B.bwg_show_order) {
     jQuery(".connectedSortable").css("cursor", "default");
     jQuery("#tbody_arr").find(".handle").hide(0);
+    jQuery("#tbody_arr").find(".handles").closest("td").hide(0);
     jQuery("#th_order").show(0);
     jQuery("#tbody_arr").find(".spider_order").show(0);
     jQuery("#show_hide_weights").val(bwg_objectL10B.bwg_hide_order);
+    jQuery("#show_hide_weights").attr('title',bwg_objectL10B.bwg_hide_order);
     if (jQuery("#tbody_arr").sortable()) {
       jQuery("#tbody_arr").sortable("disable");
     }
@@ -402,10 +422,12 @@ function spider_show_hide_weights() {
     });//.disableSelection();
     jQuery("#tbody_arr").sortable("enable");
     jQuery("#tbody_arr").find(".handle").show(0);
-    jQuery("#tbody_arr").find(".handle").attr('class', 'handle connectedSortable');
+    jQuery("#tbody_arr").find(".handles").closest("td").show(0);
+    jQuery("#tbody_arr").find(".handle").attr('class', 'bwg_img_handle handle connectedSortable');
     jQuery("#th_order").hide(0);
     jQuery("#tbody_arr").find(".spider_order").hide(0);
     jQuery("#show_hide_weights").val(bwg_objectL10B.bwg_show_order);
+    jQuery("#show_hide_weights").attr('title',bwg_objectL10B.bwg_show_order);
   }
 }
 
@@ -416,6 +438,7 @@ function spider_check_all_items() {
     jQuery('#check_all').trigger('click');
   // }
 }
+
 function spider_check_all_items_checkbox() {
   if (jQuery('#check_all_items').attr('checked')) {
     jQuery('#check_all_items').attr('checked', false);
@@ -427,6 +450,7 @@ function spider_check_all_items_checkbox() {
     var items_count = added_items + saved_items;
     jQuery('#check_all_items').attr('checked', true);
     if (items_count) {
+      jQuery('#draganddrop').attr('class','wd_updated');
       jQuery('#draganddrop').html("<strong><p>" + bwg_objectL10B.selected + ' ' + items_count + ' ' + bwg_objectL10B.item + (items_count > 1 ? "s" : "") + ".</p></strong>");
       jQuery('#draganddrop').show();
     }
@@ -706,6 +730,22 @@ function bwg_add_tag(image_id, tagIds, titles) {
   tb_remove();
 }
 
+function bwg_add_title_desc() {
+  var ids_string = jQuery("#ids_string").val();
+  ids_array = ids_string.split(",");
+  for (var i in ids_array) {
+   if (ids_array.hasOwnProperty(i) && ids_array[i]) {
+      if (jQuery("#check_" + ids_array[i]).attr('checked') == 'checked') {
+        jQuery("#image_alt_text_" + ids_array[i]).val(jQuery("#title").val());
+        jQuery("#redirect_url_" + ids_array[i]).val(jQuery("#redirecturl").val());
+        jQuery("#image_description_" + ids_array[i]).val(jQuery("#desc").val());
+      }
+	  }
+  }
+  jQuery(".opacity_image_desc").hide();
+  jQuery("#bulk_edit").val(1);
+}
+
 function bwg_remove_tag(tag_id, image_id) {
   if (jQuery('#' + image_id + '_tag_' + tag_id)) {
     jQuery('#' + image_id + '_tag_' + tag_id).remove();
@@ -862,11 +902,19 @@ function bwg_change_option_type(type) {
   for (var i = 1; i <= 10; i++) {
     if (i == type) {
       document.getElementById('div_content_' + i).style.display = 'block';
-      document.getElementById('div_' + i).style.background = '#C5C5C5';
+      document.getElementById('div_' + i).style.background = '#ffffff';
+      document.getElementById('div_' + i).style.color = '#00A0D2';
+      document.getElementById('div_' + i).style.borderLeft = '1px solid #00A0D2';
+      document.getElementById('div_' + i).style.borderTop = '1px solid #00A0D2';
+      document.getElementById('div_' + i).style.borderBottom = '1px solid #00A0D2';
     }
     else {
       document.getElementById('div_content_' + i).style.display = 'none';
-      document.getElementById('div_' + i).style.background = '#F4F4F4';
+      document.getElementById('div_' + i).style.background = '#00A0D2';
+      document.getElementById('div_' + i).style.color = '#ffffff';
+      document.getElementById('div_' + i).style.borderLeft = '1px solid #00A0D2';
+      document.getElementById('div_' + i).style.borderTop = '1px solid #00A0D2';
+      document.getElementById('div_' + i).style.borderBottom = '1px solid #00A0D2';
     }
   }
   document.getElementById('display_panel').style.display = 'inline-block';
@@ -985,23 +1033,21 @@ function bwg_change_gallery_type(type_to_set, warning_type) {
     jQuery('#content-add_media').hide();
     jQuery('#show_add_embed').hide();
     jQuery('#show_bulk_embed').hide();
-    
   }
-  else{
-
+  else {
     var ids_string = jQuery("#ids_string").val();
     ids_array = ids_string.split(",");
     var tr_count = ids_array[0]=='' ? 0: ids_array.length;  
     if(tr_count != 0){
       switch(warning_type) {
         case 'default':
-          var allowed = confirm("This action will reset gallery type to standard and will save that choice. You cannot undo it.");
+          var allowed = confirm(bwg_objectL10B.default_warning);
           break;
         case 'change':
-          var allowed = confirm("After pressing save/apply buttons, you cannot change gallery type back to Instagram!");
+          var allowed = confirm(bwg_objectL10B.change_warning);
           break;
         default:
-          var allowed = confirm("This action will reset gallery type to standard and will save that choice. You cannot undo it.");
+          var allowed = confirm(bwg_objectL10B.other_warning);
       }/*endof switch*/
 
       if (allowed == false) {
@@ -1025,8 +1071,7 @@ function bwg_change_gallery_type(type_to_set, warning_type) {
     jQuery('#spider_reset_button').show();
     jQuery('#content-add_media').show();
     jQuery('#show_add_embed').show();
-    jQuery('#show_bulk_embed').show();    
-    
+    jQuery('#show_bulk_embed').show();
   }
   return true;
 }
@@ -1136,4 +1181,67 @@ function bwg_get_embed_info(input_id) {
   });
   return 'ok'; 
    
+}
+
+function bwg_bulk_actions(that, check) {
+  var action = jQuery(that).val();
+  if (action == 'delete_all') {
+    if (confirm(bwg_objectL10B.delete_alert)) {
+      spider_set_input_value('task',action);
+      if (check == "gallery_page") {
+        jQuery('#galleries_form').submit();
+      }
+      else if (check == 'comments_page') {
+        jQuery('#comments_form').submit();
+      }
+      else if (check == 'rates_page') {
+        jQuery('#rates_form').submit();
+      }
+      else {
+        jQuery('#albums_form').submit();
+      }
+    }
+    else {
+      return false;
+    }
+  }
+  else if (action != '' && (check == 'gallery_page' || check == 'album_page' || check == 'comments_page')) {
+    spider_set_input_value('task',action);
+    if (check == "gallery_page") {
+      jQuery('#galleries_form').submit();
+    }
+    else if (check == 'comments_page') {
+      jQuery('#comments_form').submit();
+    }
+    else {
+      jQuery('#albums_form').submit();
+    }
+  }
+  else if (action == 'image_get_resize') {
+    jQuery('.opacity_resize_image').show();
+    return false;
+  }
+  else if (action == 'image_desc') {
+    jQuery('.opacity_image_desc').show();
+    return false;
+  }
+  else if (action != '' && action != 'image_delete_all') {
+    spider_set_input_value('ajax_task',action);
+    spider_ajax_save('galleries_form');
+    return false;
+  }
+  else if (action == 'image_delete_all') {
+    if (confirm(bwg_objectL10B.delete_alert)) {
+      spider_set_input_value('ajax_task', action);
+      spider_ajax_save('galleries_form');
+      return false;
+    }
+    else {
+      return false;
+    }
+  } 
+  else {
+    return false;
+  }
+  return true;
 }

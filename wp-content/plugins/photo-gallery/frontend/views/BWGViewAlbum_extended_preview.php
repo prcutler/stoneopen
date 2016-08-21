@@ -92,14 +92,14 @@ class BWGViewAlbum_extended_preview {
     $sort_direction = ' ' . $params['order_by'] . ' ';
     $theme_row = $this->model->get_theme_row_data($params['theme_id']);
     if (!$theme_row) {
-      echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'error');
+      echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
       return;
     }
     $type = (isset($_REQUEST['type_' . $bwg]) ? esc_html($_REQUEST['type_' . $bwg]) : 'album');
     $bwg_search = ((isset($_POST['bwg_search_' . $bwg]) && esc_html($_POST['bwg_search_' . $bwg]) != '') ? esc_html($_POST['bwg_search_' . $bwg]) : '');
     $album_gallery_id = (isset($_REQUEST['album_gallery_id_' . $bwg]) ? esc_html($_REQUEST['album_gallery_id_' . $bwg]) : $params['album_id']);
     if (!$album_gallery_id || ($type == 'album' && !$this->model->get_album_row_data($album_gallery_id))) {
-      echo WDWLibrary::message(__('There is no album selected or the album was deleted.', 'bwg'), 'error');
+      echo WDWLibrary::message(__('There is no album selected or the album was deleted.', 'bwg'), 'wd_error');
       return;
     }
     if ($type == 'gallery') {
@@ -121,7 +121,7 @@ class BWGViewAlbum_extended_preview {
       $image_rows = $this->model->get_image_rows_data($album_gallery_id, $items_per_page, $params['sort_by'], $bwg, $sort_direction);
       $images_count = count($image_rows);
       if (!$image_rows) {
-        echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'error');
+        echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
       }
       $page_nav = $this->model->gallery_page_nav($album_gallery_id, $bwg);
       $album_gallery_div_id = 'bwg_album_extended_' . $bwg;
@@ -133,7 +133,7 @@ class BWGViewAlbum_extended_preview {
       $items_col_num = 1;
       $album_galleries_row = $this->model->get_alb_gals_row($album_gallery_id, $items_per_page, 'order', $bwg, ' asc ');
       if (!$album_galleries_row) {
-        echo WDWLibrary::message(__('There is no album selected or the album was deleted.', 'bwg'), 'error');
+        echo WDWLibrary::message(__('There is no album selected or the album was deleted.', 'bwg'), 'wd_error');
         return;
       }
       $page_nav = $this->model->album_page_nav($album_gallery_id, $bwg);
@@ -569,7 +569,7 @@ class BWGViewAlbum_extended_preview {
             <div id="ajax_loading_<?php echo $bwg; ?>" style="position:absolute;width: 100%; z-index: 115; text-align: center; height: 100%; vertical-align: middle; display: none;">
               <div style="display: table; vertical-align: middle; width: 100%; height: 100%; background-color:#FFFFFF; opacity:0.7; filter:Alpha(opacity=70);">
                 <div style="display: table-cell; text-align: center; position: relative; vertical-align: middle;" >
-                  <div id="loading_div_<?php echo $bwg; ?>" class="spider_ajax_loading" style="display: inline-block; text-align:center; position:relative; vertical-align:middle; background-image:url(<?php echo WD_BWG_URL . '/images/ajax_loader.png'; ?>); float: none; width:50px;height:50px;background-size:50px 50px;">
+                  <div id="loading_div_<?php echo $bwg; ?>" class="bwg_spider_ajax_loading" style="display: inline-block; text-align:center; position:relative; vertical-align:middle; background-image:url(<?php echo WD_BWG_URL . '/images/ajax_loader.gif'; ?>); float: none; width:30px;height:30px;background-size:30px 30px;">
                   </div>
                 </div>
               </div>
@@ -660,7 +660,7 @@ class BWGViewAlbum_extended_preview {
                     ?>
                     <div class="bwg_album_extended_div_<?php echo $bwg; ?>">
                       <div class="bwg_album_extended_thumb_div_<?php echo $bwg; ?>">
-                        <a class="bwg_album_<?php echo $bwg; ?>" <?php echo ($options_row->enable_seo ? 'href="' . add_query_arg(array("type_" . $bwg => $def_type, "album_gallery_id_" . $bwg => $album_galallery_row->alb_gal_id, "bwg_previous_album_id_" . $bwg => $album_gallery_id . ',' . $bwg_previous_album_id , "bwg_previous_album_page_number_" . $bwg => (isset($_REQUEST['page_number_' . $bwg]) ? esc_html($_REQUEST['page_number_' . $bwg]) : 0) . ',' . $bwg_previous_album_page_number), $_SERVER['REQUEST_URI']) . '"' : ''); ?> style="font-size: 0;" data-alb_gal_id="<?php echo $album_galallery_row->alb_gal_id; ?>" data-def_type="<?php echo $def_type; ?>" data-title="<?php htmlspecialchars(addslashes($title)); ?>">
+                        <a class="bwg_album_<?php echo $bwg; ?>" <?php echo ($options_row->enable_seo ? 'href="' . esc_url(add_query_arg(array("type_" . $bwg => $def_type, "album_gallery_id_" . $bwg => $album_galallery_row->alb_gal_id, "bwg_previous_album_id_" . $bwg => $album_gallery_id . ',' . $bwg_previous_album_id , "bwg_previous_album_page_number_" . $bwg => (isset($_REQUEST['page_number_' . $bwg]) ? esc_html($_REQUEST['page_number_' . $bwg]) : 0) . ',' . $bwg_previous_album_page_number), $_SERVER['REQUEST_URI'])) . '"' : ''); ?> style="font-size: 0;" data-alb_gal_id="<?php echo $album_galallery_row->alb_gal_id; ?>" data-def_type="<?php echo $def_type; ?>" data-title="<?php htmlspecialchars(addslashes($title)); ?>">
                           <span class="bwg_album_thumb_<?php echo $bwg; ?>" style="height:inherit;">
                             <span class="bwg_album_thumb_spun1_<?php echo $bwg; ?>">
                               <span class="bwg_album_thumb_spun2_<?php echo $bwg; ?>">
@@ -835,7 +835,7 @@ class BWGViewAlbum_extended_preview {
             ?>
           </div>
         </form>
-        <div id="spider_popup_loading_<?php echo $bwg; ?>" class="spider_popup_loading"></div>
+        <div id="bwg_spider_popup_loading_<?php echo $bwg; ?>" class="bwg_spider_popup_loading"></div>
         <div id="spider_popup_overlay_<?php echo $bwg; ?>" class="spider_popup_overlay" onclick="spider_destroypopup(1000)"></div>
       </div>
     </div>

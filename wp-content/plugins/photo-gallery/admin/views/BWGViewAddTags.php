@@ -47,31 +47,31 @@ class BWGViewAddTags {
       <?php wp_nonce_field( 'addTags', 'bwg_nonce' ); ?>
       <h2 style="width:200px; float:left;"><?php _e("Tags", 'bwg_back'); ?></h2>
       <a href="" class="thickbox thickbox-preview" id="content-add_media" title="Add Tag" onclick="bwg_get_tags('<?php echo $image_id; ?>', event);" style="float:right; padding: 9px 0px 4px 0">
-        <img src="<?php echo WD_BWG_URL . '/images/add_but.png'; ?>" style="border:none;" />
+        <div class="wd-btn wd-btn-primary wd-btn-icon wd-btn-add" style="border:none;padding-top:8px !important;">ADD </div>
       </a>
       <div class="tablenav top">
         <?php
-        WDWLibrary::search(__('Name', 'bwg_back'), $search_value, 'tags_form');
+        WDWLibrary::search(__('Name', 'bwg_back'), $search_value, 'tags_form','position_search');
         WDWLibrary::html_page_nav($page_nav['total'], $pager++, $page_nav['limit'], 'tags_form', $per_page);
         ?>
       </div>
       <table class="wp-list-table widefat fixed pages">
         <thead>
           <th class="manage-column column-cb check-column table_small_col"><input id="check_all" type="checkbox" style="margin:0;" /></th>
-          <th class="table_small_col <?php if ($order_by == 'term_id') {echo $order_class;} ?>">
+          <th class="sortable table_small_col <?php if ($order_by == 'term_id') {echo $order_class;} ?>" style="padding-left:15px">
             <a onclick="spider_set_input_value('order_by', 'term_id');
                         spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'term_id') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                         spider_form_submit(event, 'tags_form')" href="">
               <span>ID</span><span class="sorting-indicator"></span></th>
             </a>
-          <th class="<?php if ($order_by == 'name') {echo $order_class;} ?>">
+          <th class="sortable <?php if ($order_by == 'name') {echo $order_class;} ?>">
             <a onclick="spider_set_input_value('order_by', 'name');
                         spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'name') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                         spider_form_submit(event, 'tags_form')" href="">
               <span><?php _e("Name", 'bwg_back'); ?></span><span class="sorting-indicator"></span>
             </a>
           </th>
-          <th class="<?php if ($order_by == 'slug') {echo $order_class;} ?>">
+          <th class="sortable <?php if ($order_by == 'slug') {echo $order_class;} ?>">
             <a onclick="spider_set_input_value('order_by', 'slug');
                         spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'slug') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                         spider_form_submit(event, 'tags_form')" href="">

@@ -614,6 +614,15 @@ class BWGControllerGalleries_bwg {
     $gal_id = (isset($_POST['current_id']) ? (int) $_POST['current_id'] : 0);
     $image_ids = (isset($_POST['ids_string']) ? esc_html(stripslashes($_POST['ids_string'])) : '');
     $image_id_array = explode(',', $image_ids);
+    if (isset($_POST['check_all_items']) && isset($_POST['bulk_edit']) && $_POST['bulk_edit'] == 1) {
+      $title = ((isset($_POST['title'])) ?  esc_html(stripslashes($_POST['title'])) : '');
+      $desc = ((isset($_POST['desc'])) ?  esc_html(stripslashes($_POST['desc'])) : '');
+      $redirecturl = ((isset($_POST['redirecturl'])) ?  esc_html(stripslashes($_POST['redirecturl'])) : '');
+      $wpdb->update($wpdb->prefix . 'bwg_image', array(
+        'description' => $desc,
+        'alt' => $title,
+        'redirect_url' => $redirecturl), array('gallery_id' => $gal_id));      
+    }
     foreach ($image_id_array as $image_id) {
       if ($image_id) {
         $filename = ((isset($_POST['input_filename_' . $image_id])) ? esc_html(stripslashes($_POST['input_filename_' . $image_id])) : '');
@@ -723,7 +732,7 @@ class BWGControllerGalleries_bwg {
   }
 
   public function save() {
-    echo WDWLibrary::message(__('Item Succesfully Saved.', 'bwg_back'), 'updated');
+    echo WDWLibrary::message(__('Item Succesfully Saved.', 'bwg_back'), 'wd_updated');
     $this->display();
   }
 
@@ -864,10 +873,10 @@ class BWGControllerGalleries_bwg {
       ));
     }
     if ($save !== FALSE) {
-      echo WDWLibrary::message(__('Item Succesfully Saved.', 'bwg_back'), 'updated');
+      echo WDWLibrary::message(__('Item Succesfully Saved.', 'bwg_back'), 'wd_updated');
     }
     else {
-      echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'error');
+      echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'wd_error');
     }
   }
 
@@ -890,7 +899,7 @@ class BWGControllerGalleries_bwg {
         $i++;
       }
       if ($flag) {
-        echo WDWLibrary::message(__('Ordering Succesfully Saved.', 'bwg_back'), 'updated');
+        echo WDWLibrary::message(__('Ordering Succesfully Saved.', 'bwg_back'), 'wd_updated');
       }
     }
     $this->display();
@@ -904,10 +913,10 @@ class BWGControllerGalleries_bwg {
     if ($wpdb->query($query)) {
       $wpdb->query($query_image);
       $wpdb->query($query_album_gallery);
-      echo WDWLibrary::message(__('Item Succesfully Deleted.', 'bwg_back'), 'updated');
+      echo WDWLibrary::message(__('Item Succesfully Deleted.', 'bwg_back'), 'wd_updated');
     }
     else {
-      echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'error');
+      echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'wd_error');
     }
     /* Delete corresponding posts and their meta.*/
     $query2 = "SELECT ID, post_content FROM " . $wpdb->posts . " WHERE post_type = 'bwg_gallery'";
@@ -937,10 +946,10 @@ class BWGControllerGalleries_bwg {
       }
     }
     if ($flag) {
-      echo WDWLibrary::message(__('Items Succesfully Deleted.', 'bwg_back'), 'updated');
+      echo WDWLibrary::message(__('Items Succesfully Deleted.', 'bwg_back'), 'wd_updated');
     }
     else {
-      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'error');
+      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'wd_error');
     }
     $this->display();
   }
@@ -949,10 +958,10 @@ class BWGControllerGalleries_bwg {
     global $wpdb;
     $save = $wpdb->update($wpdb->prefix . 'bwg_gallery', array('published' => 1), array('id' => $id));
     if ($save !== FALSE) {
-      echo WDWLibrary::message(__('Item Succesfully Published.', 'bwg_back'), 'updated');
+      echo WDWLibrary::message(__('Item Succesfully Published.', 'bwg_back'), 'wd_updated');
     }
     else {
-      echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'error');
+      echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'wd_error');
     }
     $this->display();
   }
@@ -974,10 +983,10 @@ class BWGControllerGalleries_bwg {
       }
     }
     if ($flag) {
-      echo WDWLibrary::message(__('Items Succesfully Published.', 'bwg_back'), 'updated');
+      echo WDWLibrary::message(__('Items Succesfully Published.', 'bwg_back'), 'wd_updated');
     }
     else {
-      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'error');
+      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'wd_error');
     }
     $this->display();
   }
@@ -986,10 +995,10 @@ class BWGControllerGalleries_bwg {
     global $wpdb;
     $save = $wpdb->update($wpdb->prefix . 'bwg_gallery', array('published' => 0), array('id' => $id));
     if ($save !== FALSE) {
-      echo WDWLibrary::message(__('Item Succesfully Unpublished.', 'bwg_back'), 'updated');
+      echo WDWLibrary::message(__('Item Succesfully Unpublished.', 'bwg_back'), 'wd_updated');
     }
     else {
-      echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'error');
+      echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'wd_error');
     }
     $this->display();
   }
@@ -1011,10 +1020,10 @@ class BWGControllerGalleries_bwg {
       }
     }
     if ($flag) {
-      echo WDWLibrary::message(__('Items Succesfully Unpublished.', 'bwg_back'), 'updated');
+      echo WDWLibrary::message(__('Items Succesfully Unpublished.', 'bwg_back'), 'wd_updated');
     }
     else {
-      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'error');
+      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'wd_error');
     }
     $this->display();
   }
@@ -1093,10 +1102,10 @@ class BWGControllerGalleries_bwg {
 	    }
 	  }
 	  if ($flag == false) {
-      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'error');
+      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'wd_error');
     }
 	  else {
-		  echo WDWLibrary::message(__('Thumb Succesfully Resized', 'bwg_back'), 'updated');
+		  echo WDWLibrary::message(__('Thumb Succesfully Resized', 'bwg_back'), 'wd_updated');
 	  }
   }
 

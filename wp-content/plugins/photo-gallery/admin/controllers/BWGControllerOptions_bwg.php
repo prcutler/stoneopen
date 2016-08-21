@@ -51,7 +51,7 @@ class BWGControllerOptions_bwg {
 
     require_once WD_BWG_DIR . "/admin/views/BWGViewOptions_bwg.php";
     $view = new BWGViewOptions_bwg($model);
-    echo WDWLibrary::message('Changes must be saved.', 'error');
+    echo WDWLibrary::message('Changes must be saved.', 'wd_error');
     $view->display(true);
   }
 
@@ -69,7 +69,7 @@ class BWGControllerOptions_bwg {
     if (isset($_POST['images_directory'])) {
       $images_directory = esc_html(stripslashes($_POST['images_directory']));
       if (!is_dir(ABSPATH . $images_directory)) {
-        echo WDWLibrary::message('Uploads directory doesn\'t exist. Old value is restored.', 'error');
+        echo WDWLibrary::message('Uploads directory doesn\'t exist. Old value is restored.', 'wd_error');
         if ($old_images_directory) {
           $images_directory = $old_images_directory;
         }
@@ -389,14 +389,14 @@ class BWGControllerOptions_bwg {
       }
       if (isset($_POST['recreate']) && $_POST['recreate'] == "resize_image_thumb") {
         $this->resize_image_thumb();
-        echo WDWLibrary::message(__('All thumbnails are successfully recreated.', 'bwg_back'), 'updated');
+        echo WDWLibrary::message(__('All thumbnails are successfully recreated.', 'bwg_back'), 'wd_updated');
       }
       else {
-        echo WDWLibrary::message(__('Item Succesfully Saved.', 'bwg_back'), 'updated');
+        echo WDWLibrary::message(__('Item Succesfully Saved.', 'bwg_back'), 'wd_updated');
       }
     }
     else {
-      echo WDWLibrary::message('Error. Please install plugin again.', 'error');
+      echo WDWLibrary::message('Error. Please install plugin again.', 'wd_error');
     }
   }
   

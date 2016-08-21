@@ -95,8 +95,8 @@ class BWGViewOptions_bwg {
       <h2 id="ed_options"><?php _e("Edit options", 'bwg_back'); ?></h2>
       <div style="display: inline-block; width: 100%;">
         <div style="float: right;">
-          <input class="button-primary" type="submit" onclick="if (spider_check_required('title', 'Title')) {return false;}; spider_set_input_value('task', 'save')" value="<?php _e("Save", 'bwg_back'); ?>" />
-          <input class="button-secondary" type="submit" onclick="if (confirm('<?php echo addslashes(__("Do you want to reset to default?", 'bwg_back')); ?>')) {
+          <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-save" type="submit" onclick="if (spider_check_required('title', 'Title')) {return false;}; spider_set_input_value('task', 'save')" value="<?php _e("Save", 'bwg_back'); ?>" />
+          <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-reset" type="submit" onclick="if (confirm('<?php echo addslashes(__("Do you want to reset to default?", 'bwg_back')); ?>')) {
                                                                  spider_set_input_value('task', 'reset');
                                                                } else {
                                                                  return false;
@@ -122,17 +122,6 @@ class BWGViewOptions_bwg {
         <div class="spider_div_options" id="div_content_1">
           <table>
             <tbody>
-             <tr>
-                <td class="spider_label_options">
-                  <label><?php echo __('Introduction tour:', 'bwg_back'); ?></label>
-                </td>
-                <td>
-                  <a href="admin.php?page=options_bwg&bwg_start_tour=1" class="button" title="<?php echo _e('Start tour', 'bwg_back'); ?>">
-                    <?php _e('Start tour', 'bwg_back'); ?>
-                  </a>
-                  <div class="spider_description"><?php echo __('Take this tour to quickly learn about the use of this plugin.', 'bwg_back'); ?></div>
-                </td>
-              </tr>
               <tr>
                 <td class="spider_label_options">
                   <label for="images_directory"><?php _e("Images directory:", 'bwg_back'); ?></label>
@@ -311,6 +300,17 @@ class BWGViewOptions_bwg {
                   <div class="spider_description"></div>
                 </td>
               </tr>
+              <tr>
+                <td class="spider_label_options">
+                  <label><?php echo __('Introduction tour:', 'bwg_back'); ?></label>
+                </td>
+                <td>
+                  <a href="admin.php?page=options_bwg&bwg_start_tour=1" class="wd-btn wd-btn-primary wd-not-image" title="<?php echo _e('Start tour', 'bwg_back'); ?>">
+                    <?php _e('Start tour', 'bwg_back'); ?>
+                  </a>
+                  <div class="spider_description"><?php echo __('Take this tour to quickly learn about the use of this plugin.', 'bwg_back'); ?></div>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -347,7 +347,7 @@ class BWGViewOptions_bwg {
                         $query_url = wp_nonce_url( $query_url, 'addImages', 'bwg_nonce' );
                         $query_url =  add_query_arg(array('TB_iframe' => '1'), $query_url );
                         ?>
-                        <a href="<?php echo $query_url; ?>" id="button_add_built_in_watermark_image" class="button-primary thickbox thickbox-preview"
+                        <a href="<?php echo $query_url; ?>" id="button_add_built_in_watermark_image" class="wd-btn wd-btn-primary wd-btn-icon wd-btn-add thickbox thickbox-preview"
                            title="Add image" 
                            onclick="return false;"
                            style="margin-bottom:5px;">
@@ -388,7 +388,7 @@ class BWGViewOptions_bwg {
                         <label for="built_in_watermark_font"><?php _e('Watermark font style: ', 'bwg_back'); ?></label>
                       </td>
                       <td>
-                        <select name="built_in_watermark_font" id="built_in_watermark_font" style="width:150px;" onchange="preview_built_in_watermark()">
+                        <select class="select_icon" name="built_in_watermark_font" id="built_in_watermark_font" style="width:150px;" onchange="preview_built_in_watermark()">
                           <?php
                           foreach ($built_in_watermark_fonts as $watermark_font) {
                             ?>
@@ -508,7 +508,7 @@ class BWGViewOptions_bwg {
                         $query_url = add_query_arg(array('TB_iframe' => '1'), $query_url );
                         ?>
 
-                        <a href="<?php echo $query_url; ?>" id="button_add_watermark_image" class="button-primary thickbox thickbox-preview"
+                        <a href="<?php echo $query_url; ?>" id="button_add_watermark_image" class="wd-btn wd-btn-primary wd-btn-icon wd-btn-add thickbox thickbox-preview"
                            title="Add image" 
                            onclick="return false;"
                            style="margin-bottom:5px;">
@@ -559,7 +559,7 @@ class BWGViewOptions_bwg {
                         <label for="watermark_font"><?php _e('Advertisement font style:', 'bwg_back'); ?> </label>
                       </td>
                       <td>
-                        <select name="watermark_font" id="watermark_font" style="width:150px;" onchange="preview_watermark()">
+                        <select class="select_icon" name="watermark_font" id="watermark_font" style="width:150px;" onchange="preview_watermark()">
                           <?php
                           foreach ($watermark_fonts as $watermark_font) {
                             ?>
@@ -659,7 +659,7 @@ class BWGViewOptions_bwg {
                         <label for="popup_type"><?php _e('Lightbox effect:', 'bwg_back'); ?></label>
                       </td>
                       <td>
-                        <select name="popup_type" id="popup_type" style="width:150px;">
+                        <select class="select_icon" name="popup_type" id="popup_type" style="width:150px;">
                           <?php
                           foreach ($effects as $key => $effect) {
                             ?>
@@ -1089,7 +1089,7 @@ class BWGViewOptions_bwg {
                         <label for="slideshow_type"><?php _e("Slideshow effect:", 'bwg_back'); ?> </label>
                       </td>
                       <td>
-                        <select name="slideshow_type" id="slideshow_type" style="width:150px;">
+                        <select class="select_icon" name="slideshow_type" id="slideshow_type" style="width:150px;">
                           <?php
                           foreach ($effects as $key => $effect) {
                             ?>
@@ -1371,7 +1371,7 @@ class BWGViewOptions_bwg {
                 <td>
                   <input type="text" name="upload_thumb_width" id="upload_thumb_width" value="<?php echo $row->upload_thumb_width; ?>" class="spider_int_input" /> x 
                   <input type="text" name="upload_thumb_height" id="upload_thumb_height" value="<?php echo $row->upload_thumb_height; ?>" class="spider_int_input" /> px
-                  <input type="submit" class="button-secondary" onclick="spider_set_input_value('task', 'save'); spider_set_input_value('recreate', 'resize_image_thumb');" value="<?php echo __('Recreate', 'bwg_back'); ?>" />
+                  <input type="submit" class="wd-btn wd-btn-primary wd-not-image" onclick="spider_set_input_value('task', 'save'); spider_set_input_value('recreate', 'resize_image_thumb');" value="<?php echo __('Recreate', 'bwg_back'); ?>" />
                   <div class="spider_description"><?php _e("The maximum size of the generated thumbnail. Its dimensions should be larger than the ones of the frontend thumbnail.", 'bwg_back'); ?></div>
                 </td>
               </tr>

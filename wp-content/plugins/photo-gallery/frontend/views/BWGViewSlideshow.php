@@ -43,7 +43,7 @@ class BWGViewSlideshow {
       $theme_id = (isset($params['theme_id']) ? esc_html($params['theme_id']) : 1);
       $theme_row = $this->model->get_theme_row_data($theme_id);
       if (!$theme_row) {
-        echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'error');
+        echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
         return;
       }
       $gallery_id = (isset($params['gallery_id']) ? esc_html($params['gallery_id']) : 0);
@@ -84,7 +84,7 @@ class BWGViewSlideshow {
       $theme_id = (isset($params['theme_id']) ? esc_html($params['theme_id']) : 0);
       $theme_row = $this->model->get_theme_row_data($theme_id);
       if (!$theme_row) {
-        echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'error');
+        echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
         return;
       }
       $gallery_id = (isset($params['gallery_id']) ? esc_html($params['gallery_id']) : 0);
@@ -123,12 +123,12 @@ class BWGViewSlideshow {
     }
     $gallery_row = $this->model->get_gallery_row_data($gallery_id);
     if (!$gallery_row) {
-      echo WDWLibrary::message(__('There is no gallery selected or the gallery was deleted.', 'bwg'), 'error');
+      echo WDWLibrary::message(__('There is no gallery selected or the gallery was deleted.', 'bwg'), 'wd_error');
       return;
     }
     $image_rows = $this->model->get_image_rows_data($gallery_id, $sort_by, $order_by, $bwg);
     if (!$image_rows) {
-      echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'error');
+      echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
     }
     $current_image_id = ($image_rows ? $image_rows[0]->id : 0);
     $play_pause_button_display = 'undefined';
