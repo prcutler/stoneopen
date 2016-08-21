@@ -17,19 +17,23 @@
 					<li>
 						<h3><?php esc_html_e( 'Past six months' , 'akismet');?></h3>
 						<span><?php echo number_format( $stat_totals['6-months']->spam );?></span>
-						<?php echo esc_html( _n( 'Spam blocked', 'Spam blocked', $stat_totals['6-months']->spam, 'akismet' ) ); ?>
+						<?php esc_html_e( 'Spam blocked' , 'akismet');?>
 					</li>
 					<li>
 						<h3><?php esc_html_e( 'All time' , 'akismet');?></h3>
 						<span><?php echo number_format( $stat_totals['all']->spam );?></span>
-						<?php echo esc_html( _n( 'Spam blocked', 'Spam blocked', $stat_totals['all']->spam, 'akismet' ) ); ?>
+						<?php esc_html_e( 'Spam blocked' , 'akismet');?>
 					</li>
 					<li>
 						<h3><?php esc_html_e( 'Accuracy' , 'akismet');?></h3>
 						<span><?php echo $stat_totals['all']->accuracy; ?>%</span>
-						<?php printf( _n( '%s missed spam', '%s missed spam', $stat_totals['all']->missed_spam, 'akismet' ), number_format( $stat_totals['all']->missed_spam ) ); ?>
-						|
-						<?php printf( _n( '%s false positive', '%s false positives', $stat_totals['all']->false_positives, 'akismet' ), number_format( $stat_totals['all']->false_positives ) ); ?>
+						<?php printf(
+							esc_html(
+								_n( '%s missed spam, %s false positive', '%s missed spam, %s false positives', $stat_totals['all']->false_positives , 'akismet')
+							),
+							number_format( $stat_totals['all']->missed_spam ),
+							number_format( $stat_totals['all']->false_positives )
+						); ?>
 					</li>
 				</ul>
 				<div class="clearfix"></div>
@@ -63,7 +67,7 @@
 												<th class="akismet-api-key" width="10%" align="left" scope="row"><?php esc_html_e('API Key', 'akismet');?></th>
 												<td width="5%"/>
 												<td align="left">
-													<span class="api-key"><input id="key" name="key" type="text" size="15" value="<?php echo esc_attr( get_option('wordpress_api_key') ); ?>" class="regular-text code <?php echo $akismet_user->status;?>"></span>
+													<span class="api-key"><input id="key" name="key" type="text" size="15" maxlength="12" value="<?php echo esc_attr( get_option('wordpress_api_key') ); ?>" class="regular-text code <?php echo $akismet_user->status;?>"></span>
 												</td>
 											</tr>
 											<?php endif; ?>
