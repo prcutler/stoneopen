@@ -54,9 +54,9 @@ function accesspress_parallax_display_upsell() {
 
 				<div id="<?php echo $theme->slug; ?>" class="theme active">
 					<div class="theme-screenshot">
-						<img src="<?php echo $theme->screenshot_url ?>"/>
+						<img src="<?php echo esc_url($theme->screenshot_url) ?>"/>
 					</div>
-					<h3 class="theme-name" id="accesspress-parallax-name"><strong><?php _e('Active','accesspress-parallax'); ?></strong>: <?php echo $theme->name; ?></h3>
+					<h3 class="theme-name" id="accesspress-parallax-name"><strong><?php _e('Active','accesspress-parallax'); ?></strong>: <?php echo esc_html($theme->name); ?></h3>
 					<div class="theme-actions">
 						<a class="button button-secondary activate" target="_blank" href="<?php echo get_site_url(). '/wp-admin/customize.php' ?>"><?php _e('Customize','accesspress-parallax'); ?></a>
 					</div>
@@ -88,7 +88,7 @@ function accesspress_parallax_display_upsell() {
 						<img src="<?php echo $theme->screenshot_url ?>"/>
 					</div>
 
-					<h3 class="theme-name"><?php echo $theme->name; ?></h3>
+					<h3 class="theme-name"><?php echo esc_html($theme->name); ?></h3>
 
 					<div class="theme-actions">
 						<?php if( wp_get_theme( $theme->slug )->exists() ) { ?>
@@ -120,7 +120,7 @@ function accesspress_parallax_display_upsell() {
 <?php
 }
 
-// Get all themeisle themes by using API.
+// Get all themes by using API.
 function accesspress_parallax_get_themes( $request ) {
 
 	// Generate a cache key that would hold the response for this request:

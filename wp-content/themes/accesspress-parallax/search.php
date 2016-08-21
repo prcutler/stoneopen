@@ -30,7 +30,7 @@ get_header(); ?>
 
 			<?php endwhile; ?>
 
-			<?php accesspress_parallax_paging_nav(); ?>
+			<?php the_posts_pagination(); ?>
 
 		<?php else : ?>
 
@@ -43,4 +43,4 @@ get_header(); ?>
 
 <?php get_sidebar(); ?>
 </div>
-<?php get_footer(); ?>
+<?php get_footer();

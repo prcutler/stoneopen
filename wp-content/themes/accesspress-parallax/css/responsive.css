@@ -38,6 +38,7 @@ Responsive CSS
 	}
 	.logo-top #site-logo{
 		float: left;
+		text-align: left;
 	}
 	.logo-top .main-navigation{
 		float: right;
@@ -139,8 +140,17 @@ Responsive CSS
 	.service-listing .service-list{
 		float: none;
 	}
-	.footer-column-4 .footer-block{
-		width: 48%;
+	.top-footer .top-footer-wrap{
+		margin-left: 0;
+	}
+	.footer-block{
+		width: 100% !important;
+		margin-left: 0 !important;
+		margin-bottom: 25px;
+		float: none;
+	}
+	.footer-block:last-child{
+		margin-bottom: 0;
 	}
 	.copy-right, .site-info{
 		float: none;
@@ -229,14 +239,6 @@ Responsive CSS
 
 	.team-content{
 		margin-top: 30px;
-	}
-    .top-footer .top-footer-wrap{
-        margin: 0;
-    }
-	.footer-block{
-		width: 100% !important;
-		margin: 0 0 15px !important;
-		float:none;
 	}
 	#site-logo,
 	.logo-top #site-logo{

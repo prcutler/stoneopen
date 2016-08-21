@@ -35,7 +35,7 @@ else:
 
 			<?php endwhile; ?>
 
-			<?php accesspress_parallax_paging_nav(); ?>
+			<?php the_posts_pagination(); ?>
 
 		<?php else : ?>
 
@@ -51,4 +51,4 @@ get_sidebar();
 endif;
 ?>
 </div>
-<?php get_footer(); ?>
+<?php get_footer();

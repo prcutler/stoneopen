@@ -8,7 +8,7 @@
 
 	$options_categories_obj = get_categories();
 
-	$countsettings = $_REQUEST['count_section'];
+	$countsettings = esc_attr( $_REQUEST['count_section'] );
 ?>	
 
 <div class="sub-option clearfix" data-id="<?php echo $countsettings; ?>">
@@ -20,7 +20,7 @@
 <select class="parallax_section_page" name="accesspress_parallax[parallax_section][<?php echo $countsettings; ?>][page]" class="of-input">
 <option value=""><?php _e('Select a page:', 'accesspress-parallax') ?></option>
 <?php foreach ($options_pages_obj as $page) { ?>
-	<option value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
+	<option value="<?php echo absint($page->ID); ?>"><?php echo esc_html($page->post_title); ?></option>
 <?php } ?>
 </select>
 </div>

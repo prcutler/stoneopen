@@ -57,7 +57,7 @@ function accesspress_parallax_setup_author() {
 add_action( 'wp', 'accesspress_parallax_setup_author' );
 
 //bxSlider Callback for do action
-function accesspress_bxslidercb(){
+function accesspress_parallax_bxslidercb(){
 		global $post;
 		$accesspress_parallax = of_get_option('parallax_section');
 		if(!empty($accesspress_parallax)) :
@@ -83,7 +83,7 @@ function accesspress_bxslidercb(){
 		<div class="overlay"></div>
 
 		<?php if(!empty($accesspress_parallax_first_page) && $accesspress_enable_parallax == 1): ?>
-		<div class="next-page"><a href="<?php echo esc_url( home_url( '/' ) ); ?>#section-<?php echo $accesspress_parallax_first_page; ?>"></a></div>
+		<div class="next-page"><a href="<?php echo esc_url( home_url( '/' ) ); ?>#section-<?php echo esc_attr($accesspress_parallax_first_page); ?>"></a></div>
 		<?php endif; ?>
 
  		<script type="text/javascript">
@@ -123,13 +123,13 @@ function accesspress_bxslidercb(){
 					$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false ); 
 					$image_url = "";
 					if($accesspress_slider_full_window == "yes") : 
-						$image_url =  "style = 'background-image:url(".$image[0].");'";
+						$image_url =  "style = 'background-image:url(".esc_url($image[0]).");'";
 				    endif;
 					?>
 					<div class="slides" <?php echo $image_url; ?>>
 					
 					<?php if($accesspress_slider_full_window == "no") : ?>		
-						<img src="<?php echo $image[0]; ?>">
+						<img src="<?php echo esc_url($image[0]); ?>">
 					<?php endif; ?>
 								
 						<?php if($accesspress_show_caption == 'yes'): ?>
@@ -181,13 +181,13 @@ function accesspress_bxslidercb(){
 <?php
 }
 
-add_action('accesspress_bxslider','accesspress_bxslidercb', 10);
+add_action('accesspress_bxslider','accesspress_parallax_bxslidercb', 10);
 
 
 //add class for parallax
 function accesspress_is_parallax($class){
 	$is_parallax = of_get_option('enable_parallax');
-	if($is_parallax=='1'):
+	if($is_parallax=='1' || is_page_template('home-page.php')):
 		$class[] = "parallax-on"; 
 	endif;
 	return $class;
@@ -204,19 +204,21 @@ function accesspress_header_styles_scripts(){
 	$custom_css = of_get_option('custom_css');
 	$slider_overlay = of_get_option('slider_overlay');
 	$image_url = get_template_directory_uri()."/images/";
-	echo "<link type='image/png' rel='icon' href='".$favicon."'/>\n";
+	$dyamic_style = "";
+	echo "<link type='image/png' rel='icon' href='".esc_url($favicon)."'/>\n";
 	echo "<style type='text/css' media='all'>"; 
 
 	if(!empty($sections)){
 	foreach ($sections as $section) {
-		echo "#section-".$section['page']."{ background:url(".$section['image'].") ".$section['repeat']." ".$section['attachment']." ".$section['position']." ".$section['color']."; background-size:".$section['size']."; color:".$section['font_color']."}\n";
-		echo "#section-".$section['page']." .overlay { background:url(".$image_url.$section['overlay'].".png);}\n";
+		$dyamic_style .= "#section-".$section['page']."{ background:url(".$section['image'].") ".$section['repeat']." ".$section['attachment']." ".$section['position']." ".$section['color']."; background-size:".$section['size']."; color:".$section['font_color']."}\n";
+		$dyamic_style .= "#section-".$section['page']." .overlay { background:url(".$image_url.$section['overlay'].".png);}\n";
 	}
 	}
 
 	if($slider_overlay == "yes"){
-		echo "#main-slider .overlay{display:none};";
+		$dyamic_style .= "#main-slider .overlay{display:none};";
 	}
+	echo esc_textarea($dyamic_style);
 	echo esc_textarea($custom_css);
 
 	echo "</style>\n"; 
@@ -347,13 +349,44 @@ function accesspress_letter_count($content, $limit) {
 	return $limit_content;
 }
 
-function accesspress_required_plugins() {
-    /**
-     * Array of plugin arrays. Required keys are name and slug.
-     * If the source is NOT from the .org repo, then source is also required.
-     */
-    $plugins = array(
-         array(
+
+
+function accesspress_register_string(){
+	if(function_exists('pll_register_string')){
+		$home_text = of_get_option('home_text');
+		pll_register_string('Menu: Home Text', $home_text ,'Theme Option Text');
+	}
+}
+
+add_action('after_setup_theme','accesspress_register_string');
+
+add_action( 'tgmpa_register', 'accesspress_parallax_register_plugins' );
+
+/**
+ * Register the required plugins for this theme.
+ *
+ * In this example, we register five plugins:
+ * - one included with the TGMPA library
+ * - two from an external source, one from an arbitrary source, one from a GitHub repository
+ * - two from the .org repo, where one demonstrates the use of the `is_callable` argument
+ *
+ * The variables passed to the `tgmpa()` function should be:
+ * - an array of plugin arrays;
+ * - optionally a configuration array.
+ * If you are not changing anything in the configuration array, you can remove the array and remove the
+ * variable from the function call: `tgmpa( $plugins );`.
+ * In that case, the TGMPA default settings will be used.
+ *
+ * This function is hooked into `tgmpa_register`, which is fired on the WP `init` action on priority 10.
+ */
+function accesspress_parallax_register_plugins() {
+	/*
+	 * Array of plugin arrays. Required keys are name and slug.
+	 * If the source is NOT from the .org repo, then source is also required.
+	 */
+	$plugins = array(
+
+		array(
             'name'      => __( 'AccessPress Social Icons', 'accesspress-parallax' ), //The plugin name
             'slug'      => 'accesspress-social-icons',  // The plugin slug (typically the folder name)
             'required'  => false,  // If false, the plugin is only 'recommended' instead of required.
@@ -388,44 +421,27 @@ function accesspress_required_plugins() {
             'force_activation'   => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
             'force_deactivation' => false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins.
         ),      
-    );
+	);
 
-    /**
-     * Array of configuration settings. Amend each line as needed.
-     * If you want the default strings to be available under your own theme domain,
-     * leave the strings uncommented.
-     * Some of the strings are added into a sprintf, so see the comments at the
-     * end of each line for what each argument will be.
-     */
-    $config = array(
-            'default_path' => '',                      // Default absolute path to pre-packaged plugins.
-            'menu'         => 'accesspress-install-plugins', // Menu slug.
-            'has_notices'  => true,                    // Show admin notices or not.
-            'dismissable'  => true,                    // If false, a user cannot dismiss the nag message.
-            'dismiss_msg'  => '',                      // If 'dismissable' is false, this message will be output at top of nag.
-            'is_automatic' => true,                   // Automatically activate plugins after installation or not.
-            'message'      => '',                      // Message to output right before the plugins table.
-            'strings'      => array(
-            'page_title'                      => __( 'Install Required Plugins', 'accesspress-parallax' ),
-            'menu_title'                      => __( 'Install Plugins', 'accesspress-parallax' ),
-            'installing'                      => __( 'Installing Plugin: %s', 'accesspress-parallax' ), // %s = plugin name.
-            'oops'                            => __( 'Something went wrong with the plugin API.', 'accesspress-parallax' ),
-            'notice_can_install_required'     => _n_noop( 'This theme requires the following plugin: %1$s.', 'This theme requires the following plugins: %1$s.' , 'accesspress-parallax'), // %1$s = plugin name(s).
-            'notice_can_install_recommended'  => _n_noop( 'This theme recommends the following plugin: %1$s.', 'This theme recommends the following plugins: %1$s.' , 'accesspress-parallax'), // %1$s = plugin name(s).
-            'notice_cannot_install'           => _n_noop( 'Sorry, but you do not have the correct permissions to install the %s plugin. Contact the administrator of this site for help on getting the plugin installed.', 'Sorry, but you do not have the correct permissions to install the %s plugins. Contact the administrator of this site for help on getting the plugins installed.' , 'accesspress-parallax'), // %1$s = plugin name(s).
-            'notice_can_activate_required'    => _n_noop( 'The following required plugin is currently inactive: %1$s.', 'The following required plugins are currently inactive: %1$s.' , 'accesspress-parallax'), // %1$s = plugin name(s).
-            'notice_can_activate_recommended' => _n_noop( 'The following recommended plugin is currently inactive: %1$s.', 'The following recommended plugins are currently inactive: %1$s.' , 'accesspress-parallax'), // %1$s = plugin name(s).
-            'notice_cannot_activate'          => _n_noop( 'Sorry, but you do not have the correct permissions to activate the %s plugin. Contact the administrator of this site for help on getting the plugin activated.', 'Sorry, but you do not have the correct permissions to activate the %s plugins. Contact the administrator of this site for help on getting the plugins activated.' , 'accesspress-parallax'), // %1$s = plugin name(s).
-            'notice_ask_to_update'            => _n_noop( 'The following plugin needs to be updated to its latest version to ensure maximum compatibility with this theme: %1$s.', 'The following plugins need to be updated to their latest version to ensure maximum compatibility with this theme: %1$s.' , 'accesspress-parallax'), // %1$s = plugin name(s).
-            'notice_cannot_update'            => _n_noop( 'Sorry, but you do not have the correct permissions to update the %s plugin. Contact the administrator of this site for help on getting the plugin updated.', 'Sorry, but you do not have the correct permissions to update the %s plugins. Contact the administrator of this site for help on getting the plugins updated.', 'accesspress-parallax' ), // %1$s = plugin name(s).
-            'install_link'                    => _n_noop( 'Begin installing plugin', 'Begin installing plugins' , 'accesspress-parallax'),
-            'activate_link'                   => _n_noop( 'Begin activating plugin', 'Begin activating plugins', 'accesspress-parallax' ),
-            'return'                          => __( 'Return to Required Plugins Installer', 'accesspress-parallax' ),
-            'plugin_activated'                => __( 'Plugin activated successfully.', 'accesspress-parallax' ),
-            'complete'                        => __( 'All plugins installed and activated successfully. %s', 'accesspress-parallax' ), // %s = dashboard link.
-            'nag_type'                        => 'updated' // Determines admin notice type - can only be 'updated', 'update-nag' or 'error'.
-        )
-    );
-    tgmpa( $plugins, $config );
+	/*
+	 * Array of configuration settings. Amend each line as needed.
+	 *
+	 * TGMPA will start providing localized text strings soon. If you already have translations of our standard
+	 * strings available, please help us make TGMPA even better by giving us access to these translations or by
+	 * sending in a pull-request with .po file(s) with the translations.
+	 *
+	 * Only uncomment the strings in the config array if you want to customize the strings.
+	 */
+	$config = array(
+		'id'           => 'accesspress-parallax',                 // Unique ID for hashing notices for multiple instances of TGMPA.
+		'default_path' => '',                      // Default absolute path to bundled plugins.
+		'menu'         => 'accesspress-install-plugins', // Menu slug.
+		'has_notices'  => true,                    // Show admin notices or not.
+		'dismissable'  => true,                    // If false, a user cannot dismiss the nag message.
+		'dismiss_msg'  => '',                      // If 'dismissable' is false, this message will be output at top of nag.
+		'is_automatic' => false,                   // Automatically activate plugins after installation or not.
+		'message'      => '',                      // Message to output right before the plugins table.
+	);
+
+	tgmpa( $plugins, $config );
 }
-add_action( 'tgmpa_register', 'accesspress_required_plugins' );

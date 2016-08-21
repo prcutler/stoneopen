@@ -24,10 +24,8 @@ if(of_get_option('enable_parallax') == 1 && is_front_page() && get_option( 'show
 		<main id="main" class="site-main" role="main">
 
 			<?php 
-			global $page;
-			if(of_get_option('enable_parallax') == 0 || is_singular()): ?>
-
-				<?php while ( have_posts() ) : the_post(); ?>
+	
+				while ( have_posts() ) : the_post(); ?>
 
 				<?php get_template_part( 'content', 'page' ); ?>
 
@@ -39,11 +37,6 @@ if(of_get_option('enable_parallax') == 1 && is_front_page() && get_option( 'show
 				?>
 
 			<?php endwhile; // end of the loop. ?>
-			<?php else:
-
- 			echo wpautop($page->post_content); 
-			
-			endif; ?>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
@@ -52,5 +45,4 @@ if(of_get_option('enable_parallax') == 1 && is_front_page() && get_option( 'show
 </div>
 <?php } ?>
 
-<?php get_footer(); ?>
-
+<?php get_footer();

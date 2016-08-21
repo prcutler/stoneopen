@@ -21,7 +21,7 @@ get_header();
 	?>
 
 	<?php if(!empty($section['page'])): ?>
-		<section class="parallax-section clearfix<?php echo $googlemapclass." ".$layout;  ?>" id="<?php echo "section-".$page->ID; ?>">
+		<section class="parallax-section clearfix<?php echo esc_attr($googlemapclass)." ".esc_attr($layout);  ?>" id="<?php echo "section-".absint($page->ID); ?>">
 		<?php if(!empty($image) && $overlay!="overlay0") : ?>
 			<div class="overlay"></div>
 		<?php endif; ?>
@@ -105,4 +105,4 @@ get_header();
 	endif;
 ?>
 
-<?php get_footer(); ?>
+<?php get_footer();
