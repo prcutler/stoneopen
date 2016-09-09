@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bwg\n"
 "POT-Creation-Date: 2016-01-08 10:05+0400\n"
-"PO-Revision-Date: 2016-01-08 10:05+0400\n"
+"PO-Revision-Date: 2016-08-26 16:15+0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ja_JP\n"
@@ -60,7 +60,7 @@ msgstr "このギャラリーには画像がありません"
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_masonry_preview.php:454
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_masonry_preview.php:494
 msgid "Back"
-msgstr " バック"
+msgstr "戻る"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_compact_preview.php:918
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_extended_preview.php:893

@@ -238,7 +238,7 @@ class FilemanagerView {
                             isDir="<?php echo $file['is_dir'] == true ? 'true' : 'false'; ?>">
                         <span class="item_numbering"><?php echo ++$i; ?></span>
                         <span class="item_thumb">
-                          <img src="<?php echo $file['thumb']; ?>" <?php echo $key == 24 ? 'onload="loaded()"' : ''; ?> />
+                          <img src="<?php echo $file['thumb']; ?>" <?php echo $key >= 24 ? 'onload="loaded()"' : ''; ?> />
                         </span>
                         <span class="item_icon">
                           <img src="<?php echo $file['icon']; ?>"/>
@@ -324,7 +324,7 @@ class FilemanagerView {
                          isDir="<?php echo $file['is_dir'] == true ? 'true' : 'false'; ?>">
                       <span class="item_numbering"><?php echo ++$i; ?></span>
                       <span class="item_thumb">
-                        <img src="<?php echo $file['thumb']; ?>" <?php echo $key == 24 ? 'onload="loaded()"' : ''; ?> />
+                        <img src="<?php echo $file['thumb']; ?>" <?php echo $key >= 24 ? 'onload="loaded()"' : ''; ?> />
                       </span>
                       <span class="item_icon">
                         <img src="<?php echo $file['icon']; ?>"/>

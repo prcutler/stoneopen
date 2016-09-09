@@ -42,9 +42,9 @@ jQuery(document).ready(function () {
     setTimeout(function(){jQuery(document).trigger("onSelectAllImage")});
   }
   if (all_images_count == 0 || all_images_count <= 24) {
-    jQuery("#opacity_div").hide();
-    jQuery("#loading_div").hide();
+    loaded();
   }
+  setTimeout(function(){loaded()}, 10000);
   filesSelected = [];
   filesSelectedML = [];
   dragFiles = [];
