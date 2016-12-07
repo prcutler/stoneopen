@@ -16,6 +16,9 @@
 =============================================*/
 .tribe-events-back {
 	margin: 0 0 20px 0;
+	.events-list &.tribe-events-loop {
+		margin: 0 auto 20px;
+	}
 }
 
 /* Links */
@@ -537,6 +540,7 @@ select.tribe-events-dropdown {
 /* Global Tooltips */
 .tribe-events-calendar .tribe-events-tooltip,
 .tribe-events-week .tribe-events-tooltip,
+.tribe-events-shortcode.view-week .tribe-events-tooltip,
 .recurring-info-tooltip {
 	border: 1px solid #666;
 	position: absolute;
@@ -564,6 +568,7 @@ select.tribe-events-dropdown {
 }
 .tribe-events-calendar .tribe-events-right .tribe-events-tooltip,
 .tribe-events-week .tribe-events-right .tribe-events-tooltip,
+.tribe-events-shortcode.view-week .tribe-events-right .tribe-events-tooltip,
 .recurring-info-tooltip {
 	left: auto;
 	right: 3px;

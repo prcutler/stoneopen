@@ -17,9 +17,13 @@
 
 #settings-content .ecwd_coming_soon {
   position: absolute;
-  top: 44px;
+  top: 38px;
   left: 0;
-  height: 100%;
+  height: 232px;
+}
+
+#settings-content .ecwd_coming_soon img {
+  padding-top: 11px;
 }
 
 #settings-content .add-on a {
@@ -27,11 +31,12 @@
 }
 
 #settings-content .add-on h2 {
-  color: #229DBF;
+  color: #229dbf;
   font-size: 16px;
-  margin-bottom: 9px;
-  padding: 0 0 7px;
+  height: 20px;
   line-height: 1.2;
+  margin: 9px 0;
+  padding: 0;
 }
 
 #settings-content .addon-descr {

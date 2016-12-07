@@ -22,12 +22,12 @@ else {
 require_once(WD_BWG_DIR . '/filemanager/controller.php');
 $controller = new FilemanagerController();
 
-$upload_handler = new UploadHandler(array(
+$upload_handler = new bwg_UploadHandler(array(
   'upload_dir' => $controller->uploads_dir . (isset($_GET['dir']) ? str_replace('\\', '', ($_GET['dir'])) : ''),
   'accept_file_types' => '/\.(gif|jpe?g|png|bmp|mp4|flv|webm|ogg|mp3|wav|pdf|zip)$/i'
 ));
 
-class UploadHandler {
+class bwg_UploadHandler {
     protected $options;
     // PHP File Upload error message codes:
     // http://php.net/manual/en/features.file-upload.errors.php

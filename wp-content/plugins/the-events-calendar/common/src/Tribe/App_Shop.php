@@ -80,14 +80,15 @@ if ( ! class_exists( 'Tribe__App_Shop' ) ) {
 		 * Enqueue the styles and script
 		 */
 		public function enqueue() {
-			wp_enqueue_style( 'app-shop', tribe_resource_url( 'app-shop.css', false, 'common' ), array(), apply_filters( 'tribe_events_css_version', Tribe__Main::VERSION ) );
-			wp_enqueue_script( 'app-shop', tribe_resource_url( 'app-shop.js', false, 'common' ), array(), apply_filters( 'tribe_events_js_version', Tribe__Main::VERSION ) );
+			wp_enqueue_style( 'app-shop', tribe_resource_url( 'app-shop.css', false, null, Tribe__Main::instance() ), array(), apply_filters( 'tribe_events_css_version', Tribe__Main::VERSION ) );
+			wp_enqueue_script( 'app-shop', tribe_resource_url( 'app-shop.js', false, null, Tribe__Main::instance() ), array(), apply_filters( 'tribe_events_js_version', Tribe__Main::VERSION ) );
 		}
 
 		/**
 		 * Renders the Shop App page
 		 */
 		public function do_menu_page() {
+			$main = Tribe__Main::instance();
 			$products = $this->get_all_products();
 			include_once Tribe__Main::instance()->plugin_path . 'src/admin-views/app-shop.php';
 		}
@@ -100,10 +101,11 @@ if ( ! class_exists( 'Tribe__App_Shop' ) ) {
 		private function get_all_products() {
 			$products = array(
 				(object) array(
-					'title' => __( 'Filter Bar', 'tribe-common' ),
-					'link' => 'https://theeventscalendar.com/product/wordpress-events-filterbar/?utm_campaign=in-app&utm_source=addonspage&utm_medium=wordpress-events-filterbar&utm_content=appstoreembedded-1',
-					'description' => __( 'It is awesome that your calendar is <em>THE PLACE</em> to get hooked up with prime choice ways to spend time. You have more events than Jabba the Hutt has rolls. Too bad visitors are hiring a personal assistant to go through all the choices. Ever wish you could just filter the calendar to only show events in walking distance, on a weekend, that are free? BOOM. Now you can. Introducing… the Filter Bar.', 'tribe-common' ),
-					'image' => 'images/app-shop-filter-bar.jpg',
+					'title' => __( 'Event Aggregator', 'tribe-common' ),
+					'link' => 'https://theeventscalendar.com/product/event-aggregator/?utm_campaign=in-app&utm_source=addonspage&utm_medium=event-aggregator&utm_content=appstoreembedded-1',
+					'description' => __( 'Importing events from multiple sources has never been easier! Event Aggregator helps you curate and manage event import feeds from Facebook, Meetup, Google Calendar, iCalendar, CSV, and ICS. Schedule automatic imports or manually import events when you’re ready. Event Aggregator provides a convenient dashboard to manage bulk imports, filters, one-way sync, import history, and more.', 'tribe-common' ),
+					'image' => 'images/app-shop-ical.jpg',
+					'is_installed' => Tribe__Events__Aggregator::is_service_active(),
 				),
 				(object) array(
 					'title' => __( 'Events Calendar PRO', 'tribe-common' ),
@@ -114,19 +116,7 @@ if ( ! class_exists( 'Tribe__App_Shop' ) ) {
 						'</a>'
 					),
 					'image' => 'images/app-shop-pro.jpg',
-				),
-				(object) array(
-					'title' => __( 'Community Events', 'tribe-common' ),
-					'link' => 'https://theeventscalendar.com/product/wordpress-community-events/?utm_campaign=in-app&utm_source=addonspage&utm_medium=wordpress-community-events&utm_content=appstoreembedded-1',
-					'description' => __( 'Enable users to submit events to your calendar with Community Events. You can require user accounts or allow visitors to submit without an account. Want to make sure that nothing fishy is going on? Just turn on moderation. Decide if users can edit and manage their own events, or simply submit. Plus, no scary form setup! Just activate, configure the options & off you go.', 'tribe-common' ),
-					'image' => 'images/app-shop-community.jpg',
-				),
-				(object) array(
-					'title' => __( 'Community Tickets', 'tribe-common' ),
-					'link' => 'https://theeventscalendar.com/product/community-tickets/?utm_campaign=in-app&utm_source=addonspage&utm_medium=community-tickets&utm_content=appstoreembedded-1',
-					'description' => __( 'Enable Community Events organizers to offer tickets to their events. You can set flexible payment and fee options. They can even check-in attendees to their events! All of this managed from the front-end of your site without ever needing to grant access to your admin', 'tribe-common' ),
-						'requires' => _x( 'Event Tickets Plus and Community Events', 'Names of required plugins for Community Tickets', 'tribe-common' ),
-					'image' => 'images/app-shop-community-tickets.jpg',
+					'is_installed' => class_exists( 'Tribe__Events__Pro__Main' ),
 				),
 				(object) array(
 					'title' => __( 'Event Tickets Plus', 'tribe-common' ),
@@ -137,6 +127,29 @@ if ( ! class_exists( 'Tribe__App_Shop' ) ) {
 						'</a>'
 					),
 					'image' => 'images/app-shop-tickets-plus.jpg',
+					'is_installed' => class_exists( 'Tribe__Tickets_Plus__Main' ),
+				),
+				(object) array(
+					'title' => __( 'Filter Bar', 'tribe-common' ),
+					'link' => 'https://theeventscalendar.com/product/wordpress-events-filterbar/?utm_campaign=in-app&utm_source=addonspage&utm_medium=wordpress-events-filterbar&utm_content=appstoreembedded-1',
+					'description' => __( 'It is awesome that your calendar is <em>THE PLACE</em> to get hooked up with prime choice ways to spend time. You have more events than Jabba the Hutt has rolls. Too bad visitors are hiring a personal assistant to go through all the choices. Ever wish you could just filter the calendar to only show events in walking distance, on a weekend, that are free? BOOM. Now you can. Introducing… the Filter Bar.', 'tribe-common' ),
+					'image' => 'images/app-shop-filter-bar.jpg',
+					'is_installed' => class_exists( 'Tribe__Events__Filterbar__View' ),
+				),
+				(object) array(
+					'title' => __( 'Community Events', 'tribe-common' ),
+					'link' => 'https://theeventscalendar.com/product/wordpress-community-events/?utm_campaign=in-app&utm_source=addonspage&utm_medium=wordpress-community-events&utm_content=appstoreembedded-1',
+					'description' => __( 'Enable users to submit events to your calendar with Community Events. You can require user accounts or allow visitors to submit without an account. Want to make sure that nothing fishy is going on? Just turn on moderation. Decide if users can edit and manage their own events, or simply submit. Plus, no scary form setup! Just activate, configure the options & off you go.', 'tribe-common' ),
+					'image' => 'images/app-shop-community.jpg',
+					'is_installed' => class_exists( 'Tribe__Events__Community__Main' ),
+				),
+				(object) array(
+					'title' => __( 'Community Tickets', 'tribe-common' ),
+					'link' => 'https://theeventscalendar.com/product/community-tickets/?utm_campaign=in-app&utm_source=addonspage&utm_medium=community-tickets&utm_content=appstoreembedded-1',
+					'description' => __( 'Enable Community Events organizers to offer tickets to their events. You can set flexible payment and fee options. They can even check-in attendees to their events! All of this managed from the front-end of your site without ever needing to grant access to your admin', 'tribe-common' ),
+						'requires' => _x( 'Event Tickets Plus and Community Events', 'Names of required plugins for Community Tickets', 'tribe-common' ),
+					'image' => 'images/app-shop-community-tickets.jpg',
+					'is_installed' => class_exists( 'Tribe__Events__Community__Tickets__Main' ),
 				),
 				(object) array(
 					'title' => __( 'Eventbrite Tickets', 'tribe-common' ),
@@ -147,18 +160,7 @@ if ( ! class_exists( 'Tribe__App_Shop' ) ) {
 						'</a>'
 					),
 					'image' => 'images/app-shop-eventbrite.jpg',
-				),
-				(object) array(
-					'title' => __( 'Facebook Events', 'tribe-common' ),
-					'link' => 'https://theeventscalendar.com/product/facebook-events/?utm_campaign=in-app&utm_source=addonspage&utm_medium=facebook-events&utm_content=appstoreembedded-1',
-					'description' => __( 'With the Facebook Events add-on, imported events are manually or automagically created as entries in The Events Calendar. Basic event data along with venue and organizer are populated appropriately. No more entering information in two places, or having to recreate someone else\'s listing for a public event you want to include on your WordPress calendar.', 'tribe-common' ),
-					'image' => 'images/app-shop-facebook.jpg',
-				),
-				(object) array(
-					'title' => __( 'iCal Importer', 'tribe-common' ),
-					'link' => 'https://theeventscalendar.com/product/ical-importer/?utm_campaign=in-app&utm_source=addonspage&utm_medium=ical-importer&utm_content=appstoreembedded-1',
-					'description' => __( 'The iCal Importer helps you keep your events calendar full of interesting events! You can import events from any website that publishes an iCal (aka ICS) feed and add them to your listings. The recurring import feature lets you keep your calendar brimming without manual oversight (though you can review every imported event if you like). Add filtering by keyword or geographic region and you can be sure that the kinds of events you get are the kinds you want.', 'tribe-common' ),
-					'image' => 'images/app-shop-ical.jpg',
+					'is_installed' => class_exists( 'Tribe__Events__Tickets__Eventbrite__Main' ),
 				),
 			);
 

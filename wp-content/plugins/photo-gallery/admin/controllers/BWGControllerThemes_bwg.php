@@ -241,7 +241,7 @@ class BWGControllerThemes_bwg {
     $blog_style_share_buttons_bg_color = (isset($_POST['blog_style_share_buttons_bg_color']) ? esc_html(stripslashes( $_POST['blog_style_share_buttons_bg_color'])) : 'FFFFFF');	
     $blog_style_share_buttons_align = (isset($_POST['blog_style_share_buttons_align']) ? esc_html(stripslashes( $_POST['blog_style_share_buttons_align'])) : '');	
     $blog_style_img_font_size = (isset($_POST['blog_style_img_font_size']) ? (int) esc_html(stripslashes( $_POST['blog_style_img_font_size'])) : 1);
-    $blog_style_img_font_family = (isset($_POST['blog_style_img_font_family']) ? esc_html(stripslashes( $_POST['blog_style_img_font_family'])) : 'cursive');
+    $blog_style_img_font_family = (isset($_POST['blog_style_img_font_family']) ? esc_html(stripslashes( $_POST['blog_style_img_font_family'])) : 'segoe ui');
     $blog_style_img_font_color = (isset($_POST['blog_style_img_font_color']) ? esc_html(stripslashes( $_POST['blog_style_img_font_color'])) : '000000');
     $blog_style_share_buttons_font_size = (isset($_POST['blog_style_share_buttons_font_size']) ? (int) esc_html(stripslashes( $_POST['blog_style_share_buttons_font_size'])) : 20);
     $blog_style_share_buttons_color = (isset($_POST['blog_style_share_buttons_color']) ? esc_html(stripslashes( $_POST['blog_style_share_buttons_color'])) : 'C7C3C3');
@@ -266,7 +266,7 @@ class BWGControllerThemes_bwg {
     $image_browser_image_description_bg_color = (isset($_POST['image_browser_image_description_bg_color']) ? esc_html(stripslashes( $_POST['image_browser_image_description_bg_color'])) : 'FFFFFF');	
     $image_browser_image_description_align = (isset($_POST['image_browser_image_description_align']) ? esc_html(stripslashes( $_POST['image_browser_image_description_align'])) : '');	
     $image_browser_img_font_size = (isset($_POST['image_browser_img_font_size']) ? (int) esc_html(stripslashes( $_POST['image_browser_img_font_size'])) : 1);
-    $image_browser_img_font_family = (isset($_POST['image_browser_img_font_family']) ? esc_html(stripslashes( $_POST['image_browser_img_font_family'])) : 'cursive');
+    $image_browser_img_font_family = (isset($_POST['image_browser_img_font_family']) ? esc_html(stripslashes( $_POST['image_browser_img_font_family'])) : 'segoe ui');
     $image_browser_img_font_color = (isset($_POST['image_browser_img_font_color']) ? esc_html(stripslashes( $_POST['image_browser_img_font_color'])) : '000000');
     $image_browser_full_padding = (isset($_POST['image_browser_full_padding']) ?  esc_html(stripslashes( $_POST['image_browser_full_padding'])) : '');
     $image_browser_full_border_radius = (isset($_POST['image_browser_full_border_radius']) ?  esc_html(stripslashes( $_POST['image_browser_full_border_radius'])) :'');
@@ -275,6 +275,7 @@ class BWGControllerThemes_bwg {
     $image_browser_full_border_color = (isset($_POST['image_browser_full_border_color']) ? esc_html(stripslashes( $_POST['image_browser_full_border_color'])) : '000000');
     $image_browser_full_bg_color = (isset($_POST['image_browser_full_bg_color']) ? esc_html(stripslashes( $_POST['image_browser_full_bg_color'])) : 'FFFFFF');	
     $image_browser_full_transparent = (isset($_POST['image_browser_full_transparent']) ? (int) esc_html(stripslashes( $_POST['image_browser_full_transparent'])) : 0);
+    $image_browser_image_title_align = (isset($_POST['image_browser_image_title_align']) ? esc_html(stripslashes( $_POST['image_browser_image_title_align'])) : 'top');
 
     $album_compact_title_margin = (isset($_POST['album_compact_title_margin']) ? esc_html(stripslashes( $_POST['album_compact_title_margin'])) : '');
     $album_compact_title_font_style = (isset($_POST['album_compact_title_font_style']) ? esc_html(stripslashes( $_POST['album_compact_title_font_style'])) : 'inherit');
@@ -417,14 +418,14 @@ class BWGControllerThemes_bwg {
     $slideshow_filmstrip_rl_btn_color = (isset($_POST['slideshow_filmstrip_rl_btn_color']) ?  esc_html(stripslashes( $_POST['slideshow_filmstrip_rl_btn_color'])) : 'FFFFFF');
     $slideshow_filmstrip_rl_btn_size = (isset($_POST['slideshow_filmstrip_rl_btn_size']) ? (int) esc_html(stripslashes( $_POST['slideshow_filmstrip_rl_btn_size'])) : 15);    
     $slideshow_title_font_size = (isset($_POST['slideshow_title_font_size']) ? (int)  esc_html(stripslashes( $_POST['slideshow_title_font_size'])) : 15);
-    $slideshow_title_font = (isset($_POST['slideshow_title_font']) ? esc_html(stripslashes( $_POST['slideshow_title_font'])) : 'cursive');
+    $slideshow_title_font = (isset($_POST['slideshow_title_font']) ? esc_html(stripslashes( $_POST['slideshow_title_font'])) : 'segoe ui');
     $slideshow_title_color = (isset($_POST['slideshow_title_color']) ? esc_html(stripslashes( $_POST['slideshow_title_color'])) : '000000');
     $slideshow_title_opacity = (isset($_POST['slideshow_title_opacity']) ? (int) esc_html(stripslashes( $_POST['slideshow_title_opacity'])) : 80);
     $slideshow_title_border_radius = (isset($_POST['slideshow_title_border_radius']) ? esc_html(stripslashes( $_POST['slideshow_title_border_radius'])) : '');	
     $slideshow_title_background_color = (isset($_POST['slideshow_title_background_color']) ?  esc_html(stripslashes( $_POST['slideshow_title_background_color'])) : 'FFFFFF');
     $slideshow_title_padding = (isset($_POST['slideshow_title_padding']) ? esc_html(stripslashes( $_POST['slideshow_title_padding'])) : '');
     $slideshow_description_font_size = (isset($_POST['slideshow_description_font_size']) ? (int) esc_html(stripslashes( $_POST['slideshow_description_font_size'])) : 15);		
-    $slideshow_description_font = (isset($_POST['slideshow_description_font']) ? esc_html(stripslashes( $_POST['slideshow_description_font'])) : 'cursive');
+    $slideshow_description_font = (isset($_POST['slideshow_description_font']) ? esc_html(stripslashes( $_POST['slideshow_description_font'])) : 'segoe ui');
     $slideshow_description_color = (isset($_POST['slideshow_description_color']) ? esc_html(stripslashes( $_POST['slideshow_description_color'])) : '000000');
     $slideshow_description_opacity = (isset($_POST['slideshow_description_opacity']) ? (int) esc_html(stripslashes( $_POST['slideshow_description_opacity'])) : 80);
     $slideshow_description_border_radius = (isset($_POST['slideshow_description_border_radius']) ? esc_html(stripslashes( $_POST['slideshow_description_border_radius'])) : '');	
@@ -532,7 +533,7 @@ class BWGControllerThemes_bwg {
     $carousel_close_rl_btn_hover_color = (isset($_POST['carousel_close_rl_btn_hover_color']) ? esc_html(stripslashes( $_POST['carousel_close_rl_btn_hover_color'])) : 'FFFFFF');
     $carousel_rl_btn_style = (isset($_POST['carousel_rl_btn_style']) ?  esc_html(stripslashes( $_POST['carousel_rl_btn_style'])) : 'fa-chevron');
     $carousel_mergin_bottom = (isset($_POST['carousel_mergin_bottom']) ? esc_html(stripslashes( $_POST['carousel_mergin_bottom'])) : '1');    
-    $carousel_font_family  = (isset($_POST['carousel_font_family']) ? esc_html(stripslashes( $_POST['carousel_font_family'])) : 'Arial');
+    $carousel_font_family  = (isset($_POST['carousel_font_family']) ? esc_html(stripslashes( $_POST['carousel_font_family'])) : 'segoe ui');
     $carousel_feature_border_width = (isset($_POST['carousel_feature_border_width']) ? (int) esc_html(stripslashes( $_POST['carousel_feature_border_width'])) : 2);		
     $carousel_feature_border_style = (isset($_POST['carousel_feature_border_style']) ?  esc_html(stripslashes( $_POST['carousel_feature_border_style'])) : 'solid');
     $carousel_feature_border_color = (isset($_POST['carousel_feature_border_color']) ?  esc_html(stripslashes( $_POST['carousel_feature_border_color'])) : '5D204F');      
@@ -726,7 +727,7 @@ class BWGControllerThemes_bwg {
       'image_browser_full_border_color' => $image_browser_full_border_color,
       'image_browser_full_bg_color' => $image_browser_full_bg_color,
       'image_browser_full_transparent' => $image_browser_full_transparent,
-
+      'image_browser_image_title_align' => $image_browser_image_title_align,	
       'album_compact_title_margin' => $album_compact_title_margin, 
       'album_compact_thumb_margin' => $album_compact_thumb_margin,
       'album_compact_back_padding' => $album_compact_back_padding, 

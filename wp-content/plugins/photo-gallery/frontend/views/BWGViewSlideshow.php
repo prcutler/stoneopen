@@ -1,34 +1,12 @@
 <?php
-
 class BWGViewSlideshow {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  private $model;
-
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  public function __construct($model) {
-    $this->model = $model;
-  }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function display($params, $from_shortcode = 0, $bwg = 0) {
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
     require_once(WD_BWG_DIR . '/framework/WDWLibraryEmbed.php');
 
     global $WD_BWG_UPLOAD_DIR;
     $from = (isset($params['from']) ? esc_html($params['from']) : 0);
-    $options_row = $this->model->get_options_row_data();
+    $options_row = WDWLibrary::get_options_row_data();
     if (!isset($params['order_by'])) {
       $order_by = 'asc'; 
     }
@@ -38,10 +16,13 @@ class BWGViewSlideshow {
     if (!isset($params['slideshow_title_full_width'])) {
       $params['slideshow_title_full_width'] = 0;
     }
+    if (!isset($params['tag'])) {
+      $params['tag'] = 0;
+    }
     $image_right_click = $options_row->image_right_click;
     if (!$from) {
       $theme_id = (isset($params['theme_id']) ? esc_html($params['theme_id']) : 1);
-      $theme_row = $this->model->get_theme_row_data($theme_id);
+      $theme_row = WDWLibrary::get_theme_row_data($theme_id);
       if (!$theme_row) {
         echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
         return;
@@ -82,7 +63,7 @@ class BWGViewSlideshow {
     }
     else {      
       $theme_id = (isset($params['theme_id']) ? esc_html($params['theme_id']) : 0);
-      $theme_row = $this->model->get_theme_row_data($theme_id);
+      $theme_row = WDWLibrary::get_theme_row_data($theme_id);
       if (!$theme_row) {
         echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
         return;
@@ -121,14 +102,21 @@ class BWGViewSlideshow {
       $watermark_width = $options_row->watermark_width;
       $watermark_height = $options_row->watermark_height;
     }
-    $gallery_row = $this->model->get_gallery_row_data($gallery_id);
-    if (!$gallery_row) {
+    $gallery_row = WDWLibrary::get_gallery_row_data($gallery_id);
+    if (!$gallery_row && $params["tag"] == 0) {
       echo WDWLibrary::message(__('There is no gallery selected or the gallery was deleted.', 'bwg'), 'wd_error');
       return;
     }
-    $image_rows = $this->model->get_image_rows_data($gallery_id, $sort_by, $order_by, $bwg);
-    if (!$image_rows) {
-      echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
+    $image_rows = WDWLibrary::get_image_rows_data($gallery_id, $bwg, 'slideshow', '', $params['tag'], '', '', $sort_by, $order_by);
+    $image_rows = $image_rows['images'];
+    $images_count = count($image_rows);
+    if (!$images_count) {
+      if ($params['tag']) {
+        echo WDWLibrary::message(__('There are no images.', 'bwg'), 'wd_error');
+      }
+      else {
+        echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
+      }
     }
     $current_image_id = ($image_rows ? $image_rows[0]->id : 0);
     $play_pause_button_display = 'undefined';
@@ -630,6 +618,9 @@ class BWGViewSlideshow {
     <div id="bwg_container1_<?php echo $bwg; ?>">
       <div id="bwg_container2_<?php echo $bwg; ?>">
         <div class="bwg_slideshow_image_wrap_<?php echo $bwg; ?>">
+          <div id="ajax_loading_<?php echo $bwg; ?>" style="text-align: center; top: 0; left: 0; width: 100%; height: 100%; z-index: 99999;">
+            <img src="<?php echo WD_BWG_URL . '/images/ajax_loader.gif'; ?>" style="width: 30px; border: medium none; visibility: visible;">
+          </div>
           <?php
           $current_pos = 0;
           if (!$enable_slideshow_filmstrip) {
@@ -670,9 +661,19 @@ class BWGViewSlideshow {
                         <span class="bwg_slideshow_image_spun2_<?php echo $bwg; ?>">
                           <?php 
                             if (!$is_embed) {
+                              if ($options_row->thumb_click_action == 'redirect_to_url' && $image_row->redirect_url) {
+                            ?>
+                            <a href="<?php echo $image_row->redirect_url; ?>" target="<?php echo $options_row->thumb_link_target ? '_blank' : '';?>">
+                            <?php
+                              }
                             ?>
                             <img id="bwg_slideshow_image_<?php echo $bwg; ?>" class="bwg_slideshow_image_<?php echo $bwg; ?>" src="<?php echo site_url() . '/' . $WD_BWG_UPLOAD_DIR . $image_row->image_url; ?>" image_id="<?php echo $image_row->id; ?>" alt="<?php echo $image_row->alt; ?>"/>
+                            <?php
+                              if ($options_row->thumb_click_action == 'redirect_to_url' && $image_row->redirect_url) {
+                            ?>
+                            </a>
                             <?php 
+                              }
                             }
                             else{  /*$is_embed*/?>
                             <span id="bwg_slideshow_image_<?php echo $bwg; ?>" class="bwg_slideshow_embed_<?php echo $bwg; ?>" image_id="<?php echo $image_row->id; ?>">
@@ -718,10 +719,20 @@ class BWGViewSlideshow {
                       <span class="bwg_slideshow_image_spun1_<?php echo $bwg; ?>">
                         <span class="bwg_slideshow_image_spun2_<?php echo $bwg; ?>">
                           <?php 
-                            if (! $is_embed) {
+                            if (!$is_embed) {
+                              if ($options_row->thumb_click_action == 'redirect_to_url' && $image_row->redirect_url) {
+                            ?>
+                            <a href='<?php echo $image_row->redirect_url; ?>' target="<?php echo $options_row->thumb_link_target ? '_blank' : '';?>">
+                            <?php
+                            }
                             ?>
                             <img class="bwg_slideshow_image_<?php echo $bwg; ?>" src="<?php echo site_url() . '/' . $WD_BWG_UPLOAD_DIR . $image_row->image_url; ?>" alt="<?php echo $image_row->alt; ?>"/>
+                            <?php 
+                            if ($options_row->thumb_click_action == 'redirect_to_url' && $image_row->redirect_url) {
+                            ?>
+                            </a>
                           <?php 
+                            }
                             }
                             else {   /*$is_embed*/ ?>
                             <span class="bwg_slideshow_embed_<?php echo $bwg; ?>">
@@ -1350,12 +1361,14 @@ class BWGViewSlideshow {
           jQuery(".bwg_slideshow_watermark_text_<?php echo $bwg; ?>, .bwg_slideshow_watermark_text_<?php echo $bwg; ?>:hover").css({fontSize: ((parent_width) * <?php echo $watermark_font_size / $image_width; ?>)});
           jQuery(".bwg_slideshow_title_text_<?php echo $bwg; ?>").css({fontSize: ((parent_width) * <?php echo 2 * $theme_row->slideshow_title_font_size / $image_width; ?>)});
           jQuery(".bwg_slideshow_description_text_<?php echo $bwg; ?>").css({fontSize: ((parent_width) * <?php echo 2 * $theme_row->slideshow_description_font_size / $image_width; ?>)});
+          jQuery(".bwg_slideshow_image_<?php echo $bwg; ?>").css({'display':'inline-block'});
         }
       }
       jQuery(window).resize(function() {
         bwg_popup_resize_<?php echo $bwg; ?>();
       });
       jQuery(window).load(function () {
+        jQuery('#ajax_loading_<?php echo $bwg; ?>').hide();
       	<?php
         if ($image_right_click) {
           ?>
@@ -1535,14 +1548,4 @@ class BWGViewSlideshow {
       die();
     }
   }
-  
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
 }

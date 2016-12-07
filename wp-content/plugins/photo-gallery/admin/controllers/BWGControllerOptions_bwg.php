@@ -232,7 +232,7 @@ class BWGControllerOptions_bwg {
     $show_hide_post_meta = (isset($_POST['show_hide_post_meta']) ? esc_html(stripslashes($_POST['show_hide_post_meta'])) : 0);
     $placeholder = (isset($_POST['placeholder']) ? esc_html(stripslashes($_POST['placeholder'])) : '');
     $slideshow_effect_duration = (isset($_POST['slideshow_effect_duration']) ? esc_html(stripslashes($_POST['slideshow_effect_duration'])) : 1);
-    $popup_effect_duration = (isset($_POST['popup_effect_duration']) ? esc_html(stripslashes($_POST['popup_effect_duration'])) : 1);
+    $popup_effect_duration = (isset($_POST['popup_effect_duration']) ? (int) (stripslashes($_POST['popup_effect_duration'])) : 1);
 
     $save = $wpdb->update($wpdb->prefix . 'bwg_option', array(
       'images_directory' => $images_directory,

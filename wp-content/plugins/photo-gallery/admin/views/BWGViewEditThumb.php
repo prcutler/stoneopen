@@ -723,7 +723,7 @@ class BWGViewEditThumb {
     wp_print_scripts('jquery-ui-slider');
     ?>
     <link type="text/css" rel="stylesheet" id="bwg_tables-css" href="<?php echo WD_BWG_FRONT_URL . '/css/bwg_edit_image.css'; ?>" media="all">
-    <link type="text/css" rel="stylesheet" href="<?php echo WD_BWG_FRONT_URL . '/css/font-awesome/font-awesome.css'; ?>" >
+    <link type="text/css" rel="stylesheet" href="<?php echo WD_BWG_FRONT_URL . '/css/font-awesome/font-awesome.css?ver=4.6.3'; ?>" >
     <form method="post" id="bwg_rotate_image" action="<?php echo $form_action; ?>">
       <?php wp_nonce_field('editThumb', 'bwg_nonce'); ?>
       <div class="main_cont" style="height: <?php echo $popup_height; ?>px;">

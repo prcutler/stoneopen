@@ -1,32 +1,10 @@
 <?php
-
 class BWGViewImage_browser {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  private $model;
-
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  public function __construct($model) {
-    $this->model = $model;
-  }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function display($params, $from_shortcode = 0, $bwg = 0) {
     global $WD_BWG_UPLOAD_DIR;
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
     require_once(WD_BWG_DIR . '/framework/WDWLibraryEmbed.php');
-    $theme_row = $this->model->get_theme_row_data($params['theme_id']);
+    $theme_row = WDWLibrary::get_theme_row_data($params['theme_id']);
     if (!isset($params['order_by'])) {
       $order_by = 'asc';
     }
@@ -66,27 +44,36 @@ class BWGViewImage_browser {
     if (!isset($params['popup_hit_counter'])) {
       $params['popup_hit_counter'] = 0;
     }
+    if (!isset($params['tag'])) {
+      $params['tag'] = 0;
+    }
     if (!$theme_row) {
       echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
       return;
     }
-    $gallery_row = $this->model->get_gallery_row_data($params['gallery_id']);
-    if (!$gallery_row) {
+    $gallery_row = WDWLibrary::get_gallery_row_data($params['gallery_id']);
+    if (!$gallery_row && $params["tag"] == 0) {
       echo WDWLibrary::message(__('There is no gallery selected or the gallery was deleted.', 'bwg'), 'wd_error');
       return;
     }
-    $image_rows = $this->model->get_image_rows_data($params['gallery_id'], 1, $params['sort_by'], $order_by, $bwg);
-    $images_count = count($image_rows); 
+    $image_rows = WDWLibrary::get_image_rows_data($params['gallery_id'], $bwg, 'image_browser', '', $params['tag'], 1, 1, $params['sort_by'], $params['order_by']);
+    $page_nav = $image_rows['page_nav'];
+    $image_rows = $image_rows['images'];
+    $images_count = count($image_rows);
     if (!$image_rows) {
-      echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
+      if ($params['tag']) {
+        echo WDWLibrary::message(__('There are no images.', 'bwg'), 'wd_error');
+      }
+      else {
+        echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
+      }
     }
-    $page_nav = $this->model->page_nav($params['gallery_id'], 1, $bwg);
     $rgb_page_nav_font_color = WDWLibrary::spider_hex2rgb($theme_row->page_nav_font_color);
     $image_browser_images_conteiner = WDWLibrary::spider_hex2rgb($theme_row->image_browser_full_bg_color);
     $bwg_image_browser_image = WDWLibrary::spider_hex2rgb($theme_row->image_browser_bg_color);
     $image_title = $params['image_browser_title_enable'];
     $enable_image_description = $params['image_browser_description_enable'];
-    $option_row = $this->model->get_option_row_data();
+    $option_row = WDWLibrary::get_options_row_data();
     $placeholder = isset($option_row->placeholder) ? $option_row->placeholder : '';
     $image_right_click = $option_row->image_right_click;
     if (!isset($params['popup_fullscreen'])) {
@@ -124,7 +111,8 @@ class BWGViewImage_browser {
       'enable_image_pinterest' => $params['popup_enable_pinterest'],
       'enable_image_tumblr' => $params['popup_enable_tumblr'],
       'watermark_type' => $params['watermark_type'],
-      'slideshow_effect_duration' => isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1
+      'slideshow_effect_duration' => isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1,
+      'tag' => (isset($params['tag']) ? $params['tag'] : 0)
     );
     $items_per_page = array('images_per_page' => 1, 'load_more_image_count' => 1);
     if ($params['watermark_type'] == 'none') {
@@ -148,7 +136,7 @@ class BWGViewImage_browser {
     if ($params['watermark_type'] == 'text') {
       $show_watermark = TRUE;
       $watermark_text_image = TRUE;
-      $params_array['watermark_text'] = $params['watermark_text'];
+      $params_array['watermark_text'] = urlencode($params['watermark_text']);
       $params_array['watermark_font_size'] = $params['watermark_font_size'];
       $params_array['watermark_font'] = $params['watermark_font'];
       $params_array['watermark_color'] = $params['watermark_color'];
@@ -170,6 +158,7 @@ class BWGViewImage_browser {
       $params_array['watermark_color'] = '';
        $params_array['watermark_font_size'] = ''; 
     }
+    $image_browser_image_title_align = (isset($theme_row->image_browser_image_title_align)) ? $theme_row->image_browser_image_title_align : 'top';
     ?>
     <style>
       #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .image_browser_images_conteiner_<?php echo $bwg; ?> * {
@@ -355,7 +344,7 @@ class BWGViewImage_browser {
 				width: 100%;
 				text-align: left;
 				font-size: <?php echo $theme_row->image_browser_img_font_size; ?>px;
-				font-family: <?php echo $theme_row->image_browser_img_font_family; ?>;
+				font-family: <?php echo$theme_row->image_browser_img_font_family; ?>;
 				padding: <?php echo $theme_row->image_browser_image_description_padding; ?>;
 				word-break: break-word;
 				border-style: <?php echo $theme_row->image_browser_image_description_border_style; ?>;
@@ -467,17 +456,17 @@ class BWGViewImage_browser {
                 ?>  
                 <div class="image_browser_image_buttons_conteiner_<?php echo $bwg; ?>">
                   <div class="image_browser_image_buttons_<?php echo $bwg;?>">
-                    <div class="bwg_image_browser_image_alt_<?php echo $bwg; ?>">
-                      <?php
-                      if ($image_title) {
-                        ?>
-                        <div class="bwg_image_alt_<?php echo $bwg; ?>" id="alt<?php echo $image_row->id; ?>">
-                          <?php echo html_entity_decode($image_row->alt); ?>
-                        </div>
-                      <?php
-                      }
+                    <?php
+                    if ($image_title && ($image_browser_image_title_align == 'top')) {
                       ?>
+                    <div class="bwg_image_browser_image_alt_<?php echo $bwg; ?>">
+                       <div class="bwg_image_alt_<?php echo $bwg; ?>" id="alt<?php echo $image_row->id; ?>">
+                         <?php echo html_entity_decode($image_row->alt); ?>
+                       </div>
                     </div> 
+                      <?php
+                    }
+                    ?>
                     <div class="bwg_image_browser_image_<?php echo $bwg; ?>">
                       <?php
                       if ($show_watermark) {
@@ -570,6 +559,15 @@ class BWGViewImage_browser {
                       </script>
                     </div>
                       <?php
+                      if ($image_title && ($image_browser_image_title_align == 'bottom')) {
+                        ?>
+                         <div class="bwg_image_browser_image_alt_<?php echo $bwg; ?>">
+                           <div class="bwg_image_alt_<?php echo $bwg; ?>" id="alt<?php echo $image_row->id; ?>">
+                             <?php echo html_entity_decode($image_row->alt); ?>
+                           </div>
+                         </div> 
+                        <?php
+                      }
                       if ($enable_image_description && ($image_row->description != "")) {
                         ?>
                       <div class="bwg_image_browser_image_desp_<?php echo $bwg; ?>">                    
@@ -639,13 +637,4 @@ class BWGViewImage_browser {
       die();
     }
   }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
 }

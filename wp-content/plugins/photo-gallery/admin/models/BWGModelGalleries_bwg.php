@@ -160,12 +160,6 @@ class BWGModelGalleries_bwg {
     return $page_nav;
   }
 
-  public function get_option_row_data() {
-    global $wpdb;
-    $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_option WHERE id="%d"', 1));
-    return $row;
-  }
-
 	public function get_images_count($gallery_id) {
     global $wpdb;
 		if (!current_user_can('manage_options') && $wpdb->get_var("SELECT image_role FROM " . $wpdb->prefix . "bwg_option")) {

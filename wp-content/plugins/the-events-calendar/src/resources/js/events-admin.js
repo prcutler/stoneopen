@@ -399,11 +399,16 @@ jQuery( document ).ready( function( $ ) {
 						.datepicker( 'option', option, endDate )
 						.datepicker( 'setDate', endDate );
 				} else {
+
 					dates
 						.not( this )
 						.not( '.tribe-no-end-date-update' )
 						.datepicker( 'option', option, date );
 				}
+
+				// fire the change and blur handlers on the field
+				$( this ).change();
+				$( this ).blur();
 			}
 		};
 
@@ -704,17 +709,6 @@ jQuery( document ).ready( function( $ ) {
 	} );
 
 });
-
-
-/**
- * Re-initialize chosen on widgets when moved
- * credits: http://www.johngadbois.com/adding-your-own-callbacks-to-wordpress-ajax-requests/
- */
-jQuery( document ).ajaxSuccess( function( e, xhr, settings ) {
-	if ( typeof settings !== 'undefined' && typeof settings.data !== 'undefined' && settings.data.search( 'action=save-widget' ) != - 1 ) {
-		jQuery( "#widgets-right .chosen" ).chosen();
-	}
-} );
 
 /**
  * Manage the timezone selector user interface.

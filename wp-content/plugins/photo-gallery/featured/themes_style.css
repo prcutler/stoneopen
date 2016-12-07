@@ -11,21 +11,21 @@
 }
 
 #main_featured_themes_page #featured-plugins-list li {
-	display: inline-table;
-	width: 245px;
+  display: inline-table;
+	width: 300px;
 	margin: 20px 10px 0px 10px;
 	background: #FFFFFF;
-  border-right: 3px solid #E5E5E5;
-  height: 405px;
-  border-bottom: 3px solid #E5E5E5;
-  position: relative;
+	border-right: 3px solid #E5E5E5;
+	border-bottom: 3px solid #E5E5E5;
+	position: relative;
 }
 
 #main_featured_themes_page #featured-plugins-list li .product {
 	position:relative;
-	height: 168px;
+	height: 225px;
 	background-color: #F1F1F1 !important;
 	background-size: 100% !important;
+  outline: 1px solid #D6D1D1;
 }
 
 #main_featured_themes_page #featured-plugins-list li .title {
@@ -37,28 +37,29 @@
 #main_featured_themes_page {
   width: 90%;
   margin: 15px auto 0px auto;
+  font-family: Oswald;
 }
 
-#main_featured_themes_page h3 {
-  border-bottom: 2px solid #CECECE;
-  color: rgb(111, 111, 111);
-  font-family: Segoe UI;
-  font-size: 18pt;
-  margin: 0px auto 15px auto;
-  padding: 20px 0;
+#main_featured_themes_page .page_header h3 {
+  margin: 0px;
+	font-family: Segoe UI;
+	padding-bottom: 15px;
+	color: rgb(111, 111, 111);
+	font-size: 24px;
+	text-align:center;			
+}
+#main_featured_themes_page .page_header {
+	height: 40px;
+	padding: 22px 0px 0px 0px;
+	margin-bottom: 15px;
 }
 
 #main_featured_themes_page #featured-plugins-list  li.sauron .product {background:url("images/sauron.jpg") left center no-repeat;}
-#main_featured_themes_page #featured-plugins-list  li.portfolio_gallery .product {background:url("images/portfolio.png") left center no-repeat;}
+#main_featured_themes_page #featured-plugins-list  li.portfolio_gallery .product {background:url("images/portfolio.jpg") left center no-repeat;}
 #main_featured_themes_page #featured-plugins-list  li.business_elite  .product {background:url("images/business_elite.jpg") left center no-repeat;}
-#main_featured_themes_page #featured-plugins-list  li.mottomag  .product {background:url("images/mottomag.jpg") left center no-repeat;  }
 #main_featured_themes_page #featured-plugins-list  li.business_world  .product {background:url("images/business_world.jpg") left center no-repeat;}
 #main_featured_themes_page #featured-plugins-list  li.best_magazine  .product {background:url("images/best_magazine.jpg") left center no-repeat;}
-#main_featured_themes_page #featured-plugins-list  li.wedding_style  .product {background:url("images/wedding_style.jpg") left center no-repeat;}
-#main_featured_themes_page #featured-plugins-list  li.magazine .product {background:url("images/magazine.jpg") left center no-repeat;}
-#main_featured_themes_page #featured-plugins-list  li.weddings  .product {background:url("images/wedding.jpg") left center no-repeat;}
-#main_featured_themes_page #featured-plugins-list  li.exclusive  .product {background:url("images/exclusive.jpg") left center no-repeat;}
-#main_featured_themes_page #featured-plugins-list  li.expert .product {background:url("images/expert.jpg") left center no-repeat;   background-size: 80%;}
+#main_featured_themes_page #featured-plugins-list  li.magazine .product {background:url("images/news_magazine.jpg") left center no-repeat;}
 
 #main_featured_themes_page #featured-plugins-list li .title .heading {
 	display: block;
@@ -82,35 +83,45 @@
 }
 
 #main_featured_themes_page #featured-plugins-list li .description  p {
-	text-align: center;
-  width: 100%;
-  color: #9A9A9A;
-  font-family: "Open Sans",sans-serif;
-}
-
-#featured-plugins-list li a.download {
-	display: block;
-  border-top: 1px solid #CACACA;
-  outline: none;
-  width: 90%;
-  margin: 0 auto;
-  font-size: 14px;
-  line-height: 40px;
-  text-decoration: none;
-  font-weight: bolder;
   text-align: center;
-  color: #134D68;
-  position: absolute;
-  text-transform: uppercase;
-  bottom: 0;
-  left: 10px;
+	width: 100%;
+	color: #666666;
+	font-family: "Open Sans",sans-serif;
+	font-size: 14px;
+}
+#main_featured_themes_page #featured-plugins-list li .links {
+	border-top: 1px solid #d8d8d8;
+	width: 90%;
+	margin: 0 auto;
+	font-size: 14px;
+	line-height: 40px;
+	font-weight: bolder;
+	text-align: center;
+	padding-top: 9px;
+	padding-bottom: 12px;
+	}
+  #main_featured_themes_page #featured-plugins-list li a {
+	outline: none;
+	line-height: 29px;
+	text-decoration: none;
+	color: #134d68;
 	font-family: "Open Sans",sans-serif;
 	text-shadow: 1px 0;
+	display: inline-block;
+	font-size: 15px;
+	}
+#main_featured_themes_page #featured-plugins-list li a.download {
+  padding-right: 30px;
+	background:url("images/down.png") no-repeat right;
 }
-
-#featured-plugins-list li a.download:hover {
-	color: #F47629;
-}
+#main_featured_themes_page #featured-plugins-list li a.demo {
+	color: #ffffff;
+	background: #F47629;
+	border-radius: 3px;
+	width: 76px;
+	text-align:center;
+	margin-right: 12px;
+	}
 
 .featured_header {
   background: #11465F;
@@ -126,13 +137,16 @@
   font-family: Oswald;
 }
 
-.featured_header h1.get_plugins {
+.featured_header h2.get_plugins {
   color: #FFFFFF;
-  height: 85px;
-  margin: 0;
-  background-size: 85% 100%;
-  background-position: center;
+	height: 85px;
+	margin: 0;
+	background-size: 95% 100%;
+	background-position: center;
   line-height: 60px;
+	font-size: 45px;
+	text-align: center;
+	letter-spacing: 3px;
 }
 
 .featured_header .try-now{
@@ -149,11 +163,11 @@
 }
 	
 .featured_header h1 {
-	font-size: 50px;
+  font-size: 45px;
 	text-align: center;
-	color: #FFFFFF;
+	color: #ffffff;
 	letter-spacing: 3px;
-	text-transform: uppercase;
+	line-height: 10px;
 }
 
 .featured_header a {

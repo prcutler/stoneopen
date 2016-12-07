@@ -25,11 +25,12 @@ class BWGViewBWGShortcode {
   public function display() {
     $gallery_rows = $this->model->get_gallery_rows_data();
     $album_rows = $this->model->get_album_rows_data();
-    $option_row = $this->model->get_option_row_data();
+    $option_row = WDWLibrary::get_options_row_data();
     $theme_rows = $this->model->get_theme_rows_data();
     $from_menu = ((isset($_GET['page']) && (esc_html($_GET['page']) == 'BWGShortcode')) ? TRUE : FALSE);
     $shortcodes = $this->model->get_shortcode_data();
     $shortcode_max_id = $this->model->get_shortcode_max_id();
+    $tag_rows = $this->model->get_tag_rows_data();
     $effects = array(
       'none' => __('None','bwg_back'),
       'cubeH' => __('Cube Horizontal','bwg_back'),
@@ -71,18 +72,19 @@ class BWGViewBWGShortcode {
         <script language="javascript" type="text/javascript" src="<?php echo site_url(); ?>/wp-includes/js/tinymce/utils/form_utils.js"></script>
       <?php
       wp_print_scripts('jquery');
+      bwg_register_admin_scripts();
     }
     wp_print_scripts('jquery-ui-core');
     wp_print_scripts('jquery-ui-widget');
     wp_print_scripts('jquery-ui-position');
     wp_print_scripts('jquery-ui-tooltip');
+    wp_print_scripts('bwg_shortcode');
     wp_print_scripts('wp-pointer');
     wp_print_styles('wp-pointer');
     wp_print_styles('dashicons');
-    ?> 
+    ?>
         <link rel="stylesheet" href="<?php echo WD_BWG_URL . '/css/bwg_shortcode.css?ver='.wd_bwg_version(); ?>">
         <link rel="stylesheet" href="<?php echo WD_BWG_URL . '/css/jquery-ui-1.10.3.custom.css'; ?>">
-        <script language="javascript" type="text/javascript" src="<?php echo WD_BWG_URL . '/js/bwg_shortcode.js?ver='.wd_bwg_version(); ?>"></script>
         <script language="javascript" type="text/javascript" src="<?php echo WD_BWG_URL . '/js/jscolor/jscolor.js?ver='.wd_bwg_version(); ?>"></script>
         <?php
         if (!$from_menu) {
@@ -217,6 +219,21 @@ class BWGViewBWGShortcode {
                         <option value="filetype"><?php _e("Type", 'bwg_back'); ?></option>
                         <option value="resolution"><?php _e("Resolution", 'bwg_back'); ?></option>
                         <option value="random"><?php _e("Random", 'bwg_back'); ?></option>
+                      </select>
+                    </td>
+                  </tr>
+                   <tr id="tr_tag">
+                    <td class="spider_label"><label for="gallery"><?php echo __('Tag:', 'bwg_back'); ?> </label></td>
+                    <td>
+                      <select name="tag" id="tag" class="select_icon" style="width:150px;">
+                        <option value="0" selected="selected"><?php echo __('Select Tag', 'bwg_back'); ?></option>
+                        <?php
+                        foreach ($tag_rows as $tag_row) {
+                          ?>
+                          <option value="<?php echo $tag_row->term_id; ?>"><?php echo $tag_row->name; ?></option>
+                          <?php
+                        }
+                        ?>
                       </select>
                     </td>
                   </tr>
@@ -975,13 +992,20 @@ class BWGViewBWGShortcode {
                     <td>
                       <select name="watermark_font" class="select_icon" id="watermark_font" style="width:150px;">
                         <?php
-                        foreach ($watermark_fonts as $watermark_font) {
+                        $google_fonts = WDWLibrary::get_google_fonts();
+                        $is_google_fonts = (in_array($option_row->watermark_font, $google_fonts)) ? true : false;
+                        $watermark_font_families = $is_google_fonts ? $google_fonts : $watermark_fonts;
+                        foreach ($watermark_font_families as $key => $watermark_font) {
                           ?>
-                          <option value="<?php echo $watermark_font; ?>" <?php echo ($option_row->watermark_font == $watermark_font) ? 'selected' : ''; ?>><?php echo $watermark_font; ?></option>
+                          <option value="<?php echo $watermark_font; ?>" <?php echo ($option_row->watermark_font == $watermark_font) ? 'selected="selected"' : ''; ?>><?php echo $watermark_font; ?></option>
                           <?php
                         }
                         ?>
                       </select>
+                      <input type="radio" name="watermark_google_fonts" id="watermark_google_fonts1" onchange="bwg_change_fonts('watermark_font', jQuery(this).attr('id'))" value="1" <?php if ($is_google_fonts) echo 'checked="checked"'; ?> />
+                      <label for="watermark_google_fonts1" id="watermark_google_fonts1_lbl"><?php echo __('Google fonts', 'bwg_back'); ?></label>
+                      <input type="radio" name="watermark_google_fonts" id="watermark_google_fonts0" onchange="bwg_change_fonts('watermark_font', '')" value="0" <?php if (!$is_google_fonts) echo 'checked="checked"'; ?> />
+                      <label for="watermark_google_fonts0" id="watermark_google_fonts0_lbl"><?php echo __('Default', 'bwg_back'); ?></label>
                     </td>
                   </tr>
                   <tr id="tr_watermark_color">
@@ -1105,7 +1129,7 @@ class BWGViewBWGShortcode {
               if (params['id']) {
                 shortcode_id = params['id'];
                 if(typeof shortcodes[shortcode_id] === 'undefined'){
-                  alert("<?php _e('There is No shortcode with such', 'bwg_back'); ?> ID!");
+                  alert("<?php echo addslashes(__('There is no shortcode with such ID!', 'bwg_back')); ?>");
                   bwg_gallery_type('thumbnails');
                   return 0;
                 }
@@ -1126,6 +1150,7 @@ class BWGViewBWGShortcode {
                 case 'thumbnails': {
                   jQuery("select[id=gallery] option[value='" + short_code['gallery_id'] + "']").attr('selected', 'selected');
                   jQuery("select[id=sort_by] option[value='" + short_code['sort_by'] + "']").attr('selected', 'selected');
+                  jQuery("select[id=tag] option[value='" + short_code['tag'] + "']").attr('selected', 'selected');
                   if (short_code['order_by'] == 'asc') {
                     jQuery("#order_by_1").attr('checked', 'checked');
                   }
@@ -1179,6 +1204,7 @@ class BWGViewBWGShortcode {
                 case 'slideshow': {
                   jQuery("select[id=gallery] option[value='" + short_code['gallery_id'] + "']").attr('selected', 'selected');
                   jQuery("select[id=sort_by] option[value='" + short_code['sort_by'] + "']").attr('selected', 'selected');
+                  jQuery("select[id=tag] option[value='" + short_code['tag'] + "']").attr('selected', 'selected');
                   if (short_code['order_by'] == 'asc') {
                     jQuery("#order_by_1").attr('checked', 'checked');
                   }
@@ -1246,6 +1272,7 @@ class BWGViewBWGShortcode {
                 case 'image_browser': {
                   jQuery("select[id=gallery] option[value='" + short_code['gallery_id'] + "']").attr('selected', 'selected');
                   jQuery("select[id=sort_by] option[value='" + short_code['sort_by'] + "']").attr('selected', 'selected');
+                  jQuery("select[id=tag] option[value='" + short_code['tag'] + "']").attr('selected', 'selected');
                   if (short_code['order_by'] == 'asc') {
                     jQuery("#order_by_1").attr('checked', 'checked');
                   }
@@ -1402,7 +1429,7 @@ class BWGViewBWGShortcode {
                   jQuery("#extended_album_image_thumb_width").val(short_code['extended_album_image_thumb_width']);
                   jQuery("#extended_album_image_thumb_height").val(short_code['extended_album_image_thumb_height']);
                   jQuery("#extended_albums_per_page_load_more").val(short_code['extended_albums_per_page_load_more']);
-		              jQuery("#extended_album_load_more_image_count").val(short_code['extended_album_load_more_image_count']);
+                  jQuery("#extended_album_load_more_image_count").val(short_code['extended_album_load_more_image_count']);
                   if (short_code['extended_album_enable_page'] == 1) {
                     jQuery("#extended_album_page_yes").attr('checked', 'checked');
                   }
@@ -1584,6 +1611,14 @@ class BWGViewBWGShortcode {
                 jQuery("#watermark_link").val(decodeURIComponent(short_code['watermark_link']));
                 jQuery("#watermark_text").val(short_code['watermark_text']);
                 jQuery("#watermark_font_size").val(short_code['watermark_font_size']);
+                if (in_array(short_code['watermark_font'], bwg_objectGGF)) {
+                  jQuery("#watermark_google_fonts1").attr('checked', 'checked');
+                  bwg_change_fonts('watermark_font', 'watermark_google_fonts1');
+                }
+                else {
+                  jQuery("#watermark_google_fonts0").attr('checked', 'checked');
+                  bwg_change_fonts('watermark_font', '');
+                }
                 jQuery("select[id=watermark_font] option[value='" + short_code['watermark_font'] + "']").attr('selected', 'selected');
                 jQuery("#watermark_color").val(short_code['watermark_color']);
                 jQuery("#watermark_opacity").val(short_code['watermark_opacity']);
@@ -1605,6 +1640,22 @@ class BWGViewBWGShortcode {
               }
               bwg_watermark('watermark_type_' + short_code['watermark_type']);
               bwg_gallery_type(short_code['gallery_type']);
+            }
+          }
+          // in_array
+          function in_array(what, where) {
+           var t = false; 
+            for (var i in where) {
+              if (what == where[i]) {
+                t = true;
+                break;
+              }
+            }
+            if(t == true) {
+              return true;
+            }
+            else {
+              return false;
             }
           }
           // Get shortcodes attributes.
@@ -1670,6 +1721,7 @@ class BWGViewBWGShortcode {
                 title = ' gal_title="' + jQuery.trim(jQuery('#gallery option:selected').text().replace("'", "").replace('"', '')) + '"';
                 tagtext += ' load_more_image_count="' + jQuery("#load_more_image_count").val() + '"';
                 tagtext += ' show_tag_box="' + jQuery("input[name=show_tag_box]:checked").val() + '"';
+                tagtext += ' tag="' + jQuery("#tag").val() + '"';
                 break;
 
               }
@@ -1695,6 +1747,7 @@ class BWGViewBWGShortcode {
                 tagtext += ' slideshow_music_url="' + jQuery("#slideshow_music_url").val() + '"';
 								title = ' gal_title="' + jQuery.trim(jQuery('#gallery option:selected').text().replace("'", "").replace('"', '')) + '"';
                 tagtext += ' slideshow_effect_duration="' + jQuery("#slideshow_effect_duration").val() + '"';
+                tagtext += ' tag="' + jQuery("#tag").val() + '"';
                 break;
 
               }
@@ -1708,6 +1761,7 @@ class BWGViewBWGShortcode {
                 tagtext += ' image_browser_title_enable="' + jQuery("input[name=image_browser_title_enable]:checked").val() + '"';
                 tagtext += ' image_browser_description_enable="' + jQuery("input[name=image_browser_description_enable]:checked").val() + '"';
 								title = ' gal_title="' + jQuery.trim(jQuery('#gallery option:selected').text().replace("'", "").replace('"', '')) + '"';
+                tagtext += ' tag="' + jQuery("#tag").val() + '"';
                 break;
 
               }
@@ -1845,10 +1899,11 @@ class BWGViewBWGShortcode {
           jQuery(document).ready(function () {
             bwg_loadmore();
           });
-          var bwg_image_thumb = '<?php addslashes(__('Image thumbnail dimensions:', 'bwg_back')); ?>';
-          var bwg_image_thumb_width = '<?php addslashes(__('Image thumbnail width: ', 'bwg_back')); ?>';
-          var bwg_max_column = '<?php addslashes(__('Max. number of image columns:', 'bwg_back')); ?>';
-          var bwg_image_thumb_height = '<?php addslashes(__('Image thumbnail height:', 'bwg_back')); ?>';
+          var bwg_image_thumb = '<?php echo addslashes(__('Image thumbnail dimensions:', 'bwg_back')); ?>';
+          var bwg_image_thumb_width = '<?php echo addslashes(__('Image thumbnail width: ', 'bwg_back')); ?>';
+          var bwg_max_column = '<?php echo addslashes(__('Max. number of image columns:', 'bwg_back')); ?>';
+          var bwg_image_thumb_height = '<?php echo addslashes(__('Image thumbnail height:', 'bwg_back')); ?>';
+          var bwg_number_of_image_rows = '<?php echo addslashes(__('Number of image rows:', 'bwg_back')); ?>';
         </script>
       </body>
     </html>

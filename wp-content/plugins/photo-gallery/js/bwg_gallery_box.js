@@ -54,7 +54,7 @@ function spider_receivedpopup(description, lifetime, lightbox_ctrl_btn_pos) {
 }
 
 function spider_isunsupporteduseragent() {
-	return (!window.XMLHttpRequest); 
+	return (!window.XMLHttpRequest);
 }
 
 function spider_destroypopup(duration) {

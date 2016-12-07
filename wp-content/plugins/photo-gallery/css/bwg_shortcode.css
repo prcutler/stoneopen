@@ -107,9 +107,9 @@ a.wd-btn{
 	outline:none !important;
 }
 .wd-btn-secondary{
-  background-color: #FFFFFF;
+    background-color: #FFFFFF;
 	color: #666;
-  border: 1px solid #ddd;
+    border: 1px solid #ddd;
 }
 
 .wd-btn-primary{
@@ -143,15 +143,15 @@ a.wd-btn-icon.wd-btn-primary:hover{
 	color:#fff;
 }
 .wd-btn-import{
-	background-image:url(../images/icons/import.png);
+	background-image:url("../images/icons/import.png");
 }
 .wd-not-image{
   padding: 0px 10px 1px 10px !important;
 	background-repeat: no-repeat;
 	background-position: 10% 50%;
 }
-.select_icon:disabled,.select_icon {
-	background-image:url('../images/icons/arrow.png');
+.select_icon{
+	background-image:url("../images/icons/arrow.png");
 	background-repeat: no-repeat;
 	-webkit-appearance: none; 
 	-moz-appearance: none;  
@@ -159,6 +159,7 @@ a.wd-btn-icon.wd-btn-primary:hover{
 	padding: 0 2px 2px 2px !important; 
   width: 22%;
   height:28px !important;
+  display: block;
 }
 
 th.sortable a span,

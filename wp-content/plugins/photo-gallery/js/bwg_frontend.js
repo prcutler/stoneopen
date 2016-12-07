@@ -118,3 +118,10 @@ function spider_frontend_ajax(form_id, current_view, id, album_gallery_id, cur_a
   // }
   return false;
 }
+
+function bwg_select_tag(current_view, form_id, cur_gal_id, album_gallery_id, type, reset) {
+  if (reset) {
+    jQuery("#bwg_tag_id_" + cur_gal_id).val('');
+  }
+  spider_frontend_ajax(form_id, current_view, cur_gal_id, album_gallery_id, '', type, 1);
+}

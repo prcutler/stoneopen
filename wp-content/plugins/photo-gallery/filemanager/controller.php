@@ -22,7 +22,7 @@ class FilemanagerController {
     ////////////////////////////////////////////////////////////////////////////////////////
     // Constructor & Destructor                                                           //
     ////////////////////////////////////////////////////////////////////////////////////////
-    
+
     public function __construct() {
       $upload_dir = wp_upload_dir();
       $bwg_options = $this->get_options_data();

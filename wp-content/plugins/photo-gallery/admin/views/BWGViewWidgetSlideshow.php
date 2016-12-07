@@ -101,7 +101,7 @@ class BWGViewWidgetSlideshow {
     $instance = wp_parse_args((array) $instance, $defaults);
     $gallery_rows = $this->model->get_gallery_rows_data();
     $theme_rows = $this->model->get_theme_rows_data();
-    $options_row = $this->model->get_options_row_data();
+    $options_row = WDWLibrary::get_options_row_data();
     ?>
     <p>
       <label for="<?php echo $id_title; ?>"><?php _e("Title:", 'bwg_back'); ?></label>

@@ -3,6 +3,44 @@ div[id^="bwg_container"] p {
   margin: 0 !important;
 }
 
+div[id^="bwg_container"] .SumoSelect > .CaptionCont,
+div[id^="bwg_container"] .SumoSelect:focus > .CaptionCont,
+div[id^="bwg_container"] .SumoSelect:hover > .CaptionCont,
+div[id^="bwg_container"] .SumoSelect.open > .CaptionCont {
+  border: none;
+  box-shadow: none;
+}
+
+#bwg_tag_wrap {
+  background-color: #FFFFFF;
+  width: 100%;
+  font-family: inherit;
+  margin: 0 -5px 20px 5px;
+  z-index: 200;
+  position: relative;
+}
+
+.bwg_search_loupe_container,
+.bwg_search_reset_container {
+  font-size: 18px;
+  color: #CCCCCC;
+  cursor: pointer;
+  position: relative;
+  top: -4px;
+}
+
+#bwg_tag_container p {
+  text-align: center;
+}
+
+#bwg_tag_container {
+  border: 1px solid #CCCCCC;
+  box-shadow: 0 0 3px 1px #CCCCCC;
+  border-radius: 4px;
+  width: 256px;
+  float: right;
+}
+
 #spider_popup_wrap a {
   border: none;
 }
@@ -225,6 +263,10 @@ div[id^="bwg_container"] div[id^="bwg_container"] .bwg_img_clear {
   z-index: 11;
 }
 
+.bwg_image_rate {
+  z-index: 999 !important;
+}
+
 @media screen and (max-width: 465px) {
   .bwg_ctrl_btn {
     margin-bottom:0 !important;
@@ -234,4 +276,3 @@ div[id^="bwg_container"] div[id^="bwg_container"] .bwg_img_clear {
     height:auto !important;
   }
 }
-

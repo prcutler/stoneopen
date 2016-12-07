@@ -252,6 +252,7 @@ function bwg_gallery_type(gallery_type) {
   jQuery("#tr_show_sort_images").css('display', 'none');
   jQuery("#tr_search_box_width").css('display', 'none');
   jQuery("#tr_album").css('display', 'none');
+  jQuery("#tr_tag").css('display', 'none');
 
   // Thumbnails, Masonry.
   jQuery("#tr_masonry_hor_ver").css('display', 'none');
@@ -271,6 +272,7 @@ function bwg_gallery_type(gallery_type) {
   jQuery("#tr_image_enable_page").css('display', 'none');
   jQuery("#tr_thumb_width_height").css('display', 'none');
   jQuery("#tr_load_more_image_count").css('display', 'none');
+
   // Compact Album.
   jQuery("#tr_compuct_album_column_number").css('display', 'none');
   jQuery("#tr_compuct_albums_per_page").css('display', 'none');
@@ -409,6 +411,7 @@ function bwg_gallery_type(gallery_type) {
 			jQuery("#tr_show_sort_images").css('display', '');
       jQuery("#tr_load_more_image_count").css('display', '');
       jQuery("#tr_show_tag_box").css('display', '');
+      jQuery("#tr_tag").css('display', '');
       bwg_show_search_box();
       jQuery("#bwg_pro_version").html('Thumbnails');
       jQuery("#bwg_pro_version_link").attr("href", "http://wpdemo.web-dorado.com/thumbnails-view-2/");
@@ -441,6 +444,7 @@ function bwg_gallery_type(gallery_type) {
       jQuery("#tr_image_enable_page").css('display', '');
       jQuery("#tr_thumb_width_height").css('display', '');
       jQuery("#tr_load_more_image_count").css('display', '');
+      jQuery("#tr_tag").css('display', '');
       bwg_show_search_box();
       break;
 
@@ -473,6 +477,7 @@ function bwg_gallery_type(gallery_type) {
       jQuery("#tr_image_enable_page").css('display', '');
       jQuery("#tr_thumb_width_height").css('display', '');
       jQuery("#tr_load_more_image_count").css('display', '');
+      jQuery("#tr_tag").css('display', '');
       bwg_show_search_box();
       break;
 
@@ -492,6 +497,7 @@ function bwg_gallery_type(gallery_type) {
       jQuery("#tr_enable_slideshow_filmstrip").css('display', '');
 			jQuery("#tr_show_sort_images").css('display', 'none');
       jQuery("#tr_show_tag_box").css('display', 'none');
+      jQuery("#tr_tag").css('display', '');
       if (jQuery("input[name=enable_slideshow_filmstrip]:checked").val() == 1) {
         bwg_enable_disable('', 'tr_slideshow_filmstrip_height', 'slideshow_filmstrip_yes');
       }
@@ -533,6 +539,7 @@ function bwg_gallery_type(gallery_type) {
       jQuery("#tr_image_browser_title_enable").css('display', '');
       jQuery("#tr_image_browser_description_enable").css('display', '');
       jQuery("#tr_show_tag_box").css('display', 'none');
+      jQuery("#tr_tag").css('display', '');
       bwg_show_search_box();
       jQuery("#bwg_pro_version").html('Image Browser');
       jQuery("#bwg_pro_version_link").attr("href", "http://wpdemo.web-dorado.com/image-browser-view/");
@@ -631,6 +638,7 @@ function bwg_gallery_type(gallery_type) {
 			jQuery("#tr_show_sort_images").css('display', '');
       jQuery("#tr_blog_style_load_more_image_count").css('display', '');
       jQuery("#tr_show_tag_box").css('display', '');
+      jQuery("#tr_tag").css('display', '');
       bwg_show_search_box();
       break;
     }
@@ -650,6 +658,7 @@ function bwg_gallery_type(gallery_type) {
       jQuery("#tr_carousel_prev_next_butt").css('display', '');
       jQuery("#tr_carousel_play_pause_butt").css('display', '');
       jQuery("#tr_show_tag_box").css('display', 'none');
+      jQuery("#tr_tag").css('display', '');
       break;
 		}
 			
@@ -704,4 +713,19 @@ function bwg_onKeyDown(e) {
 function spider_select_value(obj) {
   obj.focus();
   obj.select();
+}
+
+function bwg_change_fonts(cont, google_fonts) {
+  var fonts;
+  if (jQuery("#" + google_fonts).is(":checked") == true) {
+    fonts = bwg_objectGGF;
+  }
+  else {
+    fonts = {'arial' : 'Arial', 'lucida grande' : 'Lucida grande', 'segoe ui' : 'Segoe ui', 'tahoma' : 'Tahoma', 'trebuchet ms' : 'Trebuchet ms', 'verdana' : 'Verdana', 'cursive' : 'Cursive', 'fantasy' : 'Fantasy', 'monospace' : 'Monospace', 'serif' : 'Serif'};
+  }
+  var fonts_option = "";
+  for (var i in fonts) {
+    fonts_option += '<option value="' + i + '">' + fonts[i] + '</option>';
+  }
+  jQuery("#" + cont).html(fonts_option);
 }

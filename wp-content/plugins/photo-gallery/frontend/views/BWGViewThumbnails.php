@@ -1,27 +1,5 @@
 <?php
-
 class BWGViewThumbnails {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  private $model;
-
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  public function __construct($model) {
-    $this->model = $model;
-  }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function display($params, $from_shortcode = 0, $bwg = 0) {
     global $WD_BWG_UPLOAD_DIR;
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
@@ -80,9 +58,12 @@ class BWGViewThumbnails {
     if (!isset($params['show_tag_box'])) {
       $params['show_tag_box'] = 0;
     }
+    if (!isset($params['tag'])) {
+      $params['tag'] = 0;
+    }
     $from = (isset($params['from']) ? esc_html($params['from']) : 0);
     $sort_direction = ' ' . $params['order_by'] . ' ';
-    $options_row = $this->model->get_options_row_data();
+    $options_row = WDWLibrary::get_options_row_data();
     $placeholder = isset($options_row->placeholder) ? $options_row->placeholder : '';
     $play_icon = $options_row->play_icon;
     if ($from) {
@@ -148,7 +129,7 @@ class BWGViewThumbnails {
 				$params['sort_by'] = $sort_by;
 			}
 		}
-    $theme_row = $this->model->get_theme_row_data($params['theme_id']);
+    $theme_row = WDWLibrary::get_theme_row_data($params['theme_id']);
     if (!$theme_row) {
       echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
       return;
@@ -159,24 +140,30 @@ class BWGViewThumbnails {
     else {
       $type = "";
     }
-    $gallery_row = $this->model->get_gallery_row_data($params['gallery_id']);
-    if (!$gallery_row && ($type == '')) {
+    $gallery_row = WDWLibrary::get_gallery_row_data($params['gallery_id']);
+    if (!$gallery_row && ($type == '') && $params["tag"] == 0) {
       echo WDWLibrary::message(__('There is no gallery selected or the gallery was deleted.', 'bwg'), 'wd_error');
       return;
     }
     $params['load_more_image_count'] = (isset($params['load_more_image_count']) && ($params['image_enable_page'] == 2)) ? $params['load_more_image_count'] : $params['images_per_page'];
     $items_per_page = array('images_per_page' => $params['images_per_page'], 'load_more_image_count' => $params['load_more_image_count']);
-    $image_rows = $this->model->get_image_rows_data($params, $bwg, $type, $sort_direction);
-    $images_count = count($image_rows); 
-    if (!$image_rows) {
-      echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
-    }
+    $image_rows = WDWLibrary::get_image_rows_data($params['gallery_id'], $bwg, $type, 'bwg_tag_id_bwg_standart_thumbnails_' . $bwg, $params['tag'], $params['images_per_page'], $params['load_more_image_count'], $params['sort_by'], $sort_direction);
     if ($params['image_enable_page'] && $params['images_per_page']) {
-      $page_nav = $this->model->page_nav($params['gallery_id'], $bwg, $type);
+      $page_nav = $image_rows['page_nav'];
+    }
+    $image_rows = $image_rows['images'];
+    $images_count = count($image_rows);
+    if (!$images_count) {
+      if ($params['tag']) {
+        echo WDWLibrary::message(__('There are no images.', 'bwg'), 'wd_error');
+      }
+      else {
+        echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
+      }
     }
     $rgb_page_nav_font_color = WDWLibrary::spider_hex2rgb($theme_row->page_nav_font_color);
     $rgb_thumbs_bg_color = WDWLibrary::spider_hex2rgb($theme_row->thumbs_bg_color);
-    $tags_rows = $this->model->get_tags_rows_data($params['gallery_id']);
+    $tags_rows = WDWLibrary::get_tags_rows_data($params['gallery_id']);
     $image_right_click = $options_row->image_right_click;
     ?>
     <style>
@@ -321,7 +308,7 @@ class BWGViewThumbnails {
       #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .tablenav-pages_<?php echo $bwg; ?> a {
         cursor: pointer;
         font-size: <?php echo $theme_row->page_nav_font_size; ?>px;
-        font-family: <?php echo $theme_row->page_nav_font_style; ?>;
+        font-family: <?php echo str_replace('+', ' ', $theme_row->page_nav_font_style); ?>;
         font-weight: <?php echo $theme_row->page_nav_font_weight; ?>;
         color: #<?php echo $theme_row->page_nav_font_color; ?>;
         text-decoration: none;
@@ -342,7 +329,7 @@ class BWGViewThumbnails {
         color: #<?php echo $theme_row->album_compact_back_font_color; ?> !important;
         cursor: pointer;
         display: block;
-        font-family: <?php echo $theme_row->album_compact_back_font_style; ?>;
+        font-family: <?php echo str_replace('+', ' ', $theme_row->album_compact_back_font_style); ?>;
         font-size: <?php echo $theme_row->album_compact_back_font_size; ?>px;
         font-weight: <?php echo $theme_row->album_compact_back_font_weight; ?>;
         text-decoration: none;
@@ -508,7 +495,7 @@ class BWGViewThumbnails {
     <script>
       <?php
         $params_array = array(
-          'tag_id' => (isset($params['type']) ? $params['gallery_id'] : 0),
+          'tag' => (isset($params['tag']) ? $params['tag'] : 0),
           'action' => 'GalleryBox',
           'current_view' => $bwg,
           'gallery_id' => $params['gallery_id'],
@@ -547,7 +534,7 @@ class BWGViewThumbnails {
           $params_array['watermark_position'] = $params['watermark_position'];
         }
         if ($params['watermark_type'] == 'text') {
-          $params_array['watermark_text'] = $params['watermark_text'];
+          $params_array['watermark_text'] = urlencode($params['watermark_text']);
           $params_array['watermark_font_size'] = $params['watermark_font_size'];
           $params_array['watermark_font'] = $params['watermark_font'];
           $params_array['watermark_color'] = $params['watermark_color'];
@@ -597,14 +584,4 @@ class BWGViewThumbnails {
       die();
     }
   }
-  
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
 }

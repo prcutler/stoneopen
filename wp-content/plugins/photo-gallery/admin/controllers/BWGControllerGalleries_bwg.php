@@ -319,7 +319,7 @@ class BWGControllerGalleries_bwg {
       case 'text':
         foreach ($images as $image) {
           if (isset($_POST['check_' . $image->id]) || isset($_POST['check_all_items'])) {
-            $this->set_text_watermark(ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, $options->built_in_watermark_text, $options->built_in_watermark_font, $options->built_in_watermark_font_size, '#' . $options->built_in_watermark_color, $options->built_in_watermark_opacity, $options->built_in_watermark_position);
+            $this->set_text_watermark(ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, html_entity_decode($options->built_in_watermark_text), $options->built_in_watermark_font, $options->built_in_watermark_font_size, '#' . $options->built_in_watermark_color, $options->built_in_watermark_opacity, $options->built_in_watermark_position);
           }
         }
         break;
@@ -1109,6 +1109,91 @@ class BWGControllerGalleries_bwg {
 	  }
   }
 
+  public function rotate_left() {
+    $this->rotate(90);
+  }
+
+  public function rotate_right() {
+    $this->rotate(270);
+  }
+  
+  public function rotate($edit_type) {
+    global $WD_BWG_UPLOAD_DIR;
+    global $wpdb;
+    $flag = FALSE;
+    $gallery_id = ((isset($_POST['current_id'])) ? esc_html(stripslashes($_POST['current_id'])) : 0);
+    $images_data = $wpdb->get_results($wpdb->prepare('SELECT id, image_url, thumb_url FROM ' . $wpdb->prefix . 'bwg_image WHERE gallery_id="%d"', $gallery_id));
+    @ini_set('memory_limit', '-1');
+    foreach ($images_data as $image_data) {
+      if (isset($_POST['check_' . $image_data->id]) || isset($_POST['check_all_items'])) {
+	      $flag = TRUE;
+        $image_data->image_url = stripcslashes($image_data->image_url);      
+        $filename = htmlspecialchars_decode(ABSPATH . $WD_BWG_UPLOAD_DIR . $image_data->image_url, ENT_COMPAT | ENT_QUOTES);
+        $thumb_filename = htmlspecialchars_decode(ABSPATH . $WD_BWG_UPLOAD_DIR . $image_data->thumb_url, ENT_COMPAT | ENT_QUOTES);
+        list($width_rotate, $height_rotate, $type_rotate) = getimagesize($filename);
+        if ($edit_type == '270' || $edit_type == '90') {
+          if ($type_rotate == 2) {
+            $source = imagecreatefromjpeg($filename);
+            $thumb_source = imagecreatefromjpeg($thumb_filename);
+            $rotate = imagerotate($source, $edit_type, 0);
+            $thumb_rotate = imagerotate($thumb_source, $edit_type, 0);
+            imagejpeg($thumb_rotate, $thumb_filename, 90);
+            imagejpeg($rotate, $filename, 100);
+            imagedestroy($source);
+            imagedestroy($rotate);
+            imagedestroy($thumb_source);
+            imagedestroy($thumb_rotate);
+          }
+          elseif ($type_rotate == 3) {
+            $source = imagecreatefrompng($filename);
+            $thumb_source = imagecreatefrompng($thumb_filename);
+            imagealphablending($source, FALSE);
+            imagealphablending($thumb_source, FALSE);
+            imagesavealpha($source, TRUE);
+            imagesavealpha($thumb_source, TRUE);
+            $rotate = imagerotate($source, $edit_type, imageColorAllocateAlpha($source, 0, 0, 0, 127));
+            $thumb_rotate = imagerotate($thumb_source, $edit_type, imageColorAllocateAlpha($source, 0, 0, 0, 127));
+            imagealphablending($rotate, FALSE);
+            imagealphablending($thumb_rotate, FALSE);
+            imagesavealpha($rotate, TRUE);
+            imagesavealpha($thumb_rotate, TRUE);
+            imagepng($rotate, $filename, 9);
+            imagepng($thumb_rotate, $thumb_filename, 9);
+            imagedestroy($source);
+            imagedestroy($rotate);
+            imagedestroy($thumb_source);
+            imagedestroy($thumb_rotate);
+          }
+          elseif ($type_rotate == 1) {
+            $source = imagecreatefromgif($filename);
+            $thumb_source = imagecreatefromgif($thumb_filename);
+            imagealphablending($source, FALSE);
+            imagealphablending($thumb_source, FALSE);
+            imagesavealpha($source, TRUE);
+            imagesavealpha($thumb_source, TRUE);
+            $rotate = imagerotate($source, $edit_type, imageColorAllocateAlpha($source, 0, 0, 0, 127));
+            $thumb_rotate = imagerotate($thumb_source, $edit_type, imageColorAllocateAlpha($source, 0, 0, 0, 127));
+            imagealphablending($rotate, FALSE);
+            imagealphablending($thumb_rotate, FALSE);
+            imagesavealpha($rotate, TRUE);
+            imagesavealpha($thumb_rotate, TRUE);
+            imagegif($rotate, $filename);
+            imagegif($thumb_rotate, $thumb_filename);
+            imagedestroy($source);
+            imagedestroy($rotate);
+            imagedestroy($thumb_source);
+            imagedestroy($thumb_rotate);
+          }
+        }
+	    }
+	  }
+	  if ($flag == false) {
+      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'wd_error');
+    }
+	  else {
+		  echo WDWLibrary::message(__('Items successfully rotated.', 'bwg_back'), 'wd_updated');
+	  }
+  }
   ////////////////////////////////////////////////////////////////////////////////////////
   // Getters & Setters                                                                  //
   ////////////////////////////////////////////////////////////////////////////////////////

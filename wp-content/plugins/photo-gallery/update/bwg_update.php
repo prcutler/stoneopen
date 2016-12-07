@@ -342,14 +342,15 @@ function bwg_update($version) {
 	}
   if (version_compare($version, '1.2.84') == -1) {
 	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `placeholder` varchar(32) NOT NULL DEFAULT ''");
-	}
-      // Ecommerce update 
+  }
+
+  // Ecommerce update 
   if (version_compare($version, '1.2.86') == -1) {
 	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_image ADD `pricelist_id` int(16) NOT NULL DEFAULT 0");
 	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `ecommerce_icon_show_hover` varchar(32) NOT NULL DEFAULT 0");
 	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `popup_enable_ecommerce` tinyint(1) NOT NULL DEFAULT 0");
   }
-   if (version_compare($version, '1.2.104') == -1) {
+  if (version_compare($version, '1.2.104') == -1) {
 	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `slideshow_effect_duration` int(4) NOT NULL DEFAULT 1");
     $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `popup_effect_duration` int(4) NOT NULL DEFAULT 1");
   }

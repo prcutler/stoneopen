@@ -1,27 +1,5 @@
 <?php
-
 class BWGViewAlbum_compact_preview {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  private $model;
-
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  public function __construct($model) {
-    $this->model = $model;
-  }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function display($params, $from_shortcode = 0, $bwg = 0) {
     global $WD_BWG_UPLOAD_DIR;
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
@@ -86,7 +64,7 @@ class BWGViewAlbum_compact_preview {
     if (!isset($params['show_tag_box'])) {
       $params['show_tag_box'] = 0;
     }
-    $options_row = $this->model->get_options_row_data();
+    $options_row = WDWLibrary::get_options_row_data();
     $placeholder = isset($options_row->placeholder) ? $options_row->placeholder : '';
     if (!isset($params['show_album_name'])) {
       $params['show_album_name'] = $options_row->show_album_name;
@@ -146,13 +124,13 @@ class BWGViewAlbum_compact_preview {
       $params['popup_effect_duration'] = isset($options_row->popup_effect_duration) ? $options_row->popup_effect_duration : 1;
     }
 
-    $theme_row = $this->model->get_theme_row_data($params['theme_id']);
+    $theme_row = WDWLibrary::get_theme_row_data($params['theme_id']);
     if (!$theme_row) {
       echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
       return;
     }
     $album_gallery_id = (isset($_REQUEST['album_gallery_id_' . $bwg]) ? esc_html($_REQUEST['album_gallery_id_' . $bwg]) : $params['album_id']);
-    $album_row_data = $this->model->get_album_row_data($album_gallery_id);
+    $album_row_data = WDWLibrary::get_album_row_data($album_gallery_id, true);
 
     if (!$album_gallery_id || ($type == 'album' && !$album_row_data)) {
       echo WDWLibrary::message(__('There is no album selected or the album was deleted.', 'bwg'), 'wd_error');
@@ -174,12 +152,13 @@ class BWGViewAlbum_compact_preview {
           $params['sort_by'] = $sort_by;
         }
       }
-      $image_rows = $this->model->get_image_rows_data($album_gallery_id, $items_per_page, $params['sort_by'], $bwg, $sort_direction);
+      $image_rows = WDWLibrary::get_image_rows_data($album_gallery_id, $bwg, 'album_compact', 'bwg_tag_id_bwg_album_compact_' . $bwg, '', $items_per_page, $params['compuct_album_images_per_page'], $params['sort_by'], $sort_direction);
+      $page_nav = $image_rows['page_nav'];
+      $image_rows = $image_rows['images'];
       $images_count = count($image_rows);
-      if (!$image_rows) {
+      if (!$images_count) {
         echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
       }
-      $page_nav = $this->model->gallery_page_nav($album_gallery_id, $bwg);
       $album_gallery_div_id = 'bwg_album_compact_' . $bwg;
       $album_gallery_div_class = 'bwg_standart_thumbnails_' . $bwg;
     }
@@ -188,12 +167,13 @@ class BWGViewAlbum_compact_preview {
       $items_per_page_arr = array('images_per_page' => $params['compuct_albums_per_page'], 'load_more_image_count' => $params['compuct_albums_per_page']);
       $items_col_num = $params['compuct_album_column_number'];
       $sort_by = $from === "widget" && $params['show'] == 'random' ? 'RAND()' : 'order';
-      $album_galleries_row = $this->model->get_alb_gals_row($album_gallery_id, $items_per_page, $sort_by, $bwg, ' ASC ');
+      $album_galleries_row = WDWLibrary::get_alb_gals_row($album_gallery_id, $items_per_page, $sort_by, $bwg, ' ASC ');
+      $page_nav = $album_galleries_row['page_nav'];
+      $album_galleries_row = $album_galleries_row['rows'];
       if (!$album_galleries_row) {
         echo WDWLibrary::message(__('There is no album selected or the album was deleted.', 'bwg'), 'wd_error');
         return;
       }
-      $page_nav = $this->model->album_page_nav($album_gallery_id, $bwg);
       $album_gallery_div_id = 'bwg_album_compact_' . $bwg;
       $album_gallery_div_class = 'bwg_album_thumbnails_' . $bwg;
     }
@@ -260,7 +240,7 @@ class BWGViewAlbum_compact_preview {
       $params_array['watermark_position'] = $params['watermark_position'];
     }
     if ($params['watermark_type'] == 'text') {
-      $params_array['watermark_text'] = $params['watermark_text'];
+      $params_array['watermark_text'] = urlencode($params['watermark_text']);
       $params_array['watermark_font_size'] = $params['watermark_font_size'];
       $params_array['watermark_font'] = $params['watermark_font'];
       $params_array['watermark_color'] = $params['watermark_color'];
@@ -271,7 +251,7 @@ class BWGViewAlbum_compact_preview {
       $params_array['watermark_height'] = $params['watermark_height'];
     }
     $params_array_hash = $params_array;
-    $tags_rows = $this->model->get_tags_rows_data($album_gallery_id);
+    $tags_rows = WDWLibrary::get_tags_rows_data($album_gallery_id);
     $image_right_click = $options_row->image_right_click;
     ?>	
     <style>
@@ -570,7 +550,7 @@ class BWGViewAlbum_compact_preview {
       }
     </style>
 		<?php
-			$album_row = $this->model->get_album_row_data($album_gallery_id);
+			$album_row = WDWLibrary::get_album_row_data($album_gallery_id, true);
 		?>
     <div id="bwg_container1_<?php echo $bwg; ?>">
       <div id="bwg_container2_<?php echo $bwg; ?>">
@@ -629,7 +609,7 @@ class BWGViewAlbum_compact_preview {
                 }
                 foreach ($album_galleries_row as $album_galallery_row) {
                   if ($album_galallery_row->is_album) {
-                    $album_row = $this->model->get_album_row_data($album_galallery_row->alb_gal_id);
+                    $album_row = WDWLibrary::get_album_row_data($album_galallery_row->alb_gal_id, true);
                     if (!$album_row) {
                       continue;
                     }
@@ -642,7 +622,7 @@ class BWGViewAlbum_compact_preview {
                     $permalink = $album_row->permalink;
                   }
                   else {
-                    $gallery_row = $this->model->get_gallery_row_data($album_galallery_row->alb_gal_id);
+                    $gallery_row = WDWLibrary::get_gallery_row_data($album_galallery_row->alb_gal_id, "compact");
                     if (!$gallery_row) {
                       continue;
                     }
@@ -906,14 +886,4 @@ class BWGViewAlbum_compact_preview {
       die();
     }
   }
-  
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
 }

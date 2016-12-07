@@ -1,31 +1,9 @@
 <?php
-
 class BWGViewAlbum_extended_preview {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  private $model;
-
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  public function __construct($model) {
-    $this->model = $model;
-  }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function display($params, $from_shortcode = 0, $bwg = 0) {
     global $WD_BWG_UPLOAD_DIR;
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
-    $options_row = $this->model->get_options_row_data();
+    $options_row = WDWLibrary::get_options_row_data();
     $placeholder = isset($options_row->placeholder) ? $options_row->placeholder : '';
     $play_icon = $options_row->play_icon;
 
@@ -90,7 +68,7 @@ class BWGViewAlbum_extended_preview {
       $params['extended_album_enable_page'] = 1;
     }
     $sort_direction = ' ' . $params['order_by'] . ' ';
-    $theme_row = $this->model->get_theme_row_data($params['theme_id']);
+    $theme_row = WDWLibrary::get_theme_row_data($params['theme_id']);
     if (!$theme_row) {
       echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
       return;
@@ -98,7 +76,7 @@ class BWGViewAlbum_extended_preview {
     $type = (isset($_REQUEST['type_' . $bwg]) ? esc_html($_REQUEST['type_' . $bwg]) : 'album');
     $bwg_search = ((isset($_POST['bwg_search_' . $bwg]) && esc_html($_POST['bwg_search_' . $bwg]) != '') ? esc_html($_POST['bwg_search_' . $bwg]) : '');
     $album_gallery_id = (isset($_REQUEST['album_gallery_id_' . $bwg]) ? esc_html($_REQUEST['album_gallery_id_' . $bwg]) : $params['album_id']);
-    if (!$album_gallery_id || ($type == 'album' && !$this->model->get_album_row_data($album_gallery_id))) {
+    if (!$album_gallery_id || ($type == 'album' && !WDWLibrary::get_album_row_data($album_gallery_id, false))) {
       echo WDWLibrary::message(__('There is no album selected or the album was deleted.', 'bwg'), 'wd_error');
       return;
     }
@@ -118,12 +96,13 @@ class BWGViewAlbum_extended_preview {
           $params['sort_by'] = $sort_by;
         }
       }
-      $image_rows = $this->model->get_image_rows_data($album_gallery_id, $items_per_page, $params['sort_by'], $bwg, $sort_direction);
+      $image_rows = WDWLibrary::get_image_rows_data($album_gallery_id, $bwg, 'album_extended', 'bwg_tag_id_bwg_album_extended_' . $bwg, '', $items_per_page, $params['extended_album_images_per_page'], $params['sort_by'], $sort_direction);
+      $page_nav = $image_rows['page_nav'];
+      $image_rows = $image_rows['images'];
       $images_count = count($image_rows);
-      if (!$image_rows) {
+      if (!$images_count) {
         echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
       }
-      $page_nav = $this->model->gallery_page_nav($album_gallery_id, $bwg);
       $album_gallery_div_id = 'bwg_album_extended_' . $bwg;
       $album_gallery_div_class = 'bwg_standart_thumbnails_' . $bwg;
     }
@@ -131,12 +110,13 @@ class BWGViewAlbum_extended_preview {
       $items_per_page = $params['extended_albums_per_page'];
       $items_per_page_arr = array('images_per_page' => $params['extended_albums_per_page'], 'load_more_image_count' => $params['extended_albums_per_page']);
       $items_col_num = 1;
-      $album_galleries_row = $this->model->get_alb_gals_row($album_gallery_id, $items_per_page, 'order', $bwg, ' asc ');
+      $album_galleries_row = WDWLibrary::get_alb_gals_row($album_gallery_id, $items_per_page, 'order', $bwg, ' ASC ');
+      $page_nav = $album_galleries_row['page_nav'];
+      $album_galleries_row = $album_galleries_row['rows'];
       if (!$album_galleries_row) {
         echo WDWLibrary::message(__('There is no album selected or the album was deleted.', 'bwg'), 'wd_error');
         return;
       }
-      $page_nav = $this->model->album_page_nav($album_gallery_id, $bwg);
       $album_gallery_div_id = 'bwg_album_extended_' . $bwg;
       $album_gallery_div_class = 'bwg_album_extended_thumbnails_' . $bwg;
     }
@@ -203,7 +183,7 @@ class BWGViewAlbum_extended_preview {
       $params_array['watermark_position'] = $params['watermark_position'];
     }
     if ($params['watermark_type'] == 'text') {
-      $params_array['watermark_text'] = $params['watermark_text'];
+      $params_array['watermark_text'] = urlencode($params['watermark_text']);
       $params_array['watermark_font_size'] = $params['watermark_font_size'];
       $params_array['watermark_font'] = $params['watermark_font'];
       $params_array['watermark_color'] = $params['watermark_color'];
@@ -213,7 +193,7 @@ class BWGViewAlbum_extended_preview {
       $params_array['watermark_width'] = $params['watermark_width'];
       $params_array['watermark_height'] = $params['watermark_height'];
     }
-    $tags_rows = $this->model->get_tags_rows_data($album_gallery_id);
+    $tags_rows = WDWLibrary::get_tags_rows_data($album_gallery_id);
     $image_right_click = $options_row->image_right_click;
     ?>
     <style>
@@ -596,7 +576,7 @@ class BWGViewAlbum_extended_preview {
                 }
                 foreach ($album_galleries_row as $album_galallery_row) {
                   if ($album_galallery_row->is_album) {
-                    $album_row = $this->model->get_album_row_data($album_galallery_row->alb_gal_id);
+                    $album_row = WDWLibrary::get_album_row_data($album_galallery_row->alb_gal_id, false);
                     if (!$album_row) {
                       continue;
                     }
@@ -609,7 +589,7 @@ class BWGViewAlbum_extended_preview {
                     $description = wpautop($album_row->description);
                   }
                   else {
-                    $gallery_row = $this->model->get_gallery_row_data($album_galallery_row->alb_gal_id);
+                    $gallery_row = WDWLibrary::get_gallery_row_data($album_galallery_row->alb_gal_id);
                     if (!$gallery_row) {
                       continue;
                     }
@@ -656,61 +636,61 @@ class BWGViewAlbum_extended_preview {
                     $thumb_left = 0;
                     $thumb_top = 0;
                   }
-                  if ($type != 'gallery') {
-                    ?>
-                    <div class="bwg_album_extended_div_<?php echo $bwg; ?>">
-                      <div class="bwg_album_extended_thumb_div_<?php echo $bwg; ?>">
-                        <a class="bwg_album_<?php echo $bwg; ?>" <?php echo ($options_row->enable_seo ? 'href="' . esc_url(add_query_arg(array("type_" . $bwg => $def_type, "album_gallery_id_" . $bwg => $album_galallery_row->alb_gal_id, "bwg_previous_album_id_" . $bwg => $album_gallery_id . ',' . $bwg_previous_album_id , "bwg_previous_album_page_number_" . $bwg => (isset($_REQUEST['page_number_' . $bwg]) ? esc_html($_REQUEST['page_number_' . $bwg]) : 0) . ',' . $bwg_previous_album_page_number), $_SERVER['REQUEST_URI'])) . '"' : ''); ?> style="font-size: 0;" data-alb_gal_id="<?php echo $album_galallery_row->alb_gal_id; ?>" data-def_type="<?php echo $def_type; ?>" data-title="<?php htmlspecialchars(addslashes($title)); ?>">
-                          <span class="bwg_album_thumb_<?php echo $bwg; ?>" style="height:inherit;">
-                            <span class="bwg_album_thumb_spun1_<?php echo $bwg; ?>">
-                              <span class="bwg_album_thumb_spun2_<?php echo $bwg; ?>">
-                                <img class="bwg_img_clear bwg_img_custom" style="width:<?php echo $image_thumb_width; ?>px; height:<?php echo $image_thumb_height; ?>px; margin-left: <?php echo $thumb_left; ?>px; margin-top: <?php echo $thumb_top; ?>px;" src="<?php echo $preview_url; ?>" alt="<?php echo $title; ?>" />
-                              </span>
+                  ?>
+                  <div class="bwg_album_extended_div_<?php echo $bwg; ?>">
+                    <div class="bwg_album_extended_thumb_div_<?php echo $bwg; ?>">
+                      <a class="bwg_album_<?php echo $bwg; ?>" <?php echo ($options_row->enable_seo ? 'href="' . esc_url(add_query_arg(array("type_" . $bwg => $def_type, "album_gallery_id_" . $bwg => $album_galallery_row->alb_gal_id, "bwg_previous_album_id_" . $bwg => $album_gallery_id . ',' . $bwg_previous_album_id , "bwg_previous_album_page_number_" . $bwg => (isset($_REQUEST['page_number_' . $bwg]) ? esc_html($_REQUEST['page_number_' . $bwg]) : 0) . ',' . $bwg_previous_album_page_number), $_SERVER['REQUEST_URI'])) . '"' : ''); ?> style="font-size: 0;" data-alb_gal_id="<?php echo $album_galallery_row->alb_gal_id; ?>" data-def_type="<?php echo $def_type; ?>" data-title="<?php htmlspecialchars(addslashes($title)); ?>">
+                        <span class="bwg_album_thumb_<?php echo $bwg; ?>" style="height:inherit;">
+                          <span class="bwg_album_thumb_spun1_<?php echo $bwg; ?>">
+                            <span class="bwg_album_thumb_spun2_<?php echo $bwg; ?>">
+                              <img class="bwg_img_clear bwg_img_custom" style="width:<?php echo $image_thumb_width; ?>px; height:<?php echo $image_thumb_height; ?>px; margin-left: <?php echo $thumb_left; ?>px; margin-top: <?php echo $thumb_top; ?>px;" src="<?php echo $preview_url; ?>" alt="<?php echo $title; ?>" />
                             </span>
                           </span>
+                        </span>
+                      </a>
+                    </div>
+                    <div class="bwg_album_extended_text_div_<?php echo $bwg; ?>">
+                      <?php
+                      if ($title) {
+                        ?>
+                        <a class="bwg_album_<?php echo $bwg; ?>" <?php echo ($options_row->enable_seo ? 'href="' . esc_url(add_query_arg(array("type_" . $bwg => $def_type, "album_gallery_id_" . $bwg => $album_galallery_row->alb_gal_id, "bwg_previous_album_id_" . $bwg => $album_gallery_id . ',' . $bwg_previous_album_id , "bwg_previous_album_page_number_" . $bwg => (isset($_REQUEST['page_number_' . $bwg]) ? esc_html($_REQUEST['page_number_' . $bwg]) : 0) . ',' . $bwg_previous_album_page_number), $_SERVER['REQUEST_URI'])) . '"' : ''); ?> style="font-size: 0;" data-alb_gal_id="<?php echo $album_galallery_row->alb_gal_id; ?>" data-def_type="<?php echo $def_type; ?>" data-title="<?php htmlspecialchars(addslashes($title)); ?>">
+                         <span class="bwg_title_spun_<?php echo $bwg; ?>"><?php echo $title; ?></span>
                         </a>
-                      </div>
-                      <div class="bwg_album_extended_text_div_<?php echo $bwg; ?>">
                         <?php
-                        if ($title) {
+                      }
+                      if ($params['extended_album_description_enable'] && $description) {
+                        if (stripos($description, '<!--more-->') !== FALSE) {
+                          $description_array = explode('<!--more-->', $description);
+                          $description_short = $description_array[0];
+                          $description_full = $description_array[1];
                           ?>
-                          <span class="bwg_title_spun_<?php echo $bwg; ?>"><?php echo $title; ?></span>
+                          <span class="bwg_description_spun1_<?php echo $bwg; ?>">
+                            <span class="bwg_description_spun2_<?php echo $bwg; ?>">
+                              <span class="bwg_description_short_<?php echo $bwg; ?>">
+                                <?php echo $description_short; ?>
+                              </span>
+                              <span class="bwg_description_full_<?php echo $bwg; ?>">
+                                <?php echo $description_full; ?>
+                              </span>
+                            </span>
+                            <span class="bwg_description_more_<?php echo $bwg; ?> bwg_more"><?php echo __('More', 'bwg'); ?></span>
+                          </span>
                           <?php
                         }
-                        if ($params['extended_album_description_enable'] && $description) {
-                          if (stripos($description, '<!--more-->') !== FALSE) {
-                            $description_array = explode('<!--more-->', $description);
-                            $description_short = $description_array[0];
-                            $description_full = $description_array[1];
-                            ?>
-                            <span class="bwg_description_spun1_<?php echo $bwg; ?>">
-                              <span class="bwg_description_spun2_<?php echo $bwg; ?>">
-                                <span class="bwg_description_short_<?php echo $bwg; ?>">
-                                  <?php echo $description_short; ?>
-                                </span>
-                                <span class="bwg_description_full_<?php echo $bwg; ?>">
-                                  <?php echo $description_full; ?>
-                                </span>
-                              </span>
-                              <span class="bwg_description_more_<?php echo $bwg; ?> bwg_more"><?php echo __('More', 'bwg'); ?></span>
+                        else {
+                          ?>
+                          <span class="bwg_description_spun1_<?php echo $bwg; ?>">
+                            <span class="bwg_description_short_<?php echo $bwg; ?>">
+                              <?php echo $description; ?>
                             </span>
-                            <?php
-                          }
-                          else {
-                            ?>
-                            <span class="bwg_description_spun1_<?php echo $bwg; ?>">
-                              <span class="bwg_description_short_<?php echo $bwg; ?>">
-                                <?php echo $description; ?>
-                              </span>
-                            </span>
-                            <?php
-                          }
+                          </span>
+                          <?php
                         }
-                        ?>
-                      </div>
+                      }
+                      ?>
                     </div>
-                    <?php
-                  }
+                  </div>
+                  <?php
                 }
               }
               elseif ($type == 'gallery') {
@@ -887,14 +867,4 @@ class BWGViewAlbum_extended_preview {
       die();
     }
   }
-  
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
 }

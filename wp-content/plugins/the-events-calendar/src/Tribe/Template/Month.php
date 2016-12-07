@@ -29,6 +29,16 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 		const AJAX_HOOK = 'tribe_calendar';
 
 		/**
+		 * The path to the template file used for the view.
+		 * This value is used in Shortcodes/Tribe_Events.php to
+		 * locate the correct template file for each shortcode
+		 * view.
+		 *
+		 * @var string
+		 */
+		public $view_path = 'month/content';
+
+		/**
 		 * Number of events per day
 		 * @var int
 		 * @see tribe_events_month_day_limit
@@ -231,6 +241,15 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 
 			// In all other cases, let's cache it!
 			return true;
+		}
+
+		/**
+		 * Returns an array containing the IDs of all the events in the month.
+		 *
+		 * @return array
+		 */
+		public function get_events_in_month_ids() {
+			return $this->has_events() ? wp_list_pluck( $this->events_in_month, 'ID' ) : array();
 		}
 
 		/**
@@ -565,6 +584,10 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 
 					$event_start = strtotime( tribe_get_start_date( $event->ID, true, Tribe__Date_Utils::DBDATETIMEFORMAT ) );
 					$event_end   = strtotime( tribe_get_end_date( $event->ID, true, Tribe__Date_Utils::DBDATETIMEFORMAT ) );
+					$order = get_post_field( 'menu_order', $event->ID );
+
+					// Builds the Index to allow a better ordering of events
+					$order_index = $order . ':' . $event_start . ':' . $event->ID;
 
 					$start = date( 'Y-m-d', $event_start );
 					$end = date( 'Y-m-d', $event_end );
@@ -629,7 +652,7 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 								$this->event_ids_by_day[ $new_start ] = array();
 							}
 
-							$this->event_ids_by_day[ $new_start ][] = $event->ID;
+							$this->event_ids_by_day[ $new_start ][ $order_index ] = $event->ID;
 
 							$new_start = date( 'Y-m-d', strtotime( '+1 day', strtotime( $new_start ) ) );
 						}
@@ -639,14 +662,14 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 							$this->event_ids_by_day[ $start ] = array();
 						}
 
-						$this->event_ids_by_day[ $start ][] = $event->ID;
+						$this->event_ids_by_day[ $start ][ $order_index ] = $event->ID;
 					}
 				}
 
 				// Now that we've built our event_ids_by_day, let's array_unique and sort
 				foreach ( $this->event_ids_by_day as &$day ) {
 					$day = array_unique( $day );
-					sort( $day );
+					ksort( $day );
 				}
 			}
 
@@ -693,11 +716,9 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 					'update_post_meta_cache' => false,
 					'no_found_rows'          => false,
 					'do_not_inject_date'     => true,
-					'meta_key'               => '_EventStartDate',
-					'orderby'                => array(
-						'menu_order' => 'ASC',
-						'meta_value' => 'ASC',
-					),
+
+					// Don't replace `orderby` without taking in cosideration `menu_order`
+					'orderby'                => 'post__in',
 				), $this->args
 			);
 
@@ -732,7 +753,7 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 			// Populate complete date range including leading/trailing days from adjacent months
 			while ( $date <= $this->final_grid_date ) {
 
-				$day_events = self::get_daily_events( $date );
+				$day_events = $this->get_daily_events( $date );
 				$day = (int) substr( $date, - 2 );
 
 				$prev_month = (int) substr( $date, 5, 2 ) < (int) substr( $this->requested_date, 5, 2 );
@@ -1043,7 +1064,6 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 			if ( isset( $_POST['eventDate'] ) && $_POST['eventDate'] ) {
 
 				Tribe__Events__Query::init();
-
 
 				Tribe__Events__Main::instance()->displaying = 'month';
 

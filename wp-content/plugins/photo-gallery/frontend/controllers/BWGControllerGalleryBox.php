@@ -41,7 +41,7 @@ class BWGControllerGalleryBox {
   public function save() {
     require_once WD_BWG_DIR . "/frontend/models/BWGModelGalleryBox.php";
     $model = new BWGModelGalleryBox();
-    $option_row = $model->get_option_row_data();
+    $option_row = WDWLibrary::get_options_row_data();
     if ($option_row->popup_enable_email) {
       // Email validation.
       $email = (isset($_POST['bwg_email']) ? is_email(stripslashes($_POST['bwg_email'])) : FALSE);

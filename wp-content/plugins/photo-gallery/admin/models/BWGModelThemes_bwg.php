@@ -57,6 +57,9 @@ class BWGModelThemes_bwg {
       if (!isset($row->lightbox_bg_transparent)) {
         $row->lightbox_bg_transparent = 100;
       }
+      if (!isset($row->image_browser_image_title_align)) {
+        $row->image_browser_image_title_align = 'top';
+      }
       if ($reset) {
         if (!$row->default_theme) {
           $row_id = $row->id;
@@ -65,6 +68,16 @@ class BWGModelThemes_bwg {
           $row->id = $row_id;
           $row->name = $row_name;
           $row->default_theme = FALSE;
+          $themes = json_decode($row->options);
+          foreach ($themes as $key => $value) {
+            $row->$key = $value;
+          }
+          if (!isset($row->lightbox_bg_transparent)) {
+            $row->lightbox_bg_transparent = 100;
+          }
+          if (!isset($row->image_browser_image_title_align)) {
+            $row->image_browser_image_title_align = 'top';
+          }
         }
         else {
           $row->thumb_margin = 4;
@@ -443,6 +456,7 @@ class BWGModelThemes_bwg {
           $row->image_browser_full_border_color = 'F7F7F7';
           $row->image_browser_full_bg_color = 'F5F5F5';
           $row->image_browser_full_transparent = 90;
+          $row->image_browser_image_title_align = 'top';
           $row->lightbox_info_pos = 'top';
           $row->lightbox_info_align = 'right';
           $row->lightbox_info_bg_color = '000000';
@@ -500,7 +514,7 @@ class BWGModelThemes_bwg {
           $row->carousel_close_rl_btn_hover_color = 'CCCCCC';
           $row->carousel_rl_btn_style='fa-chevron';
           $row->carousel_mergin_bottom = '0.5';      
-          $row->carousel_font_family = 'Arial';
+          $row->carousel_font_family = 'segoe ui';
           $row->carousel_feature_border_width = 2;
           $row->carousel_feature_border_style = 'solid';
           $row->carousel_feature_border_color= '5D204F';          
@@ -521,6 +535,10 @@ class BWGModelThemes_bwg {
       $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme WHERE default_theme="%d"', 1));
       $row->id = 0;
       $row->name = '';
+      $themes = json_decode($row->options);
+      foreach ($themes as $key => $value) {
+        $row->$key = $value;
+      }
       $row->default_theme = 0;
       $themes = json_decode($row->options);
       foreach ($themes as $key => $value) {
@@ -528,6 +546,9 @@ class BWGModelThemes_bwg {
       }
       if (!isset($row->lightbox_bg_transparent)) {
         $row->lightbox_bg_transparent = 100;
+      }
+      if (!isset($row->image_browser_image_title_align)) {
+        $row->image_browser_image_title_align = 'top';
       }
     }
     return $row;
