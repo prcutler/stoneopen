@@ -55,7 +55,7 @@
 <select name="accesspress_parallax[parallax_section][<?php echo $countsettings; ?>][category]" class="of-input">
 	<option value=""><?php _e('Select a Category:', 'accesspress-parallax') ?></option>
 <?php foreach ($options_categories_obj as $category) { ?>
-	<option value="<?php echo $category->cat_ID; ?>"><?php echo $category->cat_name; ?></option>
+	<option value="<?php echo absint( $category->cat_ID ); ?>"><?php echo esc_html( $category->cat_name ); ?></option>
 <?php } ?>
 </select>
 </div>

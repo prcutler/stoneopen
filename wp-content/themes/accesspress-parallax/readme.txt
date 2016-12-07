@@ -89,6 +89,10 @@ Images
 ---------------------------------------------
 
 == Changelog ==
+Version 1.26.2
+ * Fixed some escapting value
+ * Updated .pot file
+ 
 Version 1.26.1
 * Translation Bug fixed
 

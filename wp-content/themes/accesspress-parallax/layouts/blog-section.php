@@ -12,7 +12,7 @@
 			'cat' => $category,
 			'posts_per_page' => 3
 			);
-		$count_service = 0;
+		
 		$query = new WP_Query($args);
 		if($query->have_posts()):
 			$i = 0;
@@ -24,7 +24,7 @@
 			<div class="blog-image">
 			<?php if(has_post_thumbnail()) : 
 			$image = wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()),'blog-thumbnail'); ?>
-				<img src="<?php echo esc_url($image[0]); ?>" alt="<?php the_title(); ?>">
+				<img src="<?php echo esc_url( $image[0] ); ?>" alt="<?php the_title(); ?>">
 			<?php else: ?>
 				<img src="<?php echo get_template_directory_uri(); ?>/images/no-image.jpg" alt="<?php the_title(); ?>">
 			<?php endif; ?>

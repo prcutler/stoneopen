@@ -12,7 +12,7 @@
 			'cat' => $category,
 			'posts_per_page' => -1
 			);
-		$count_service = 0;
+		
 		$query = new WP_Query($args);
 		if($query->have_posts()):
 			$i = 0;
