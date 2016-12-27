@@ -495,8 +495,8 @@ class BWGViewThumbnails {
     <script>
       <?php
         $params_array = array(
-          'tag' => (isset($params['tag']) ? $params['tag'] : 0),
           'action' => 'GalleryBox',
+          'tags' => (isset($params['tag']) ? $params['tag'] : 0),
           'current_view' => $bwg,
           'gallery_id' => $params['gallery_id'],
           'theme_id' => $params['theme_id'],

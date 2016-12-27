@@ -4,7 +4,7 @@ Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
 Tags: album, image gallery, gallery, image, images, lightbox, photo, photo gallery, photos, responsive, thumbnail, widget
 Requires at least: 3.4
 Tested up to: 4.7 
-Stable tag: 1.3.20    
+Stable tag: 1.3.22    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -173,6 +173,21 @@ To enable the feature of adding Media Library images, go to Photo Gallery > Opti
 
 == Changelog ==
 
+= 1.3.22 =
+* Fixed: Styles on Twenty Seventeen theme.    
+* Fixed: Conflict with lazy load in albums views.     
+* Fixed: Google fonts bad request.     
+* Fixed: Tag in gallery box url.   
+* Fixed: German translation (Thanks to Hans-Jurgen Stephan).   
+* Fixed: Tag pages display bug.   
+* Fixed: Upload only images zip.  
+* Fixed: Show galleries in pages loaded with ajax.    
+* Fixed: Conflict with "All in One SEO Pack" plugin.    
+
+= 1.3.21 =
+* Fixed: Frontend content language in AJAX response on Wordpress 4.7.   
+* Fixed: Images check all in backend on Wordpress 4.7.   
+* Fixed: Item price with parameter.   
 
 = 1.3.20 =
 * Fixed: Redirect to url for masonry view.     

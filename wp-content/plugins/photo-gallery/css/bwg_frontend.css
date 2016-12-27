@@ -3,6 +3,10 @@ div[id^="bwg_container"] p {
   margin: 0 !important;
 }
 
+div[id^="bwg_container"] img {
+  box-shadow: none !important;
+}
+
 div[id^="bwg_container"] .SumoSelect > .CaptionCont,
 div[id^="bwg_container"] .SumoSelect:focus > .CaptionCont,
 div[id^="bwg_container"] .SumoSelect:hover > .CaptionCont,
@@ -47,7 +51,7 @@ div[id^="bwg_container"] .SumoSelect.open > .CaptionCont {
 
 div[id^="bwg_container"] a {
   border: none;
-  box-shadow: none;
+  box-shadow: none !important;
   outline: none;
   font-size: 0;
   cursor: pointer;

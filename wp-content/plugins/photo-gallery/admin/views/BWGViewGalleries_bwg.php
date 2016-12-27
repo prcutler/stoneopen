@@ -665,15 +665,9 @@ class BWGViewGalleries_bwg {
                     onclick="spider_remove_url('button_preview_image', 'preview_image', 'delete_preview_image', 'img_preview_image')"></span>
             </td>
           </tr>
-          <tr>
-            <td colspan=2>
-              <?php
-              echo $this->image_display($id);
-              ?>
-            </td>
-          </tr>
         </tbody>
       </table>
+      <?php echo $this->image_display($id); ?>
       <input id="task" name="task" type="hidden" value="" />
       <input id="current_id" name="current_id" type="hidden" value="<?php echo $row->id; ?>" />
       <script>
@@ -692,7 +686,7 @@ class BWGViewGalleries_bwg {
     </form>
     <?php
   }
-  
+
   public function image_display($id) {
     global $WD_BWG_UPLOAD_DIR;
     $rows_data = $this->model->get_image_rows_data($id);

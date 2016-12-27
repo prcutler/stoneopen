@@ -130,9 +130,8 @@ class BWGViewAlbum_compact_preview {
       return;
     }
     $album_gallery_id = (isset($_REQUEST['album_gallery_id_' . $bwg]) ? esc_html($_REQUEST['album_gallery_id_' . $bwg]) : $params['album_id']);
-    $album_row_data = WDWLibrary::get_album_row_data($album_gallery_id, true);
-
-    if (!$album_gallery_id || ($type == 'album' && !$album_row_data)) {
+    $album_row = WDWLibrary::get_album_row_data($album_gallery_id, FALSE);
+    if (!$album_gallery_id || ($type == 'album' && !$album_row)) {
       echo WDWLibrary::message(__('There is no album selected or the album was deleted.', 'bwg'), 'wd_error');
       return;
     }
@@ -549,9 +548,6 @@ class BWGViewAlbum_compact_preview {
         margin: 0 auto;
       }
     </style>
-		<?php
-			$album_row = WDWLibrary::get_album_row_data($album_gallery_id, true);
-		?>
     <div id="bwg_container1_<?php echo $bwg; ?>">
       <div id="bwg_container2_<?php echo $bwg; ?>">
         <form id="gal_front_form_<?php echo $bwg; ?>" method="post" action="#">
@@ -609,7 +605,7 @@ class BWGViewAlbum_compact_preview {
                 }
                 foreach ($album_galleries_row as $album_galallery_row) {
                   if ($album_galallery_row->is_album) {
-                    $album_row = WDWLibrary::get_album_row_data($album_galallery_row->alb_gal_id, true);
+                    $album_row = WDWLibrary::get_album_row_data($album_galallery_row->alb_gal_id, $from === "widget");
                     if (!$album_row) {
                       continue;
                     }
@@ -622,7 +618,7 @@ class BWGViewAlbum_compact_preview {
                     $permalink = $album_row->permalink;
                   }
                   else {
-                    $gallery_row = WDWLibrary::get_gallery_row_data($album_galallery_row->alb_gal_id, "compact");
+                    $gallery_row = WDWLibrary::get_gallery_row_data($album_galallery_row->alb_gal_id, ($from === "widget" ? "compact" : ""));
                     if (!$gallery_row) {
                       continue;
                     }

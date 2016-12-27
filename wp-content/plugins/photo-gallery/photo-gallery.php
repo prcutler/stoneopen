@@ -4,7 +4,7 @@
  * Plugin Name: Photo Gallery
  * Plugin URI: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
- * Version: 1.3.20
+ * Version: 1.3.22
  * Author: WebDorado
  * Author URI: https://web-dorado.com/
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
@@ -150,6 +150,9 @@ function bwg_addons() {
 }
 
 function bwg_ajax_frontend() {
+  if (function_exists('switch_to_locale') && function_exists('get_locale')) {
+    switch_to_locale(get_locale());
+  }
   require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
   $page = WDWLibrary::get('action');
   if (($page != '') && ($page == 'GalleryBox')) {
@@ -295,6 +298,9 @@ function photo_gallery($id) {
 }
 
 function bwg_shortcode($params) {
+  if ( is_admin() && defined('DOING_AJAX') && !DOING_AJAX) {
+    return;
+  }
   if (isset($params['id'])) {
     global $wpdb;
     $shortcode = $wpdb->get_var($wpdb->prepare("SELECT tagtext FROM " . $wpdb->prefix . "bwg_shortcode WHERE id='%d'", $params['id']));
@@ -1926,7 +1932,7 @@ function bwg_activate() {
     ));
   }
   $version = WD_BWG_VERSION;
-  $new_version = '1.3.20';
+  $new_version = '1.3.22';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -1978,7 +1984,7 @@ wp_oembed_add_provider( '#https://instagr(\.am|am\.com)/p/.*#i', 'https://api.in
 
 function bwg_update_hook() {
   $version = WD_BWG_VERSION;
-  $new_version = '1.3.20';
+  $new_version = '1.3.22';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -2011,8 +2017,8 @@ function bwg_styles() {
   wp_enqueue_style('bwg_tables', WD_BWG_URL . '/css/bwg_tables.css', array(), wd_bwg_version());
   require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
   $google_fonts = WDWLibrary::get_google_fonts();
-  for ($i = 0; $i < count($google_fonts); $i = $i + 150) {
-    $fonts = array_slice($google_fonts, $i, 150);
+  for ($i = 0; $i < count($google_fonts); $i = $i + 120) {
+    $fonts = array_slice($google_fonts, $i, 120);
     $query = implode("|", str_replace(' ', '+', $fonts));
     $url = 'https://fonts.googleapis.com/css?family=' . $query . '&subset=greek,latin,greek-ext,vietnamese,cyrillic-ext,latin-ext,cyrillic';
     wp_enqueue_style('bwg_googlefonts_' . $i, $url, null, null);
@@ -2237,8 +2243,8 @@ function bwg_front_end_scripts() {
   // Google fonts.
   require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
   $google_fonts = WDWLibrary::get_google_fonts();
-  for ($i = 0; $i < count($google_fonts); $i = $i + 150) {
-    $fonts = array_slice($google_fonts, $i, 150);
+  for ($i = 0; $i < count($google_fonts); $i = $i + 120) {
+    $fonts = array_slice($google_fonts, $i, 120);
     $query = implode("|", str_replace(' ', '+', $fonts));
     $url = 'https://fonts.googleapis.com/css?family=' . $query . '&subset=greek,latin,greek-ext,vietnamese,cyrillic-ext,latin-ext,cyrillic';
     wp_enqueue_style('bwg_googlefonts_' . $i, $url, null, null);
@@ -2261,7 +2267,7 @@ function bwg_create_post_type() {
      $show_hide_post_meta = array('editor', 'comments', 'thumbnail', 'title');
   }
   else {
-     $show_hide_post_meta = array('thumbnail', 'title');
+     $show_hide_post_meta = array('editor', 'thumbnail', 'title');
   }
   if ($row->show_hide_custom_post == 0) {
      $show_hide_custom_post = false;

@@ -2,19 +2,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bwg\n"
 "POT-Creation-Date: 2016-01-08 09:54+0400\n"
-"PO-Revision-Date: 2016-01-08 09:54+0400\n"
+"PO-Revision-Date: 2016-12-10 18:25+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: __\n"
-"X-Poedit-SearchPath-0: C:\\wamp\\www\\wordpress\\wp-content\\plugins\\photo-"
-"gallery\\frontend\n"
+"X-Poedit-SearchPath-0: C:/wamp/www/wordpress/wp-content/plugins/photo-"
+"gallery/frontend\n"
 "X-Poedit-SearchPath-1: C:/wamp/www/wordpress/wp-content/plugins/photo-"
 "gallery/framework\n"
 
@@ -71,7 +71,7 @@ msgstr "Album ist leer."
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_extended_preview.php:1024
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_masonry_preview.php:583
 msgid "There are no images matching your search."
-msgstr "Es gibt keine Bilder, die Ihrer Suche entsprechen."
+msgstr "Es gibt keine Bilder, die ihrer Suche entsprechen."
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_compact_preview.php:1041
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewAlbum_extended_preview.php:1029
@@ -270,7 +270,7 @@ msgstr "Kommentar löschen"
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:2261
 msgid "Show Comments"
-msgstr "Anmerkungen anzeigen "
+msgstr "Kommentare anzeigen "
 
 #: C:\wamp\www\wordpress\wp-content\plugins\photo-gallery\frontend/views/BWGViewGalleryBox.php:2480
 msgid "Hide info"
@@ -291,71 +291,71 @@ msgstr "Vollbildmodus beenden"
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:46
 msgid "Item Succesfully Saved."
-msgstr ""
+msgstr "Objekt erfolgreich gesichert."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:52
 msgid "Error. Please install plugin again."
-msgstr ""
+msgstr "Fehler, bitte installiere das Plugin nocheinmal."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:58
 msgid "Item Succesfully Deleted."
-msgstr ""
+msgstr "Objekt erfolgreich gelöscht."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:64
 msgid "You can't delete default theme"
-msgstr ""
+msgstr "Sie können das Standard Theme nicht löschen"
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:70
 msgid "Items Succesfully Deleted."
-msgstr ""
+msgstr "Objekte erfrolgreich gelöscht."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:76
 msgid "You must select at least one item."
-msgstr ""
+msgstr "Sie müssen mindestens ein Objekt auswählen."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:82
 msgid "The item is successfully set as default."
-msgstr ""
+msgstr "Das Objekt wurde erfolgreich als Standard gespeichert."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:88
 msgid "Options Succesfully Saved."
-msgstr ""
+msgstr "Optionen erfolgreich gespeichert."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:94
 msgid "Item Succesfully Published."
-msgstr ""
+msgstr "Objekt erfolgreich veröffentlicht."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:100
 msgid "Items Succesfully Published."
-msgstr ""
+msgstr "Objekte erfolgreich veröffentlicht."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:106
 msgid "Item Succesfully Unpublished."
-msgstr ""
+msgstr "Objekt erfolgreich nicht veröffentlicht."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:112
 msgid "Items Succesfully Unpublished."
-msgstr ""
+msgstr "Objekte erfolgreich nicht veröffentlicht."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:118
 msgid "Ordering Succesfully Saved."
-msgstr ""
+msgstr "Der Auftrag wurde erfolgreich gespeichert."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:124
 msgid "A term with the name provided already exists."
-msgstr ""
+msgstr "Ein Begriff mit dem eingegebenen Namen existiert breits."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:130
 msgid "Name field is required."
-msgstr ""
+msgstr "Das Feld Name wird benötigt."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:136
 msgid "The slug must be unique."
-msgstr ""
+msgstr "Die Webadresse muss eindeutig sein."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:142
 msgid "Changes must be saved."
-msgstr ""
+msgstr "Änderungen müssen gesichert werden."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:188
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:362
@@ -379,11 +379,11 @@ msgstr "von"
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:436
 msgid "item"
-msgstr ""
+msgstr "Objekt"
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:516
 msgid " item(s)"
-msgstr " Foto(s)"
+msgstr "Objekt(e)"
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:521
 msgid "First"
@@ -423,11 +423,11 @@ msgstr "Laden Sie Mehr ..."
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:846
 msgid "Order by: "
-msgstr "Sortieren nach"
+msgstr "Sortieren nach:"
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:848
 msgid "Default"
-msgstr "Default"
+msgstr "Standard"
 
 #: C:/wamp/www/wordpress/wp-content/plugins/photo-gallery/framework/WDWLibrary.php:849
 msgid "Filename"

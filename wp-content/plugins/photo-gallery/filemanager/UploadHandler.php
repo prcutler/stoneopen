@@ -605,35 +605,37 @@ class bwg_UploadHandler {
     }
 
     protected function handle_zip_file($file_path, $file) {
-     $zip = new ZipArchive;
-     $res = $zip->open($file_path);
-     if ($res === TRUE) {
-       $allow_extract = true;
-       for($i = 0; $i < $zip->numFiles; $i++) {
-         $OnlyFileName = $zip->getNameIndex($i);
-         $FullFileName = $zip->statIndex($i);
-         if (!($FullFileName['name'][strlen($FullFileName['name'])-1] =="/")) {
-           if (!preg_match('#\.(gif|jpe?g|png|bmp|mp4|flv|webm|ogg|mp3|wav|pdf|ini|txt)$#i', $OnlyFileName)) {
-             $allow_extract = false;
-           }
-         }
-       }
-       if ($allow_extract) {
-         $target_dir = substr($file_path, 0, strlen($file_path) - 4);
-         if (!is_dir($target_dir)) {
-           mkdir($target_dir, 0777);
-         }
-         $zip->extractTo($target_dir);
-       }
-       else {
-         $file->error = 'Zip file should contain only image files.';
-       }
-       $zip->close();
-       if ($allow_extract) {
-         $this->handle_directory($target_dir);
-       }
-     }
-   }
+      $zip = new ZipArchive;
+      $res = $zip->open($file_path);
+      if ($res === TRUE) {
+        $allow_extract = true;
+        for($i = 0; $i < $zip->numFiles; $i++) {
+          $OnlyFileName = $zip->getNameIndex($i);
+          $FullFileName = $zip->statIndex($i);
+          if (!($FullFileName['name'][strlen($FullFileName['name']) - 1] == "/")) {
+            if (!preg_match('#\.(gif|jpe?g|png|bmp|mp4|flv|webm|ogg|mp3|wav|pdf|ini|txt)$#i', $OnlyFileName)) {
+              $allow_extract = false;
+            }
+          }
+        }
+        if ($allow_extract) {
+          $target_dir = substr($file_path, 0, strlen($file_path) - 4);
+          if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0777);
+          }
+          $zip->extractTo($target_dir);
+        }
+        else {
+          $file->error = 'Zip file should contain only image files.';
+        }
+        $zip->close();
+        if ($allow_extract) {
+          $this->handle_directory($target_dir);
+        }
+      }
+      unlink($file_path);
+      return $file->error;
+    }
 
     protected function handle_directory($target_dir) {
       $extracted_files = scandir($target_dir);
@@ -753,7 +755,7 @@ class bwg_UploadHandler {
             $this->handle_image_file($file_path, $file);
           }
           else {
-            $this->handle_zip_file($file_path, $file);
+            $file->error = $this->handle_zip_file($file_path, $file);
           }
         }
         else {

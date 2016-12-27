@@ -23,7 +23,7 @@ class BWGViewGalleryBox {
   public function display() {
     global $WD_BWG_UPLOAD_DIR;
     require_once(WD_BWG_DIR . '/framework/WDWLibraryEmbed.php');
-    $tag = (isset($_GET['tag']) ? esc_html($_GET['tag']) : 0);
+    $tag = (isset($_GET['tags']) ? esc_html($_GET['tags']) : 0);
     $gallery_id = WDWLibrary::esc_script('get', 'gallery_id', 0, 'int');
     $bwg = (isset($_GET['current_view']) ? esc_html($_GET['current_view']) : 0);
     $current_image_id = WDWLibrary::esc_script('get', 'image_id', 0, 'int');

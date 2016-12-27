@@ -416,7 +416,7 @@ class FilemanagerView {
                       onBtnBackClick();
                     },
                     done: function (e, data) {
-                      jQuery.each(data.files, function (index, file) {
+                      jQuery.each(data.result.files, function (index, file) {
                         if (file.error) {
                           alert(errorLoadingFile + ' :: ' + file.error);
                         }
@@ -447,22 +447,21 @@ class FilemanagerView {
             </div>
           </div>
         </div>
-
-        <input type="hidden" name="task" value="">
-        <input type="hidden" name="extensions" value="<?php echo (isset($_REQUEST['extensions']) ? esc_html($_REQUEST['extensions']) : '*'); ?>">
-        <input type="hidden" name="callback" value="<?php echo (isset($_REQUEST['callback']) ? esc_html($_REQUEST['callback']) : ''); ?>">
-        <input type="hidden" name="sort_by" value="<?php echo $sort_by; ?>">
-        <input type="hidden" name="sort_order" value="<?php echo $sort_order; ?>">
-        <input type="hidden" name="items_view" value="<?php echo $items_view; ?>">
-        <input type="hidden" name="dir" value="<?php echo (isset($_REQUEST['dir']) ? str_replace('\\', '', ($_REQUEST['dir'])) : ''); ?>"/>
-        <input type="hidden" name="file_names" value=""/>
-        <input type="hidden" name="file_namesML" value=""/>
-        <input type="hidden" name="file_new_name" value=""/>
-        <input type="hidden" name="new_dir_name" value=""/>
-        <input type="hidden" name="clipboard_task" value="<?php echo $clipboard_task; ?>"/>
-        <input type="hidden" name="clipboard_files" value="<?php echo $clipboard_files; ?>"/>
-        <input type="hidden" name="clipboard_src" value="<?php echo $clipboard_src; ?>"/>
-        <input type="hidden" name="clipboard_dest" value="<?php echo $clipboard_dest; ?>"/>
+        <input type="hidden" name="task" value="" />
+        <input type="hidden" name="extensions" value="<?php echo (isset($_REQUEST['extensions']) ? esc_html($_REQUEST['extensions']) : '*'); ?>" />
+        <input type="hidden" name="callback" value="<?php echo (isset($_REQUEST['callback']) ? esc_html($_REQUEST['callback']) : ''); ?>" />
+        <input type="hidden" name="sort_by" value="<?php echo $sort_by; ?>" />
+        <input type="hidden" name="sort_order" value="<?php echo $sort_order; ?>" />
+        <input type="hidden" name="items_view" value="<?php echo $items_view; ?>" />
+        <input type="hidden" name="dir" value="<?php echo (isset($_REQUEST['dir']) ? str_replace('\\', '', ($_REQUEST['dir'])) : ''); ?>" />
+        <input type="hidden" name="file_names" value="" />
+        <input type="hidden" name="file_namesML" value="" />
+        <input type="hidden" name="file_new_name" value="" />
+        <input type="hidden" name="new_dir_name" value="" />
+        <input type="hidden" name="clipboard_task" value="<?php echo $clipboard_task; ?>" />
+        <input type="hidden" name="clipboard_files" value="<?php echo $clipboard_files; ?>" />
+        <input type="hidden" name="clipboard_src" value="<?php echo $clipboard_src; ?>" />
+        <input type="hidden" name="clipboard_dest" value="<?php echo $clipboard_dest; ?>" />
       </form>
       <?php
       include_once (WD_BWG_DIR .'/includes/bwg_pointers.php');

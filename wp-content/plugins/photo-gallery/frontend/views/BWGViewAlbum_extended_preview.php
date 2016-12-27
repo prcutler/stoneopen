@@ -76,7 +76,7 @@ class BWGViewAlbum_extended_preview {
     $type = (isset($_REQUEST['type_' . $bwg]) ? esc_html($_REQUEST['type_' . $bwg]) : 'album');
     $bwg_search = ((isset($_POST['bwg_search_' . $bwg]) && esc_html($_POST['bwg_search_' . $bwg]) != '') ? esc_html($_POST['bwg_search_' . $bwg]) : '');
     $album_gallery_id = (isset($_REQUEST['album_gallery_id_' . $bwg]) ? esc_html($_REQUEST['album_gallery_id_' . $bwg]) : $params['album_id']);
-    if (!$album_gallery_id || ($type == 'album' && !WDWLibrary::get_album_row_data($album_gallery_id, false))) {
+    if (!$album_gallery_id || ($type == 'album' && !WDWLibrary::get_album_row_data($album_gallery_id, FALSE))) {
       echo WDWLibrary::message(__('There is no album selected or the album was deleted.', 'bwg'), 'wd_error');
       return;
     }
@@ -576,7 +576,7 @@ class BWGViewAlbum_extended_preview {
                 }
                 foreach ($album_galleries_row as $album_galallery_row) {
                   if ($album_galallery_row->is_album) {
-                    $album_row = WDWLibrary::get_album_row_data($album_galallery_row->alb_gal_id, false);
+                    $album_row = WDWLibrary::get_album_row_data($album_galallery_row->alb_gal_id, FALSE);
                     if (!$album_row) {
                       continue;
                     }

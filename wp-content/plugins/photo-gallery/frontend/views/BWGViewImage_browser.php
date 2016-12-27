@@ -112,7 +112,7 @@ class BWGViewImage_browser {
       'enable_image_tumblr' => $params['popup_enable_tumblr'],
       'watermark_type' => $params['watermark_type'],
       'slideshow_effect_duration' => isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1,
-      'tag' => (isset($params['tag']) ? $params['tag'] : 0)
+      'tags' => (isset($params['tag']) ? $params['tag'] : 0)
     );
     $items_per_page = array('images_per_page' => 1, 'load_more_image_count' => 1);
     if ($params['watermark_type'] == 'none') {
