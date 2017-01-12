@@ -55,6 +55,10 @@ class BWGViewTags_bwg {
       <span class="tag_icon"></span>
       <h2><?php _e("Tags", 'bwg_back'); ?></h2>
       <div class="buttons_div_right">
+      <span class="wd-btn wd-btn-primary-gray bwg_check_all  non_selectable " onclick="spider_check_all_items()">
+        <input type="checkbox" id="check_all_items" name="check_all_items" onclick="spider_check_all_items_checkbox()" style="margin: 0; vertical-align: middle;" />
+        <span style="vertical-align: middle;"><?php echo __('Select All', 'bwg_back'); ?></span>
+      </span> 
       <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-save" type="submit" value="<?php echo addslashes(__("Save", 'bwg_back')); ?>" onclick="spider_set_input_value('task', 'edit_tags');" />
         <input class="wd-btn wd-btn-primary-red wd-btn-icon wd-btn-delete" type="submit" value="<?php echo addslashes(__("Delete", 'bwg_back')); ?>" onclick="if (confirm('Do you want to delete selected items?')) {
                                                                       spider_set_input_value('task', 'delete_all');

@@ -1385,6 +1385,16 @@ class BWGViewOptions_bwg {
                 </tr>
                 <tr>
                   <td class="spider_label_options">
+                    <label><?php echo __('Include styles/scripts in necessary pages only:', 'bwg_back'); ?></label>
+                  </td>
+                  <td>
+                    <input type="radio" name="use_inline_stiles_and_scripts" id="use_inline_stiles_and_scripts_1" value="1" <?php if ($row->use_inline_stiles_and_scripts) echo 'checked="checked"'; ?> /><label for="use_inline_stiles_and_scripts_1"><?php echo __('Yes', 'bwg_back'); ?></label>
+                    <input type="radio" name="use_inline_stiles_and_scripts" id="use_inline_stiles_and_scripts_0" value="0" <?php if (!$row->use_inline_stiles_and_scripts) echo 'checked="checked"'; ?> /><label for="use_inline_stiles_and_scripts_0"><?php echo __('No', 'bwg_back'); ?></label>
+                    <div class="spider_description"></div>
+                  </td>
+                </tr>
+                 <tr>
+                  <td class="spider_label_options">
                     <label><?php echo __('Introduction tour:', 'bwg_back'); ?></label>
                   </td>
                   <td>

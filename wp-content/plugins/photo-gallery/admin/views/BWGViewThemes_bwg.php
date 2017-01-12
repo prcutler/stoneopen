@@ -91,7 +91,7 @@ class  BWGViewThemes_bwg {
       </div>
       <div class="tablenav top">
         <?php
-        WDWLibrary::search(__('Title','bwg_back'), $search_value, 'themes_form');
+        WDWLibrary::search(__('Title','bwg_back'), $search_value, 'themes_form', 'position_search');
         WDWLibrary::html_page_nav($page_nav['total'], $pager++, $page_nav['limit'], 'themes_form', $per_page);
         ?>
       </div>

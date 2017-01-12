@@ -68,9 +68,6 @@ class BWGViewImage_browser {
         echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
       }
     }
-    $rgb_page_nav_font_color = WDWLibrary::spider_hex2rgb($theme_row->page_nav_font_color);
-    $image_browser_images_conteiner = WDWLibrary::spider_hex2rgb($theme_row->image_browser_full_bg_color);
-    $bwg_image_browser_image = WDWLibrary::spider_hex2rgb($theme_row->image_browser_bg_color);
     $image_title = $params['image_browser_title_enable'];
     $enable_image_description = $params['image_browser_description_enable'];
     $option_row = WDWLibrary::get_options_row_data();
@@ -159,8 +156,239 @@ class BWGViewImage_browser {
        $params_array['watermark_font_size'] = ''; 
     }
     $image_browser_image_title_align = (isset($theme_row->image_browser_image_title_align)) ? $theme_row->image_browser_image_title_align : 'top';
+
+    $inline_style = $this->inline_styles($bwg, $theme_row, $params, $params_array, $text_align, $vertical_align);
+    global $wd_bwg_inline_stiles;
+    if ($wd_bwg_inline_stiles) {
+      wp_enqueue_style('bwg_frontend');
+      wp_add_inline_style('bwg_frontend', $inline_style);
+      wp_enqueue_style('bwg_font-awesome');
+      wp_enqueue_style('bwg_mCustomScrollbar');
+      $google_fonts = WDWLibrary::get_google_fonts();
+      wp_enqueue_style('bwg_googlefonts');
+    }
+    else {
+      echo '<style>' . $inline_style . '</style>';
+    }
     ?>
-    <style>
+    <div id="bwg_container1_<?php echo $bwg; ?>">
+      <div id="bwg_container2_<?php echo $bwg; ?>">
+        <form id="gal_front_form_<?php echo $bwg; ?>" method="post" action="#">
+          <?php
+          if ($params['show_search_box']) {
+            WDWLibrary::ajax_html_frontend_search_box('gal_front_form_' . $bwg, $bwg, 'bwg_standart_thumbnails_' . $bwg, $images_count, $params['search_box_width'], $placeholder);
+          }
+          ?>
+          <div class="image_browser_images_conteiner_<?php echo $bwg; ?>">
+            <div id="ajax_loading_<?php echo $bwg; ?>" style="position:absolute;width: 100%; z-index: 115; text-align: center; height: 100%; vertical-align: middle; display:none;">
+              <div style="display: table; vertical-align: middle; width: 100%; height: 100%; background-color: #FFFFFF; opacity: 0.7; filter: Alpha(opacity=70);">
+                <div style="display: table-cell; text-align: center; position: relative; vertical-align: middle;" >
+                  <div id="loading_div_<?php echo $bwg; ?>" class="bwg_spider_ajax_loading" style="display: inline-block; text-align:center; position:relative; vertical-align:middle; background-image:url(<?php echo WD_BWG_URL . '/images/ajax_loader.gif'; ?>); float: none; width:30px;height:30px;background-size:30px 30px;">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="image_browser_images_<?php echo $bwg; ?>" id="bwg_standart_thumbnails_<?php echo $bwg; ?>" >
+              <?php
+              if ( $theme_row->page_nav_position == 'top') {
+                WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page, $bwg, 'bwg_standart_thumbnails_' . $bwg, 0, 'album', $option_row->enable_seo);
+              }
+              foreach ($image_rows as $image_row) {
+                $params_array['image_id'] = (isset($_POST['image_id']) ? esc_html($_POST['image_id']) : $image_row->id);
+                $is_embed = preg_match('/EMBED/',$image_row->filetype)==1 ? true :false;
+                $is_embed_16x9 = ((preg_match('/EMBED/',$image_row->filetype)==1 ? true : false) && (preg_match('/VIDEO/',$image_row->filetype)==1 ? true : false) && !(preg_match('/INSTAGRAM/',$image_row->filetype)==1 ? true :false));
+                $is_embed_instagram_post = preg_match('/INSTAGRAM_POST/',$image_row->filetype)==1 ? true :false;
+                ?>  
+                <div class="image_browser_image_buttons_conteiner_<?php echo $bwg; ?>">
+                  <div class="image_browser_image_buttons_<?php echo $bwg;?>">
+                    <?php
+                    if ($image_title && ($image_browser_image_title_align == 'top')) {
+                      ?>
+                    <div class="bwg_image_browser_image_alt_<?php echo $bwg; ?>">
+                       <div class="bwg_image_alt_<?php echo $bwg; ?>" id="alt<?php echo $image_row->id; ?>">
+                         <?php echo html_entity_decode($image_row->alt); ?>
+                       </div>
+                    </div> 
+                      <?php
+                    }
+                    ?>
+                    <div class="bwg_image_browser_image_<?php echo $bwg; ?>">
+                      <?php
+                      if ($show_watermark) {
+                        ?>
+                        <div class="bwg_image_browser_image_contain_<?php echo $bwg; ?>" id="bwg_image_browser_image_contain_<?php echo $image_row->id ?>">
+                          <div class="bwg_image_browser_watermark_contain_<?php echo $bwg; ?>">
+                            <div class="bwg_image_browser_watermark_cont_<?php echo $bwg; ?>">
+                              <div <?php echo $watermark_div; ?> >
+                                <a class="bwg_none_selectable <?php echo $watermark_a; ?>" id="watermark_a<?php echo $image_row->id; ?>" href="<?php echo urldecode($params_array['watermark_link']); ?>" target="_blank">
+                                  <?php echo $watermark_image_or_text; ?>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <?php
+                      }
+                      if (!$is_embed) {
+                      ?>
+                        <a style="position:relative;" <?php echo ($params['thumb_click_action'] == 'open_lightbox' ? (' class="bwg_lightbox_' . $bwg . '" data-image-id="' . $image_row->id . '"') : ($params['thumb_click_action'] == 'redirect_to_url' && $image_row->redirect_url ? 'href="' . $image_row->redirect_url . '" target="' .  ($params['thumb_link_target'] ? '_blank' : '')  . '"' : '')) ?>>
+                          <img class="bwg_image_browser_img_<?php echo $bwg; ?>" src="<?php echo site_url() . '/' . $WD_BWG_UPLOAD_DIR . $image_row->image_url; ?>" alt="<?php echo $image_row->alt; ?>" />
+                        </a>
+                      <?php 
+                      }
+                      else{ /*$is_embed*/
+
+                        if($is_embed_16x9){
+                          WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('id'=>"bwg_embed_frame_16x9_".$bwg,'width'=>$params['image_browser_width'], 'height'=>$params['image_browser_width']*0.5625, 'frameborder'=>"0", 'allowfullscreen'=>"allowfullscreen", 'style'=>"position: relative; margin:0;"));          
+                        }
+                        else if($is_embed_instagram_post) {
+                          $instagram_post_width = $params['image_browser_width'];
+                          $instagram_post_height = $params['image_browser_width'];
+                          $image_resolution = explode(' x ', $image_row->resolution);
+                          if (is_array($image_resolution)) {
+                            $instagram_post_width = $image_resolution[0];
+                            $instagram_post_height = explode(' ', $image_resolution[1]);
+                            $instagram_post_height = $instagram_post_height[0];
+                          }
+                          WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('class' => "bwg_embed_frame_instapost_" . $bwg, 'data-width' => $instagram_post_width, 'data-height' => $instagram_post_height, 'frameborder' => "0", 'allowfullscreen' => "allowfullscreen", 'style' => "position: relative; margin:0;"));          
+                        }
+                        else{/*for instagram image, video and flickr enable lightbox onclick*/
+                          ?>
+                          <a style="position:relative;" <?php echo ($params['thumb_click_action'] == 'open_lightbox' ? (' class="bwg_lightbox_' . $bwg . '" data-image-id="' . $image_row->id . '"') : ($image_row->redirect_url ? 'href="' . $image_row->redirect_url . '" target="' .  ($params['thumb_link_target'] ? '_blank' : '')  . '"' : '')) ?>>
+                            <?php
+                            WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('id'=>"bwg_embed_frame_".$bwg,'width'=>$params['image_browser_width'], 'height'=>'auto', 'frameborder'=>"0", 'allowfullscreen'=>"allowfullscreen", 'style'=>"position: relative; margin:0;"));          
+                          ?>
+                          </a>
+
+                        <?php
+                        } 
+                      }
+                      ?>
+                      <script>
+                      function bwg_image_browser_<?php echo $bwg; ?>() {
+                        jQuery('#bwg_embed_frame_16x9_<?php echo $bwg; ?>').width(jQuery('#bwg_embed_frame_16x9_<?php echo $bwg; ?>').parent().width());
+                        jQuery('#bwg_embed_frame_16x9_<?php echo $bwg; ?>').height(jQuery('#bwg_embed_frame_16x9_<?php echo $bwg; ?>').width() * 0.5625);
+                        jQuery('#bwg_embed_frame_instapost_<?php echo $bwg; ?>').width(jQuery('#bwg_embed_frame_16x9_<?php echo $bwg; ?>').parent().width());
+                        /* 16 is 2*padding inside iframe */
+                        /* 96 is 2*padding(top) + 1*padding(bottom) + 40(footer) + 32(header) */
+                        jQuery('.bwg_embed_frame_instapost_<?php echo $bwg; ?>').height((jQuery('.bwg_embed_frame_instapost_<?php echo $bwg; ?>').width() - 16) * jQuery('.bwg_embed_frame_instapost_<?php echo $bwg; ?>').attr('data-height') / jQuery('.bwg_embed_frame_instapost_<?php echo $bwg; ?>').attr('data-width') + 96);
+
+                        var bwg_image_browser_width = jQuery('.image_browser_images_<?php echo $bwg; ?>').width();
+                        if (bwg_image_browser_width <= 108) {
+                          jQuery('.paging-input_<?php echo $bwg; ?>').css('display', 'none');
+                        }
+                        else if (bwg_image_browser_width <= 200) {
+                          jQuery('.paging-input_<?php echo $bwg; ?>').css('margin', '0% 0% 0% 0%');
+                          jQuery('.paging-input_<?php echo $bwg; ?>').css('display', 'inline');
+                          jQuery('.tablenav-pages_<?php echo $bwg; ?> .next-page').css('margin', '0% 0% 0% 0%');
+                          jQuery('.tablenav-pages_<?php echo $bwg; ?> .prev-page').css('margin', '0% 0% 0% 0%');
+                        }
+                        else if (bwg_image_browser_width <= 580) {
+                          jQuery('.paging-input_<?php echo $bwg; ?>').css('display', 'inline');
+                          jQuery('.tablenav-pages_<?php echo $bwg; ?> a').css('font-size', '13px');
+                          jQuery('.paging-input_<?php echo $bwg; ?>').css('margin', '0% 7% 0% 7%');
+                          jQuery('.tablenav-pages_<?php echo $bwg; ?> .next-page').css('margin', '0% 0% 0% 0%');
+                          jQuery('.tablenav-pages_<?php echo $bwg; ?> .prev-page').css('margin', '0% 0% 0% 0%');
+                        }
+                        else {
+                          jQuery('.tablenav-pages_<?php echo $bwg; ?> a').css('font-size', '15px');
+                          jQuery('.paging-input_<?php echo $bwg; ?>').css('margin', '0%  14% 0%  14%');
+                          jQuery('.paging-input_<?php echo $bwg; ?>').css('display', 'inline');
+                          jQuery('.tablenav-pages_<?php echo $bwg; ?> .next-page').css('margin', '0% 0% 0% 0%');
+                          jQuery('.tablenav-pages_<?php echo $bwg; ?> .prev-page').css('margin', '0% 0% 0% 0%');
+                        }
+                      }
+                      setTimeout(function() {
+                        bwg_image_browser_<?php echo $bwg; ?>();
+                      }, 3);
+                      </script>
+                    </div>
+                      <?php
+                      if ($image_title && ($image_browser_image_title_align == 'bottom')) {
+                        ?>
+                         <div class="bwg_image_browser_image_alt_<?php echo $bwg; ?>">
+                           <div class="bwg_image_alt_<?php echo $bwg; ?>" id="alt<?php echo $image_row->id; ?>">
+                             <?php echo html_entity_decode($image_row->alt); ?>
+                           </div>
+                         </div> 
+                        <?php
+                      }
+                      if ($enable_image_description && ($image_row->description != "")) {
+                        ?>
+                      <div class="bwg_image_browser_image_desp_<?php echo $bwg; ?>">                    
+                        <div class="bwg_image_browser_image_description_<?php echo $bwg; ?>" id="alt<?php echo $image_row->id; ?>">
+                          <?php echo html_entity_decode($image_row->description); ?>
+                        </div>                  
+                      </div>
+                        <?php
+                      }
+                      ?>
+                  </div>
+                </div>
+                <?php
+              }
+              if ( $theme_row->page_nav_position == 'bottom') {
+                WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page, $bwg, 'bwg_standart_thumbnails_' . $bwg, 0, 'album', $option_row->enable_seo);
+              }
+              ?>
+            </div>
+          </div>
+        </form>
+        <div id="bwg_spider_popup_loading_<?php echo $bwg; ?>" class="bwg_spider_popup_loading"></div>
+        <div id="spider_popup_overlay_<?php echo $bwg; ?>" class="spider_popup_overlay" onclick="spider_destroypopup(1000)"></div>
+      </div>
+    </div>
+    <script>
+      jQuery(window).load(function () {
+        <?php
+        if ($image_right_click) {
+          ?>
+          /* Disable right click.*/
+          jQuery('div[id^="bwg_container"]').bind("contextmenu", function (e) {
+            return false;
+          });
+          jQuery('div[id^="bwg_container"]').css('webkitTouchCallout','none');
+          <?php
+        }
+        ?>
+      });
+      jQuery(window).resize(function() {
+        bwg_image_browser_<?php echo $bwg; ?>();
+      });
+      function bwg_gallery_box_<?php echo $bwg; ?>(image_id) {
+        var filtersearchname = jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() ? jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() : '';
+        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&image_id=' + image_id + "&filter_search_name_<?php echo $bwg; ?>=" +  filtersearchname, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5, "<?php echo $theme_row->lightbox_ctrl_btn_pos ;?>");
+      }
+      function bwg_document_ready_<?php echo $bwg; ?>() {
+        var bwg_touch_flag = false;
+        jQuery(".bwg_lightbox_<?php echo $bwg; ?>").on("click", function () {
+          if (!bwg_touch_flag) {
+            bwg_touch_flag = true;
+            setTimeout(function(){ bwg_touch_flag = false; }, 100);
+            bwg_gallery_box_<?php echo $bwg; ?>(jQuery(this).attr("data-image-id"));
+            return false;
+          }
+        });
+      }
+      jQuery(document).ready(function () {
+        bwg_document_ready_<?php echo $bwg; ?>();
+      });
+    </script>
+    <?php
+    if ($from_shortcode) {
+      return;
+    }
+    else {
+      die();
+    }
+  }
+
+  private function inline_styles($bwg, $theme_row, $params, $params_array, $text_align, $vertical_align) {
+    ob_start();
+    $rgb_page_nav_font_color = WDWLibrary::spider_hex2rgb($theme_row->page_nav_font_color);
+    $image_browser_images_conteiner = WDWLibrary::spider_hex2rgb($theme_row->image_browser_full_bg_color);
+    $bwg_image_browser_image = WDWLibrary::spider_hex2rgb($theme_row->image_browser_bg_color);
+    ?>
       #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .image_browser_images_conteiner_<?php echo $bwg; ?> * {
         -moz-box-sizing: border-box;
         box-sizing: border-box;
@@ -425,216 +653,7 @@ class BWGViewImage_browser {
         -ms-user-select: none;
         user-select: none;
       }
-    </style>
-    <div id="bwg_container1_<?php echo $bwg; ?>">
-      <div id="bwg_container2_<?php echo $bwg; ?>">
-        <form id="gal_front_form_<?php echo $bwg; ?>" method="post" action="#">
-          <?php
-          if ($params['show_search_box']) {
-            WDWLibrary::ajax_html_frontend_search_box('gal_front_form_' . $bwg, $bwg, 'bwg_standart_thumbnails_' . $bwg, $images_count, $params['search_box_width'], $placeholder);
-          }
-          ?>
-          <div class="image_browser_images_conteiner_<?php echo $bwg; ?>">
-            <div id="ajax_loading_<?php echo $bwg; ?>" style="position:absolute;width: 100%; z-index: 115; text-align: center; height: 100%; vertical-align: middle; display:none;">
-              <div style="display: table; vertical-align: middle; width: 100%; height: 100%; background-color: #FFFFFF; opacity: 0.7; filter: Alpha(opacity=70);">
-                <div style="display: table-cell; text-align: center; position: relative; vertical-align: middle;" >
-                  <div id="loading_div_<?php echo $bwg; ?>" class="bwg_spider_ajax_loading" style="display: inline-block; text-align:center; position:relative; vertical-align:middle; background-image:url(<?php echo WD_BWG_URL . '/images/ajax_loader.gif'; ?>); float: none; width:30px;height:30px;background-size:30px 30px;">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="image_browser_images_<?php echo $bwg; ?>" id="bwg_standart_thumbnails_<?php echo $bwg; ?>" >
-              <?php
-              if ( $theme_row->page_nav_position == 'top') {
-                WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page, $bwg, 'bwg_standart_thumbnails_' . $bwg, 0, 'album', $option_row->enable_seo);
-              }
-              foreach ($image_rows as $image_row) {
-                $params_array['image_id'] = (isset($_POST['image_id']) ? esc_html($_POST['image_id']) : $image_row->id);
-                $is_embed = preg_match('/EMBED/',$image_row->filetype)==1 ? true :false;
-                $is_embed_16x9 = ((preg_match('/EMBED/',$image_row->filetype)==1 ? true : false) && (preg_match('/VIDEO/',$image_row->filetype)==1 ? true : false) && !(preg_match('/INSTAGRAM/',$image_row->filetype)==1 ? true :false));
-                $is_embed_instagram_post = preg_match('/INSTAGRAM_POST/',$image_row->filetype)==1 ? true :false;
-                ?>  
-                <div class="image_browser_image_buttons_conteiner_<?php echo $bwg; ?>">
-                  <div class="image_browser_image_buttons_<?php echo $bwg;?>">
-                    <?php
-                    if ($image_title && ($image_browser_image_title_align == 'top')) {
-                      ?>
-                    <div class="bwg_image_browser_image_alt_<?php echo $bwg; ?>">
-                       <div class="bwg_image_alt_<?php echo $bwg; ?>" id="alt<?php echo $image_row->id; ?>">
-                         <?php echo html_entity_decode($image_row->alt); ?>
-                       </div>
-                    </div> 
-                      <?php
-                    }
-                    ?>
-                    <div class="bwg_image_browser_image_<?php echo $bwg; ?>">
-                      <?php
-                      if ($show_watermark) {
-                        ?>
-                        <div class="bwg_image_browser_image_contain_<?php echo $bwg; ?>" id="bwg_image_browser_image_contain_<?php echo $image_row->id ?>">
-                          <div class="bwg_image_browser_watermark_contain_<?php echo $bwg; ?>">
-                            <div class="bwg_image_browser_watermark_cont_<?php echo $bwg; ?>">
-                              <div <?php echo $watermark_div; ?> >
-                                <a class="bwg_none_selectable <?php echo $watermark_a; ?>" id="watermark_a<?php echo $image_row->id; ?>" href="<?php echo urldecode($params_array['watermark_link']); ?>" target="_blank">
-                                  <?php echo $watermark_image_or_text; ?>
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <?php
-                      }
-                      if (!$is_embed) {
-                      ?>
-                        <a style="position:relative;" <?php echo ($params['thumb_click_action'] == 'open_lightbox' ? (' class="bwg_lightbox_' . $bwg . '" data-image-id="' . $image_row->id . '"') : ($params['thumb_click_action'] == 'redirect_to_url' && $image_row->redirect_url ? 'href="' . $image_row->redirect_url . '" target="' .  ($params['thumb_link_target'] ? '_blank' : '')  . '"' : '')) ?>>
-                          <img class="bwg_image_browser_img_<?php echo $bwg; ?>" src="<?php echo site_url() . '/' . $WD_BWG_UPLOAD_DIR . $image_row->image_url; ?>" alt="<?php echo $image_row->alt; ?>" />
-                        </a>
-                      <?php 
-                      }
-                      else{ /*$is_embed*/
-
-                        if($is_embed_16x9){
-                          WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('id'=>"bwg_embed_frame_16x9_".$bwg,'width'=>$params['image_browser_width'], 'height'=>$params['image_browser_width']*0.5625, 'frameborder'=>"0", 'allowfullscreen'=>"allowfullscreen", 'style'=>"position: relative; margin:0;"));          
-                        }
-                        else if($is_embed_instagram_post) {
-                          $instagram_post_width = $params['image_browser_width'];
-                          $instagram_post_height = $params['image_browser_width'];
-                          $image_resolution = explode(' x ', $image_row->resolution);
-                          if (is_array($image_resolution)) {
-                            $instagram_post_width = $image_resolution[0];
-                            $instagram_post_height = explode(' ', $image_resolution[1]);
-                            $instagram_post_height = $instagram_post_height[0];
-                          }
-                          WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('class' => "bwg_embed_frame_instapost_" . $bwg, 'data-width' => $instagram_post_width, 'data-height' => $instagram_post_height, 'frameborder' => "0", 'allowfullscreen' => "allowfullscreen", 'style' => "position: relative; margin:0;"));          
-                        }
-                        else{/*for instagram image, video and flickr enable lightbox onclick*/
-                          ?>
-                          <a style="position:relative;" <?php echo ($params['thumb_click_action'] == 'open_lightbox' ? (' class="bwg_lightbox_' . $bwg . '" data-image-id="' . $image_row->id . '"') : ($image_row->redirect_url ? 'href="' . $image_row->redirect_url . '" target="' .  ($params['thumb_link_target'] ? '_blank' : '')  . '"' : '')) ?>>
-                            <?php
-                            WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('id'=>"bwg_embed_frame_".$bwg,'width'=>$params['image_browser_width'], 'height'=>'auto', 'frameborder'=>"0", 'allowfullscreen'=>"allowfullscreen", 'style'=>"position: relative; margin:0;"));          
-                          ?>
-                          </a>
-
-                        <?php
-                        } 
-                      }
-                      ?>
-                      <script>
-                      function bwg_image_browser_<?php echo $bwg; ?>() {
-                        jQuery('#bwg_embed_frame_16x9_<?php echo $bwg; ?>').width(jQuery('#bwg_embed_frame_16x9_<?php echo $bwg; ?>').parent().width());
-                        jQuery('#bwg_embed_frame_16x9_<?php echo $bwg; ?>').height(jQuery('#bwg_embed_frame_16x9_<?php echo $bwg; ?>').width() * 0.5625);
-                        jQuery('#bwg_embed_frame_instapost_<?php echo $bwg; ?>').width(jQuery('#bwg_embed_frame_16x9_<?php echo $bwg; ?>').parent().width());
-                        /* 16 is 2*padding inside iframe */
-                        /* 96 is 2*padding(top) + 1*padding(bottom) + 40(footer) + 32(header) */
-                        jQuery('.bwg_embed_frame_instapost_<?php echo $bwg; ?>').height((jQuery('.bwg_embed_frame_instapost_<?php echo $bwg; ?>').width() - 16) * jQuery('.bwg_embed_frame_instapost_<?php echo $bwg; ?>').attr('data-height') / jQuery('.bwg_embed_frame_instapost_<?php echo $bwg; ?>').attr('data-width') + 96);
-
-                        var bwg_image_browser_width = jQuery('.image_browser_images_<?php echo $bwg; ?>').width();
-                        if (bwg_image_browser_width <= 108) {
-                          jQuery('.paging-input_<?php echo $bwg; ?>').css('display', 'none');
-                        }
-                        else if (bwg_image_browser_width <= 200) {
-                          jQuery('.paging-input_<?php echo $bwg; ?>').css('margin', '0% 0% 0% 0%');
-                          jQuery('.paging-input_<?php echo $bwg; ?>').css('display', 'inline');
-                          jQuery('.tablenav-pages_<?php echo $bwg; ?> .next-page').css('margin', '0% 0% 0% 0%');
-                          jQuery('.tablenav-pages_<?php echo $bwg; ?> .prev-page').css('margin', '0% 0% 0% 0%');
-                        }
-                        else if (bwg_image_browser_width <= 580) {
-                          jQuery('.paging-input_<?php echo $bwg; ?>').css('display', 'inline');
-                          jQuery('.tablenav-pages_<?php echo $bwg; ?> a').css('font-size', '13px');
-                          jQuery('.paging-input_<?php echo $bwg; ?>').css('margin', '0% 7% 0% 7%');
-                          jQuery('.tablenav-pages_<?php echo $bwg; ?> .next-page').css('margin', '0% 0% 0% 0%');
-                          jQuery('.tablenav-pages_<?php echo $bwg; ?> .prev-page').css('margin', '0% 0% 0% 0%');
-                        }
-                        else {
-                          jQuery('.tablenav-pages_<?php echo $bwg; ?> a').css('font-size', '15px');
-                          jQuery('.paging-input_<?php echo $bwg; ?>').css('margin', '0%  14% 0%  14%');
-                          jQuery('.paging-input_<?php echo $bwg; ?>').css('display', 'inline');
-                          jQuery('.tablenav-pages_<?php echo $bwg; ?> .next-page').css('margin', '0% 0% 0% 0%');
-                          jQuery('.tablenav-pages_<?php echo $bwg; ?> .prev-page').css('margin', '0% 0% 0% 0%');
-                        }
-                      }
-                      setTimeout(function() {
-                        bwg_image_browser_<?php echo $bwg; ?>();
-                      }, 3);
-                      </script>
-                    </div>
-                      <?php
-                      if ($image_title && ($image_browser_image_title_align == 'bottom')) {
-                        ?>
-                         <div class="bwg_image_browser_image_alt_<?php echo $bwg; ?>">
-                           <div class="bwg_image_alt_<?php echo $bwg; ?>" id="alt<?php echo $image_row->id; ?>">
-                             <?php echo html_entity_decode($image_row->alt); ?>
-                           </div>
-                         </div> 
-                        <?php
-                      }
-                      if ($enable_image_description && ($image_row->description != "")) {
-                        ?>
-                      <div class="bwg_image_browser_image_desp_<?php echo $bwg; ?>">                    
-                        <div class="bwg_image_browser_image_description_<?php echo $bwg; ?>" id="alt<?php echo $image_row->id; ?>">
-                          <?php echo html_entity_decode($image_row->description); ?>
-                        </div>                  
-                      </div>
-                        <?php
-                      }
-                      ?>
-                  </div>
-                </div>
-                <?php
-              }
-              if ( $theme_row->page_nav_position == 'bottom') {
-                WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page, $bwg, 'bwg_standart_thumbnails_' . $bwg, 0, 'album', $option_row->enable_seo);
-              }
-              ?>
-            </div>
-          </div>
-        </form>
-        <div id="bwg_spider_popup_loading_<?php echo $bwg; ?>" class="bwg_spider_popup_loading"></div>
-        <div id="spider_popup_overlay_<?php echo $bwg; ?>" class="spider_popup_overlay" onclick="spider_destroypopup(1000)"></div>
-      </div>
-    </div>
-    <script>
-      jQuery(window).load(function () {
-        <?php
-        if ($image_right_click) {
-          ?>
-          /* Disable right click.*/
-          jQuery('div[id^="bwg_container"]').bind("contextmenu", function (e) {
-            return false;
-          });
-          jQuery('div[id^="bwg_container"]').css('webkitTouchCallout','none');
-          <?php
-        }
-        ?>
-      });
-      jQuery(window).resize(function() {
-        bwg_image_browser_<?php echo $bwg; ?>();
-      });
-      function bwg_gallery_box_<?php echo $bwg; ?>(image_id) {
-        var filtersearchname = jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() ? jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() : '';
-        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&image_id=' + image_id + "&filter_search_name_<?php echo $bwg; ?>=" +  filtersearchname, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5, "<?php echo $theme_row->lightbox_ctrl_btn_pos ;?>");
-      }
-      function bwg_document_ready_<?php echo $bwg; ?>() {
-        var bwg_touch_flag = false;
-        jQuery(".bwg_lightbox_<?php echo $bwg; ?>").on("click", function () {
-          if (!bwg_touch_flag) {
-            bwg_touch_flag = true;
-            setTimeout(function(){ bwg_touch_flag = false; }, 100);
-            bwg_gallery_box_<?php echo $bwg; ?>(jQuery(this).attr("data-image-id"));
-            return false;
-          }
-        });
-      }
-      jQuery(document).ready(function () {
-        bwg_document_ready_<?php echo $bwg; ?>();
-      });
-    </script>
     <?php
-    if ($from_shortcode) {
-      return;
-    }
-    else {
-      die();
-    }
+    return ob_get_clean();
   }
 }

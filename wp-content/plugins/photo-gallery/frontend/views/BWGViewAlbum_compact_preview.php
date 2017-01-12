@@ -53,7 +53,7 @@ class BWGViewAlbum_compact_preview {
       $params['popup_hit_counter'] = 0;
     }
     if (!isset($params['order_by'])) {
-      $params['order_by'] = ' ASC ';
+      $params['order_by'] = 'ASC';
     }
     if (!isset($params['show_sort_images'])) {
       $params['show_sort_images'] = 0;
@@ -72,14 +72,14 @@ class BWGViewAlbum_compact_preview {
     $from = (isset($params['from']) ? esc_html($params['from']) : 0);
     $type = (isset($_REQUEST['type_' . $bwg]) ? esc_html($_REQUEST['type_' . $bwg]) : (isset($params['type']) ? $params['type'] : 'album'));
     $bwg_search = ((isset($_POST['bwg_search_' . $bwg]) && esc_html($_POST['bwg_search_' . $bwg]) != '') ? esc_html($_POST['bwg_search_' . $bwg]) : '');
-    $sort_direction = ' ' . $params['order_by'] . ' ';
+    $sort_direction = $params['order_by'];
     
     $play_icon = $options_row->play_icon;
     if ($from === "widget") {
       $params['album_id'] = $params['id'];
       $params['sort_by'] = $params['show'] == 'random' ? 'RAND()' : 'order';
       if ($params['show'] == 'last') {
-        $sort_direction = ' DESC ';
+        $sort_direction = 'DESC';
       }
       $params['compuct_albums_per_page'] = $params['count'];
       $params['compuct_album_column_number'] = $options_row->album_column_number;
@@ -197,10 +197,6 @@ class BWGViewAlbum_compact_preview {
     $bwg_previous_album_id = (isset($_REQUEST['bwg_previous_album_id_' . $bwg]) ? esc_html($_REQUEST['bwg_previous_album_id_' . $bwg]) : $params['album_id']);
     $bwg_previous_album_page_number = (isset($_REQUEST['bwg_previous_album_page_number_' . $bwg]) ? esc_html($_REQUEST['bwg_previous_album_page_number_' . $bwg]) : 0);
 
-    $rgb_page_nav_font_color = WDWLibrary::spider_hex2rgb($theme_row->page_nav_font_color);
-    $rgb_album_compact_thumbs_bg_color = WDWLibrary::spider_hex2rgb($theme_row->album_compact_thumbs_bg_color);
-    $rgb_thumbs_bg_color = WDWLibrary::spider_hex2rgb($theme_row->thumbs_bg_color);
-
     $params_array = array(
       'action' => 'GalleryBox',
       'current_view' => $bwg,
@@ -252,302 +248,21 @@ class BWGViewAlbum_compact_preview {
     $params_array_hash = $params_array;
     $tags_rows = WDWLibrary::get_tags_rows_data($album_gallery_id);
     $image_right_click = $options_row->image_right_click;
-    ?>	
-    <style>
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumb_<?php echo $bwg; ?> {
-        display: inline-block;
-        text-align: center;
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .<?php echo $album_gallery_div_class; ?> * {
-        -moz-box-sizing: content-box;
-        box-sizing: content-box;
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumb_spun1_<?php echo $bwg; ?> {
-        background-color: #<?php echo $theme_row->album_compact_thumb_bg_color; ?>;
-        display: inline-block;
-        height: <?php echo $params['compuct_album_thumb_height']; ?>px;
-        margin: <?php echo $theme_row->album_compact_thumb_margin; ?>px;
-        opacity: <?php echo number_format($theme_row->album_compact_thumb_transparent / 100, 2, ".", ""); ?>;
-        filter: Alpha(opacity=<?php echo $theme_row->album_compact_thumb_transparent; ?>);
-        <?php echo ($theme_row->album_compact_thumb_transition) ? 'transition: all 0.3s ease 0s;-webkit-transition: all 0.3s ease 0s;' : ''; ?>
-        padding: <?php echo $theme_row->album_compact_thumb_padding; ?>px;
-        text-align: center;
-        vertical-align: middle;
-        width: <?php echo $params['compuct_album_thumb_width']; ?>px;
-        z-index: 100;
-        -webkit-backface-visibility: visible;
-        -ms-backface-visibility: visible;
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumb_spun1_<?php echo $bwg; ?>:hover {
-        opacity: 1;
-        filter: Alpha(opacity=100);
-        transform: <?php echo $theme_row->album_compact_thumb_hover_effect; ?>(<?php echo $theme_row->album_compact_thumb_hover_effect_value; ?>);
-        -ms-transform: <?php echo $theme_row->album_compact_thumb_hover_effect; ?>(<?php echo $theme_row->album_compact_thumb_hover_effect_value; ?>);
-        -webkit-transform: <?php echo $theme_row->album_compact_thumb_hover_effect; ?>(<?php echo $theme_row->album_compact_thumb_hover_effect_value; ?>);
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-        -moz-backface-visibility: hidden;
-        -ms-backface-visibility: hidden;
-        z-index: 102;
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumb_spun2_<?php echo $bwg; ?> {
-        border-radius: <?php echo $theme_row->album_compact_thumb_border_radius; ?>;
-        border: <?php echo $theme_row->album_compact_thumb_border_width; ?>px <?php echo $theme_row->album_compact_thumb_border_style; ?> #<?php echo $theme_row->album_compact_thumb_border_color; ?>;
-        box-shadow: <?php echo $theme_row->album_compact_thumb_box_shadow; ?>;
-        display: inline-block;
-        height: <?php echo $params['compuct_album_thumb_height']; ?>px;
-        overflow: hidden;
-        width: <?php echo $params['compuct_album_thumb_width']; ?>px;
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumbnails_<?php echo $bwg; ?> {
-        display: inline-block;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        background-color: rgba(<?php echo $rgb_album_compact_thumbs_bg_color['red']; ?>, <?php echo $rgb_album_compact_thumbs_bg_color['green']; ?>, <?php echo $rgb_album_compact_thumbs_bg_color['blue']; ?>, <?php echo number_format($theme_row->album_compact_thumb_bg_transparent / 100, 2, ".", ""); ?>);
-        font-size: 0;
-        text-align: <?php echo $theme_row->album_compact_thumb_align; ?>;
-        max-width: <?php echo $items_col_num * ($params['compuct_album_thumb_width'] + 2 * (2 + $theme_row->album_compact_thumb_margin + $theme_row->album_compact_thumb_padding + $theme_row->album_compact_thumb_border_width)); ?>px;
-      }
-      <?php
-      if ($params['compuct_album_title'] == 'show') { /* Show album/gallery title at the bottom.*/
-        ?>
-        #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_title_spun1_<?php echo $bwg; ?> {
-          display: block;
-          opacity: 1;
-          filter: Alpha(opacity=100);
-          text-align: center;
-          width: <?php echo $params['compuct_album_thumb_width']; ?>px;
-        }
-        <?php
-      }
-      elseif ($params['compuct_album_title'] == 'hover') { /* Show album/gallery title on hover.*/
-        ?>
-        #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_title_spun1_<?php echo $bwg; ?> {
-          display: table;
-          height: inherit;
-          left: -3000px;
-          opacity: 0;
-          filter: Alpha(opacity=0);
-          position: absolute;
-          top: 0px;
-          width: inherit;
-        }
-        <?php
-      }
-      ?>
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumb_spun1_<?php echo $bwg; ?>:hover .bwg_title_spun1_<?php echo $bwg; ?> {
-        left: <?php echo $theme_row->album_compact_thumb_padding; ?>px;
-        top: <?php echo $theme_row->album_compact_thumb_padding; ?>px;
-        opacity: 1;
-        filter: Alpha(opacity=100);
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_title_spun2_<?php echo $bwg; ?> {
-        color: #<?php echo $theme_row->album_compact_title_font_color; ?>;
-        display: table-cell;
-        font-family: <?php echo $theme_row->album_compact_title_font_style; ?>;
-        font-size: <?php echo $theme_row->album_compact_title_font_size; ?>px;
-        font-weight: <?php echo $theme_row->album_compact_title_font_weight; ?>;
-        height: inherit;
-        padding: <?php echo $theme_row->album_compact_title_margin; ?>;
-        text-shadow: <?php echo $theme_row->album_compact_title_shadow; ?>;
-        vertical-align: middle;
-        width: inherit;
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumbnails_<?php echo $bwg; ?> {
-        display: inline-block;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        background-color: rgba(<?php echo $rgb_album_compact_thumbs_bg_color['red']; ?>, <?php echo $rgb_album_compact_thumbs_bg_color['green']; ?>, <?php echo $rgb_album_compact_thumbs_bg_color['blue']; ?>, <?php echo number_format($theme_row->album_compact_thumb_bg_transparent / 100, 2, ".", ""); ?>);
-        font-size: 0;
-        text-align: <?php echo $theme_row->album_compact_thumb_align; ?>;
-        max-width: <?php echo $items_col_num * ($params['compuct_album_thumb_width'] + 2 * (2 + $theme_row->album_compact_thumb_margin + $theme_row->album_compact_thumb_padding + $theme_row->album_compact_thumb_border_width)); ?>px;
-      }
-      /*Image thumbs styles.*/
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_standart_thumb_spun1_<?php echo $bwg; ?> {
-        background-color: #<?php echo $theme_row->thumb_bg_color; ?>;
-        display: inline-block;
-        height: <?php echo $params['compuct_album_image_thumb_height']; ?>px;
-        margin: <?php echo $theme_row->thumb_margin; ?>px;
-        opacity: <?php echo number_format($theme_row->thumb_transparent / 100, 2, ".", ""); ?>;
-        filter: Alpha(opacity=<?php echo $theme_row->thumb_transparent; ?>);
-        <?php echo ($theme_row->thumb_transition) ? 'transition: all 0.3s ease 0s;-webkit-transition: all 0.3s ease 0s;' : ''; ?>
-        padding: <?php echo $theme_row->thumb_padding; ?>px;
-        text-align: center;
-        vertical-align: middle;
-        width: <?php echo $params['compuct_album_image_thumb_width']; ?>px;
-        z-index: 100;
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_standart_thumb_spun1_<?php echo $bwg; ?>:hover {
-        -ms-transform: <?php echo $theme_row->thumb_hover_effect; ?>(<?php echo $theme_row->thumb_hover_effect_value; ?>);
-        -webkit-transform: <?php echo $theme_row->thumb_hover_effect; ?>(<?php echo $theme_row->thumb_hover_effect_value; ?>);
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-        -moz-backface-visibility: hidden;
-        -ms-backface-visibility: hidden;
-        opacity: 1;
-        filter: Alpha(opacity=100);
-        transform: <?php echo $theme_row->thumb_hover_effect; ?>(<?php echo $theme_row->thumb_hover_effect_value; ?>);
-        z-index: 102;
-        position: relative;
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_standart_thumb_spun2_<?php echo $bwg; ?> {
-        border-radius: <?php echo $theme_row->thumb_border_radius; ?>;
-        border: <?php echo $theme_row->thumb_border_width; ?>px <?php echo $theme_row->thumb_border_style; ?> #<?php echo $theme_row->thumb_border_color; ?>;
-        box-shadow: <?php echo $theme_row->thumb_box_shadow; ?>;
-        display: inline-block;
-        height: <?php echo $params['compuct_album_image_thumb_height']; ?>px;
-        overflow: hidden;
-        width: <?php echo $params['compuct_album_image_thumb_width']; ?>px;
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_standart_thumbnails_<?php echo $bwg; ?> {
-        -moz-box-sizing: border-box;
-        display: inline-block;
-        background-color: rgba(<?php echo $rgb_thumbs_bg_color['red']; ?>, <?php echo $rgb_thumbs_bg_color['green']; ?>, <?php echo $rgb_thumbs_bg_color['blue']; ?>, <?php echo number_format($theme_row->thumb_bg_transparent / 100, 2, ".", ""); ?>);
-        box-sizing: border-box;
-        font-size: 0;
-        max-width: <?php echo $params['compuct_album_image_column_number'] * ($params['compuct_album_image_thumb_width'] + 2 * (2 + $theme_row->thumb_margin + $theme_row->thumb_padding + $theme_row->thumb_border_width)); ?>px;
-        text-align: <?php echo $theme_row->thumb_align; ?>;
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_standart_thumb_<?php echo $bwg; ?> {
-        display: inline-block;
-        text-align: center;
-      }
-      <?php
-      if ($params['compuct_album_image_title'] == 'show') { /* Show image title at the bottom.*/
-        ?>
-        #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_image_title_spun1_<?php echo $bwg; ?> {
-          display: block;
-          margin: 0 auto;
-          opacity: 1;
-          filter: Alpha(opacity=100);
-          text-align: center;
-          width: <?php echo $params['compuct_album_thumb_width']; ?>px;
-        }
-        <?php
-      }
-      elseif ($params['compuct_album_image_title'] == 'hover') { /* Show image title on hover.*/
-        ?>
-        #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_image_title_spun1_<?php echo $bwg; ?> {
-          display: table;
-          height: inherit;
-          left: -3000px;
-          opacity: 0;
-          filter: Alpha(opacity=0);
-          position: absolute;
-          top: 0px;
-          width: inherit;
-        }
-        <?php
-      }
-      ?>
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_standart_thumb_spun1_<?php echo $bwg; ?>:hover .bwg_image_title_spun1_<?php echo $bwg; ?> {
-        left: <?php echo $theme_row->thumb_padding; ?>px;
-        top: <?php echo $theme_row->thumb_padding; ?>px;
-        opacity: 1;
-        filter: Alpha(opacity=100);
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_image_title_spun2_<?php echo $bwg; ?> {
-        color: #<?php echo $theme_row->thumb_title_font_color; ?>;
-        display: table-cell;
-        font-family: <?php echo $theme_row->thumb_title_font_style; ?>;
-        font-size: <?php echo $theme_row->thumb_title_font_size; ?>px;
-        font-weight: <?php echo $theme_row->thumb_title_font_weight; ?>;
-        height: inherit;
-        margin: <?php echo $theme_row->thumb_title_margin; ?>;
-        text-shadow: <?php echo $theme_row->thumb_title_shadow; ?>;
-        vertical-align: middle;
-        width: inherit;
-        word-wrap: break-word;
-      }
-      /*Pagination styles.*/
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .tablenav-pages_<?php echo $bwg; ?> {
-        text-align: <?php echo $theme_row->page_nav_align; ?>;
-        font-size: <?php echo $theme_row->page_nav_font_size; ?>px;
-        font-family: <?php echo $theme_row->page_nav_font_style; ?>;
-        font-weight: <?php echo $theme_row->page_nav_font_weight; ?>;
-        color: #<?php echo $theme_row->page_nav_font_color; ?>;
-        margin: 6px 0 4px;
-        display: block;
-        height: 30px;
-        line-height: 30px;
-      }
-      @media only screen and (max-width : 320px) {
-        #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .displaying-num_<?php echo $bwg; ?> {
-          display: none;
-        }
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .displaying-num_<?php echo $bwg; ?> {
-        font-size: <?php echo $theme_row->page_nav_font_size; ?>px;
-        font-family: <?php echo $theme_row->page_nav_font_style; ?>;
-        font-weight: <?php echo $theme_row->page_nav_font_weight; ?>;
-        color: #<?php echo $theme_row->page_nav_font_color; ?>;
-        margin-right: 10px;
-        vertical-align: middle;
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .paging-input_<?php echo $bwg; ?> {
-        font-size: <?php echo $theme_row->page_nav_font_size; ?>px;
-        font-family: <?php echo $theme_row->page_nav_font_style; ?>;
-        font-weight: <?php echo $theme_row->page_nav_font_weight; ?>;
-        color: #<?php echo $theme_row->page_nav_font_color; ?>;
-        vertical-align: middle;
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .tablenav-pages_<?php echo $bwg; ?> a.disabled,
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .tablenav-pages_<?php echo $bwg; ?> a.disabled:hover,
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .tablenav-pages_<?php echo $bwg; ?> a.disabled:focus {
-        cursor: default;
-        color: rgba(<?php echo $rgb_page_nav_font_color['red']; ?>, <?php echo $rgb_page_nav_font_color['green']; ?>, <?php echo $rgb_page_nav_font_color['blue']; ?>, 0.5);
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .tablenav-pages_<?php echo $bwg; ?> a {
-        cursor: pointer;
-        font-size: <?php echo $theme_row->page_nav_font_size; ?>px;
-        font-family: <?php echo $theme_row->page_nav_font_style; ?>;
-        font-weight: <?php echo $theme_row->page_nav_font_weight; ?>;
-        color: #<?php echo $theme_row->page_nav_font_color; ?>;
-        text-decoration: none;
-        padding: <?php echo $theme_row->page_nav_padding; ?>;
-        margin: <?php echo $theme_row->page_nav_margin; ?>;
-        border-radius: <?php echo $theme_row->page_nav_border_radius; ?>;
-        border-style: <?php echo $theme_row->page_nav_border_style; ?>;
-        border-width: <?php echo $theme_row->page_nav_border_width; ?>px;
-        border-color: #<?php echo $theme_row->page_nav_border_color; ?>;
-        background-color: #<?php echo $theme_row->page_nav_button_bg_color; ?>;
-        opacity: <?php echo number_format($theme_row->page_nav_button_bg_transparent / 100, 2, ".", ""); ?>;
-        filter: Alpha(opacity=<?php echo $theme_row->page_nav_button_bg_transparent; ?>);
-        box-shadow: <?php echo $theme_row->page_nav_box_shadow; ?>;
-        <?php echo ($theme_row->page_nav_button_transition ) ? 'transition: all 0.3s ease 0s;-webkit-transition: all 0.3s ease 0s;' : ''; ?>
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_back_<?php echo $bwg; ?> {
-        background-color: rgba(0, 0, 0, 0);
-        color: #<?php echo $theme_row->album_compact_back_font_color; ?> !important;
-        cursor: pointer;
-        display: block;
-        font-family: <?php echo $theme_row->album_compact_back_font_style; ?>;
-        font-size: <?php echo $theme_row->album_compact_back_font_size; ?>px;
-        font-weight: <?php echo $theme_row->album_compact_back_font_weight; ?>;
-        text-decoration: none;
-        padding: <?php echo $theme_row->album_compact_back_padding; ?>;
-      }
-      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> #spider_popup_overlay_<?php echo $bwg; ?> {
-        background-color: #<?php echo $theme_row->lightbox_overlay_bg_color; ?>;
-        opacity: <?php echo number_format($theme_row->lightbox_overlay_bg_transparent / 100, 2, ".", ""); ?>;
-        filter: Alpha(opacity=<?php echo $theme_row->lightbox_overlay_bg_transparent; ?>);
-      }
-      .bwg_play_icon_spun_<?php echo $bwg; ?>	 {
-        width: inherit;
-        height: inherit;
-        display: table;
-        position: absolute;
-      }	 
-     .bwg_play_icon_<?php echo $bwg; ?> {
-        color: #<?php echo $theme_row->thumb_title_font_color; ?>;
-        font-size: <?php echo 2 * $theme_row->thumb_title_font_size; ?>px;
-        vertical-align: middle;
-        display: table-cell !important;
-        z-index: 1;
-        text-align: center;
-        margin: 0 auto;
-      }
-    </style>
+    
+    $inline_style = $this->inline_styles($bwg, $theme_row, $params, $album_gallery_div_class, $items_col_num, $album_view_type);
+    global $wd_bwg_inline_stiles;
+    if ($wd_bwg_inline_stiles) {
+      wp_enqueue_style('bwg_frontend');
+      wp_add_inline_style('bwg_frontend', $inline_style);
+      wp_enqueue_style('bwg_font-awesome');
+      wp_enqueue_style('bwg_mCustomScrollbar');
+      $google_fonts = WDWLibrary::get_google_fonts();
+      wp_enqueue_style('bwg_googlefonts');
+    }
+    else {
+      echo '<style>' . $inline_style . '</style>';
+    }
+    ?>
     <div id="bwg_container1_<?php echo $bwg; ?>">
       <div id="bwg_container2_<?php echo $bwg; ?>">
         <form id="gal_front_form_<?php echo $bwg; ?>" method="post" action="#">
@@ -881,5 +596,308 @@ class BWGViewAlbum_compact_preview {
     else {
       die();
     }
+  }
+
+  private function inline_styles($bwg, $theme_row, $params, $album_gallery_div_class, $items_col_num, $album_view_type) {
+    ob_start();
+    $rgb_page_nav_font_color = WDWLibrary::spider_hex2rgb($theme_row->page_nav_font_color);
+    $rgb_album_compact_thumbs_bg_color = WDWLibrary::spider_hex2rgb($theme_row->album_compact_thumbs_bg_color);
+    $rgb_thumbs_bg_color = WDWLibrary::spider_hex2rgb($theme_row->thumbs_bg_color);
+    ?>
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumb_<?php echo $bwg; ?> {
+        display: inline-block;
+        text-align: center;
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .<?php echo $album_gallery_div_class; ?> * {
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumb_spun1_<?php echo $bwg; ?> {
+        background-color: #<?php echo $theme_row->album_compact_thumb_bg_color; ?>;
+        display: inline-block;
+        height: <?php echo $params['compuct_album_thumb_height']; ?>px;
+        margin: <?php echo $theme_row->album_compact_thumb_margin; ?>px;
+        opacity: <?php echo number_format($theme_row->album_compact_thumb_transparent / 100, 2, ".", ""); ?>;
+        filter: Alpha(opacity=<?php echo $theme_row->album_compact_thumb_transparent; ?>);
+        <?php echo ($theme_row->album_compact_thumb_transition) ? 'transition: all 0.3s ease 0s;-webkit-transition: all 0.3s ease 0s;' : ''; ?>
+        padding: <?php echo $theme_row->album_compact_thumb_padding; ?>px;
+        text-align: center;
+        vertical-align: middle;
+        width: <?php echo $params['compuct_album_thumb_width']; ?>px;
+        z-index: 100;
+        -webkit-backface-visibility: visible;
+        -ms-backface-visibility: visible;
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumb_spun1_<?php echo $bwg; ?>:hover {
+        opacity: 1;
+        filter: Alpha(opacity=100);
+        transform: <?php echo $theme_row->album_compact_thumb_hover_effect; ?>(<?php echo $theme_row->album_compact_thumb_hover_effect_value; ?>);
+        -ms-transform: <?php echo $theme_row->album_compact_thumb_hover_effect; ?>(<?php echo $theme_row->album_compact_thumb_hover_effect_value; ?>);
+        -webkit-transform: <?php echo $theme_row->album_compact_thumb_hover_effect; ?>(<?php echo $theme_row->album_compact_thumb_hover_effect_value; ?>);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        -ms-backface-visibility: hidden;
+        z-index: 102;
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumb_spun2_<?php echo $bwg; ?> {
+        border-radius: <?php echo $theme_row->album_compact_thumb_border_radius; ?>;
+        border: <?php echo $theme_row->album_compact_thumb_border_width; ?>px <?php echo $theme_row->album_compact_thumb_border_style; ?> #<?php echo $theme_row->album_compact_thumb_border_color; ?>;
+        box-shadow: <?php echo $theme_row->album_compact_thumb_box_shadow; ?>;
+        display: inline-block;
+        height: <?php echo $params['compuct_album_thumb_height']; ?>px;
+        overflow: hidden;
+        width: <?php echo $params['compuct_album_thumb_width']; ?>px;
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumbnails_<?php echo $bwg; ?> {
+        display: inline-block;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        background-color: rgba(<?php echo $rgb_album_compact_thumbs_bg_color['red']; ?>, <?php echo $rgb_album_compact_thumbs_bg_color['green']; ?>, <?php echo $rgb_album_compact_thumbs_bg_color['blue']; ?>, <?php echo number_format($theme_row->album_compact_thumb_bg_transparent / 100, 2, ".", ""); ?>);
+        font-size: 0;
+        text-align: <?php echo $theme_row->album_compact_thumb_align; ?>;
+        max-width: <?php echo $items_col_num * ($params['compuct_album_thumb_width'] + 2 * (2 + $theme_row->album_compact_thumb_margin + $theme_row->album_compact_thumb_padding + $theme_row->album_compact_thumb_border_width)); ?>px;
+      }
+      <?php
+      if ($params['compuct_album_title'] == 'show') { /* Show album/gallery title at the bottom.*/
+        ?>
+        #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_title_spun1_<?php echo $bwg; ?> {
+          display: block;
+          opacity: 1;
+          filter: Alpha(opacity=100);
+          text-align: center;
+          width: <?php echo $params['compuct_album_thumb_width']; ?>px;
+        }
+        <?php
+      }
+      elseif ($params['compuct_album_title'] == 'hover') { /* Show album/gallery title on hover.*/
+        ?>
+        #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_title_spun1_<?php echo $bwg; ?> {
+          display: table;
+          height: inherit;
+          left: -3000px;
+          opacity: 0;
+          filter: Alpha(opacity=0);
+          position: absolute;
+          top: 0px;
+          width: inherit;
+        }
+        <?php
+      }
+      ?>
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumb_spun1_<?php echo $bwg; ?>:hover .bwg_title_spun1_<?php echo $bwg; ?> {
+        left: <?php echo $theme_row->album_compact_thumb_padding; ?>px;
+        top: <?php echo $theme_row->album_compact_thumb_padding; ?>px;
+        opacity: 1;
+        filter: Alpha(opacity=100);
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_title_spun2_<?php echo $bwg; ?> {
+        color: #<?php echo $theme_row->album_compact_title_font_color; ?>;
+        display: table-cell;
+        font-family: <?php echo $theme_row->album_compact_title_font_style; ?>;
+        font-size: <?php echo $theme_row->album_compact_title_font_size; ?>px;
+        font-weight: <?php echo $theme_row->album_compact_title_font_weight; ?>;
+        height: inherit;
+        padding: <?php echo $theme_row->album_compact_title_margin; ?>;
+        text-shadow: <?php echo $theme_row->album_compact_title_shadow; ?>;
+        vertical-align: middle;
+        width: inherit;
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_album_thumbnails_<?php echo $bwg; ?> {
+        display: inline-block;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        background-color: rgba(<?php echo $rgb_album_compact_thumbs_bg_color['red']; ?>, <?php echo $rgb_album_compact_thumbs_bg_color['green']; ?>, <?php echo $rgb_album_compact_thumbs_bg_color['blue']; ?>, <?php echo number_format($theme_row->album_compact_thumb_bg_transparent / 100, 2, ".", ""); ?>);
+        font-size: 0;
+        text-align: <?php echo $theme_row->album_compact_thumb_align; ?>;
+        max-width: <?php echo $items_col_num * ($params['compuct_album_thumb_width'] + 2 * (2 + $theme_row->album_compact_thumb_margin + $theme_row->album_compact_thumb_padding + $theme_row->album_compact_thumb_border_width)); ?>px;
+      }
+      /*Image thumbs styles.*/
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_standart_thumb_spun1_<?php echo $bwg; ?> {
+        background-color: #<?php echo $theme_row->thumb_bg_color; ?>;
+        display: inline-block;
+        height: <?php echo $params['compuct_album_image_thumb_height']; ?>px;
+        margin: <?php echo $theme_row->thumb_margin; ?>px;
+        opacity: <?php echo number_format($theme_row->thumb_transparent / 100, 2, ".", ""); ?>;
+        filter: Alpha(opacity=<?php echo $theme_row->thumb_transparent; ?>);
+        <?php echo ($theme_row->thumb_transition) ? 'transition: all 0.3s ease 0s;-webkit-transition: all 0.3s ease 0s;' : ''; ?>
+        padding: <?php echo $theme_row->thumb_padding; ?>px;
+        text-align: center;
+        vertical-align: middle;
+        width: <?php echo $params['compuct_album_image_thumb_width']; ?>px;
+        z-index: 100;
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_standart_thumb_spun1_<?php echo $bwg; ?>:hover {
+        -ms-transform: <?php echo $theme_row->thumb_hover_effect; ?>(<?php echo $theme_row->thumb_hover_effect_value; ?>);
+        -webkit-transform: <?php echo $theme_row->thumb_hover_effect; ?>(<?php echo $theme_row->thumb_hover_effect_value; ?>);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        -ms-backface-visibility: hidden;
+        opacity: 1;
+        filter: Alpha(opacity=100);
+        transform: <?php echo $theme_row->thumb_hover_effect; ?>(<?php echo $theme_row->thumb_hover_effect_value; ?>);
+        z-index: 102;
+        position: relative;
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_standart_thumb_spun2_<?php echo $bwg; ?> {
+        border-radius: <?php echo $theme_row->thumb_border_radius; ?>;
+        border: <?php echo $theme_row->thumb_border_width; ?>px <?php echo $theme_row->thumb_border_style; ?> #<?php echo $theme_row->thumb_border_color; ?>;
+        box-shadow: <?php echo $theme_row->thumb_box_shadow; ?>;
+        display: inline-block;
+        height: <?php echo $params['compuct_album_image_thumb_height']; ?>px;
+        overflow: hidden;
+        width: <?php echo $params['compuct_album_image_thumb_width']; ?>px;
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_standart_thumbnails_<?php echo $bwg; ?> {
+        -moz-box-sizing: border-box;
+        display: inline-block;
+        background-color: rgba(<?php echo $rgb_thumbs_bg_color['red']; ?>, <?php echo $rgb_thumbs_bg_color['green']; ?>, <?php echo $rgb_thumbs_bg_color['blue']; ?>, <?php echo number_format($theme_row->thumb_bg_transparent / 100, 2, ".", ""); ?>);
+        box-sizing: border-box;
+        font-size: 0;
+        max-width: <?php echo $params['compuct_album_image_column_number'] * ($params['compuct_album_image_thumb_width'] + 2 * (2 + $theme_row->thumb_margin + $theme_row->thumb_padding + $theme_row->thumb_border_width)); ?>px;
+        text-align: <?php echo $theme_row->thumb_align; ?>;
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_standart_thumb_<?php echo $bwg; ?> {
+        display: inline-block;
+        text-align: center;
+      }
+      <?php
+      if ($params['compuct_album_image_title'] == 'show') { /* Show image title at the bottom.*/
+        ?>
+        #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_image_title_spun1_<?php echo $bwg; ?> {
+          display: block;
+          margin: 0 auto;
+          opacity: 1;
+          filter: Alpha(opacity=100);
+          text-align: center;
+          width: <?php echo $params['compuct_album_thumb_width']; ?>px;
+        }
+        <?php
+      }
+      elseif ($params['compuct_album_image_title'] == 'hover') { /* Show image title on hover.*/
+        ?>
+        #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_image_title_spun1_<?php echo $bwg; ?> {
+          display: table;
+          height: inherit;
+          left: -3000px;
+          opacity: 0;
+          filter: Alpha(opacity=0);
+          position: absolute;
+          top: 0px;
+          width: inherit;
+        }
+        <?php
+      }
+      ?>
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_standart_thumb_spun1_<?php echo $bwg; ?>:hover .bwg_image_title_spun1_<?php echo $bwg; ?> {
+        left: <?php echo $theme_row->thumb_padding; ?>px;
+        top: <?php echo $theme_row->thumb_padding; ?>px;
+        opacity: 1;
+        filter: Alpha(opacity=100);
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_image_title_spun2_<?php echo $bwg; ?> {
+        color: #<?php echo $theme_row->thumb_title_font_color; ?>;
+        display: table-cell;
+        font-family: <?php echo $theme_row->thumb_title_font_style; ?>;
+        font-size: <?php echo $theme_row->thumb_title_font_size; ?>px;
+        font-weight: <?php echo $theme_row->thumb_title_font_weight; ?>;
+        height: inherit;
+        margin: <?php echo $theme_row->thumb_title_margin; ?>;
+        text-shadow: <?php echo $theme_row->thumb_title_shadow; ?>;
+        vertical-align: middle;
+        width: inherit;
+        word-wrap: break-word;
+      }
+      /*Pagination styles.*/
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .tablenav-pages_<?php echo $bwg; ?> {
+        text-align: <?php echo $theme_row->page_nav_align; ?>;
+        font-size: <?php echo $theme_row->page_nav_font_size; ?>px;
+        font-family: <?php echo $theme_row->page_nav_font_style; ?>;
+        font-weight: <?php echo $theme_row->page_nav_font_weight; ?>;
+        color: #<?php echo $theme_row->page_nav_font_color; ?>;
+        margin: 6px 0 4px;
+        display: block;
+        height: 30px;
+        line-height: 30px;
+      }
+      @media only screen and (max-width : 320px) {
+        #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .displaying-num_<?php echo $bwg; ?> {
+          display: none;
+        }
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .displaying-num_<?php echo $bwg; ?> {
+        font-size: <?php echo $theme_row->page_nav_font_size; ?>px;
+        font-family: <?php echo $theme_row->page_nav_font_style; ?>;
+        font-weight: <?php echo $theme_row->page_nav_font_weight; ?>;
+        color: #<?php echo $theme_row->page_nav_font_color; ?>;
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .paging-input_<?php echo $bwg; ?> {
+        font-size: <?php echo $theme_row->page_nav_font_size; ?>px;
+        font-family: <?php echo $theme_row->page_nav_font_style; ?>;
+        font-weight: <?php echo $theme_row->page_nav_font_weight; ?>;
+        color: #<?php echo $theme_row->page_nav_font_color; ?>;
+        vertical-align: middle;
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .tablenav-pages_<?php echo $bwg; ?> a.disabled,
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .tablenav-pages_<?php echo $bwg; ?> a.disabled:hover,
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .tablenav-pages_<?php echo $bwg; ?> a.disabled:focus {
+        cursor: default;
+        color: rgba(<?php echo $rgb_page_nav_font_color['red']; ?>, <?php echo $rgb_page_nav_font_color['green']; ?>, <?php echo $rgb_page_nav_font_color['blue']; ?>, 0.5);
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .tablenav-pages_<?php echo $bwg; ?> a {
+        cursor: pointer;
+        font-size: <?php echo $theme_row->page_nav_font_size; ?>px;
+        font-family: <?php echo $theme_row->page_nav_font_style; ?>;
+        font-weight: <?php echo $theme_row->page_nav_font_weight; ?>;
+        color: #<?php echo $theme_row->page_nav_font_color; ?>;
+        text-decoration: none;
+        padding: <?php echo $theme_row->page_nav_padding; ?>;
+        margin: <?php echo $theme_row->page_nav_margin; ?>;
+        border-radius: <?php echo $theme_row->page_nav_border_radius; ?>;
+        border-style: <?php echo $theme_row->page_nav_border_style; ?>;
+        border-width: <?php echo $theme_row->page_nav_border_width; ?>px;
+        border-color: #<?php echo $theme_row->page_nav_border_color; ?>;
+        background-color: #<?php echo $theme_row->page_nav_button_bg_color; ?>;
+        opacity: <?php echo number_format($theme_row->page_nav_button_bg_transparent / 100, 2, ".", ""); ?>;
+        filter: Alpha(opacity=<?php echo $theme_row->page_nav_button_bg_transparent; ?>);
+        box-shadow: <?php echo $theme_row->page_nav_box_shadow; ?>;
+        <?php echo ($theme_row->page_nav_button_transition ) ? 'transition: all 0.3s ease 0s;-webkit-transition: all 0.3s ease 0s;' : ''; ?>
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_back_<?php echo $bwg; ?> {
+        background-color: rgba(0, 0, 0, 0);
+        color: #<?php echo $theme_row->album_compact_back_font_color; ?> !important;
+        cursor: pointer;
+        display: block;
+        font-family: <?php echo $theme_row->album_compact_back_font_style; ?>;
+        font-size: <?php echo $theme_row->album_compact_back_font_size; ?>px;
+        font-weight: <?php echo $theme_row->album_compact_back_font_weight; ?>;
+        text-decoration: none;
+        padding: <?php echo $theme_row->album_compact_back_padding; ?>;
+      }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> #spider_popup_overlay_<?php echo $bwg; ?> {
+        background-color: #<?php echo $theme_row->lightbox_overlay_bg_color; ?>;
+        opacity: <?php echo number_format($theme_row->lightbox_overlay_bg_transparent / 100, 2, ".", ""); ?>;
+        filter: Alpha(opacity=<?php echo $theme_row->lightbox_overlay_bg_transparent; ?>);
+      }
+      .bwg_play_icon_spun_<?php echo $bwg; ?>	 {
+        width: inherit;
+        height: inherit;
+        display: table;
+        position: absolute;
+      }	 
+     .bwg_play_icon_<?php echo $bwg; ?> {
+        color: #<?php echo $theme_row->thumb_title_font_color; ?>;
+        font-size: <?php echo 2 * $theme_row->thumb_title_font_size; ?>px;
+        vertical-align: middle;
+        display: table-cell !important;
+        z-index: 1;
+        text-align: center;
+        margin: 0 auto;
+      }
+    <?php
+    return ob_get_clean();
   }
 }

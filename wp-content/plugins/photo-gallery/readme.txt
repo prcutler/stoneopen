@@ -1,16 +1,18 @@
 === Gallery ===
 Contributors: webdorado
 Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
-Tags: album, image gallery, gallery, image, images, lightbox, photo, photo gallery, photos, responsive, thumbnail, widget
+Tags:  content gallery, gallery, gallery image, image gallery, images gallery, lightbox gallery, media gallery, photo gallery, responsive gallery, thumbnail gallery, wordpress gallery, youtube gallery
 Requires at least: 3.4
 Tested up to: 4.7 
-Stable tag: 1.3.22    
+Stable tag: 1.3.25    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Photo Gallery is an advanced plugin with a list of tools and options for adding and editing images for different views. It is fully responsive.
+Gallery is an advanced plugin with a list of tools and options for adding and editing images for different views. It is fully responsive. 
 
 == Description ==
+
+Gallery is a fully responsive WordPress gallery plugin with advanced functionality.
 Create 100% responsive FREE WordPress photo gallery in minutes. Easy to customize and various views.    
    
 https://www.youtube.com/watch?v=4Mxg0FsFZZE&index=5&list=PLnxWPiY5tLFUsFI67acGEPAqoDMZqss5F
@@ -172,6 +174,22 @@ We recommend to use images with the width of 1200px to 1600px. In order to speed
 To enable the feature of adding Media Library images, go to Photo Gallery > Options > Global Options and set Import from Media Library option to Yes. After that you will be able to import photos from Media Library to Photo Gallery.     
 
 == Changelog ==
+
+= 1.3.25 =
+* Fixed: Google Fonts.    
+* Added: Select all button on tags page.   
+
+= 1.3.24 =
+* Fixed: Google Fonts list bug.   
+
+= 1.3.23 =
+* Fixed: Ordering bug in Gallery Box.   
+* Added: Possibility to include styles/scripts in necessary pages only.   
+* Fixed: Share after image change.   
+* Fixed: Author for custom posts.   
+* Fixed: Removed unnecessary spaces from ordering.   
+* Fixed: Tag select on mobile.     
+* Changed: Include only necessary Google Fonts.      
 
 = 1.3.22 =
 * Fixed: Styles on Twenty Seventeen theme.    

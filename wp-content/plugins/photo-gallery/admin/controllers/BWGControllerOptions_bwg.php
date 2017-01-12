@@ -230,6 +230,7 @@ class BWGControllerOptions_bwg {
     $show_tag_box = (isset($_POST['show_tag_box']) ? esc_html(stripslashes($_POST['show_tag_box'])) : 0);
     $show_hide_custom_post = (isset($_POST['show_hide_custom_post']) ? esc_html(stripslashes($_POST['show_hide_custom_post'])) : 0);
     $show_hide_post_meta = (isset($_POST['show_hide_post_meta']) ? esc_html(stripslashes($_POST['show_hide_post_meta'])) : 0);
+    $use_inline_stiles_and_scripts = (isset($_POST['use_inline_stiles_and_scripts']) ? esc_html(stripslashes($_POST['use_inline_stiles_and_scripts'])) : 0);
     $placeholder = (isset($_POST['placeholder']) ? esc_html(stripslashes($_POST['placeholder'])) : '');
     $slideshow_effect_duration = (isset($_POST['slideshow_effect_duration']) ? esc_html(stripslashes($_POST['slideshow_effect_duration'])) : 1);
     $popup_effect_duration = (isset($_POST['popup_effect_duration']) ? (int) (stripslashes($_POST['popup_effect_duration'])) : 1);
@@ -372,6 +373,7 @@ class BWGControllerOptions_bwg {
       'show_tag_box' => $show_tag_box,
       'show_hide_custom_post' => $show_hide_custom_post,
       'show_hide_post_meta' => $show_hide_post_meta,
+      'use_inline_stiles_and_scripts' => $use_inline_stiles_and_scripts,
       'placeholder' => $placeholder,
       'slideshow_effect_duration' => $slideshow_effect_duration,
       'popup_effect_duration' => $popup_effect_duration,

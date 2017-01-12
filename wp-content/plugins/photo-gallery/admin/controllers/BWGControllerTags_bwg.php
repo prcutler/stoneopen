@@ -260,7 +260,7 @@ class BWGControllerTags_bwg {
     $flag = FALSE;
     $tag_ids_col = $wpdb->get_col("SELECT term_id FROM " . $wpdb->prefix . "terms");
     foreach ($tag_ids_col as $tag_id) {
-      if (isset($_POST['check_' . $tag_id])) {
+      if (isset($_POST['check_' . $tag_id]) || isset($_POST['check_all_items'])) {
         wp_delete_term($tag_id, 'bwg_tag');
         $wpdb->query($wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_image_tag WHERE tag_id="%d"', $tag_id));
         $flag = TRUE;

@@ -280,3 +280,83 @@ div[id^="bwg_container"] div[id^="bwg_container"] .bwg_img_clear {
     height:auto !important;
   }
 }
+
+/* search */
+.bwg_search_container_1 {
+  display: inline-block;
+  width: 100%;
+  text-align: right;
+  margin: 0 5px 20px 5px;
+  background-color: rgba(0,0,0,0);
+}
+.bwg_search_container_2 {
+  display: inline-block;
+  position: relative;
+  border-radius: 4px;
+  box-shadow: 0 0 3px 1px #CCCCCC;
+  background-color: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  max-width: 100%;
+}
+div[id^="bwg_search_container_1_"] div[id^="bwg_search_container_2_"] .bwg_search_input_container {
+  display: block;
+  margin-right: 45px;
+}
+div[id^="bwg_search_container_1_"] div[id^="bwg_search_container_2_"] .bwg_search_loupe_container {
+  display: inline-block; 
+  margin-right: 1px;
+  vertical-align: middle;
+  float: right;
+  padding-top: 3px;
+}
+div[id^="bwg_search_container_1_"] div[id^="bwg_search_container_2_"] .bwg_search_reset_container {
+  display: inline-block;
+  margin-right: 5px;
+  vertical-align: middle;
+  float: right;
+  padding-top: 3px;
+}
+div[id^="bwg_search_container_1_"] div[id^="bwg_search_container_2_"] .bwg_search,
+div[id^="bwg_search_container_1_"] div[id^="bwg_search_container_2_"] .bwg_reset {
+  font-size: 18px;
+  color: #CCCCCC;
+  cursor: pointer;
+}
+div[id^="bwg_search_container_1_"] div[id^="bwg_search_container_2_"] .bwg_search_input,
+div[id^="bwg_search_container_1_"] div[id^="bwg_search_container_2_"] .bwg_search_input:focus {
+  color: hsl(0, 1%, 3%);
+  outline: none;
+  border: none;
+  box-shadow: none;
+  background: none;
+  padding: 0 5px;
+  font-family: inherit;
+  width: 100%;
+}
+/* end search */
+
+/* sort */
+.bwg_order_cont {
+  background-color: rgba(0,0,0,0);
+  display: block;
+  margin: 0 5px 20px 5px;
+  text-align: right;
+  width: 100%;
+}
+.bwg_order_label {
+  border: none;
+  box-shadow: none;
+  color: #BBBBBB;
+  font-family: inherit;
+  font-weight: bold;
+  outline: none;
+}
+.bwg_order {
+  background-color: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  box-shadow: 0 0 3px 1px #CCCCCC;
+  border-radius: 4px;
+  height: initial;
+  max-width: 100%;
+}
+/* end sort */

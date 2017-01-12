@@ -303,7 +303,7 @@ class WDWLibrary {
       <span class="displaying-num">
         <?php
         if ($count_items != 0) {
-          echo $count_items; ?> item<?php echo (($count_items == 1) ? '' : 's');
+          echo $count_items; ?> <?php echo __('item', 'bwg_back'); ?><?php echo (($count_items == 1) ? '' : 's');
         }
         ?>
       </span>
@@ -535,7 +535,7 @@ class WDWLibrary {
       <?php
       if ($theme_row->page_nav_number) {
       ?>
-      <span class="displaying-num_<?php echo $current_view; ?>"><?php echo $count_items . __(' item(s)', 'bwg'); ?></span>
+      <span class="displaying-num_<?php echo $current_view; ?>"><?php echo $count_items . ' ' . __(' item(s)', 'bwg'); ?></span>
       <?php
       }
       if ($count_items > $limit) {
@@ -668,67 +668,26 @@ class WDWLibrary {
     $bwg_search = ((isset($_POST['bwg_search_' . $current_view]) && esc_html($_POST['bwg_search_' . $current_view]) != '') ? esc_html($_POST['bwg_search_' . $current_view]) : '');	
     $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : 'album');
     $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : 0);
+   ob_start();
     ?>
-    <style>
-      .bwg_search_container_1 {
-        display: inline-block;
-        width: 100%;
-        text-align: right;
-        margin: 0 5px 20px 5px;
-        background-color: rgba(0,0,0,0);
-      }
-      .bwg_search_container_2 {
-        display: inline-block;
-        position: relative;
-        border-radius: 4px;
-        box-shadow: 0 0 3px 1px #CCCCCC;
-        background-color: #FFFFFF;
-        border: 1px solid #CCCCCC;
-        width: <?php echo $search_box_width; ?>px;
-        max-width: 100%;
-      }
-      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_search_input_container {
-        display: block;
-        margin-right: 45px;
-      }
-      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_search_loupe_container {
-        display: inline-block; 
-        margin-right: 1px;
-        vertical-align: middle;
-        float: right;
-        padding-top: 3px;
-      }
-      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_search_reset_container {
-        display: inline-block;
-        margin-right: 5px;
-        vertical-align: middle;
-        float: right;
-        padding-top: 3px;
-      }
-      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_search,
-      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_reset {
-        font-size: 18px;
-        color: #CCCCCC;
-        cursor: pointer;
-      }
-      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_search_input_<?php echo $current_view; ?>,
-      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_search_input_<?php echo $current_view; ?>:focus {
-        color: hsl(0, 1%, 3%);
-        outline: none;
-        border: none;
-        box-shadow: none;
-        background: none;
-        padding: 0 5px;
-        font-family: inherit;
-        width: 100%;
-      }
-   
-    </style>
+    #bwg_search_container_2_<?php echo $current_view; ?> {
+      width: <?php echo $search_box_width; ?>px;
+    }
+    <?php
+    global $wd_bwg_inline_stiles;
+    $inline_style = ob_get_clean();
+    if ($wd_bwg_inline_stiles) {
+      wp_add_inline_style('bwg_frontend', $inline_style);
+    }
+    else {
+      echo '<style>' . $inline_style . '</style>';
+    }
+    ?>
     <script type="text/javascript">
       function clear_input_<?php echo $current_view; ?> (current_view) {
         jQuery("#bwg_search_input_" + current_view).val('');
       }
-      function check_enter_key(e) {
+      function check_enter_key_<?php echo $current_view; ?>(e) {
         var key_code = e.which || e.keyCode;
         if (key_code == 13) {
           spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1);
@@ -746,7 +705,7 @@ class WDWLibrary {
           <i title="<?php echo __('Search', 'bwg'); ?>" class="bwg_search fa fa-search" onclick="spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1)"></i>
         </span>
         <span class="bwg_search_input_container">
-          <input id="bwg_search_input_<?php echo $current_view; ?>" class="bwg_search_input_<?php echo $current_view; ?>" type="text" onkeypress="return check_enter_key(event)" name="bwg_search_<?php echo $current_view; ?>" value="<?php echo $bwg_search; ?>" placeholder="<?php echo $placeholder; ?>" />
+          <input id="bwg_search_input_<?php echo $current_view; ?>" class="bwg_search_input" type="text" onkeypress="return check_enter_key_<?php echo $current_view; ?>(event)" name="bwg_search_<?php echo $current_view; ?>" value="<?php echo $bwg_search; ?>" placeholder="<?php echo $placeholder; ?>" />
           <input id="bwg_images_count_<?php echo $current_view; ?>" class="bwg_search_input" type="hidden" name="bwg_images_count_<?php echo $current_view; ?>" value="<?php echo $images_count; ?>" >
         </span>
       </div>
@@ -755,6 +714,10 @@ class WDWLibrary {
   }
 
   public static function ajax_html_frontend_search_tags($form_id, $current_view, $cur_gal_id, $images_count, $tags_rows) {
+    global $wd_bwg_inline_stiles;
+    if ($wd_bwg_inline_stiles) {
+      wp_enqueue_style('bwg_sumoselect');
+    }
     $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : 'album');
     $bwg_search_tags = (isset($_POST['bwg_tag_id_' . $cur_gal_id]) && $_POST['bwg_tag_id_' . $cur_gal_id] != '' )? $_POST['bwg_tag_id_' . $cur_gal_id] : array();	
     $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : 0);
@@ -795,35 +758,24 @@ class WDWLibrary {
     $bwg_search = ((isset($_POST['bwg_search_' . $current_view]) && esc_html($_POST['bwg_search_' . $current_view]) != '') ? esc_html($_POST['bwg_search_' . $current_view]) : '');	
     $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : 'album');
     $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : 0);
+    ob_start();
     ?>
-    <style>
-      .bwg_order_cont_<?php echo $current_view; ?> {
-        background-color: rgba(0,0,0,0);
-        display: block;
-        margin: 0 5px 20px 5px;
-        text-align: right;
-        width: 100%;
-      }
-      .bwg_order_label_<?php echo $current_view; ?> {
-        border: none;
-        box-shadow: none;
-        color: #BBBBBB;
-        font-family: inherit;
-        font-weight: bold;
-        outline: none;
-      }
-      .bwg_order_<?php echo $current_view; ?> {
-        background-color: #FFFFFF;
-        border: 1px solid #CCCCCC;
-        box-shadow: 0 0 3px 1px #CCCCCC;
-        border-radius: 4px;
-        max-width: 100%;
-        width: <?php echo $search_box_width; ?>px;
-      }
-    </style>
-    <div class="bwg_order_cont_<?php echo $current_view; ?>">
-      <span class="bwg_order_label_<?php echo $current_view; ?>"><?php echo __('Order by: ', 'bwg'); ?></span>
-      <select class="bwg_order_<?php echo $current_view; ?>" onchange="spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1, '', this.value)">
+    #bwg_order_<?php echo $current_view; ?> {
+      width: <?php echo $search_box_width; ?>px;
+    }
+    <?php
+    $inline_style = ob_get_clean();
+    global $wd_bwg_inline_stiles;
+    if ($wd_bwg_inline_stiles) {
+      wp_add_inline_style('bwg_frontend', $inline_style);
+    }
+    else {
+      echo '<style>' . $inline_style . '</style>';
+    }
+    ?>
+    <div class="bwg_order_cont">
+      <span class="bwg_order_label"><?php echo __('Order by: ', 'bwg'); ?></span>
+      <select id="bwg_order_<?php echo $current_view; ?>" class="bwg_order" onchange="spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1, '', this.value)">
         <option <?php if ($sort_by == 'default') echo 'selected'; ?> value="default"><?php echo __('Default', 'bwg'); ?></option>
         <option <?php if ($sort_by == 'filename') echo 'selected'; ?> value="filename"><?php echo __('Filename', 'bwg'); ?></option>								
         <option <?php if ($sort_by == 'size') echo 'selected'; ?> value="size"><?php echo __('Size', 'bwg'); ?></option>
@@ -921,6 +873,54 @@ class WDWLibrary {
     return $google_fonts;
   }
 
+  public static function get_used_google_fonts($theme = null, $shortcode = null) {
+    global $wpdb;
+    $options_google_font = $wpdb->get_row('SELECT watermark_font FROM ' . $wpdb->prefix . 'bwg_option');
+    $google_array = array();
+    $google_fonts = self::get_google_fonts();
+    if (null === $theme) {
+      $theme = $wpdb->get_results('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme');
+    }
+    else {
+      $theme = array($theme);
+    }
+    if (null === $shortcode) {
+      $shortcode_google_fonts = $wpdb->get_results('SELECT * FROM ' . $wpdb->prefix . 'bwg_shortcode');
+    }
+    else {
+      $shortcode_google_fonts = array($shortcode);
+    }
+    if ($shortcode_google_fonts) {
+      foreach($shortcode_google_fonts as $shortcode_google_font){
+        $shortcode_font_string = $shortcode_google_font->tagtext;
+        $len_start = strpos($shortcode_font_string, 'watermark_font="');
+        $len_current = strpos(substr($shortcode_font_string, $len_start), '"');
+        $len_end =  strpos(substr(substr($shortcode_font_string, $len_start), $len_current + 1), '"');
+        $shortcode_fonts = str_replace('"', '', substr(substr($shortcode_font_string, $len_start), $len_current, $len_end + 1));
+        if (true == in_array($shortcode_fonts, $google_fonts)) {
+         $google_array[$shortcode_fonts] = $shortcode_fonts;
+        }  
+      }
+    }
+    if ($theme) {
+      foreach ($theme as $row) {
+        if (isset($row->options)) {
+          $options = json_decode($row->options);
+          foreach ($options as $option) {
+            $is_google_fonts = (in_array((string)$option, $google_fonts)) ? true : false;
+            if (true == $is_google_fonts) {
+              $google_array[$option] = $option;
+            }
+          }
+        }
+      }
+    }
+    if (true == in_array($options_google_font->watermark_font, $google_fonts)) {
+      $google_array[$options_google_font->watermark_font] = $options_google_font->watermark_font;
+    }
+    return $google_array; 
+  }
+
   public static function get_theme_row_data($id) {
     global $wpdb;
     if ($id) {
@@ -990,12 +990,14 @@ class WDWLibrary {
         'post_name'      => $slug,
         'post_status'    => 'publish',
         'post_title'     => $title,
+        'post_author'     => 1,
         'post_type'      => $post_type
       );
       wp_insert_post($post);
     }
     else {
       $bwg_post_id->post_name = $slug;
+      $bwg_post_id->post_author = 1;
       $bwg_post_id->post_content = $shortecode_string;
       wp_update_post($bwg_post_id);
     }

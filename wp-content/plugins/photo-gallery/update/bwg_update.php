@@ -369,6 +369,9 @@ function bwg_update($version) {
       }
     }
   }
-  return;
+  if (version_compare($version, '1.3.23') == -1) {
+    $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `use_inline_stiles_and_scripts` tinyint(1) NOT NULL DEFAULT 0");
+	}
+	return;
 }
 ?>
