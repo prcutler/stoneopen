@@ -317,7 +317,7 @@ function bwg_update($version) {
   if (version_compare($version, '1.2.61') == -1) {
 	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `show_tag_box` tinyint(1) NOT NULL DEFAULT 0");
 	}
-   if (version_compare($version, '1.2.64') == -1) {
+  if (version_compare($version, '1.2.64') == -1) {
 	  $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `show_hide_custom_post` tinyint(1) NOT NULL DEFAULT 0");
     $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `show_hide_post_meta` tinyint(1) NOT NULL DEFAULT 0");
 	}
@@ -371,6 +371,10 @@ function bwg_update($version) {
   }
   if (version_compare($version, '1.3.23') == -1) {
     $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `use_inline_stiles_and_scripts` tinyint(1) NOT NULL DEFAULT 0");
+	}
+  if (version_compare($version, '1.3.27') == -1) {
+    $bwg_options_row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_option WHERE id="%d"', 1));
+    add_option('wd_bwg_options', json_encode($bwg_options_row), '', 'no');
 	}
 	return;
 }

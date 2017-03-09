@@ -70,9 +70,9 @@ class BWGViewImage_browser {
     }
     $image_title = $params['image_browser_title_enable'];
     $enable_image_description = $params['image_browser_description_enable'];
-    $option_row = WDWLibrary::get_options_row_data();
-    $placeholder = isset($option_row->placeholder) ? $option_row->placeholder : '';
-    $image_right_click = $option_row->image_right_click;
+    global $wd_bwg_options;
+    $placeholder = isset($wd_bwg_options->placeholder) ? $wd_bwg_options->placeholder : '';
+    $image_right_click = $wd_bwg_options->image_right_click;
     if (!isset($params['popup_fullscreen'])) {
       $params['popup_fullscreen'] = 0;
     }
@@ -158,14 +158,30 @@ class BWGViewImage_browser {
     $image_browser_image_title_align = (isset($theme_row->image_browser_image_title_align)) ? $theme_row->image_browser_image_title_align : 'top';
 
     $inline_style = $this->inline_styles($bwg, $theme_row, $params, $params_array, $text_align, $vertical_align);
-    global $wd_bwg_inline_stiles;
-    if ($wd_bwg_inline_stiles) {
+    if ($wd_bwg_options->use_inline_stiles_and_scripts) {
       wp_enqueue_style('bwg_frontend');
       wp_add_inline_style('bwg_frontend', $inline_style);
       wp_enqueue_style('bwg_font-awesome');
       wp_enqueue_style('bwg_mCustomScrollbar');
       $google_fonts = WDWLibrary::get_google_fonts();
       wp_enqueue_style('bwg_googlefonts');
+      if (!wp_script_is('bwg_frontend', 'done')) {
+        wp_print_scripts('bwg_frontend');
+      }
+      if ($params['thumb_click_action'] == 'open_lightbox') {
+        if (!wp_script_is('bwg_mCustomScrollbar', 'done')) {
+          wp_print_scripts('bwg_mCustomScrollbar');
+        }
+        if (!wp_script_is('jquery-fullscreen', 'done')) {
+          wp_print_scripts('jquery-fullscreen');
+        }
+        if (!wp_script_is('bwg_gallery_box', 'done')) {
+          wp_print_scripts('bwg_gallery_box');
+        }
+      }
+      if (!wp_script_is('bwg_jquery_mobile', 'done')) {
+        wp_print_scripts('bwg_jquery_mobile');
+      }
     }
     else {
       echo '<style>' . $inline_style . '</style>';
@@ -191,7 +207,7 @@ class BWGViewImage_browser {
             <div class="image_browser_images_<?php echo $bwg; ?>" id="bwg_standart_thumbnails_<?php echo $bwg; ?>" >
               <?php
               if ( $theme_row->page_nav_position == 'top') {
-                WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page, $bwg, 'bwg_standart_thumbnails_' . $bwg, 0, 'album', $option_row->enable_seo);
+                WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page, $bwg, 'bwg_standart_thumbnails_' . $bwg, 0, 'album', $wd_bwg_options->enable_seo);
               }
               foreach ($image_rows as $image_row) {
                 $params_array['image_id'] = (isset($_POST['image_id']) ? esc_html($_POST['image_id']) : $image_row->id);
@@ -328,7 +344,7 @@ class BWGViewImage_browser {
                 <?php
               }
               if ( $theme_row->page_nav_position == 'bottom') {
-                WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page, $bwg, 'bwg_standart_thumbnails_' . $bwg, 0, 'album', $option_row->enable_seo);
+                WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page, $bwg, 'bwg_standart_thumbnails_' . $bwg, 0, 'album', $wd_bwg_options->enable_seo);
               }
               ?>
             </div>

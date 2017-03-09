@@ -30,7 +30,8 @@ class BWGModelAlbums_bwg {
   ////////////////////////////////////////////////////////////////////////////////////////
   public function get_rows_data() {
     global $wpdb;
-    if (!current_user_can('manage_options') && $wpdb->get_var("SELECT album_role FROM " . $wpdb->prefix . "bwg_option")) {
+    global $wd_bwg_options;
+    if (!current_user_can('manage_options') && $wd_bwg_options->album_role) {
       $where = " WHERE author=" . get_current_user_id();
     }
     else {
@@ -54,8 +55,9 @@ class BWGModelAlbums_bwg {
   
   public function get_row_data($id) {
     global $wpdb;
+    global $wd_bwg_options;
     if ($id != 0) {
-      if (!current_user_can('manage_options') && $wpdb->get_var("SELECT album_role FROM " . $wpdb->prefix . "bwg_option")) {
+      if (!current_user_can('manage_options') && $wd_bwg_options->album_role) {
         $where = " WHERE author=" . get_current_user_id();
       }
       else {
@@ -79,7 +81,8 @@ class BWGModelAlbums_bwg {
   
   public function get_albums_galleries_rows_data($album_id) {
     global $wpdb;
-    if (!current_user_can('manage_options') && $wpdb->get_var("SELECT album_role FROM " . $wpdb->prefix . "bwg_option")) {
+    global $wd_bwg_options;
+    if (!current_user_can('manage_options') && $wd_bwg_options->album_role) {
       $where = " AND author=" . get_current_user_id();
     }
     else {

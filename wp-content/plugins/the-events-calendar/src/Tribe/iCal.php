@@ -127,7 +127,7 @@ class Tribe__Events__iCal {
 				$events    = Tribe__Events__Query::getEvents( array( 'post__in' => $event_ids ) );
 				$this->generate_ical_feed( $events );
 			} elseif ( is_single() ) {
-				$this->generate_ical_feed( $wp_query->post, null );
+				$this->generate_ical_feed( $wp_query->post );
 			} else {
 				$this->generate_ical_feed();
 			}
@@ -192,7 +192,6 @@ class Tribe__Events__iCal {
 	 * @param bool $echo Whether the content should be echoed or returned
 	 */
 	public function generate_ical_feed( $post = null, $echo = true ) {
-
 		$tec         = Tribe__Events__Main::instance();
 		$events      = '';
 		$blogHome    = get_bloginfo( 'url' );
@@ -200,6 +199,8 @@ class Tribe__Events__iCal {
 
 		if ( $post ) {
 			$events_posts = is_array( $post ) ? $post : array( $post );
+		} elseif ( tribe_is_month() ) {
+			$events_posts = self::get_month_view_events();
 		} else {
 			/**
 			 * Filters the number of upcoming events the iCal feed should export.

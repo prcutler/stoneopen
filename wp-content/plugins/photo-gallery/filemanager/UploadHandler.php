@@ -11,7 +11,8 @@
  */
  
 if (function_exists('current_user_can')) {
-  if (!current_user_can('manage_options')) {
+  global $wd_bwg_options;
+  if (!current_user_can($wd_bwg_options->permissions)) {
     die('Access Denied');
   }
 }
@@ -24,7 +25,7 @@ $controller = new FilemanagerController();
 
 $upload_handler = new bwg_UploadHandler(array(
   'upload_dir' => $controller->uploads_dir . (isset($_GET['dir']) ? str_replace('\\', '', ($_GET['dir'])) : ''),
-  'accept_file_types' => '/\.(gif|jpe?g|png|bmp|mp4|flv|webm|ogg|mp3|wav|pdf|zip)$/i'
+  'accept_file_types' => '/\.(gif|jpe?g|png|aac|m4a|f4a|oga|ogg|mp3|zip)$/i'
 ));
 
 class bwg_UploadHandler {
@@ -105,9 +106,6 @@ class bwg_UploadHandler {
       }
       $this->options += array(
         'image_versions' => array(
-          // Uncomment the following version to restrict the size of
-          // uploaded images:
-          
           // Uncomment the following to create medium sized images:
           /*
           'medium' => array(

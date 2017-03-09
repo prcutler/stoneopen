@@ -32,7 +32,8 @@ class BWGModelGalleries_bwg {
 
   public function get_image_rows_data($gallery_id) {
     global $wpdb;
-    if (!current_user_can('manage_options') && $wpdb->get_var("SELECT image_role FROM " . $wpdb->prefix . "bwg_option")) {
+    global $wd_bwg_options;
+    if (!current_user_can('manage_options') && $wd_bwg_options->image_role) {
       $where = " WHERE author=" . get_current_user_id();
     }
     else {
@@ -64,7 +65,8 @@ class BWGModelGalleries_bwg {
 
   public function get_rows_data() {
     global $wpdb;
-    if (!current_user_can('manage_options') && $wpdb->get_var("SELECT gallery_role FROM " . $wpdb->prefix . "bwg_option")) {
+    global $wd_bwg_options;
+    if (!current_user_can('manage_options') && $wd_bwg_options->gallery_role) {
       $where = " WHERE author=" . get_current_user_id();
     }
     else {
@@ -88,8 +90,9 @@ class BWGModelGalleries_bwg {
 
   public function get_row_data($id) {
     global $wpdb;
+    global $wd_bwg_options;
     if ($id != 0) {
-      if (!current_user_can('manage_options') && $wpdb->get_var("SELECT gallery_role FROM " . $wpdb->prefix . "bwg_option")) {
+      if (!current_user_can('manage_options') && $wd_bwg_options->gallery_role) {
         $where = " WHERE author=" . get_current_user_id();
       }
       else {
@@ -118,7 +121,8 @@ class BWGModelGalleries_bwg {
   
   public function page_nav() {
     global $wpdb;
-    if (!current_user_can('manage_options') && $wpdb->get_var("SELECT gallery_role FROM " . $wpdb->prefix . "bwg_option")) {
+    global $wd_bwg_options;
+    if (!current_user_can('manage_options') && $wd_bwg_options->gallery_role) {
       $where = " WHERE author=" . get_current_user_id();
     }
     else {
@@ -140,7 +144,8 @@ class BWGModelGalleries_bwg {
 
   public function image_page_nav($gallery_id) {
     global $wpdb;
-    if (!current_user_can('manage_options') && $wpdb->get_var("SELECT image_role FROM " . $wpdb->prefix . "bwg_option")) {
+    global $wd_bwg_options;
+    if (!current_user_can('manage_options') && $wd_bwg_options->image_role) {
       $where = " AND author=" . get_current_user_id();
     }
     else {
@@ -162,7 +167,8 @@ class BWGModelGalleries_bwg {
 
 	public function get_images_count($gallery_id) {
     global $wpdb;
-		if (!current_user_can('manage_options') && $wpdb->get_var("SELECT image_role FROM " . $wpdb->prefix . "bwg_option")) {
+    global $wd_bwg_options;
+		if (!current_user_can('manage_options') && $wd_bwg_options->image_role) {
       $where = " WHERE author=" . get_current_user_id();
     }
     else {

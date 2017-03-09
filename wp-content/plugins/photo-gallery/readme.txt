@@ -1,10 +1,10 @@
 === Gallery ===
-Contributors: webdorado
+Contributors: webdorado,wdsupport
 Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
 Tags:  content gallery, gallery, gallery image, image gallery, images gallery, lightbox gallery, media gallery, photo gallery, responsive gallery, thumbnail gallery, wordpress gallery, youtube gallery
 Requires at least: 3.4
 Tested up to: 4.7 
-Stable tag: 1.3.25    
+Stable tag: 1.3.30    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -174,6 +174,32 @@ We recommend to use images with the width of 1200px to 1600px. In order to speed
 To enable the feature of adding Media Library images, go to Photo Gallery > Options > Global Options and set Import from Media Library option to Yes. After that you will be able to import photos from Media Library to Photo Gallery.     
 
 == Changelog ==
+
+= 1.3.30 =
+* Changed: Scroll load in filemanager.   
+* Fixed: Image dimensions on images reset.   
+
+= 1.3.29 =
+* Changed: Possibility to include scripts only in necessary pages.    
+
+= 1.3.28 =
+* Fixed: Filemanager allowed file types.    
+* Fixed: Instagram.   
+
+= 1.3.27 =
+* Changed: Removed bwg_option table.   
+* Fixed: Masonry galleries bug in masonry album.    
+
+= 1.3.26 =
+* Fixed: Sanitize folder names in filemanager.   
+* Fixed: Random order (pagination and lightbox).   
+* Fixed: Album widget sort direction.   
+* Fixed: Images ordering bug in lightbox.   
+* Fixed: Removed unnecessary spaces from order by.   
+* Fixed: Gallery title bug in extended album view.  
+* Fixed: Tags cloud widget styles conflict with some themes.  
+* Fixed: Open lightbox from tag cloud.   
+* Changed: Generate shortcode with ajax.   
 
 = 1.3.25 =
 * Fixed: Google Fonts.    

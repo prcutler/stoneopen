@@ -134,12 +134,11 @@ html, body, div, span, th, td, a {
     float: left;
     margin: 0;
     padding: 0;
-	margin-left: 5px;
 }
 
 .ctrls_bar .ctrls_right {
     float: right;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
 }
 
@@ -243,8 +242,8 @@ html, body, div, span, th, td, a {
   color: #F5F6F7;
   cursor: pointer;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  height: 30px !important;
-  font-size: 14px !important;
+  height: 32px !important;
+  font-size: 13px !important;
 }
 
 .ctrl_bar_btn.btn_upload_files, .ctrl_bar_btn.btn_import_files:hover {
@@ -272,7 +271,7 @@ html, body, div, span, th, td, a {
 }
 
 .ctrl_bar_btn.btn_secondary {
-  background: linear-gradient(to bottom, #FEFEFE, #F4F4F4) repeat scroll 0 0 #F3F3F3;
+  background: linear-gradient(to bottom, #FEFEFE, #fff) repeat scroll 0 0 #F3F3F3;
   border-color: #BBBBBB;
   color: #333333 !important;
   text-shadow: 0 1px 0 #FFFFFF;
@@ -305,6 +304,8 @@ html, body, div, span, th, td, a {
 .ctrl_bar_btn.btn_back {
   background-image: url("../images/btn_icons/back.png");
 }
+
+
 /* sort icons */
 .sort_order_asc {
   display: inline-block !important;
@@ -335,6 +336,8 @@ html, body, div, span, th, td, a {
   text-decoration: none;
   cursor: pointer;
 }
+
+
 /* path */
 #path {
   display: table-row;
@@ -436,7 +439,7 @@ html, body, div, span, th, td, a {
   right: 0;
   font-size: 24pt !important;
   color: #c0c0c0;
-  line-height:33px;
+  line-height: 33px;
 }
 
 #btnBrowseContainer {
@@ -535,26 +538,13 @@ html, body, div, span, th, td, a {
   margin-left:-30px;
 }
 
+
 .wp-pointer.wp-pointer-aligned-right .wp-pointer-arrow {
   left: auto;
   right: 233px;
   margin-top: -50px;
 }
 
-.bwg_upload_img {
-  margin:10px 0 0 -30px;
-}
-
-.bwg_selected_img {
-  margin-top :-20px;
-}
-.bwg_select_img {
-  margin-top: -50px;
-  margin-left:10px;
-}
-.wp-pointer-aligned-center .wp-pointer-arrow {
-  margin-top:30px;
-}
 .bwg_upload_img {
   margin:10px 0 0 -30px;
 }
@@ -592,9 +582,9 @@ a.wd-btn{
 	outline:none !important;
 }
 .wd-btn-secondary{
-    background-color: #FFFFFF;
-	  color: #686;
-    border: 1px solid #ddd;
+  background-color: #FFFFFF;
+	color: #686;
+  border: 1px solid #ddd;
 }
 
 .wd-btn-primary{
@@ -620,13 +610,13 @@ a.wd-btn-primary:hover, a.wd-btn-primary:active, a.wd-btn-primary:link{
 	background-image:url(../images/btn_icons/upload.png);
 }
 .wd-btn-add{
-	background-image:url(../images/icons/add-new.png);
+	background-image:url("../images/icons/add-new.png");
 }
 .wd-btn-apply{
-	background-image:url(../images/icons/apply.png);
+	background-image:url("../images/icons/apply.png");
 }
 .wd-btn-cancel{
-	background-image:url(../images/icons/cancel.png);
+	background-image:url("../images/icons/cancel.png");
 }
 .wd-not-image{
   padding: 0px 10px 1px 10px !important;

@@ -31,7 +31,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 		const POSTTYPE            = 'tribe_events';
 		const VENUE_POST_TYPE     = 'tribe_venue';
 		const ORGANIZER_POST_TYPE = 'tribe_organizer';
-		const VERSION             = '4.4.0.1';
+		const VERSION             = '4.4.4';
 		const MIN_ADDON_VERSION   = '4.4';
 		const MIN_COMMON_VERSION  = '4.4';
 		const WP_PLUGIN_URL       = 'http://wordpress.org/extend/plugins/the-events-calendar/';
@@ -93,6 +93,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 		public $tag_slug = 'tag';
 		public $monthSlug = 'month';
 		public $featured_slug = 'featured';
+		public $all_slug = 'all';
 
 		/** @deprecated 4.0 */
 		public $taxRewriteSlug = 'event/category';
@@ -139,6 +140,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 		public $pluginName;
 
 		public $displaying;
+		public $plugin_file;
 		public $plugin_dir;
 		public $plugin_path;
 		public $plugin_url;
@@ -169,6 +171,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 			'_EventTimezoneAbbr',
 			self::EVENTSERROROPT,
 			'_EventOrigin',
+			'_tribe_featured',
 		);
 
 		public $venueTags = array(
@@ -252,7 +255,8 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 		 * Initializes plugin variables and sets up WordPress hooks/actions.
 		 */
 		protected function __construct() {
-			$this->pluginPath = $this->plugin_path = trailingslashit( dirname( dirname( dirname( __FILE__ ) ) ) );
+			$this->plugin_file = TRIBE_EVENTS_FILE;
+			$this->pluginPath = $this->plugin_path = trailingslashit( dirname( $this->plugin_file ) );
 			$this->pluginDir  = $this->plugin_dir = trailingslashit( basename( $this->plugin_path ) );
 			$this->pluginUrl  = $this->plugin_url = plugins_url( $this->plugin_dir );
 
@@ -330,6 +334,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 				$this->loadLibraries();
 				$this->addHooks();
 				$this->maybe_load_tickets_framework();
+				$this->register_active_plugin();
 			} else {
 				// Either PHP or WordPress version is inadequate so we simply return an error.
 				add_action( 'admin_head', array( $this, 'notSupportedError' ) );
@@ -439,6 +444,19 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 
 			require_once $this->plugin_path . 'vendor/tickets/event-tickets.php';
 			Tribe__Tickets__Main::instance()->plugins_loaded();
+		}
+
+		/**
+		 * Registers this plugin as being active for other tribe plugins and extensions
+		 */
+		protected function register_active_plugin() {
+			if ( class_exists( 'Tribe__Dependency' ) ) {
+				Tribe__Dependency::instance()->add_active_plugin(
+					__CLASS__,
+					self::VERSION,
+					$this->plugin_file
+				);
+			}
 		}
 
 		/**
@@ -703,6 +721,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 			$this->daySlug                                    = sanitize_title( __( 'day', 'the-events-calendar' ) );
 			$this->todaySlug                                  = sanitize_title( __( 'today', 'the-events-calendar' ) );
 			$this->featured_slug                              = sanitize_title( _x( 'featured', 'featured events slug', 'the-events-calendar' ) );
+			$this->all_slug                                   = sanitize_title( _x( 'all', 'all events slug', 'the-events-calendar' ) );
 
 			$this->singular_venue_label                       = $this->get_venue_label_singular();
 			$this->plural_venue_label                         = $this->get_venue_label_plural();
@@ -2250,6 +2269,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 			$qvars[] = 'end_date';
 			$qvars[] = 'featured';
 			$qvars[] = self::TAXONOMY;
+			$qvars[] = 'tribe_remove_date_filters';
 
 			return $qvars;
 		}
@@ -2610,7 +2630,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 		 *
 		 * @param int|null $post_id
 		 *
-		 * @return string a fully qualified link to http://maps.google.com/ for this event
+		 * @return string a fully qualified link to https://maps.google.com/ for this event
 		 */
 		public function googleMapLink( $post_id = null ) {
 			if ( $post_id === null || ! is_numeric( $post_id ) ) {
@@ -2630,7 +2650,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 			}
 
 			if ( $to_encode ) {
-				$url = 'http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=' . urlencode( trim( $to_encode ) );
+				$url = 'https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=' . urlencode( trim( $to_encode ) );
 			}
 
 			return apply_filters( 'tribe_events_google_map_link', $url, $post_id );
@@ -3850,7 +3870,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 						'utm_campaign' => 'in-app',
 						'utm_medium'   => 'plugin-tec',
 						'utm_source'   => 'plugins-manager',
-					), self::$tribeUrl . self::$addOnPath
+					), self::$tecUrl . self::$addOnPath
 				);
 				$links[] = '<a href="' . esc_url( $link ) . '" target="_blank">' . $anchor . '</a>';
 			}
@@ -3924,7 +3944,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 									'utm_medium'   => 'plugin-tec',
 									'utm_source'   => 'post-editor',
 								),
-								self::$tribeUrl . self::$addOnPath
+								self::$tecUrl . self::$addOnPath
 							)
 						)
 						. '">',
@@ -4094,7 +4114,7 @@ if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 				$filters['tribe-bar-search'] = array(
 					'name'    => 'tribe-bar-search',
 					'caption' => esc_html__( 'Search', 'the-events-calendar' ),
-					'html'    => '<input type="text" name="tribe-bar-search" id="tribe-bar-search" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr__( 'Search', 'the-events-calendar' ) . '">',
+					'html'    => '<input type="text" name="tribe-bar-search" id="tribe-bar-search" value="' . esc_attr( $value ) . '" placeholder="' . esc_attr__( 'Keyword', 'the-events-calendar' ) . '">',
 				);
 			}
 

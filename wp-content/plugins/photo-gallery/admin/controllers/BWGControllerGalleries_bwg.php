@@ -152,82 +152,18 @@ class BWGControllerGalleries_bwg {
   }
   
   public function recover() {
-    global $wpdb;
     $id = ((isset($_POST['image_current_id'])) ? esc_html(stripslashes($_POST['image_current_id'])) : 0);
-    $options = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'bwg_option WHERE id=1');
-    $thumb_width = $options->upload_thumb_width;
-    $thumb_height = $options->upload_thumb_height;    
-    $this->recover_image($id, $thumb_width, $thumb_height);
+    global $wd_bwg_options;
+    $thumb_width = $wd_bwg_options->upload_thumb_width;
+    $width = $wd_bwg_options->upload_img_width;    
+    WDWLibrary::recover_image($id, $thumb_width, $width, 'gallery_page');
   }
   
   public function image_recover_all() {
-    global $wpdb;
     $gallery_id = ((isset($_POST['current_id'])) ? esc_html(stripslashes($_POST['current_id'])) : 0);
-    $options = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'bwg_option WHERE id=1');
-    $thumb_width = $options->upload_thumb_width;
-    $thumb_height = $options->upload_thumb_height;    
-    $image_ids_col = $wpdb->get_col($wpdb->prepare('SELECT id FROM ' . $wpdb->prefix . 'bwg_image WHERE gallery_id="%d"', $gallery_id));
-    foreach ($image_ids_col as $image_id) {
-      if (isset($_POST['check_' . $image_id]) || isset($_POST['check_all_items'])) {
-        $this->recover_image($image_id, $thumb_width, $thumb_height);
-      }
-    }
+    WDWLibrary::bwg_image_recover_all($gallery_id);
   }
   
-  public function recover_image($id, $thumb_width, $thumb_height) {
-    global $WD_BWG_UPLOAD_DIR;
-    global $wpdb;
-    $image_data = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_image WHERE id="%d"', $id));
-    $filename = htmlspecialchars_decode(ABSPATH . $WD_BWG_UPLOAD_DIR . $image_data->image_url, ENT_COMPAT | ENT_QUOTES);
-    $thumb_filename = htmlspecialchars_decode(ABSPATH . $WD_BWG_UPLOAD_DIR . $image_data->thumb_url, ENT_COMPAT | ENT_QUOTES);
-    copy(str_replace('/thumb/', '/.original/', $thumb_filename), $filename);
-    list($width_orig, $height_orig, $type_orig) = getimagesize($filename);
-    $percent = $width_orig / $thumb_width;
-    $thumb_height = $height_orig / $percent;
-    @ini_set('memory_limit', '-1');
-    if ($type_orig == 2) {
-      $img_r = imagecreatefromjpeg($filename);
-      $dst_r = ImageCreateTrueColor($thumb_width, $thumb_height);
-      imagecopyresampled($dst_r, $img_r, 0, 0, 0, 0, $thumb_width, $thumb_height, $width_orig, $height_orig);
-      imagejpeg($dst_r, $thumb_filename, 100);
-      imagedestroy($img_r);
-      imagedestroy($dst_r);
-    }
-    elseif ($type_orig == 3) {
-      $img_r = imagecreatefrompng($filename);
-      $dst_r = ImageCreateTrueColor($thumb_width, $thumb_height);
-      imageColorAllocateAlpha($dst_r, 0, 0, 0, 127);
-      imagealphablending($dst_r, FALSE);
-      imagesavealpha($dst_r, TRUE);
-      imagecopyresampled($dst_r, $img_r, 0, 0, 0, 0, $thumb_width, $thumb_height, $width_orig, $height_orig);
-      imagealphablending($dst_r, FALSE);
-      imagesavealpha($dst_r, TRUE);
-      imagepng($dst_r, $thumb_filename, 9);
-      imagedestroy($img_r);
-      imagedestroy($dst_r);
-    }
-    elseif ($type_orig == 1) {
-      $img_r = imagecreatefromgif($filename);
-      $dst_r = ImageCreateTrueColor($thumb_width, $thumb_height);
-      imageColorAllocateAlpha($dst_r, 0, 0, 0, 127);
-      imagealphablending($dst_r, FALSE);
-      imagesavealpha($dst_r, TRUE);
-      imagecopyresampled($dst_r, $img_r, 0, 0, 0, 0, $thumb_width, $thumb_height, $width_orig, $height_orig);
-      imagealphablending($dst_r, FALSE);
-      imagesavealpha($dst_r, TRUE);
-      imagegif($dst_r, $thumb_filename);
-      imagedestroy($img_r);
-      imagedestroy($dst_r);
-    }
-    @ini_restore('memory_limit');
-    ?>
-    <script language="javascript">
-      var image_src = window.parent.document.getElementById("image_thumb_<?php echo $id; ?>").src;
-      document.getElementById("image_thumb_<?php echo $id; ?>").src = image_src + "?date=<?php echo date('Y-m-y H:i:s'); ?>";
-    </script>
-    <?php
-  }
-
   public function image_publish() {
     $id = ((isset($_POST['image_current_id'])) ? esc_html(stripslashes($_POST['image_current_id'])) : 0);
     global $wpdb;
@@ -310,28 +246,8 @@ class BWGControllerGalleries_bwg {
   }
 
   public function image_set_watermark() {
-    global $wpdb;
-    global $WD_BWG_UPLOAD_DIR;
-    $options = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'bwg_option WHERE id=1');
     $gallery_id = ((isset($_POST['current_id'])) ? esc_html(stripslashes($_POST['current_id'])) : 0);
-    $images = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_image WHERE gallery_id="%d"', $gallery_id));
-    switch ($options->built_in_watermark_type) {
-      case 'text':
-        foreach ($images as $image) {
-          if (isset($_POST['check_' . $image->id]) || isset($_POST['check_all_items'])) {
-            $this->set_text_watermark(ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, html_entity_decode($options->built_in_watermark_text), $options->built_in_watermark_font, $options->built_in_watermark_font_size, '#' . $options->built_in_watermark_color, $options->built_in_watermark_opacity, $options->built_in_watermark_position);
-          }
-        }
-        break;
-      case 'image':
-        $watermark_path = str_replace(site_url() . '/', ABSPATH, $options->built_in_watermark_url);
-        foreach ($images as $image) {
-          if (isset($_POST['check_' . $image->id]) || isset($_POST['check_all_items'])) {
-            $this->set_image_watermark(ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, $watermark_path, $options->built_in_watermark_size, $options->built_in_watermark_size, $options->built_in_watermark_position);
-          }
-        }
-        break;
-    }
+    WDWLibrary::bwg_image_set_watermark($gallery_id);
   }
 
   public function image_resize() {
@@ -435,180 +351,7 @@ class BWGControllerGalleries_bwg {
     @ini_restore('memory_limit');
     return $success;
   }
-
-  function bwg_hex2rgb($hex) {
-    $hex = str_replace("#", "", $hex);
-    if (strlen($hex) == 3) {
-      $r = hexdec(substr($hex,0,1).substr($hex,0,1));
-      $g = hexdec(substr($hex,1,1).substr($hex,1,1));
-      $b = hexdec(substr($hex,2,1).substr($hex,2,1));
-    }
-    else {
-      $r = hexdec(substr($hex,0,2));
-      $g = hexdec(substr($hex,2,2));
-      $b = hexdec(substr($hex,4,2));
-    }
-    $rgb = array($r, $g, $b);
-    return $rgb;
-  }
-
-  function bwg_imagettfbboxdimensions($font_size, $font_angle, $font, $text) {
-    $box = @ImageTTFBBox($font_size, $font_angle, $font, $text) or die;
-    $max_x = max(array($box[0], $box[2], $box[4], $box[6]));
-    $max_y = max(array($box[1], $box[3], $box[5], $box[7]));
-    $min_x = min(array($box[0], $box[2], $box[4], $box[6]));
-    $min_y = min(array($box[1], $box[3], $box[5], $box[7]));
-    return array(
-      "width"  => ($max_x - $min_x),
-      "height" => ($max_y - $min_y)
-    );
-  }
-
-  function set_text_watermark($original_filename, $dest_filename, $watermark_text, $watermark_font, $watermark_font_size, $watermark_color, $watermark_transparency, $watermark_position) {
-    $original_filename = htmlspecialchars_decode($original_filename, ENT_COMPAT | ENT_QUOTES);
-    $dest_filename = htmlspecialchars_decode($dest_filename, ENT_COMPAT | ENT_QUOTES);
-
-    $watermark_transparency = 127 - ($watermark_transparency * 1.27);
-    list($width, $height, $type) = getimagesize($original_filename);
-    $watermark_image = imagecreatetruecolor($width, $height);
-
-    $watermark_color = $this->bwg_hex2rgb($watermark_color);
-    $watermark_color = imagecolorallocatealpha($watermark_image, $watermark_color[0], $watermark_color[1], $watermark_color[2], $watermark_transparency);
-    $watermark_font = WD_BWG_DIR . '/fonts/' . $watermark_font;
-    $watermark_font_size = (($height > $width ? $width : $height) * $watermark_font_size / 500) . 'px';
-    $watermark_position = explode('-', $watermark_position);
-    $watermark_sizes = $this->bwg_imagettfbboxdimensions($watermark_font_size, 0, $watermark_font, $watermark_text);
-
-    $top = $height - 5;
-    $left = $width - $watermark_sizes['width'] - 5;
-    switch ($watermark_position[0]) {
-      case 'top':
-        $top = $watermark_sizes['height'] + 5;
-        break;
-      case 'middle':
-        $top = ($height + $watermark_sizes['height']) / 2;
-        break;
-    }
-    switch ($watermark_position[1]) {
-      case 'left':
-        $left = 5;
-        break;
-      case 'center':
-        $left = ($width - $watermark_sizes['width']) / 2;
-        break;
-    }
-    @ini_set('memory_limit', '-1');
-    if ($type == 2) {
-      $image = imagecreatefromjpeg($original_filename);
-      imagettftext($image, $watermark_font_size, 0, $left, $top, $watermark_color, $watermark_font, $watermark_text);
-      imagejpeg ($image, $dest_filename, 100);
-      imagedestroy($image);  
-    }
-    elseif ($type == 3) {
-      $image = imagecreatefrompng($original_filename);
-      imagettftext($image, $watermark_font_size, 0, $left, $top, $watermark_color, $watermark_font, $watermark_text);
-      imageColorAllocateAlpha($image, 0, 0, 0, 127);
-      imagealphablending($image, FALSE);
-      imagesavealpha($image, TRUE);
-      imagepng($image, $dest_filename, 9);
-      imagedestroy($image);
-    }
-    elseif ($type == 1) {
-      $image = imagecreatefromgif($original_filename);
-      imageColorAllocateAlpha($watermark_image, 0, 0, 0, 127);
-      imagecopy($watermark_image, $image, 0, 0, 0, 0, $width, $height);
-      imagettftext($watermark_image, $watermark_font_size, 0, $left, $top, $watermark_color, $watermark_font, $watermark_text);
-      imagealphablending($watermark_image, FALSE);
-      imagesavealpha($watermark_image, TRUE);
-      imagegif($watermark_image, $dest_filename);
-      imagedestroy($image);
-    }
-    imagedestroy($watermark_image);
-    @ini_restore('memory_limit');
-  }
-
-  function set_image_watermark($original_filename, $dest_filename, $watermark_url, $watermark_height, $watermark_width, $watermark_position) {
-    $original_filename = htmlspecialchars_decode($original_filename, ENT_COMPAT | ENT_QUOTES);
-    $dest_filename = htmlspecialchars_decode($dest_filename, ENT_COMPAT | ENT_QUOTES);
-    $watermark_url = htmlspecialchars_decode($watermark_url, ENT_COMPAT | ENT_QUOTES);
-
-    list($width, $height, $type) = getimagesize($original_filename);
-    list($width_watermark, $height_watermark, $type_watermark) = getimagesize($watermark_url);
-
-    $watermark_width = $width * $watermark_width / 100;
-    $watermark_height = $height_watermark * $watermark_width / $width_watermark;
-        
-    $watermark_position = explode('-', $watermark_position);
-    $top = $height - $watermark_height - 5;
-    $left = $width - $watermark_width - 5;
-    switch ($watermark_position[0]) {
-      case 'top':
-        $top = 5;
-        break;
-      case 'middle':
-        $top = ($height - $watermark_height) / 2;
-        break;
-    }
-    switch ($watermark_position[1]) {
-      case 'left':
-        $left = 5;
-        break;
-      case 'center':
-        $left = ($width - $watermark_width) / 2;
-        break;
-    }
-    @ini_set('memory_limit', '-1');
-    if ($type_watermark == 2) {
-      $watermark_image = imagecreatefromjpeg($watermark_url);        
-    }
-    elseif ($type_watermark == 3) {
-      $watermark_image = imagecreatefrompng($watermark_url);
-    }
-    elseif ($type_watermark == 1) {
-      $watermark_image = imagecreatefromgif($watermark_url);      
-    }
-    else {
-      return false;
-    }
-    
-    $watermark_image_resized = imagecreatetruecolor($watermark_width, $watermark_height);
-    imagecolorallocatealpha($watermark_image_resized, 255, 255, 255, 127);
-    imagealphablending($watermark_image_resized, FALSE);
-    imagesavealpha($watermark_image_resized, TRUE);
-    imagecopyresampled ($watermark_image_resized, $watermark_image, 0, 0, 0, 0, $watermark_width, $watermark_height, $width_watermark, $height_watermark);
-        
-    if ($type == 2) {
-      $image = imagecreatefromjpeg($original_filename);
-      imagecopy($image, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
-      if ($dest_filename <> '') {
-        imagejpeg ($image, $dest_filename, 100); 
-      } else {
-        header('Content-Type: image/jpeg');
-        imagejpeg($image, null, 100);
-      };
-      imagedestroy($image);  
-    }
-    elseif ($type == 3) {
-      $image = imagecreatefrompng($original_filename);
-      imagecopy($image, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
-      imagealphablending($image, FALSE);
-      imagesavealpha($image, TRUE);
-      imagepng($image, $dest_filename, 9);
-      imagedestroy($image);
-    }
-    elseif ($type == 1) {
-      $image = imagecreatefromgif($original_filename);
-      $tempimage = imagecreatetruecolor($width, $height);
-      imagecopy($tempimage, $image, 0, 0, 0, 0, $width, $height);
-      imagecopy($tempimage, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
-      imagegif($tempimage, $dest_filename);
-      imagedestroy($image);
-      imagedestroy($tempimage);
-    }
-    imagedestroy($watermark_image);
-    @ini_restore('memory_limit');
-  }
-
+  
   public function save_image_db() {
     global $wpdb;
     $gal_id = (isset($_POST['current_id']) ? (int) $_POST['current_id'] : 0);
@@ -1033,7 +776,7 @@ class BWGControllerGalleries_bwg {
     $flag = FALSE;
     $gallery_id = ((isset($_POST['current_id'])) ? esc_html(stripslashes($_POST['current_id'])) : 0);
     $img_ids = $wpdb->get_results($wpdb->prepare('SELECT id, thumb_url FROM ' . $wpdb->prefix . 'bwg_image WHERE gallery_id="%d"', $gallery_id));
-    $options = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'bwg_option');
+    global $wd_bwg_options;
     foreach ($img_ids as $img_id) {
       if (isset($_POST['check_' . $img_id->id]) || isset($_POST['check_all_items'])) {
 	      $flag = TRUE;
@@ -1043,8 +786,8 @@ class BWGControllerGalleries_bwg {
         if (!$img_width || !$img_height) {
           continue;
         }
-        $max_width = $options->upload_thumb_width;
-        $max_height = $options->upload_thumb_height;
+        $max_width = $wd_bwg_options->upload_thumb_width;
+        $max_height = $wd_bwg_options->upload_thumb_height;
         $scale = min(
           $max_width / $img_width,
           $max_height / $img_height
@@ -1063,7 +806,7 @@ class BWGControllerGalleries_bwg {
           case 2:
             $src_img = @imagecreatefromjpeg($file_path);
             $write_image = 'imagejpeg';
-            $image_quality = isset($options->jpeg_quality) ? $options->jpeg_quality : 75;
+            $image_quality = isset($wd_bwg_options->jpeg_quality) ? $wd_bwg_options->jpeg_quality : 75;
             break;
           case 1:
             @imagecolortransparent($new_img, @imagecolorallocate($new_img, 0, 0, 0));
@@ -1077,7 +820,7 @@ class BWGControllerGalleries_bwg {
             @imagesavealpha($new_img, true);
             $src_img = @imagecreatefrompng($file_path);
             $write_image = 'imagepng';
-            $image_quality = isset($options->png_quality) ? $options->png_quality : 9;
+            $image_quality = isset($wd_bwg_options->png_quality) ? $wd_bwg_options->png_quality : 9;
             break;
           default:
             $src_img = null;

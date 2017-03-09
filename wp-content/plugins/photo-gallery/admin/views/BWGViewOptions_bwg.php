@@ -1,27 +1,13 @@
 <?php
 
 class BWGViewOptions_bwg {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
+
   private $model;
 
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function __construct($model) {
     $this->model = $model;
   }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
+
   public function display($reset = FALSE) {
     if (isset($_GET['bwg_start_tour']) && $_GET['bwg_start_tour'] == '1') {
       update_user_meta(get_current_user_id(), 'bwg_photo_gallery', '1');
@@ -52,7 +38,7 @@ class BWGViewOptions_bwg {
       }
     </script>
     <?php
-    $row = $this->model->get_row_data($reset);
+    $row = new WD_BWG_Options($reset);
     if (!$row) {
       echo WDWLibrary::message_id(2);
       return;
@@ -1425,8 +1411,8 @@ class BWGViewOptions_bwg {
                 <tr id="tr_thumb_show_name">
                   <td class="spider_label_options"><label><?php _e("Show gallery name:", 'bwg_back'); ?> </label></td>
                   <td>
-                    <input type="radio" name="thumb_name" id="thumb_name_yes" value="1" <?php if ($row->showthumbs_name) echo 'checked="checked"'; ?> /><label for="thumb_name_yes"><?php _e("Yes", 'bwg_back'); ?></label>
-                    <input type="radio" name="thumb_name" id="thumb_name_no" value="0"  <?php if (!$row->showthumbs_name) echo 'checked="checked"'; ?> /><label for="thumb_name_no"><?php _e("No", 'bwg_back'); ?></label>
+                    <input type="radio" name="showthumbs_name" id="thumb_name_yes" value="1" <?php if ($row->showthumbs_name) echo 'checked="checked"'; ?> /><label for="thumb_name_yes"><?php _e("Yes", 'bwg_back'); ?></label>
+                    <input type="radio" name="showthumbs_name" id="thumb_name_no" value="0"  <?php if (!$row->showthumbs_name) echo 'checked="checked"'; ?> /><label for="thumb_name_no"><?php _e("No", 'bwg_back'); ?></label>
                     <div class="spider_description"></div>
                   </td>
                 </tr>
@@ -1578,8 +1564,8 @@ class BWGViewOptions_bwg {
                     <label><?php _e('Show album/gallery name:', 'bwg_back'); ?></label>
                   </td>
                   <td>
-                    <input type="radio" name="show_album_name_enable" id="show_album_name_enable_1" value="1" <?php if ($row->show_album_name) echo 'checked="checked"'; ?> /><label for="show_album_name_enable_1"><?php _e('Yes', 'bwg_back'); ?></label>
-                    <input type="radio" name="show_album_name_enable" id="show_album_name_enable_0" value="0" <?php if (!$row->show_album_name) echo 'checked="checked"'; ?> /><label for="show_album_name_enable_0"><?php _e('No', 'bwg_back'); ?></label>
+                    <input type="radio" name="show_album_name" id="show_album_name_enable_1" value="1" <?php if ($row->show_album_name) echo 'checked="checked"'; ?> /><label for="show_album_name_enable_1"><?php _e('Yes', 'bwg_back'); ?></label>
+                    <input type="radio" name="show_album_name" id="show_album_name_enable_0" value="0" <?php if (!$row->show_album_name) echo 'checked="checked"'; ?> /><label for="show_album_name_enable_0"><?php _e('No', 'bwg_back'); ?></label>
                     <div class="spider_description"></div>
                   </td>
                 </tr>
@@ -1784,7 +1770,6 @@ class BWGViewOptions_bwg {
       </div>
       <input id="task" name="task" type="hidden" value="" />
       <input id="recreate" name="recreate" type="hidden" value="" />
-      <input id="current_id" name="current_id" type="hidden" value="<?php echo $row->id; ?>" />
       <input id="watermark" name="watermark" type="hidden" value="" />
       <script>
         // "state" global get var is for checking redirect from facebook.

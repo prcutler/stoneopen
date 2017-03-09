@@ -41,15 +41,15 @@ class BWGControllerGalleryBox {
   public function save() {
     require_once WD_BWG_DIR . "/frontend/models/BWGModelGalleryBox.php";
     $model = new BWGModelGalleryBox();
-    $option_row = WDWLibrary::get_options_row_data();
-    if ($option_row->popup_enable_email) {
+    global $wd_bwg_options;
+    if ($wd_bwg_options->popup_enable_email) {
       // Email validation.
       $email = (isset($_POST['bwg_email']) ? is_email(stripslashes($_POST['bwg_email'])) : FALSE);
     }
     else {
       $email = TRUE;
     }
-    if ($option_row->popup_enable_captcha) {
+    if ($wd_bwg_options->popup_enable_captcha) {
       $bwg_captcha_input = (isset($_POST['bwg_captcha_input']) ? esc_html(stripslashes($_POST['bwg_captcha_input'])) : '');
       @session_start();
       $bwg_captcha_code = (isset($_SESSION['bwg_captcha_code']) ? esc_html(stripslashes($_SESSION['bwg_captcha_code'])) : '');
@@ -70,7 +70,7 @@ class BWGControllerGalleryBox {
       $name = (isset($_POST['bwg_name']) ? esc_html(stripslashes($_POST['bwg_name'])) : '');
       $bwg_comment = (isset($_POST['bwg_comment']) ? esc_html(stripslashes($_POST['bwg_comment'])) : '');
       $bwg_email = (isset($_POST['bwg_email']) ? esc_html(stripslashes($_POST['bwg_email'])) : '');
-      $published = (current_user_can('manage_options') || !$option_row->comment_moderation) ? 1 : 0;
+      $published = (current_user_can('manage_options') || !$wd_bwg_options->comment_moderation) ? 1 : 0;
       $save = $wpdb->insert($wpdb->prefix . 'bwg_image_comment', array(
         'image_id' => $image_id,
         'name' => $name,

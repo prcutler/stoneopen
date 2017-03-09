@@ -11,13 +11,16 @@ class BWGModelGalleryBox {
     if ($sort_by == 'size' || $sort_by == 'resolution') {
       $sort_by = ' CAST(image.' . $sort_by . ' AS SIGNED) ';
     }
+    elseif ($sort_by == 'random' || $sort_by == 'RAND()') {
+      $sort_by = 'RAND()';
+    }
     elseif (($sort_by != 'alt') && ($sort_by != 'date') && ($sort_by != 'filetype') && ($sort_by != 'filename')) {
       $sort_by = 'image.`order`';
     }
-    if (preg_replace('/\s+/', '', $order_by) != 'asc') {
+    if (strtolower($order_by) != 'asc') {
       $order_by = 'desc';
     }
-
+    $bwg_random_seed = isset($_SESSION['bwg_random_seed_'. $bwg]) ? $_SESSION['bwg_random_seed_'. $bwg] : '';
     $filter_tags = (isset($_REQUEST['filter_tag_'. $bwg]) && $_REQUEST['filter_tag_'. $bwg]) ? explode(",", $_REQUEST['filter_tag_'. $bwg]) : array();
     $filter_search_name = (isset($_REQUEST['filter_search_name_'. $bwg])) ? esc_html($_REQUEST['filter_search_name_'. $bwg]) : '';
     $where = '';
@@ -33,33 +36,8 @@ class BWGModelGalleryBox {
       $where .= ' AND CONCAT(",", tags.tags_combined, ",") REGEXP ",(' . implode("|", $filter_tags) . ')," ';
     }
 
-    $row = $wpdb->get_results('SELECT image.*, rates.rate FROM ' . $wpdb->prefix . 'bwg_image as image LEFT JOIN (SELECT rate, image_id FROM ' . $wpdb->prefix . 'bwg_image_rate WHERE ip="%s") as rates ON image.id=rates.image_id ' . $join . ' WHERE image.published=1 ' . $where . ' ORDER BY ' . $sort_by . ' ' . $order_by);
+    $row = $wpdb->get_results('SELECT image.*, rates.rate FROM ' . $wpdb->prefix . 'bwg_image as image LEFT JOIN (SELECT rate, image_id FROM ' . $wpdb->prefix . 'bwg_image_rate WHERE ip="%s") as rates ON image.id=rates.image_id ' . $join . ' WHERE image.published=1 ' . $where . ' ORDER BY ' . str_replace('RAND()', 'RAND(' . $bwg_random_seed . ')', $sort_by) . ' ' . $order_by);
 
     return $row;
   }
-
-  public function get_image_rows_data_tag($tag_id, $sort_by, $order_by = 'asc') {
-    global $wpdb;
-    if ($sort_by == 'size' || $sort_by == 'resolution') {
-      $sort_by = ' CAST(' . $sort_by . ' AS SIGNED) ';
-    }
-    elseif (($sort_by != 'alt') && ($sort_by != 'date') && ($sort_by != 'filetype')) {
-      $sort_by = '`order`';
-    }
-    if (preg_replace('/\s+/', '', $order_by) != 'asc') {
-      $order_by = 'desc';
-    }
-    $row = $wpdb->get_results($wpdb->prepare('SELECT t1.*,t2.rate FROM (SELECT image.* FROM ' . $wpdb->prefix . 'bwg_image as image INNER JOIN ' . $wpdb->prefix . 'bwg_image_tag as tag ON image.id=tag.image_id WHERE image.published=1 AND tag.tag_id="%d" ORDER BY  ' . $sort_by . ' ' . $order_by. ') as t1 LEFT JOIN (SELECT rate, image_id FROM ' . $wpdb->prefix . 'bwg_image_rate WHERE ip="%s") as t2 ON t1.id=t2.image_id ', $tag_id, $_SERVER['REMOTE_ADDR']));
-    return $row;
-  }
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
 }

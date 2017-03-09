@@ -4,7 +4,6 @@
  * Time: 3:56 PM
  */
 
-
 ////////////////////////////////////////////////////////////////////////////////////////
 // Events                                                                             //
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -21,7 +20,8 @@ var filesSelectedML;
 var dragFiles;
 var isUploading;
 
-
+var ajax = true;
+var item_number = 100;
 ////////////////////////////////////////////////////////////////////////////////////////
 // Constructor                                                                        //
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -29,6 +29,42 @@ var isUploading;
 // Public Methods                                                                     //
 ////////////////////////////////////////////////////////////////////////////////////////
 jQuery(document).ready(function () {
+  var elements = 1;
+  var all_item_count = jQuery("#explorer_body_container #explorer_body").data("files_count");
+  jQuery("#explorer_body_container").scroll(function () {
+    var explorer_item_count = jQuery("#explorer_body .explorer_item").length;
+    if (ajax && explorer_item_count < all_item_count) {
+      var scroll = jQuery(this).scrollTop();
+      var scroll_position = jQuery(this).scrollTop() + jQuery(this).innerHeight();
+      var scroll_Height = jQuery(this)[0].scrollHeight;
+      if (scroll_position >= scroll_Height) {
+        jQuery('#loading_div').show();
+        jQuery('#opacity_div').show();
+        elements++;
+        jQuery.ajax({
+          type: "POST",
+          url: ajaxurl,
+          dataType: 'json',
+          data: {
+            action: 'addImages',
+            load_count: elements,
+            addImages_ajax: 'addImages_ajax'
+          },
+          success: function (response) {
+            if (response.files.length === 0) {
+              jQuery('#loading_div').hide();
+              jQuery('#opacity_div').hide();
+              ajax = false;
+              return;
+            } else {
+              ajax_print_images(response);
+            }
+          }
+        });
+      }
+    }
+  });
+
   if (jQuery("#importer").css("display") != 'none') {
     var all_images_count = jQuery("#importer .item_thumb img").length;
   }
@@ -596,4 +632,76 @@ function onBtnSelectAllMediLibraryClick() {
       keyFileSelectedML = this;
     }
   });
+}
+
+function ajax_print_images(response) {
+  for (i in response.files) {
+    var corent_file = response.files[i];
+    var name = corent_file["name"];
+    var filename = corent_file["filename"];
+    var filethumb = corent_file["thumb"];
+    var filesize = corent_file["size"];
+    var filetype = corent_file["type"];
+    var date_modified = corent_file["date_modified"];
+    var fileresolution = corent_file["resolution"];
+    var fileCredit = corent_file["credit"];
+    var fileAperture = corent_file["aperture"];
+    var fileCamera = corent_file["camera"];
+    var fileCaption = corent_file["caption"];
+    var fileIso = corent_file["iso"];
+    var fileOrientation = corent_file["orientation"];
+    var fileCopyright = corent_file["copyright"];
+    var onmouseover = "onFileMOver(event, this);";
+    var onmouseout = "onFileMOut(event, this);";
+    var onclick = "onFileClick(event, this);";
+    var ondblclick = "onFileDblClick(event, this);";
+    var ondragstart = "onFileDragStart(event, this);";
+    var ondragover = "";
+    var ondrop = "";
+    if (corent_file['is_dir'] == true) {
+      ondragover = "onFileDragOver(event, this);";
+      ondrop = "onFileDrop(event, this);";
+    }
+    var isDir = false;
+    if (corent_file['is_dir'] === true) {
+      isDir = 'true';
+    }
+
+    item_number = item_number + i;
+    var item_thumb = '<span class="item_thumb"><img src="' + corent_file['thumb'] + '"/></span>';
+    var item_icon = '<span class="item_icon"><img src="'+corent_file['icon']+'"/> </span>';
+    var item_name = '<span class="item_name">'+corent_file['name']+'</span>';
+    var item_size = '<span class="item_size">'+corent_file['size']+'</span>';
+    var item_date_modified = '<span class="item_date_modified">'+corent_file['date_modified']+'</span>';
+    var item_numbering =  '<span class="item_numbering">'+item_number+'</span>';
+
+    var explorer_item = '<div class="explorer_item" ' +
+      'name="' + name + '" ' +
+      'filename="' + filename + '" ' +
+      'filethumb="' + filethumb + '" ' +
+      'filesize="' + filesize + '" ' +
+      'filetype="' + filetype + '" ' +
+      'date_modified="' + date_modified + '" ' +
+      'fileresolution="' + fileresolution + '" ' +
+      'fileresolution="' + fileresolution + '" ' +
+      'fileCredit="' + fileCredit + '" ' +
+      'fileAperture="' + fileAperture + '" ' +
+      'fileCamera="' + fileCamera + '" ' +
+      'fileCaption="' + fileCaption + '" ' +
+      'fileIso="' + fileIso + '" ' +
+      'fileOrientation="' + fileOrientation + '" ' +
+      'fileCopyright="' + fileCopyright + '" ' +
+      'isDir="' + isDir + '" ' +
+      'onmouseover="' + onmouseover + '" ' +
+      'onmouseout="' + onmouseout + '" ' +
+      'onclick="' + onclick + '" ' +
+      'ondblclick="' + ondblclick + '" ' +
+      'ondragstart="' + ondragstart + '" ' +
+      'ondragover="' + ondragover + '" ' +
+      'ondrop="' + ondrop + '" ' +
+      'draggable="true" >'+item_numbering + item_thumb + item_icon+item_name+item_size+item_date_modified+'</div>';
+    jQuery("#explorer_body").append(explorer_item);
+    jQuery('#loading_div').hide();
+    jQuery('#opacity_div').hide();
+  }
 }
