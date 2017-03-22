@@ -29,7 +29,7 @@ class FilemanagerView {
     ////////////////////////////////////////////////////////////////////////////////////////
     // Public Methods                                                                     //
     ////////////////////////////////////////////////////////////////////////////////////////
-    public function display() {
+    public function display($ajax = false, $load_count = 0) {
       if (isset($_GET['filemanager_msg']) && esc_html($_GET['filemanager_msg']) != '') {
         ?>
         <div id="file_manager_message" style="height:40px;">
@@ -40,9 +40,8 @@ class FilemanagerView {
         <?php
         $_GET['filemanager_msg'] = '';
       }
-      $bwg_options = $this->controller->get_options_data();
-      $file_manager_data = $this->model->get_file_manager_data();
-
+      global $wd_bwg_options;
+      $file_manager_data = $this->model->get_file_manager_data($ajax,$load_count);
       $items_view = $file_manager_data['session_data']['items_view'];
       $sort_by = $file_manager_data['session_data']['sort_by'];
       $sort_order = $file_manager_data['session_data']['sort_order'];
@@ -64,8 +63,8 @@ class FilemanagerView {
       ?>
       <script src="<?php echo WD_BWG_URL; ?>/filemanager/js/jq_uploader/jquery.iframe-transport.js"></script>
       <script src="<?php echo WD_BWG_URL; ?>/filemanager/js/jq_uploader/jquery.fileupload.js"></script>
-      <link media="all" type="text/css" href="<?php echo get_admin_url(); ?>load-styles.php?c=1&amp;dir=ltr&amp;load=admin-bar,dashicons,wp-admin,buttons,wp-auth-check,wp-pointer" rel="stylesheet">
       <script>
+        var ajaxurl = "<?php echo wp_nonce_url( admin_url('admin-ajax.php'), 'addImages', 'bwg_nonce' ); ?>";
         var DS = "<?php echo addslashes('/'); ?>";
 
         var errorLoadingFile = "<?php echo __('File loading failed', 'bwg_back'); ?>";
@@ -101,9 +100,8 @@ class FilemanagerView {
       }
       $i = 0;
       ?>
-
       <form id="adminForm" name="adminForm" action="" method="post">
-      <?php wp_nonce_field( '', 'bwg_nonce' ); ?>
+        <?php wp_nonce_field( '', 'bwg_nonce' ); ?>
         <div id="wrapper">
           <div id="opacity_div" style="background-color: rgba(0, 0, 0, 0.2); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99998;"></div>
           <div id="loading_div" style="text-align: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99999;">
@@ -124,7 +122,7 @@ class FilemanagerView {
                 <span class="ctrl_bar_btn">
                   <a id="upload_images" class="ctrl_bar_btn wd-btn wd-btn-primary wd-btn-icon wd-btn-uplaod" onclick="onBtnShowUploaderClick(event, this);"><?php echo __('Upload files', 'bwg_back'); ?></a>
                 </span>
-                <?php if ($bwg_options->enable_ML_import) { ?>
+                <?php if ($wd_bwg_options->enable_ML_import) { ?>
                 <span class="ctrl_bar_divider"></span>
                 <span class="ctrl_bar_btn">
                   <a class="ctrl_bar_btn wd-btn wd-btn-primary wd-btn-icon btn_import_files" onclick="onBtnShowImportClick(event, this);"><?php echo __('Media library', 'bwg_back'); ?></a>
@@ -200,7 +198,7 @@ class FilemanagerView {
               </div>
               <div id="explorer_body_wrapper">
                 <div id="explorer_body_container">
-                  <div id="explorer_body">
+                  <div id="explorer_body" data-files_count="<?php echo $file_manager_data["files_count"]; ?>">
                     <?php
                     foreach ($file_manager_data['files'] as $key => $file) {
                       $file['name'] = esc_html($file['name']);
@@ -230,12 +228,12 @@ class FilemanagerView {
                           <?php
                           if ($file['is_dir'] == true) {
                             ?>
-                            ondragover="onFileDragOver(event, this);"
-                            ondrop="onFileDrop(event, this);"
+                          ondragover="onFileDragOver(event, this);"
+                          ondrop="onFileDrop(event, this);"
                             <?php
                           }
                           ?>
-                            isDir="<?php echo $file['is_dir'] == true ? 'true' : 'false'; ?>">
+                          isDir="<?php echo $file['is_dir'] == true ? 'true' : 'false'; ?>">
                         <span class="item_numbering"><?php echo ++$i; ?></span>
                         <span class="item_thumb">
                           <img src="<?php echo $file['thumb']; ?>" <?php echo $key >= 24 ? 'onload="loaded()"' : ''; ?> />
@@ -280,16 +278,16 @@ class FilemanagerView {
             <div class="ctrls_bar ctrls_bar_header">
               <div class="ctrls_left upload_thumb">
                 <?php echo __("Thumbnail Maximum Dimensions:", 'bwg_back'); ?>
-                <input type="text" class="upload_thumb_dim" name="importer_thumb_width" id="importer_thumb_width" value="<?php echo $bwg_options->upload_thumb_width; ?>" /> x 
-                <input type="text" class="upload_thumb_dim" name="importer_thumb_height" id="importer_thumb_height" value="<?php echo $bwg_options->upload_thumb_height; ?>" /> px
+                <input type="text" class="upload_thumb_dim" name="importer_thumb_width" id="importer_thumb_width" value="<?php echo $wd_bwg_options->upload_thumb_width; ?>" /> x 
+                <input type="text" class="upload_thumb_dim" name="importer_thumb_height" id="importer_thumb_height" value="<?php echo $wd_bwg_options->upload_thumb_height; ?>" /> px
               </div>
               <div class="ctrls_right">
                 <a class="ctrl_bar_btn btn_back" onclick="onBtnBackClick(event, this);" title="<?php echo __('Back', 'bwg_back'); ?>"></a>
               </div>
               <div class="ctrls_right_img upload_thumb">
                 <?php echo __("Image Maximum Dimensions:", 'bwg_back'); ?>
-                <input type="text" class="upload_thumb_dim" name="importer_img_width" id="importer_img_width" value="<?php echo $bwg_options->upload_img_width; ?>" /> x 
-                <input type="text" class="upload_thumb_dim" name="importer_img_height" id="importer_img_height" value="<?php echo $bwg_options->upload_img_height; ?>" /> px
+                <input type="text" class="upload_thumb_dim" name="importer_img_width" id="importer_img_width" value="<?php echo $wd_bwg_options->upload_img_width; ?>" /> x 
+                <input type="text" class="upload_thumb_dim" name="importer_img_height" id="importer_img_height" value="<?php echo $wd_bwg_options->upload_img_height; ?>" /> px
               </div>
             </div>
             <div id="importer_body_wrapper">
@@ -363,16 +361,16 @@ class FilemanagerView {
             <div class="ctrls_bar ctrls_bar_header">
               <div class="ctrls_left upload_thumb">
                 <?php echo __("Thumbnail Maximum Dimensions:", 'bwg_back'); ?>
-                <input type="text" class="upload_thumb_dim" name="upload_thumb_width" id="upload_thumb_width" value="<?php echo $bwg_options->upload_thumb_width; ?>" /> x 
-                <input type="text" class="upload_thumb_dim" name="upload_thumb_height" id="upload_thumb_height" value="<?php echo $bwg_options->upload_thumb_height; ?>" /> px
+                <input type="text" class="upload_thumb_dim" name="upload_thumb_width" id="upload_thumb_width" value="<?php echo $wd_bwg_options->upload_thumb_width; ?>" /> x 
+                <input type="text" class="upload_thumb_dim" name="upload_thumb_height" id="upload_thumb_height" value="<?php echo $wd_bwg_options->upload_thumb_height; ?>" /> px
               </div>
               <div class="ctrls_right">
                 <a class="ctrl_bar_btn btn_back" onclick="onBtnBackClick(event, this);" title="<?php echo __('Back', 'bwg_back'); ?>"></a>
               </div>
               <div class="ctrls_right_img upload_thumb">
                 <?php echo __("Image Maximum Dimensions:", 'bwg_back'); ?>
-                <input type="text" class="upload_thumb_dim" name="upload_img_width" id="upload_img_width" value="<?php echo $bwg_options->upload_img_width; ?>" /> x 
-                <input type="text" class="upload_thumb_dim" name="upload_img_height" id="upload_img_height" value="<?php echo $bwg_options->upload_img_height; ?>" /> px
+                <input type="text" class="upload_thumb_dim" name="upload_img_width" id="upload_img_width" value="<?php echo $wd_bwg_options->upload_img_width; ?>" /> x 
+                <input type="text" class="upload_thumb_dim" name="upload_img_height" id="upload_img_height" value="<?php echo $wd_bwg_options->upload_img_height; ?>" /> px
               </div>
             </div>
             <label for="jQueryUploader">
@@ -381,10 +379,10 @@ class FilemanagerView {
                   <span><?php echo __('Drag files here or click the button below','bwg_back') . '<br />' . __('to upload files','bwg_back')?></span>
                 </div>
                 <div id="btnBrowseContainer">
-                  <?php
-                  $query_url = wp_nonce_url( admin_url('admin-ajax.php'), 'bwg_UploadHandler', 'bwg_nonce' );
-                  $query_url = add_query_arg(array('action' => 'bwg_UploadHandler', 'dir' => (isset($_REQUEST['dir']) ? esc_html($_REQUEST['dir']) : '') . '/'), $query_url);
-                  ?>
+                <?php
+                $query_url = wp_nonce_url( admin_url('admin-ajax.php'), 'bwg_UploadHandler', 'bwg_nonce' );
+                $query_url = add_query_arg(array('action' => 'bwg_UploadHandler', 'dir' => (isset($_REQUEST['dir']) ? esc_html($_REQUEST['dir']) : '') . '/'), $query_url);
+                ?>
                   <input id="jQueryUploader" type="file" name="files[]"
                          data-url="<?php echo $query_url; ?>"
                          multiple>

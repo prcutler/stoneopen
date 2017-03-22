@@ -1,28 +1,7 @@
 <?php
 
 class WDWLibrary {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  public function __construct() {
-  }
 
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public static function get($key, $default_value = '') {
     if (isset($_GET[$key])) {
       $value = $_GET[$key];
@@ -674,9 +653,9 @@ class WDWLibrary {
       width: <?php echo $search_box_width; ?>px;
     }
     <?php
-    global $wd_bwg_inline_stiles;
+    global $wd_bwg_options;
     $inline_style = ob_get_clean();
-    if ($wd_bwg_inline_stiles) {
+    if ($wd_bwg_options->use_inline_stiles_and_scripts) {
       wp_add_inline_style('bwg_frontend', $inline_style);
     }
     else {
@@ -714,10 +693,6 @@ class WDWLibrary {
   }
 
   public static function ajax_html_frontend_search_tags($form_id, $current_view, $cur_gal_id, $images_count, $tags_rows) {
-    global $wd_bwg_inline_stiles;
-    if ($wd_bwg_inline_stiles) {
-      wp_enqueue_style('bwg_sumoselect');
-    }
     $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : 'album');
     $bwg_search_tags = (isset($_POST['bwg_tag_id_' . $cur_gal_id]) && $_POST['bwg_tag_id_' . $cur_gal_id] != '' )? $_POST['bwg_tag_id_' . $cur_gal_id] : array();	
     $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : 0);
@@ -748,7 +723,8 @@ class WDWLibrary {
       jQuery(".search_tags").SumoSelect({
         placeholder: bwg_objectsL10n.bwg_select_tag,
         search: 1,
-        searchText: bwg_objectsL10n.bwg_search
+        searchText: bwg_objectsL10n.bwg_search,
+        forceCustomRendering: true
       });
     </script>
     <?php
@@ -765,8 +741,8 @@ class WDWLibrary {
     }
     <?php
     $inline_style = ob_get_clean();
-    global $wd_bwg_inline_stiles;
-    if ($wd_bwg_inline_stiles) {
+    global $wd_bwg_options;
+    if ($wd_bwg_options->use_inline_stiles_and_scripts) {
       wp_add_inline_style('bwg_frontend', $inline_style);
     }
     else {
@@ -875,7 +851,7 @@ class WDWLibrary {
 
   public static function get_used_google_fonts($theme = null, $shortcode = null) {
     global $wpdb;
-    $options_google_font = $wpdb->get_row('SELECT watermark_font FROM ' . $wpdb->prefix . 'bwg_option');
+    global $wd_bwg_options;
     $google_array = array();
     $google_fonts = self::get_google_fonts();
     if (null === $theme) {
@@ -898,8 +874,8 @@ class WDWLibrary {
         $len_end =  strpos(substr(substr($shortcode_font_string, $len_start), $len_current + 1), '"');
         $shortcode_fonts = str_replace('"', '', substr(substr($shortcode_font_string, $len_start), $len_current, $len_end + 1));
         if (true == in_array($shortcode_fonts, $google_fonts)) {
-         $google_array[$shortcode_fonts] = $shortcode_fonts;
-        }  
+          $google_array[$shortcode_fonts] = $shortcode_fonts;
+        }
       }
     }
     if ($theme) {
@@ -915,8 +891,8 @@ class WDWLibrary {
         }
       }
     }
-    if (true == in_array($options_google_font->watermark_font, $google_fonts)) {
-      $google_array[$options_google_font->watermark_font] = $options_google_font->watermark_font;
+    if (true == in_array($wd_bwg_options->watermark_font, $google_fonts)) {
+      $google_array[$wd_bwg_options->watermark_font] = $wd_bwg_options->watermark_font;
     }
     return $google_array; 
   }
@@ -953,12 +929,6 @@ class WDWLibrary {
     return $row;
   }
 
-  public static function get_options_row_data() {
-    global $wpdb;
-    $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_option WHERE id="%d"', 1));
-    return $row;
-  }
-
   public static function get_tags_rows_data($gallery_id) {
     global $wpdb;
     $row = $wpdb->get_results('Select t1.* FROM ' . $wpdb->prefix . 'terms AS t1 LEFT JOIN ' . $wpdb->prefix . 'term_taxonomy AS t2 ON t1.term_id = t2.term_id' . ($gallery_id ? ' LEFT JOIN (SELECT DISTINCT tag_id , gallery_id  FROM ' . $wpdb->prefix . 'bwg_image_tag) AS t3 ON t1.term_id=t3.tag_id' : '') . ' WHERE taxonomy="bwg_tag"' . ($gallery_id ? ' AND t3.gallery_id="' . $gallery_id . '"' : ''));
@@ -968,20 +938,20 @@ class WDWLibrary {
   public static function bwg_create_post($title, $slug, $type, $id) {
     $post_type = 'bwg_' . $type['type'];
     $bwg_post_id = get_page_by_title($title, OBJECT, $post_type);
-    $options_row = self::get_options_row_data();
+    global $wd_bwg_options;
     $theme_row = self::get_theme_row_data(0);
     switch ($type['mode']) {
       case 'compact':
-        $shortecode_string = '[Best_Wordpress_Gallery type="' . $type['type'] . '" gallery_type="album_compact_preview" theme_id="' . $theme_row->id . '" album_id="' . $id . '" sort_by="order" order_by="asc" compuct_album_column_number="' . $options_row->album_column_number . '" compuct_albums_per_page="' . $options_row->albums_per_page . '" compuct_album_title="' . $options_row->album_title_show_hover . '" compuct_album_view_type="' . $options_row->album_view_type . '" compuct_album_thumb_width="' . $options_row->album_thumb_width . '" compuct_album_thumb_height="' . $options_row->album_thumb_height . '" compuct_album_image_column_number="' . $options_row->image_column_number . '" compuct_album_images_per_page="' . $options_row->images_per_page . '" compuct_album_image_title="' . $options_row->image_title_show_hover . '" compuct_album_image_thumb_width="' . $options_row->thumb_width . '" compuct_album_image_thumb_height="' . $options_row->thumb_height . '" compuct_album_enable_page="' . $options_row->album_enable_page . '" popup_fullscreen="' . $options_row->popup_fullscreen . '" popup_autoplay="' . $options_row->popup_autoplay . '" popup_width="' . $options_row->popup_width . '" popup_height="' . $options_row->popup_height . '" popup_effect="' . $options_row->popup_type . '" popup_interval="' . $options_row->popup_interval . '" popup_enable_filmstrip="' . $options_row->popup_enable_filmstrip . '" popup_filmstrip_height="' . $options_row->popup_filmstrip_height . '" popup_enable_ctrl_btn="' . $options_row->popup_enable_ctrl_btn . '" popup_enable_fullscreen="' . $options_row->popup_enable_fullscreen . '" popup_enable_comment="' . $options_row->popup_enable_comment . '" popup_enable_facebook="' . $options_row->popup_enable_facebook . '" popup_enable_twitter="' . $options_row->popup_enable_twitter . '" popup_enable_google="' . $options_row->popup_enable_google . '" popup_enable_pinterest="' . $options_row->popup_enable_pinterest . '" popup_enable_tumblr="' . $options_row->popup_enable_tumblr . '" watermark_type="' . $options_row->watermark_type . '" watermark_link="' . $options_row->watermark_link . '" watermark_text="' . $options_row->watermark_text . '" watermark_font_size="' . $options_row->watermark_font_size . '" watermark_font="' . $options_row->watermark_font . '" watermark_color="' . $options_row->watermark_color . '" watermark_opacity="' . $options_row->watermark_opacity . '" watermark_position="' . $options_row->watermark_position . '" watermark_url="' . $options_row->watermark_url . '" watermark_width="' . $options_row->watermark_width . '" watermark_height="' . $options_row->watermark_height . '" show_search_box="' . $options_row->show_search_box . '" search_box_width="' . $options_row->search_box_width . '" popup_enable_info="' . $options_row->popup_enable_info . '" popup_info_always_show="' . $options_row->popup_info_always_show . '" popup_enable_rate="' . $options_row->popup_enable_rate . '" popup_hit_counter="' . $options_row->popup_hit_counter . '"]';
+        $shortecode_string = '[Best_Wordpress_Gallery type="' . $type['type'] . '" gallery_type="album_compact_preview" theme_id="' . $theme_row->id . '" album_id="' . $id . '" sort_by="order" order_by="asc" compuct_album_column_number="' . $wd_bwg_options->album_column_number . '" compuct_albums_per_page="' . $wd_bwg_options->albums_per_page . '" compuct_album_title="' . $wd_bwg_options->album_title_show_hover . '" compuct_album_view_type="' . $wd_bwg_options->album_view_type . '" compuct_album_thumb_width="' . $wd_bwg_options->album_thumb_width . '" compuct_album_thumb_height="' . $wd_bwg_options->album_thumb_height . '" compuct_album_image_column_number="' . $wd_bwg_options->image_column_number . '" compuct_album_images_per_page="' . $wd_bwg_options->images_per_page . '" compuct_album_image_title="' . $wd_bwg_options->image_title_show_hover . '" compuct_album_image_thumb_width="' . $wd_bwg_options->thumb_width . '" compuct_album_image_thumb_height="' . $wd_bwg_options->thumb_height . '" compuct_album_enable_page="' . $wd_bwg_options->album_enable_page . '" popup_fullscreen="' . $wd_bwg_options->popup_fullscreen . '" popup_autoplay="' . $wd_bwg_options->popup_autoplay . '" popup_width="' . $wd_bwg_options->popup_width . '" popup_height="' . $wd_bwg_options->popup_height . '" popup_effect="' . $wd_bwg_options->popup_type . '" popup_interval="' . $wd_bwg_options->popup_interval . '" popup_enable_filmstrip="' . $wd_bwg_options->popup_enable_filmstrip . '" popup_filmstrip_height="' . $wd_bwg_options->popup_filmstrip_height . '" popup_enable_ctrl_btn="' . $wd_bwg_options->popup_enable_ctrl_btn . '" popup_enable_fullscreen="' . $wd_bwg_options->popup_enable_fullscreen . '" popup_enable_comment="' . $wd_bwg_options->popup_enable_comment . '" popup_enable_facebook="' . $wd_bwg_options->popup_enable_facebook . '" popup_enable_twitter="' . $wd_bwg_options->popup_enable_twitter . '" popup_enable_google="' . $wd_bwg_options->popup_enable_google . '" popup_enable_pinterest="' . $wd_bwg_options->popup_enable_pinterest . '" popup_enable_tumblr="' . $wd_bwg_options->popup_enable_tumblr . '" watermark_type="' . $wd_bwg_options->watermark_type . '" watermark_link="' . $wd_bwg_options->watermark_link . '" watermark_text="' . $wd_bwg_options->watermark_text . '" watermark_font_size="' . $wd_bwg_options->watermark_font_size . '" watermark_font="' . $wd_bwg_options->watermark_font . '" watermark_color="' . $wd_bwg_options->watermark_color . '" watermark_opacity="' . $wd_bwg_options->watermark_opacity . '" watermark_position="' . $wd_bwg_options->watermark_position . '" watermark_url="' . $wd_bwg_options->watermark_url . '" watermark_width="' . $wd_bwg_options->watermark_width . '" watermark_height="' . $wd_bwg_options->watermark_height . '" show_search_box="' . $wd_bwg_options->show_search_box . '" search_box_width="' . $wd_bwg_options->search_box_width . '" popup_enable_info="' . $wd_bwg_options->popup_enable_info . '" popup_info_always_show="' . $wd_bwg_options->popup_info_always_show . '" popup_enable_rate="' . $wd_bwg_options->popup_enable_rate . '" popup_hit_counter="' . $wd_bwg_options->popup_hit_counter . '"]';
         break;
       case 'masonry':
-        $shortecode_string = '[Best_Wordpress_Gallery type="' . $type['type'] . '" gallery_type="album_masonry_preview" theme_id="' . $theme_row->id . '" album_id="' . $id . '" sort_by="order" order_by="asc" masonry_album_column_number="' . $options_row->album_column_number . '" masonry_albums_per_page="' . $options_row->albums_per_page . '" masonry_album_title="' . $options_row->album_title_show_hover . '" masonry_album_thumb_width="' . $options_row->album_thumb_width . '" masonry_album_thumb_height="' . $options_row->album_thumb_height . '" masonry_album_image_column_number="' . $options_row->image_column_number . '" masonry_album_images_per_page="' . $options_row->images_per_page . '" masonry_album_image_title="' . $options_row->image_title_show_hover . '" masonry_album_image_thumb_width="' . $options_row->thumb_width . '" masonry_album_image_thumb_height="' . $options_row->thumb_height . '" masonry_album_enable_page="' . $options_row->album_enable_page . '" popup_fullscreen="' . $options_row->popup_fullscreen . '" popup_autoplay="' . $options_row->popup_autoplay . '" popup_width="' . $options_row->popup_width . '" popup_height="' . $options_row->popup_height . '" popup_effect="' . $options_row->popup_type . '" popup_interval="' . $options_row->popup_interval . '" popup_enable_filmstrip="' . $options_row->popup_enable_filmstrip . '" popup_filmstrip_height="' . $options_row->popup_filmstrip_height . '" popup_enable_ctrl_btn="' . $options_row->popup_enable_ctrl_btn . '" popup_enable_fullscreen="' . $options_row->popup_enable_fullscreen . '" popup_enable_comment="' . $options_row->popup_enable_comment . '" popup_enable_facebook="' . $options_row->popup_enable_facebook . '" popup_enable_twitter="' . $options_row->popup_enable_twitter . '" popup_enable_google="' . $options_row->popup_enable_google . '" popup_enable_pinterest="' . $options_row->popup_enable_pinterest . '" popup_enable_tumblr="' . $options_row->popup_enable_tumblr . '" watermark_type="' . $options_row->watermark_type . '" watermark_link="' . $options_row->watermark_link . '" watermark_text="' . $options_row->watermark_text . '" watermark_font_size="' . $options_row->watermark_font_size . '" watermark_font="' . $options_row->watermark_font . '" watermark_color="' . $options_row->watermark_color . '" watermark_opacity="' . $options_row->watermark_opacity . '" watermark_position="' . $options_row->watermark_position . '" watermark_url="' . $options_row->watermark_url . '" watermark_width="' . $options_row->watermark_width . '" watermark_height="' . $options_row->watermark_height . '" show_search_box="' . $options_row->show_search_box . '" search_box_width="' . $options_row->search_box_width . '" popup_enable_info="' . $options_row->popup_enable_info . '" popup_info_always_show="' . $options_row->popup_info_always_show . '" popup_enable_rate="' . $options_row->popup_enable_rate . '" popup_hit_counter="' . $options_row->popup_hit_counter . '"]';
+        $shortecode_string = '[Best_Wordpress_Gallery type="' . $type['type'] . '" gallery_type="album_masonry_preview" theme_id="' . $theme_row->id . '" album_id="' . $id . '" sort_by="order" order_by="asc" masonry_album_column_number="' . $wd_bwg_options->album_column_number . '" masonry_albums_per_page="' . $wd_bwg_options->albums_per_page . '" masonry_album_title="' . $wd_bwg_options->album_title_show_hover . '" masonry_album_thumb_width="' . $wd_bwg_options->album_thumb_width . '" masonry_album_thumb_height="' . $wd_bwg_options->album_thumb_height . '" masonry_album_image_column_number="' . $wd_bwg_options->image_column_number . '" masonry_album_images_per_page="' . $wd_bwg_options->images_per_page . '" masonry_album_image_title="' . $wd_bwg_options->image_title_show_hover . '" masonry_album_image_thumb_width="' . $wd_bwg_options->thumb_width . '" masonry_album_image_thumb_height="' . $wd_bwg_options->thumb_height . '" masonry_album_enable_page="' . $wd_bwg_options->album_enable_page . '" popup_fullscreen="' . $wd_bwg_options->popup_fullscreen . '" popup_autoplay="' . $wd_bwg_options->popup_autoplay . '" popup_width="' . $wd_bwg_options->popup_width . '" popup_height="' . $wd_bwg_options->popup_height . '" popup_effect="' . $wd_bwg_options->popup_type . '" popup_interval="' . $wd_bwg_options->popup_interval . '" popup_enable_filmstrip="' . $wd_bwg_options->popup_enable_filmstrip . '" popup_filmstrip_height="' . $wd_bwg_options->popup_filmstrip_height . '" popup_enable_ctrl_btn="' . $wd_bwg_options->popup_enable_ctrl_btn . '" popup_enable_fullscreen="' . $wd_bwg_options->popup_enable_fullscreen . '" popup_enable_comment="' . $wd_bwg_options->popup_enable_comment . '" popup_enable_facebook="' . $wd_bwg_options->popup_enable_facebook . '" popup_enable_twitter="' . $wd_bwg_options->popup_enable_twitter . '" popup_enable_google="' . $wd_bwg_options->popup_enable_google . '" popup_enable_pinterest="' . $wd_bwg_options->popup_enable_pinterest . '" popup_enable_tumblr="' . $wd_bwg_options->popup_enable_tumblr . '" watermark_type="' . $wd_bwg_options->watermark_type . '" watermark_link="' . $wd_bwg_options->watermark_link . '" watermark_text="' . $wd_bwg_options->watermark_text . '" watermark_font_size="' . $wd_bwg_options->watermark_font_size . '" watermark_font="' . $wd_bwg_options->watermark_font . '" watermark_color="' . $wd_bwg_options->watermark_color . '" watermark_opacity="' . $wd_bwg_options->watermark_opacity . '" watermark_position="' . $wd_bwg_options->watermark_position . '" watermark_url="' . $wd_bwg_options->watermark_url . '" watermark_width="' . $wd_bwg_options->watermark_width . '" watermark_height="' . $wd_bwg_options->watermark_height . '" show_search_box="' . $wd_bwg_options->show_search_box . '" search_box_width="' . $wd_bwg_options->search_box_width . '" popup_enable_info="' . $wd_bwg_options->popup_enable_info . '" popup_info_always_show="' . $wd_bwg_options->popup_info_always_show . '" popup_enable_rate="' . $wd_bwg_options->popup_enable_rate . '" popup_hit_counter="' . $wd_bwg_options->popup_hit_counter . '"]';
         break;
       case 'tag':
-        $shortecode_string = '[Best_Wordpress_Gallery type="' . $type['type'] . '" gallery_type="thumbnails" theme_id="' . $theme_row->id . '" gallery_id="" tag="' . $id . '" sort_by="date" order_by="asc" image_column_number="' . $options_row->image_column_number . '" images_per_page="' . $options_row->images_per_page . '" image_title="' . $options_row->image_title_show_hover . '" image_enable_page="' . $options_row->image_enable_page . '" thumb_width="' . $options_row->thumb_width . '" thumb_height="' . $options_row->thumb_height . '" popup_fullscreen="' . $options_row->popup_fullscreen . '" popup_autoplay="' . $options_row->popup_autoplay . '" popup_width="' . $options_row->popup_width . '" popup_height="' . $options_row->popup_height . '" popup_effect="' . $options_row->popup_type . '" popup_interval="' . $options_row->popup_interval . '" popup_enable_filmstrip="' . $options_row->popup_enable_filmstrip . '" popup_filmstrip_height="' . $options_row->popup_filmstrip_height . '" popup_enable_ctrl_btn="' . $options_row->popup_enable_ctrl_btn . '" popup_enable_fullscreen="' . $options_row->popup_enable_fullscreen . '" popup_enable_comment="' . $options_row->popup_enable_comment . '" popup_enable_facebook="' . $options_row->popup_enable_facebook . '" popup_enable_twitter="' . $options_row->popup_enable_twitter . '" popup_enable_google="' . $options_row->popup_enable_google . '" popup_enable_pinterest="' . $options_row->popup_enable_pinterest . '" popup_enable_tumblr="' . $options_row->popup_enable_tumblr . '" watermark_type="' . $options_row->watermark_type . '" watermark_link="' . $options_row->watermark_link . '" watermark_text="' . $options_row->watermark_text . '" watermark_font_size="' . $options_row->watermark_font_size . '" watermark_font="' . $options_row->watermark_font . '" watermark_color="' . $options_row->watermark_color . '" watermark_opacity="' . $options_row->watermark_opacity . '" watermark_position="' . $options_row->watermark_position . '" watermark_url="' . $options_row->watermark_url . '" watermark_width="' . $options_row->watermark_width . '" watermark_height="' . $options_row->watermark_height . '" show_search_box="' . $options_row->show_search_box . '" search_box_width="' . $options_row->search_box_width . '" popup_enable_info="' . $options_row->popup_enable_info . '" popup_info_always_show="' . $options_row->popup_info_always_show . '" popup_enable_rate="' . $options_row->popup_enable_rate . '" popup_hit_counter="' . $options_row->popup_hit_counter . '" thumb_click_action="' . $options_row->thumb_click_action . '" thumb_link_target="' . $options_row->thumb_link_target . '"]';
+        $shortecode_string = '[Best_Wordpress_Gallery type="' . $type['type'] . '" gallery_type="thumbnails" theme_id="' . $theme_row->id . '" gallery_id="" tag="' . $id . '" sort_by="date" order_by="asc" image_column_number="' . $wd_bwg_options->image_column_number . '" images_per_page="' . $wd_bwg_options->images_per_page . '" image_title="' . $wd_bwg_options->image_title_show_hover . '" image_enable_page="' . $wd_bwg_options->image_enable_page . '" thumb_width="' . $wd_bwg_options->thumb_width . '" thumb_height="' . $wd_bwg_options->thumb_height . '" popup_fullscreen="' . $wd_bwg_options->popup_fullscreen . '" popup_autoplay="' . $wd_bwg_options->popup_autoplay . '" popup_width="' . $wd_bwg_options->popup_width . '" popup_height="' . $wd_bwg_options->popup_height . '" popup_effect="' . $wd_bwg_options->popup_type . '" popup_interval="' . $wd_bwg_options->popup_interval . '" popup_enable_filmstrip="' . $wd_bwg_options->popup_enable_filmstrip . '" popup_filmstrip_height="' . $wd_bwg_options->popup_filmstrip_height . '" popup_enable_ctrl_btn="' . $wd_bwg_options->popup_enable_ctrl_btn . '" popup_enable_fullscreen="' . $wd_bwg_options->popup_enable_fullscreen . '" popup_enable_comment="' . $wd_bwg_options->popup_enable_comment . '" popup_enable_facebook="' . $wd_bwg_options->popup_enable_facebook . '" popup_enable_twitter="' . $wd_bwg_options->popup_enable_twitter . '" popup_enable_google="' . $wd_bwg_options->popup_enable_google . '" popup_enable_pinterest="' . $wd_bwg_options->popup_enable_pinterest . '" popup_enable_tumblr="' . $wd_bwg_options->popup_enable_tumblr . '" watermark_type="' . $wd_bwg_options->watermark_type . '" watermark_link="' . $wd_bwg_options->watermark_link . '" watermark_text="' . $wd_bwg_options->watermark_text . '" watermark_font_size="' . $wd_bwg_options->watermark_font_size . '" watermark_font="' . $wd_bwg_options->watermark_font . '" watermark_color="' . $wd_bwg_options->watermark_color . '" watermark_opacity="' . $wd_bwg_options->watermark_opacity . '" watermark_position="' . $wd_bwg_options->watermark_position . '" watermark_url="' . $wd_bwg_options->watermark_url . '" watermark_width="' . $wd_bwg_options->watermark_width . '" watermark_height="' . $wd_bwg_options->watermark_height . '" show_search_box="' . $wd_bwg_options->show_search_box . '" search_box_width="' . $wd_bwg_options->search_box_width . '" popup_enable_info="' . $wd_bwg_options->popup_enable_info . '" popup_info_always_show="' . $wd_bwg_options->popup_info_always_show . '" popup_enable_rate="' . $wd_bwg_options->popup_enable_rate . '" popup_hit_counter="' . $wd_bwg_options->popup_hit_counter . '" thumb_click_action="' . $wd_bwg_options->thumb_click_action . '" thumb_link_target="' . $wd_bwg_options->thumb_link_target . '"]';
         break;
       default:
-        $shortecode_string = '[Best_Wordpress_Gallery type="' . $type['type'] . '" gallery_type="thumbnails" theme_id="' . $theme_row->id . '" gallery_id="' . $id . '" sort_by="date" order_by="asc" image_column_number="' . $options_row->image_column_number . '" images_per_page="' . $options_row->images_per_page . '" image_title="' . $options_row->image_title_show_hover . '" image_enable_page="' . $options_row->image_enable_page . '" thumb_width="' . $options_row->thumb_width . '" thumb_height="' . $options_row->thumb_height . '" popup_fullscreen="' . $options_row->popup_fullscreen . '" popup_autoplay="' . $options_row->popup_autoplay . '" popup_width="' . $options_row->popup_width . '" popup_height="' . $options_row->popup_height . '" popup_effect="' . $options_row->popup_type . '" popup_interval="' . $options_row->popup_interval . '" popup_enable_filmstrip="' . $options_row->popup_enable_filmstrip . '" popup_filmstrip_height="' . $options_row->popup_filmstrip_height . '" popup_enable_ctrl_btn="' . $options_row->popup_enable_ctrl_btn . '" popup_enable_fullscreen="' . $options_row->popup_enable_fullscreen . '" popup_enable_comment="' . $options_row->popup_enable_comment . '" popup_enable_facebook="' . $options_row->popup_enable_facebook . '" popup_enable_twitter="' . $options_row->popup_enable_twitter . '" popup_enable_google="' . $options_row->popup_enable_google . '" popup_enable_pinterest="' . $options_row->popup_enable_pinterest . '" popup_enable_tumblr="' . $options_row->popup_enable_tumblr . '" watermark_type="' . $options_row->watermark_type . '" watermark_link="' . $options_row->watermark_link . '" watermark_text="' . $options_row->watermark_text . '" watermark_font_size="' . $options_row->watermark_font_size . '" watermark_font="' . $options_row->watermark_font . '" watermark_color="' . $options_row->watermark_color . '" watermark_opacity="' . $options_row->watermark_opacity . '" watermark_position="' . $options_row->watermark_position . '" watermark_url="' . $options_row->watermark_url . '" watermark_width="' . $options_row->watermark_width . '" watermark_height="' . $options_row->watermark_height . '" show_search_box="' . $options_row->show_search_box . '" search_box_width="' . $options_row->search_box_width . '" popup_enable_info="' . $options_row->popup_enable_info . '" popup_info_always_show="' . $options_row->popup_info_always_show . '" popup_enable_rate="' . $options_row->popup_enable_rate . '" popup_hit_counter="' . $options_row->popup_hit_counter . '" thumb_click_action="' . $options_row->thumb_click_action . '" thumb_link_target="' . $options_row->thumb_link_target . '"]';
+        $shortecode_string = '[Best_Wordpress_Gallery type="' . $type['type'] . '" gallery_type="thumbnails" theme_id="' . $theme_row->id . '" gallery_id="' . $id . '" sort_by="date" order_by="asc" image_column_number="' . $wd_bwg_options->image_column_number . '" images_per_page="' . $wd_bwg_options->images_per_page . '" image_title="' . $wd_bwg_options->image_title_show_hover . '" image_enable_page="' . $wd_bwg_options->image_enable_page . '" thumb_width="' . $wd_bwg_options->thumb_width . '" thumb_height="' . $wd_bwg_options->thumb_height . '" popup_fullscreen="' . $wd_bwg_options->popup_fullscreen . '" popup_autoplay="' . $wd_bwg_options->popup_autoplay . '" popup_width="' . $wd_bwg_options->popup_width . '" popup_height="' . $wd_bwg_options->popup_height . '" popup_effect="' . $wd_bwg_options->popup_type . '" popup_interval="' . $wd_bwg_options->popup_interval . '" popup_enable_filmstrip="' . $wd_bwg_options->popup_enable_filmstrip . '" popup_filmstrip_height="' . $wd_bwg_options->popup_filmstrip_height . '" popup_enable_ctrl_btn="' . $wd_bwg_options->popup_enable_ctrl_btn . '" popup_enable_fullscreen="' . $wd_bwg_options->popup_enable_fullscreen . '" popup_enable_comment="' . $wd_bwg_options->popup_enable_comment . '" popup_enable_facebook="' . $wd_bwg_options->popup_enable_facebook . '" popup_enable_twitter="' . $wd_bwg_options->popup_enable_twitter . '" popup_enable_google="' . $wd_bwg_options->popup_enable_google . '" popup_enable_pinterest="' . $wd_bwg_options->popup_enable_pinterest . '" popup_enable_tumblr="' . $wd_bwg_options->popup_enable_tumblr . '" watermark_type="' . $wd_bwg_options->watermark_type . '" watermark_link="' . $wd_bwg_options->watermark_link . '" watermark_text="' . $wd_bwg_options->watermark_text . '" watermark_font_size="' . $wd_bwg_options->watermark_font_size . '" watermark_font="' . $wd_bwg_options->watermark_font . '" watermark_color="' . $wd_bwg_options->watermark_color . '" watermark_opacity="' . $wd_bwg_options->watermark_opacity . '" watermark_position="' . $wd_bwg_options->watermark_position . '" watermark_url="' . $wd_bwg_options->watermark_url . '" watermark_width="' . $wd_bwg_options->watermark_width . '" watermark_height="' . $wd_bwg_options->watermark_height . '" show_search_box="' . $wd_bwg_options->show_search_box . '" search_box_width="' . $wd_bwg_options->search_box_width . '" popup_enable_info="' . $wd_bwg_options->popup_enable_info . '" popup_info_always_show="' . $wd_bwg_options->popup_info_always_show . '" popup_enable_rate="' . $wd_bwg_options->popup_enable_rate . '" popup_hit_counter="' . $wd_bwg_options->popup_hit_counter . '" thumb_click_action="' . $wd_bwg_options->thumb_click_action . '" thumb_link_target="' . $wd_bwg_options->thumb_link_target . '"]';
         break;
     }
     if (!$bwg_post_id) {
@@ -1034,6 +1004,11 @@ class WDWLibrary {
         $items_in_page = $load_more_image_count;
       }
       $limit = (((int) $_REQUEST['page_number_' . $bwg] - 2) * $items_in_page) + $images_per_page;
+      $bwg_random_seed = isset($_SESSION['bwg_random_seed_'. $bwg]) ? $_SESSION['bwg_random_seed_'. $bwg] : '';
+    }
+    else {
+      $bwg_random_seed = rand();
+      $_SESSION['bwg_random_seed_'. $bwg] = $bwg_random_seed;
     }
     $limit_str = '';
     if ($images_per_page) {
@@ -1048,7 +1023,7 @@ class WDWLibrary {
       $where .= ' AND CONCAT(",", tags.tags_combined, ",") REGEXP ",(' . implode("|", $_REQUEST[$tag_input_name]) . ')," ';
     }
 
-    $row = $wpdb->get_results('SELECT image.* FROM ' . $wpdb->prefix . 'bwg_image as image ' . $join . ' WHERE image.published=1 ' . $where . ' ORDER BY ' . $sort_by . ' ' . $sort_direction . ' ' . $limit_str);
+    $row = $wpdb->get_results('SELECT image.* FROM ' . $wpdb->prefix . 'bwg_image as image ' . $join . ' WHERE image.published=1 ' . $where . ' ORDER BY ' . str_replace('RAND()', 'RAND(' . $bwg_random_seed . ')', $sort_by) . ' ' . $sort_direction . ' ' . $limit_str);
     $total = $wpdb->get_var('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_image as image ' . $join . ' WHERE image.published=1 ' . $where);
 
     $page_nav['total'] = $total;
@@ -1073,7 +1048,7 @@ class WDWLibrary {
     return $row;
   }
 
-  public static function get_alb_gals_row($id, $albums_per_page, $sort_by, $bwg, $sort_direction = ' ASC ') {
+  public static function get_alb_gals_row($id, $albums_per_page, $sort_by, $bwg, $sort_direction = 'ASC') {
     global $wpdb;
     $limit = 0;
     if (isset($_REQUEST['page_number_' . $bwg]) && $_REQUEST['page_number_' . $bwg]) {
@@ -1086,7 +1061,7 @@ class WDWLibrary {
     if ($sort_by != "RAND()") {
       $sort_by = '`' . $sort_by . '`';
     }
-    $row = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d" ORDER BY ' . $sort_by . $sort_direction . $limit_str, $id));
+    $row = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d" ORDER BY ' . $sort_by . ' ' . $sort_direction . ' ' . $limit_str, $id));
 
     $total = $wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d"', $id));
     $page_nav['total'] = $total;
@@ -1097,6 +1072,299 @@ class WDWLibrary {
 
     return array('rows' => $row, 'page_nav' => $page_nav);
   }
+
+  public static function bwg_image_set_watermark($gallery_id) {
+    global $wpdb;
+    global $WD_BWG_UPLOAD_DIR;
+    global $wd_bwg_options;
+    if ($gallery_id != 0) {
+      $images = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_image WHERE gallery_id="%d"', $gallery_id));
+    }
+    else {
+      $images = $wpdb->get_results('SELECT * FROM ' . $wpdb->prefix . 'bwg_image');
+    }
+    switch ($wd_bwg_options->built_in_watermark_type) {
+      case 'text':
+        foreach ($images as $image) {
+          if (isset($_POST['check_' . $image->id]) || isset($_POST['check_all_items'])) {
+            self::set_text_watermark(ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, html_entity_decode($wd_bwg_options->built_in_watermark_text), $wd_bwg_options->built_in_watermark_font, $wd_bwg_options->built_in_watermark_font_size, '#' . $wd_bwg_options->built_in_watermark_color, $wd_bwg_options->built_in_watermark_opacity, $wd_bwg_options->built_in_watermark_position);
+          }
+          if ($gallery_id == 0) {
+            self::set_text_watermark(ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, html_entity_decode($wd_bwg_options->built_in_watermark_text), $wd_bwg_options->built_in_watermark_font, $wd_bwg_options->built_in_watermark_font_size, '#' . $wd_bwg_options->built_in_watermark_color, $wd_bwg_options->built_in_watermark_opacity, $wd_bwg_options->built_in_watermark_position);
+          }
+        }
+        break;
+      case 'image':
+        $watermark_path = str_replace(site_url() . '/', ABSPATH, $wd_bwg_options->built_in_watermark_url);
+        foreach ($images as $image) {
+          if (isset($_POST['check_' . $image->id]) || isset($_POST['check_all_items'])) {
+            self::set_image_watermark(ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, $watermark_path, $wd_bwg_options->built_in_watermark_size, $wd_bwg_options->built_in_watermark_size, $wd_bwg_options->built_in_watermark_position);
+          }
+          if ($gallery_id == 0) {
+            self::set_image_watermark(ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, $watermark_path, $wd_bwg_options->built_in_watermark_size, $wd_bwg_options->built_in_watermark_size, $wd_bwg_options->built_in_watermark_position);
+          }
+        }
+        break;
+    } 
+  }
+
+  public static function set_text_watermark($original_filename, $dest_filename, $watermark_text, $watermark_font, $watermark_font_size, $watermark_color, $watermark_transparency, $watermark_position) {
+    $original_filename = htmlspecialchars_decode($original_filename, ENT_COMPAT | ENT_QUOTES);
+    $dest_filename = htmlspecialchars_decode($dest_filename, ENT_COMPAT | ENT_QUOTES);
+
+    $watermark_transparency = 127 - ($watermark_transparency * 1.27);
+    list($width, $height, $type) = getimagesize($original_filename);
+    $watermark_image = imagecreatetruecolor($width, $height);
+
+    $watermark_color = self::bwg_hex2rgb($watermark_color);
+    $watermark_color = imagecolorallocatealpha($watermark_image, $watermark_color[0], $watermark_color[1], $watermark_color[2], $watermark_transparency);
+    $watermark_font = WD_BWG_DIR . '/fonts/' . $watermark_font;
+    $watermark_font_size = (($height > $width ? $width : $height) * $watermark_font_size / 500) . 'px';
+    $watermark_position = explode('-', $watermark_position);
+    $watermark_sizes = self::bwg_imagettfbboxdimensions($watermark_font_size, 0, $watermark_font, $watermark_text);
+
+    $top = $height - 5;
+    $left = $width - $watermark_sizes['width'] - 5;
+    switch ($watermark_position[0]) {
+      case 'top':
+        $top = $watermark_sizes['height'] + 5;
+        break;
+      case 'middle':
+        $top = ($height + $watermark_sizes['height']) / 2;
+        break;
+    }
+    switch ($watermark_position[1]) {
+      case 'left':
+        $left = 5;
+        break;
+      case 'center':
+        $left = ($width - $watermark_sizes['width']) / 2;
+        break;
+    }
+    @ini_set('memory_limit', '-1');
+    if ($type == 2) {
+      $image = imagecreatefromjpeg($original_filename);
+      imagettftext($image, $watermark_font_size, 0, $left, $top, $watermark_color, $watermark_font, $watermark_text);
+      imagejpeg ($image, $dest_filename, 100);
+      imagedestroy($image);  
+    }
+    elseif ($type == 3) {
+      $image = imagecreatefrompng($original_filename);
+      imagettftext($image, $watermark_font_size, 0, $left, $top, $watermark_color, $watermark_font, $watermark_text);
+      imageColorAllocateAlpha($image, 0, 0, 0, 127);
+      imagealphablending($image, FALSE);
+      imagesavealpha($image, TRUE);
+      imagepng($image, $dest_filename, 9);
+      imagedestroy($image);
+    }
+    elseif ($type == 1) {
+      $image = imagecreatefromgif($original_filename);
+      imageColorAllocateAlpha($watermark_image, 0, 0, 0, 127);
+      imagecopy($watermark_image, $image, 0, 0, 0, 0, $width, $height);
+      imagettftext($watermark_image, $watermark_font_size, 0, $left, $top, $watermark_color, $watermark_font, $watermark_text);
+      imagealphablending($watermark_image, FALSE);
+      imagesavealpha($watermark_image, TRUE);
+      imagegif($watermark_image, $dest_filename);
+      imagedestroy($image);
+    }
+    imagedestroy($watermark_image);
+    @ini_restore('memory_limit');
+  }
+
+  public static function set_image_watermark($original_filename, $dest_filename, $watermark_url, $watermark_height, $watermark_width, $watermark_position) {
+    $original_filename = htmlspecialchars_decode($original_filename, ENT_COMPAT | ENT_QUOTES);
+    $dest_filename = htmlspecialchars_decode($dest_filename, ENT_COMPAT | ENT_QUOTES);
+    $watermark_url = htmlspecialchars_decode($watermark_url, ENT_COMPAT | ENT_QUOTES);
+
+    list($width, $height, $type) = getimagesize($original_filename);
+    list($width_watermark, $height_watermark, $type_watermark) = getimagesize($watermark_url);
+
+    $watermark_width = $width * $watermark_width / 100;
+    $watermark_height = $height_watermark * $watermark_width / $width_watermark;
+        
+    $watermark_position = explode('-', $watermark_position);
+    $top = $height - $watermark_height - 5;
+    $left = $width - $watermark_width - 5;
+    switch ($watermark_position[0]) {
+      case 'top':
+        $top = 5;
+        break;
+      case 'middle':
+        $top = ($height - $watermark_height) / 2;
+        break;
+    }
+    switch ($watermark_position[1]) {
+      case 'left':
+        $left = 5;
+        break;
+      case 'center':
+        $left = ($width - $watermark_width) / 2;
+        break;
+    }
+    @ini_set('memory_limit', '-1');
+    if ($type_watermark == 2) {
+      $watermark_image = imagecreatefromjpeg($watermark_url);        
+    }
+    elseif ($type_watermark == 3) {
+      $watermark_image = imagecreatefrompng($watermark_url);
+    }
+    elseif ($type_watermark == 1) {
+      $watermark_image = imagecreatefromgif($watermark_url);      
+    }
+    else {
+      return false;
+    }
+    
+    $watermark_image_resized = imagecreatetruecolor($watermark_width, $watermark_height);
+    imagecolorallocatealpha($watermark_image_resized, 255, 255, 255, 127);
+    imagealphablending($watermark_image_resized, FALSE);
+    imagesavealpha($watermark_image_resized, TRUE);
+    imagecopyresampled ($watermark_image_resized, $watermark_image, 0, 0, 0, 0, $watermark_width, $watermark_height, $width_watermark, $height_watermark);
+        
+    if ($type == 2) {
+      $image = imagecreatefromjpeg($original_filename);
+      imagecopy($image, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
+      if ($dest_filename <> '') {
+        imagejpeg ($image, $dest_filename, 100); 
+      } else {
+        header('Content-Type: image/jpeg');
+        imagejpeg($image, null, 100);
+      };
+      imagedestroy($image);  
+    }
+    elseif ($type == 3) {
+      $image = imagecreatefrompng($original_filename);
+      imagecopy($image, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
+      imagealphablending($image, FALSE);
+      imagesavealpha($image, TRUE);
+      imagepng($image, $dest_filename, 9);
+      imagedestroy($image);
+    }
+    elseif ($type == 1) {
+      $image = imagecreatefromgif($original_filename);
+      $tempimage = imagecreatetruecolor($width, $height);
+      imagecopy($tempimage, $image, 0, 0, 0, 0, $width, $height);
+      imagecopy($tempimage, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
+      imagegif($tempimage, $dest_filename);
+      imagedestroy($image);
+      imagedestroy($tempimage);
+    }
+    imagedestroy($watermark_image);
+    @ini_restore('memory_limit');
+  }
+
+  public static function bwg_image_recover_all($gallery_id) {
+    global $wpdb;
+    global $wd_bwg_options;
+    $thumb_width = $wd_bwg_options->upload_thumb_width;
+    $width = $wd_bwg_options->upload_img_width;
+    if($gallery_id == 0) {
+     $image_ids_col = $wpdb->get_col('SELECT id FROM ' . $wpdb->prefix . 'bwg_image'); 
+    }
+    else{    
+      $image_ids_col = $wpdb->get_col($wpdb->prepare('SELECT id FROM ' . $wpdb->prefix . 'bwg_image WHERE gallery_id="%d"', $gallery_id));
+    }
+    foreach ($image_ids_col as $image_id) {
+      if (isset($_POST['check_' . $image_id]) || isset($_POST['check_all_items'])) {
+        self::recover_image($image_id, $thumb_width, $width, 'gallery_page');
+      }
+      if($gallery_id == 0) {
+        self::recover_image($image_id, $thumb_width, $width, 'option_page');
+      }
+    }
+  }
+
+  public static function recover_image($id, $thumb_width, $width, $page) {
+    global $WD_BWG_UPLOAD_DIR;
+    global $wpdb;
+    $image_data = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_image WHERE id="%d"', $id));
+    $filename = htmlspecialchars_decode(ABSPATH . $WD_BWG_UPLOAD_DIR . $image_data->image_url, ENT_COMPAT | ENT_QUOTES);
+    $thumb_filename = htmlspecialchars_decode(ABSPATH . $WD_BWG_UPLOAD_DIR . $image_data->thumb_url, ENT_COMPAT | ENT_QUOTES);
+    $original_filename = str_replace('/thumb/', '/.original/', $thumb_filename);
+    if (file_exists($filename) && file_exists($thumb_filename) && file_exists($original_filename)) {
+      list($width_orig, $height_orig, $type_orig) = getimagesize($original_filename);
+      self::recover_image_size($width_orig, $height_orig, $width, $original_filename, $filename, $type_orig);
+      self::recover_image_size($width_orig, $height_orig, $thumb_width, $original_filename, $thumb_filename, $type_orig);
+    }
+    @ini_restore('memory_limit');
+    if ($page == 'gallery_page') {
+      ?>
+      <script language="javascript">
+        var image_src = window.parent.document.getElementById("image_thumb_<?php echo $id; ?>").src;
+        document.getElementById("image_thumb_<?php echo $id; ?>").src = image_src + "?date=<?php echo date('Y-m-y H:i:s'); ?>";
+      </script>
+      <?php
+    }
+  }
+
+  public static function recover_image_size($width_orig, $height_orig, $width, $original_filename, $filename, $type_orig) {
+      $percent = $width_orig / $width;
+      $height = $height_orig / $percent;
+      @ini_set('memory_limit', '-1');
+       if ($type_orig == 2) {
+        $img_r = imagecreatefromjpeg($original_filename);
+        $dst_r = ImageCreateTrueColor($width, $height);
+        imagecopyresampled($dst_r, $img_r, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+        imagejpeg($dst_r, $filename, 100);
+        imagedestroy($img_r);
+        imagedestroy($dst_r);
+      }
+      elseif ($type_orig == 3) {
+        $img_r = imagecreatefrompng($original_filename);
+        $dst_r = ImageCreateTrueColor($width, $height);
+        imageColorAllocateAlpha($dst_r, 0, 0, 0, 127);
+        imagealphablending($dst_r, FALSE);
+        imagesavealpha($dst_r, TRUE);
+        imagecopyresampled($dst_r, $img_r, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+        imagealphablending($dst_r, FALSE);
+        imagesavealpha($dst_r, TRUE);
+        imagepng($dst_r, $filename, 9);
+        imagedestroy($img_r);
+        imagedestroy($dst_r);
+      }
+      elseif ($type_orig == 1) {
+        $img_r = imagecreatefromgif($original_filename);
+        $dst_r = ImageCreateTrueColor($width, $height);
+        imageColorAllocateAlpha($dst_r, 0, 0, 0, 127);
+        imagealphablending($dst_r, FALSE);
+        imagesavealpha($dst_r, TRUE);
+        imagecopyresampled($dst_r, $img_r, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+        imagealphablending($dst_r, FALSE);
+        imagesavealpha($dst_r, TRUE);
+        imagegif($dst_r, $filename);
+        imagedestroy($img_r);
+        imagedestroy($dst_r);
+      }
+  }
+
+  public static function bwg_hex2rgb($hex) {
+    $hex = str_replace("#", "", $hex);
+    if (strlen($hex) == 3) {
+      $r = hexdec(substr($hex,0,1).substr($hex,0,1));
+      $g = hexdec(substr($hex,1,1).substr($hex,1,1));
+      $b = hexdec(substr($hex,2,1).substr($hex,2,1));
+    }
+    else {
+      $r = hexdec(substr($hex,0,2));
+      $g = hexdec(substr($hex,2,2));
+      $b = hexdec(substr($hex,4,2));
+    }
+    $rgb = array($r, $g, $b);
+    return $rgb;
+  }
+
+  public static function bwg_imagettfbboxdimensions($font_size, $font_angle, $font, $text) {
+    $box = @ImageTTFBBox($font_size, $font_angle, $font, $text) or die;
+    $max_x = max(array($box[0], $box[2], $box[4], $box[6]));
+    $max_y = max(array($box[1], $box[3], $box[5], $box[7]));
+    $min_x = min(array($box[0], $box[2], $box[4], $box[6]));
+    $min_y = min(array($box[1], $box[3], $box[5], $box[7]));
+    return array(
+      "width"  => ($max_x - $min_x),
+      "height" => ($max_y - $min_y)
+    );
+  }
+  
   ////////////////////////////////////////////////////////////////////////////////////////
   // Private Methods                                                                    //
   ////////////////////////////////////////////////////////////////////////////////////////

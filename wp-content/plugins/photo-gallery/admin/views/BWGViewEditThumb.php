@@ -28,7 +28,7 @@ class BWGViewEditThumb {
     $image_width = $popup_width - 40;
     $popup_height = ((int) (isset($_GET['height']) ? esc_html($_GET['height']) : '500')) - 50;
     $image_height = $popup_height - 40;
-    
+
     $instagram_post_width = ((int) (isset($_GET['instagram_post_width']) ? esc_html($_GET['instagram_post_width']) : $image_width));
     $instagram_post_height = ((int) (isset($_GET['instagram_post_height']) ? esc_html($_GET['instagram_post_height']) : $image_height));
 
@@ -99,9 +99,9 @@ class BWGViewEditThumb {
 
   public function crop() {
     global $WD_BWG_UPLOAD_DIR;
-    $options = $this->model->get_option_data();
-    $thumb_width = $options->upload_thumb_width;
-    $thumb_height = $options->upload_thumb_height;
+    global $wd_bwg_options;
+    $thumb_width = $wd_bwg_options->upload_thumb_width;
+    $thumb_height = $wd_bwg_options->upload_thumb_height;
     $popup_width = ((int) (isset($_GET['width']) ? esc_html($_GET['width']) : '800')) - 50;
     $image_width = $popup_width - $thumb_width - 70;
     $popup_height = ((int) (isset($_GET['height']) ? esc_html($_GET['height']) : '500')) - 75;
@@ -279,7 +279,7 @@ class BWGViewEditThumb {
           spider_crop_fix("", "");
         }
         else {
-          spider_crop_fix("<?php echo $options->upload_thumb_width; ?>", "<?php echo $options->upload_thumb_height; ?>");
+          spider_crop_fix("<?php echo $wd_bwg_options->upload_thumb_width; ?>", "<?php echo $wd_bwg_options->upload_thumb_height; ?>");
         }
         jQuery('#crop_button').show();
         jQuery('#thumb_message').hide();
@@ -294,7 +294,7 @@ class BWGViewEditThumb {
       window.parent.document.getElementById("image_thumb_<?php echo $image_id; ?>").src = image_src + "?date=<?php echo date('Y-m-y H:i:s'); ?>";
       // jQuery('#image_view').Jcrop();
       jQuery(window).load(function() {
-        spider_crop_fix("<?php echo $options->upload_thumb_width; ?>", "<?php echo $options->upload_thumb_height; ?>");
+        spider_crop_fix("<?php echo $wd_bwg_options->upload_thumb_width; ?>", "<?php echo $wd_bwg_options->upload_thumb_height; ?>");
       });
       function spider_crop_fix(wi, he) {
         var ratio = parseInt('<?php echo $width_orig; ?>') / jQuery('#image_view').width();
@@ -335,8 +335,8 @@ class BWGViewEditThumb {
       function spider_update_thumb(c) {
         jQuery('#crop_button').hide();
         jQuery('#croped_message').show();
-        var thumb_width = parseInt('<?php echo $options->upload_thumb_width; ?>');
-        var thumb_height = parseInt('<?php echo $options->upload_thumb_height; ?>');
+        var thumb_width = parseInt('<?php echo $wd_bwg_options->upload_thumb_width; ?>');
+        var thumb_height = parseInt('<?php echo $wd_bwg_options->upload_thumb_height; ?>');
         jQuery('#thumb_image_preview').css("margin-left", -c.x * (thumb_width / c.w) + "px");
         jQuery('#thumb_image_preview').css("margin-top", -c.y * (thumb_height / c.h) + "px");        
         jQuery('#thumb_image_preview').css("width", ((thumb_width / c.w) * jQuery('#image_view').width()) + "px");
@@ -712,9 +712,9 @@ class BWGViewEditThumb {
     elseif ($edit_type == 'recover') {
       global $wpdb;
       $id = ((isset($_POST['image_id'])) ? (int) esc_html(stripslashes($_POST['image_id'])) : 0);
-      $options = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'bwg_option WHERE id=1');
-      $thumb_width = $options->thumb_width;
-      $thumb_height = $options->thumb_height;
+      global $wd_bwg_options;
+      $thumb_width = $wd_bwg_options->thumb_width;
+      $thumb_height = $wd_bwg_options->thumb_height;
       $this->recover_image($id, $thumb_width, $thumb_height);
     }
     @ini_restore('memory_limit');

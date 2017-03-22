@@ -44,7 +44,7 @@ class BWGViewWidgetSlideshow {
       echo $before_title . $title . $after_title;
     }
     // Widget output.
-  require_once(WD_BWG_DIR . '/frontend/controllers/BWGControllerSlideshow.php');
+    require_once(WD_BWG_DIR . '/frontend/controllers/BWGControllerSlideshow.php');
     $controller_class = 'BWGControllerSlideshow';
     $controller = new $controller_class();
     global $bwg;
@@ -101,15 +101,15 @@ class BWGViewWidgetSlideshow {
     $instance = wp_parse_args((array) $instance, $defaults);
     $gallery_rows = $this->model->get_gallery_rows_data();
     $theme_rows = $this->model->get_theme_rows_data();
-    $options_row = WDWLibrary::get_options_row_data();
+    global $wd_bwg_options;
     ?>
     <p>
-      <label for="<?php echo $id_title; ?>"><?php _e("Title:", 'bwg_back'); ?></label>
+      <label for="<?php echo $id_title; ?>"><?php echo __('Title:', 'bwg_back'); ?></label>
       <input class="widefat" id="<?php echo $id_title; ?>" name="<?php echo $name_title; ?>" type="text" value="<?php echo $instance['title']; ?>"/>
     </p>    
     <p>
       <select name="<?php echo $name_gallery_id; ?>" id="<?php echo $id_gallery_id; ?>" class="widefat">
-        <option value="0"><?php _e("Select Gallery", 'bwg_back'); ?></option>
+        <option value="0"><?php echo __('Select Gallery', 'bwg_back'); ?></option>
         <?php
         foreach ($gallery_rows as $gallery_row) {
           ?>
@@ -120,16 +120,16 @@ class BWGViewWidgetSlideshow {
       </select>
     </p>
     <p>
-      <label for="<?php echo $id_width; ?>"><?php _e("Dimensions:", 'bwg_back'); ?></label>
+      <label for="<?php echo $id_width; ?>"><?php echo __('Dimensions:', 'bwg_back'); ?></label>
       <input class="widefat" style="width:25%;" id="<?php echo $id_width; ?>" name="<?php echo $name_width; ?>" type="text" value="<?php echo $instance['width']; ?>"/> x 
       <input class="widefat" style="width:25%;" id="<?php echo $id_height; ?>" name="<?php echo $name_height; ?>" type="text" value="<?php echo $instance['height']; ?>"/> px
     </p>
-    <p title="<?php _e("This option is disabled in free version.", 'bwg_back'); ?>" <?php echo ($options_row->slideshow_enable_filmstrip ? 'style="color: #7F7F7F;"' : 'style="display: none;"'); ?>>
+    <p title="<?php _e("This option is disabled in free version.", 'bwg_back'); ?>" <?php echo ($wd_bwg_options->slideshow_enable_filmstrip ? 'style="color: #7F7F7F;"' : 'style="display: none;"'); ?>>
       <label><?php _e("Filmstrip height:", 'bwg_back'); ?></label>
       <input disabled="disabled" class="widefat" style="width: 25%; color: #7F7F7F;" type="text" value="40" /> px
     </p>
     <p>
-      <label for="<?php echo $id_effect; ?>"><?php _e("Slideshow effect:", 'bwg_back'); ?></label>
+      <label for="<?php echo $id_effect; ?>"><?php echo __('Slideshow effect:', 'bwg_back'); ?></label>
       <select name="<?php echo $name_effect; ?>" id="<?php echo $id_effect; ?>" class="widefat">        
         <?php
         foreach ($slideshow_effects as $key => $slideshow_effect) {
@@ -141,13 +141,13 @@ class BWGViewWidgetSlideshow {
       </select>
     </p>
     <p>
-      <label for="<?php echo $id_interval; ?>"><?php _e("Time interval:", 'bwg_back'); ?></label>
+      <label for="<?php echo $id_interval; ?>"><?php echo __('Time interval:', 'bwg_back'); ?></label>
       <input class="widefat" style="width:25%;" id="<?php echo $id_interval; ?>" name="<?php echo $name_interval; ?>" type="text" value="<?php echo $instance['interval']; ?>" /> sec.
     </p>
     <p>
-      <label><?php _e("Enable shuffle:", 'bwg_back'); ?></label>
-      <input type="radio" name="<?php echo $name_shuffle; ?>" id="<?php echo $id_shuffle . "_1"; ?>" value="1" <?php if ($instance['shuffle']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "1");' /><label for="<?php echo $id_shuffle . "_1"; ?>"><?php _e("Yes", 'bwg_back'); ?></label>
-      <input type="radio" name="<?php echo $name_shuffle; ?>" id="<?php echo $id_shuffle . "_0"; ?>" value="0" <?php if (!$instance['shuffle']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "0");' /><label for="<?php echo $id_shuffle . "_0"; ?>"><?php _e("No", 'bwg_back'); ?></label>
+      <label><?php echo __('Enable shuffle:', 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_shuffle; ?>" id="<?php echo $id_shuffle . "_1"; ?>" value="1" <?php if ($instance['shuffle']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "1");' /><label for="<?php echo $id_shuffle . "_1"; ?>"><?php echo __('Yes', 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_shuffle; ?>" id="<?php echo $id_shuffle . "_0"; ?>" value="0" <?php if (!$instance['shuffle']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "0");' /><label for="<?php echo $id_shuffle . "_0"; ?>"><?php echo __('No', 'bwg_back'); ?></label>
       <input type="hidden" name="<?php echo $name_shuffle; ?>" id="<?php echo $id_shuffle; ?>" value="<?php echo $instance['shuffle']; ?>" class="bwg_hidden" />
     </p>
     <p>

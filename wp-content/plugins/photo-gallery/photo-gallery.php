@@ -4,7 +4,7 @@
  * Plugin Name: Photo Gallery
  * Plugin URI: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
- * Version: 1.3.25
+ * Version: 1.3.30
  * Author: WebDorado
  * Author URI: https://web-dorado.com/
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
@@ -40,17 +40,10 @@ else {
   define('WD_BWG_FRONT_URL', WD_BWG_URL);
 }
 
-global $wpdb;
-if ($wpdb->query("SHOW TABLES LIKE '" . $wpdb->prefix . "bwg_option'")) {
-  $bwg_options_row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_option WHERE id="%d"', 1));
-  $WD_BWG_UPLOAD_DIR = $bwg_options_row->images_directory . '/photo-gallery';
-  $wd_bwg_inline_stiles = isset($bwg_options_row->use_inline_stiles_and_scripts) ? $bwg_options_row->use_inline_stiles_and_scripts : 0;
-}
-else {
-  $upload_dir = wp_upload_dir();
-  $WD_BWG_UPLOAD_DIR = str_replace(ABSPATH, '', $upload_dir['basedir']) . '/photo-gallery';
-  $wd_bwg_inline_stiles = 0;
-}
+require_once(WD_BWG_DIR . '/framework/BWGOptions.php');
+$wd_bwg_options = new WD_BWG_Options();
+
+$WD_BWG_UPLOAD_DIR = $wd_bwg_options->images_directory . '/photo-gallery';
 
 // Plugin menu.
 function bwg_options_panel() {
@@ -201,18 +194,28 @@ function bwg_filemanager_ajax() {
   }
   global $wpdb;
   require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
-  $page = WDWLibrary::get('action');
+  $page = WDWLibrary::get('action');  
+
   if (($page != '') && (($page == 'addImages') || ($page == 'addMusic'))) {
-    
-    if(!WDWLibrary::verify_nonce($page)){
+    if (!WDWLibrary::verify_nonce($page)) {
       die('Sorry, your nonce did not verify.');
     }
     require_once(WD_BWG_DIR . '/filemanager/controller.php');
     $controller_class = 'FilemanagerController';
     $controller = new $controller_class();
-    $controller->execute();
+    $addImages_ajax = WDWLibrary::get('addImages_ajax');
+    if ($addImages_ajax == 'addImages_ajax') {
+      $load_count = WDWLibrary::get('load_count');
+      $images_list = $controller->get_images(intval($load_count));
+      echo (json_encode($images_list, true));
+      die;
+    }
+    else {
+      $controller->execute(true, 1);
+    }
   }
 }
+
 function bwg_add_embed_ajax() {
   if (function_exists('current_user_can')) {
     if (!current_user_can('manage_options')) {
@@ -226,7 +229,7 @@ function bwg_add_embed_ajax() {
   if (!WDWLibrary::verify_nonce('')) {
     die(WDWLibrary::delimit_wd_output(json_encode(array("error", "Sorry, your nonce did not verify."))));
   }
-  
+
   require_once(WD_BWG_DIR . '/framework/WDWLibraryEmbed.php');
   $embed_action = WDWLibrary::get('action');
 
@@ -662,164 +665,6 @@ function bwg_activate() {
     PRIMARY KEY (`id`)
   ) DEFAULT CHARSET=utf8;";
   $wpdb->query($bwg_image_tag);
-  $bwg_option = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "bwg_option` (
-    `id` bigint(20) NOT NULL AUTO_INCREMENT,
-    `images_directory` mediumtext NOT NULL,
-
-    `masonry` varchar(255) NOT NULL,
-
-    `mosaic` varchar(255) NOT NULL,
-    `resizable_mosaic` tinyint(1) NOT NULL,
-    `mosaic_total_width` int(4) NOT NULL,
-    `image_column_number` int(4) NOT NULL,
-    `images_per_page` int(4) NOT NULL,
-    `thumb_width` int(4) NOT NULL,
-    `thumb_height` int(4) NOT NULL,
-    `upload_thumb_width` int(4) NOT NULL,
-    `upload_thumb_height` int(4) NOT NULL,
-    `image_enable_page` tinyint(1) NOT NULL,
-    `image_title_show_hover` varchar(20) NOT NULL,
-    `ecommerce_icon_show_hover` varchar(20) NOT NULL,
-
-    `album_column_number` int(4) NOT NULL,
-    `albums_per_page` int(4) NOT NULL,
-    `album_title_show_hover` varchar(8) NOT NULL,
-    `album_thumb_width` int(4) NOT NULL,
-    `album_thumb_height` int(4) NOT NULL,
-    `album_enable_page` tinyint(1) NOT NULL,
-    `extended_album_height` int(4) NOT NULL,
-    `extended_album_description_enable` tinyint(1) NOT NULL,
-
-    `image_browser_width` int(4) NOT NULL,
-    `image_browser_title_enable` tinyint(1) NOT NULL,
-    `image_browser_description_enable` tinyint(1) NOT NULL,
-
-    `blog_style_width` int(4) NOT NULL,
-    `blog_style_title_enable` tinyint(1) NOT NULL,
-    `blog_style_images_per_page` int(4) NOT NULL,
-    `blog_style_enable_page` tinyint(1) NOT NULL,
-
-    `slideshow_type` varchar(16) NOT NULL,
-    `slideshow_interval` int(4) NOT NULL,
-    `slideshow_width` int(4) NOT NULL,
-    `slideshow_height` int(4) NOT NULL,
-    `slideshow_enable_autoplay` tinyint(1) NOT NULL,
-    `slideshow_enable_shuffle` tinyint(1) NOT NULL,
-    `slideshow_enable_ctrl` tinyint(1) NOT NULL,
-    `slideshow_enable_filmstrip` tinyint(1) NOT NULL,
-    `slideshow_filmstrip_height` int(4) NOT NULL,
-    `slideshow_enable_title` tinyint(1) NOT NULL,
-    `slideshow_title_position` varchar(16) NOT NULL,
-    `slideshow_enable_description` tinyint(1) NOT NULL,
-    `slideshow_description_position` varchar(16) NOT NULL,
-    `slideshow_enable_music` tinyint(1) NOT NULL,
-    `slideshow_audio_url` varchar(255) NOT NULL,
-    `slideshow_effect_duration` int(4) NOT NULL,
-
-    `popup_width` int(4) NOT NULL,
-    `popup_height` int(4) NOT NULL,
-    `popup_type` varchar(16) NOT NULL,
-    `popup_interval` int(4) NOT NULL,
-    `popup_enable_filmstrip` tinyint(1) NOT NULL,
-    `popup_filmstrip_height` int(4) NOT NULL,
-    `popup_enable_ctrl_btn` tinyint(1) NOT NULL,
-    `popup_enable_fullscreen` tinyint(1) NOT NULL,
-    `popup_enable_info` tinyint(1) NOT NULL,
-    `popup_info_always_show` tinyint(1) NOT NULL,
-    `popup_enable_rate` tinyint(1) NOT NULL,
-    `popup_enable_comment` tinyint(1) NOT NULL,
-    `popup_enable_email` tinyint(1) NOT NULL,
-    `popup_enable_captcha` tinyint(1) NOT NULL,
-    `popup_enable_download` tinyint(1) NOT NULL,
-    `popup_enable_fullsize_image` tinyint(1) NOT NULL,
-    `popup_enable_facebook` tinyint(1) NOT NULL,
-    `popup_enable_twitter` tinyint(1) NOT NULL,
-    `popup_enable_google` tinyint(1) NOT NULL,
-    `popup_enable_ecommerce` tinyint(1) NOT NULL,
-    `popup_effect_duration` int(4) NOT NULL,
-
-    `watermark_type` varchar(8) NOT NULL,
-    `watermark_position` varchar(16) NOT NULL,
-    `watermark_width` int(4) NOT NULL,
-    `watermark_height` int(4) NOT NULL,
-    `watermark_url` mediumtext NOT NULL,
-    `watermark_text` mediumtext NOT NULL,
-    `watermark_link` mediumtext NOT NULL,
-    `watermark_font_size` int(4) NOT NULL,
-    `watermark_font` varchar(16) NOT NULL,
-    `watermark_color` varchar(8) NOT NULL,
-    `watermark_opacity` int(4) NOT NULL,
-    
-    `built_in_watermark_type` varchar(16) NOT NULL,
-    `built_in_watermark_position` varchar(16) NOT NULL,
-    `built_in_watermark_size` int(4) NOT NULL,
-    `built_in_watermark_url` mediumtext NOT NULL,
-    `built_in_watermark_text` mediumtext NOT NULL,
-    `built_in_watermark_font_size` int(4) NOT NULL,
-    `built_in_watermark_font` varchar(16) NOT NULL,
-    `built_in_watermark_color` varchar(8) NOT NULL,
-    `built_in_watermark_opacity` int(4) NOT NULL,
-
-    `image_right_click` tinyint(1) NOT NULL,
-    `popup_fullscreen` tinyint(1) NOT NULL,
-    `gallery_role` tinyint(1) NOT NULL,
-    `album_role` tinyint(1) NOT NULL,
-    `image_role` tinyint(1) NOT NULL,
-    `popup_autoplay` tinyint(1) NOT NULL,
-    `album_view_type` varchar(16) NOT NULL,
-    `popup_enable_pinterest` tinyint(1) NOT NULL,
-    `popup_enable_tumblr` tinyint(1) NOT NULL,
-    `show_search_box` tinyint(1) NOT NULL,
-    `search_box_width` int(4) NOT NULL,
-    `preload_images` tinyint(1) NOT NULL,
-    `preload_images_count` int(4) NOT NULL,
-    `thumb_click_action` varchar(16) NOT NULL,
-    `thumb_link_target` tinyint(1) NOT NULL,
-    `comment_moderation` tinyint(1) NOT NULL,
-    `popup_hit_counter` tinyint(1) NOT NULL,
-    `enable_ML_import` tinyint(1) NOT NULL,
-    `showthumbs_name` tinyint(1) NOT NULL,
-    `show_album_name` tinyint(1) NOT NULL,
-    `show_image_counts` tinyint(1) NOT NULL,
-    `upload_img_width` int(4) NOT NULL,
-    `upload_img_height` int(4) NOT NULL,
-    `play_icon` tinyint(1) NOT NULL,
-    `show_masonry_thumb_description` tinyint(1) NOT NULL,
-    `slideshow_title_full_width` tinyint(1) NOT NULL,
-    `popup_info_full_width` tinyint(1) NOT NULL,
-    `show_sort_images` tinyint(1) NOT NULL,
-    `autoupdate_interval` int(4) NOT NULL,
-    `instagram_access_token` varchar(128) NOT NULL,
-    `description_tb` tinyint(1) NOT NULL,
-    `enable_seo` tinyint(1) NOT NULL,
-    `autohide_lightbox_navigation` tinyint(1) NOT NULL,
-    `autohide_slideshow_navigation` tinyint(1) NOT NULL,
-    `read_metadata` tinyint(1) NOT NULL,
-    `enable_loop` tinyint(1) NOT NULL,
-    `enable_addthis` tinyint(1) NOT NULL,
-    `addthis_profile_id` varchar(66) NOT NULL,
-    `carousel_interval` int(4) NOT NULL,
-    `carousel_width` int(4) NOT NULL,
-    `carousel_height` int(4) NOT NULL,
-    `carousel_image_column_number` int(4) NOT NULL,
-    `carousel_image_par` varchar(32) NOT NULL,
-    `carousel_enable_title` tinyint(1) NOT NULL,
-    `carousel_enable_autoplay` tinyint(1) NOT NULL,
-    `carousel_r_width` int(4) NOT NULL,
-    `carousel_fit_containerWidth` tinyint(1) NOT NULL,
-    `carousel_prev_next_butt` tinyint(1) NOT NULL,
-    `carousel_play_pause_butt` tinyint(1) NOT NULL,
-    `permissions` varchar(20) NOT NULL,
-    `facebook_app_id` varchar(64) NOT NULL,
-    `facebook_app_secret` varchar(64) NOT NULL,
-    `show_tag_box` tinyint(1) NOT NULL,
-    `show_hide_custom_post` tinyint(1) NOT NULL,
-    `show_hide_post_meta` tinyint(1) NOT NULL,
-    `use_inline_stiles_and_scripts` tinyint(1) NOT NULL,
-    `placeholder` varchar(32) NOT NULL,
-    PRIMARY KEY (`id`)
-  ) DEFAULT CHARSET=utf8;";
-  $wpdb->query($bwg_option);
   $bwg_theme = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "bwg_theme` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `name` varchar(255) NOT NULL,
@@ -851,170 +696,6 @@ function bwg_activate() {
   ) DEFAULT CHARSET=utf8;";
   $wpdb->query($bwg_image_rate);
 
-  $upload_dir = wp_upload_dir();
-  if (!is_dir($upload_dir['basedir'] . '/' . plugin_basename(dirname(__FILE__)))) {
-    mkdir($upload_dir['basedir'] . '/' . plugin_basename(dirname(__FILE__)), 0777);
-  }
-  $exists_default = $wpdb->get_var('SELECT count(id) FROM ' . $wpdb->prefix . 'bwg_option');
-  if (!$exists_default) {
-    $save = $wpdb->insert($wpdb->prefix . 'bwg_option', array(
-      'id' => 1,
-      'images_directory' => str_replace(ABSPATH, '', $upload_dir['basedir']),
-
-      'masonry' => 'vertical',
-      'mosaic' => 'vertical',
-      'resizable_mosaic' => 0,
-      'mosaic_total_width'=> 100,
-      'image_column_number' => 5,
-      'images_per_page' => 30,
-      'thumb_width' => 180,
-      'thumb_height' => 90,
-      'upload_thumb_width' => 300,
-      'upload_thumb_height' => 300,
-      'image_enable_page' => 1,
-      'image_title_show_hover' => 'none',
-
-      'album_column_number' => 5,
-      'albums_per_page' => 30,
-      'album_title_show_hover' => 'hover',
-      'album_thumb_width' => 120,
-      'album_thumb_height' => 90,
-      'album_enable_page' => 1,
-      'extended_album_height' => 150,
-      'extended_album_description_enable' => 1,
-
-      'image_browser_width' => 800,
-      'image_browser_title_enable' => 1,
-      'image_browser_description_enable' => 1,
-
-      'blog_style_width' => 800,
-      'blog_style_title_enable' => 1,
-      'blog_style_images_per_page' => 5,
-      'blog_style_enable_page' => 1,
-
-      'slideshow_type' => 'fade',
-      'slideshow_interval' => 5,
-      'slideshow_width' => 800,
-      'slideshow_height' => 500,
-      'slideshow_enable_autoplay' => 0,
-      'slideshow_enable_shuffle' => 0,
-      'slideshow_enable_ctrl' => 1,
-      'slideshow_enable_filmstrip' => 1,
-      'slideshow_filmstrip_height' => 90,
-      'slideshow_enable_title' => 0,
-      'slideshow_title_position' => 'top-right',
-      'slideshow_enable_description' => 0,
-      'slideshow_description_position' => 'bottom-right',
-      'slideshow_enable_music' => 0,
-      'slideshow_audio_url' => '',
-      'slideshow_effect_duration' => 1,
-
-      'popup_width' => 800,
-      'popup_height' => 500,
-      'popup_type' => 'fade',
-      'popup_interval' => 5,
-      'popup_enable_filmstrip' => 1,
-      'popup_filmstrip_height' => 70,
-      'popup_enable_ctrl_btn' => 1,
-      'popup_enable_fullscreen' => 1,
-      'popup_enable_comment' => 1,
-      'popup_enable_email' => 0,
-      'popup_enable_captcha' => 0,
-      'popup_enable_download' => 0,
-      'popup_enable_fullsize_image' => 0,
-      'popup_enable_facebook' => 1,
-      'popup_enable_twitter' => 1,
-      'popup_enable_google' => 1,
-      'popup_effect_duration' => 1,
-
-      'watermark_type' => 'none',
-      'watermark_position' => 'bottom-left',
-      'watermark_width' => 90,
-      'watermark_height' => 90,
-      'watermark_url' => WD_BWG_URL . '/images/watermark.png',
-      'watermark_text' => 'web-dorado.com',
-      'watermark_link' => 'https://web-dorado.com',
-      'watermark_font_size' => 20,
-      'watermark_font' => 'segoe ui',
-      'watermark_color' => 'FFFFFF',
-      'watermark_opacity' => 30,
-
-      'built_in_watermark_type' => 'none',
-      'built_in_watermark_position' => 'middle-center',
-      'built_in_watermark_size' => 15,
-      'built_in_watermark_url' => WD_BWG_URL . '/images/watermark.png',
-      'built_in_watermark_text' => 'web-dorado.com',
-      'built_in_watermark_font_size' => 20,
-      'built_in_watermark_font' => 'arial',
-      'built_in_watermark_color' => 'FFFFFF',
-      'built_in_watermark_opacity' => 30,
-
-      'image_right_click' => 0,
-      'popup_fullscreen' => 0,
-      'gallery_role' => 0,
-      'album_role' => 0,
-      'image_role' => 0,
-      'popup_autoplay' => 0,
-      'album_view_type' => 'thumbnail',
-      'popup_enable_pinterest' => 0,
-      'popup_enable_tumblr' => 0,
-      'show_search_box' => 0,
-      'search_box_width' => 180,
-      'preload_images' => 0,
-      'preload_images_count' => 10,
-      'popup_enable_info' => 1,
-      'popup_enable_rate' => 0,
-      'thumb_click_action' => 'open_lightbox',
-      'thumb_link_target' => 1,
-      'comment_moderation' => 0,
-      'popup_info_always_show' => 0,
-      'popup_hit_counter' => 0,
-      'enable_ML_import' => 0,
-      'showthumbs_name'=> 0,
-      'show_album_name'=> 0,
-      'show_image_counts'=> 0,
-      'upload_img_width' => 1200,
-      'upload_img_height' => 1200,
-      'play_icon'=> 1,
-      'show_masonry_thumb_description' => 0,
-      'slideshow_title_full_width' => 0,
-      'popup_info_full_width' => 0,
-      'show_sort_images' => 0,
-      'autoupdate_interval' => 30,
-      'instagram_access_token' => '',
-      'description_tb' => 0,
-      'enable_seo' => 1,
-      'autohide_lightbox_navigation' => 1,
-      'autohide_slideshow_navigation' => 1,
-      'read_metadata' => 1,
-      'enable_loop'=> 1,
-      'enable_addthis'=> 0,
-      'addthis_profile_id'=> '',
-      'carousel_interval' => 5,
-      'carousel_width' => 300,
-      'carousel_height' => 300,
-      'carousel_image_column_number' => 5,
-      'carousel_image_par' => '0.75',
-      'carousel_enable_title' => 0,
-      'carousel_enable_autoplay' => 0,
-      'carousel_r_width' => 800,
-      'carousel_fit_containerWidth' => 1,
-      'carousel_prev_next_butt' => 1,
-      'carousel_play_pause_butt' => 1,
-      'permissions' => 'manage_options',
-      'facebook_app_id' => '',
-      'facebook_app_secret' => '',
-      'show_tag_box' => 0,
-      'show_hide_custom_post' => 0,
-      'show_hide_post_meta' => 0,
-      'use_inline_stiles_and_scripts' => 0,
-      'placeholder' => '',
-      'ecommerce_icon_show_hover' => '',
-      'popup_enable_ecommerce' => 0,
-      'slideshow_effect_duration' => 1,
-      'popup_effect_duration' => 1,
-    ));
-  }
   $exists_default = $wpdb->get_var('SELECT count(id) FROM ' . $wpdb->prefix . 'bwg_theme');
   $theme1 = array(
       'thumb_margin' => 4,
@@ -1938,7 +1619,7 @@ function bwg_activate() {
     ));
   }
   $version = get_option('wd_bwg_version');
-  $new_version = '1.3.25';
+  $new_version = '1.3.30';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -1990,7 +1671,7 @@ wp_oembed_add_provider( '#https://instagr(\.am|am\.com)/p/.*#i', 'https://api.in
 
 function bwg_update_hook() {
   $version = get_option('wd_bwg_version');
-  $new_version = '1.3.25';
+  $new_version = '1.3.30';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -2023,6 +1704,7 @@ function bwg_styles() {
   wp_enqueue_style('bwg_tables', WD_BWG_URL . '/css/bwg_tables.css', array(), wd_bwg_version());
   require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
   $google_fonts = WDWLibrary::get_google_fonts();
+
   for ($i = 0; $i < count($google_fonts); $i = $i + 120) {
     $fonts = array_slice($google_fonts, $i, 120);
     $query = implode("|", str_replace(' ', '+', $fonts));
@@ -2208,26 +1890,24 @@ function bwg_options_scripts() {
     'watermark_set'  => __('Watermarks Succesfully Set.', 'bwg_back'),
     'reset'  => __('Items Succesfully Reset.', 'bwg_back'),
   ));
-   require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
-   wp_localize_script('bwg_admin', 'bwg_objectGGF', WDWLibrary::get_google_fonts());
+  require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
+  wp_localize_script('bwg_admin', 'bwg_objectGGF', WDWLibrary::get_google_fonts());
 }
 
 function bwg_front_end_scripts() {
   $version = wd_bwg_version();
-  wp_enqueue_script('jquery');
-  /*wp_enqueue_style('jquery-ui', WD_BWG_FRONT_URL . '/css/jquery-ui-1.10.3.custom.css', array(), $version);*/
 
-  wp_enqueue_script('bwg_frontend', WD_BWG_FRONT_URL . '/js/bwg_frontend.js', array(), $version);
+  wp_register_script('bwg_frontend', WD_BWG_FRONT_URL . '/js/bwg_frontend.js', array('jquery'), $version);
   wp_register_style('bwg_frontend', WD_BWG_FRONT_URL . '/css/bwg_frontend.css', array(), $version);
-  wp_enqueue_script('bwg_sumoselect', WD_BWG_FRONT_URL . '/js/jquery.sumoselect.min.js', array(), '3.0.2');
+  wp_register_script('bwg_sumoselect', WD_BWG_FRONT_URL . '/js/jquery.sumoselect.min.js', array('jquery'), '3.0.2');
   wp_register_style('bwg_sumoselect', WD_BWG_FRONT_URL . '/css/sumoselect.css', array(), '3.0.2');
   // Styles/Scripts for popup.
   wp_register_style('bwg_font-awesome', WD_BWG_FRONT_URL . '/css/font-awesome/font-awesome.css', array(), '4.6.3');
-  wp_enqueue_script('bwg_jquery_mobile', WD_BWG_FRONT_URL . '/js/jquery.mobile.js', array(), $version);
-  wp_enqueue_script('bwg_mCustomScrollbar', WD_BWG_FRONT_URL . '/js/jquery.mCustomScrollbar.concat.min.js', array(), $version);
+  wp_register_script('bwg_jquery_mobile', WD_BWG_FRONT_URL . '/js/jquery.mobile.js', array('jquery'), $version);
+  wp_register_script('bwg_mCustomScrollbar', WD_BWG_FRONT_URL . '/js/jquery.mCustomScrollbar.concat.min.js', array('jquery'), $version);
   wp_register_style('bwg_mCustomScrollbar', WD_BWG_FRONT_URL . '/css/jquery.mCustomScrollbar.css', array(), $version);
-  wp_enqueue_script('jquery-fullscreen', WD_BWG_FRONT_URL . '/js/jquery.fullscreen-0.4.1.js', array(), '0.4.1');
-  wp_enqueue_script('bwg_gallery_box', WD_BWG_FRONT_URL . '/js/bwg_gallery_box.js', array(), $version);
+  wp_register_script('jquery-fullscreen', WD_BWG_FRONT_URL . '/js/jquery.fullscreen-0.4.1.js', array('jquery'), '0.4.1');
+  wp_register_script('bwg_gallery_box', WD_BWG_FRONT_URL . '/js/bwg_gallery_box.js', array('jquery'), $version);
   wp_localize_script('bwg_gallery_box', 'bwg_objectL10n', array(
     'bwg_field_required'  => __('field is required.', 'bwg'),
     'bwg_mail_validation' => __('This is not a valid email address.', 'bwg'),
@@ -2247,13 +1927,19 @@ function bwg_front_end_scripts() {
     wp_register_style('bwg_googlefonts', $url, null, null);
   }
 
-  global $wd_bwg_inline_stiles;
-  if (!$wd_bwg_inline_stiles) {
+  global $wd_bwg_options;
+  if (!$wd_bwg_options->use_inline_stiles_and_scripts) {
     wp_enqueue_style('bwg_frontend');
     wp_enqueue_style('bwg_font-awesome');
     wp_enqueue_style('bwg_mCustomScrollbar');
     wp_enqueue_style('bwg_googlefonts');
     wp_enqueue_style('bwg_sumoselect');
+    wp_enqueue_script('bwg_frontend');
+    wp_enqueue_script('bwg_sumoselect');
+    wp_enqueue_script('bwg_jquery_mobile');
+    wp_enqueue_script('bwg_mCustomScrollbar');
+    wp_enqueue_script('jquery-fullscreen');
+    wp_enqueue_script('bwg_gallery_box');
   }
 }
 add_action('wp_enqueue_scripts', 'bwg_front_end_scripts');
@@ -2267,15 +1953,18 @@ add_action('init', 'bwg_language_load');
 
 function bwg_create_post_type() {
   global $wpdb;
-  $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_option WHERE id="%d"', 1));
- 
-  if ($row->show_hide_post_meta == 1) {
+  global $wd_bwg_options;
+  if (!isset($wd_bwg_options)) {
+    $wd_bwg_options = new WD_BWG_Options();
+  }
+
+  if ($wd_bwg_options->show_hide_post_meta == 1) {
      $show_hide_post_meta = array('editor', 'comments', 'thumbnail', 'title');
   }
   else {
      $show_hide_post_meta = array('editor', 'thumbnail', 'title');
   }
-  if ($row->show_hide_custom_post == 0) {
+  if ($wd_bwg_options->show_hide_custom_post == 0) {
      $show_hide_custom_post = false;
   }
   else {

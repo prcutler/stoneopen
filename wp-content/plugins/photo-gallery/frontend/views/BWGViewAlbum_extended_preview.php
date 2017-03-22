@@ -3,9 +3,9 @@ class BWGViewAlbum_extended_preview {
   public function display($params, $from_shortcode = 0, $bwg = 0) {
     global $WD_BWG_UPLOAD_DIR;
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
-    $options_row = WDWLibrary::get_options_row_data();
-    $placeholder = isset($options_row->placeholder) ? $options_row->placeholder : '';
-    $play_icon = $options_row->play_icon;
+    global $wd_bwg_options;
+    $placeholder = isset($wd_bwg_options->placeholder) ? $wd_bwg_options->placeholder : '';
+    $play_icon = $wd_bwg_options->play_icon;
 
     if (!isset($params['extended_album_image_title'])) {
       $params['extended_album_image_title'] = 'none';
@@ -110,7 +110,7 @@ class BWGViewAlbum_extended_preview {
       $items_per_page = $params['extended_albums_per_page'];
       $items_per_page_arr = array('images_per_page' => $params['extended_albums_per_page'], 'load_more_image_count' => $params['extended_albums_per_page']);
       $items_col_num = 1;
-      $album_galleries_row = WDWLibrary::get_alb_gals_row($album_gallery_id, $items_per_page, 'order', $bwg, ' ASC ');
+      $album_galleries_row = WDWLibrary::get_alb_gals_row($album_gallery_id, $items_per_page, 'order', $bwg, 'ASC');
       $page_nav = $album_galleries_row['page_nav'];
       $album_galleries_row = $album_galleries_row['rows'];
       if (!$album_galleries_row) {
@@ -190,17 +190,39 @@ class BWGViewAlbum_extended_preview {
       $params_array['watermark_height'] = $params['watermark_height'];
     }
     $tags_rows = WDWLibrary::get_tags_rows_data($album_gallery_id);
-    $image_right_click = $options_row->image_right_click;
+    $image_right_click = $wd_bwg_options->image_right_click;
     
     $inline_style = $this->inline_styles($bwg, $theme_row, $params, $album_view_type);
-    global $wd_bwg_inline_stiles;
-    if ($wd_bwg_inline_stiles) {
+    if ($wd_bwg_options->use_inline_stiles_and_scripts) {
       wp_enqueue_style('bwg_frontend');
       wp_add_inline_style('bwg_frontend', $inline_style);
       wp_enqueue_style('bwg_font-awesome');
       wp_enqueue_style('bwg_mCustomScrollbar');
       $google_fonts = WDWLibrary::get_google_fonts();
       wp_enqueue_style('bwg_googlefonts');
+      if (isset($params['show_tag_box']) && $params['show_tag_box']) {
+        wp_enqueue_style('bwg_sumoselect');
+        if (!wp_script_is('bwg_sumoselect', 'done')) {
+          wp_print_scripts('bwg_sumoselect');
+        }
+      }
+      if (!wp_script_is('bwg_frontend', 'done')) {
+        wp_print_scripts('bwg_frontend');
+      }
+      if ($params['thumb_click_action'] == 'open_lightbox') {
+        if (!wp_script_is('bwg_mCustomScrollbar', 'done')) {
+          wp_print_scripts('bwg_mCustomScrollbar');
+        }
+        if (!wp_script_is('jquery-fullscreen', 'done')) {
+          wp_print_scripts('jquery-fullscreen');
+        }
+        if (!wp_script_is('bwg_gallery_box', 'done')) {
+          wp_print_scripts('bwg_gallery_box');
+        }
+      }
+      if (!wp_script_is('bwg_jquery_mobile', 'done')) {
+        wp_print_scripts('bwg_jquery_mobile');
+      }
     }
     else {
       echo '<style>' . $inline_style . '</style>';
@@ -231,12 +253,29 @@ class BWGViewAlbum_extended_preview {
             </div>
             <?php
             if ($params['extended_album_enable_page']  && $items_per_page && ($theme_row->page_nav_position == 'top') && $page_nav['total']) {
-              WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page_arr, $bwg, $album_gallery_div_id, $params['album_id'], $type, $options_row->enable_seo, $params['extended_album_enable_page']);
+              WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page_arr, $bwg, $album_gallery_div_id, $params['album_id'], $type, $wd_bwg_options->enable_seo, $params['extended_album_enable_page']);
             }
             if ($bwg_previous_album_id != $params['album_id']) {
               ?>
               <a class="bwg_back_<?php echo $bwg; ?>" onclick="spider_frontend_ajax('gal_front_form_<?php echo $bwg; ?>', '<?php echo $bwg; ?>', '<?php echo $album_gallery_div_id; ?>', 'back', '', 'album')"><?php echo __('Back', 'bwg'); ?></a>
               <?php
+            }
+            if ($wd_bwg_options->show_album_name) {
+              ?>
+              <div class="bwg_back_<?php echo $bwg; ?>" ><?php echo isset($_POST['title_' . $bwg]) ? esc_html($_POST['title_' . $bwg]) : ''; ?></div>
+              <?php
+            }
+            if (!$page_nav['total']) {
+              if ($bwg_search != '') {
+                ?>
+                <span class="bwg_back_<?php echo $bwg; ?>"><?php echo __('There are no images matching your search.', 'bwg'); ?></span>
+                <?php
+              }
+              else {
+                ?>
+                <span class="bwg_back_<?php echo $bwg; ?>"><?php echo __('Gallery is empty.', 'bwg'); ?></span>
+                <?php
+              }
             }
             ?>
             <div id="<?php echo $album_gallery_div_id; ?>" class="<?php echo $album_gallery_div_class; ?>">
@@ -314,7 +353,7 @@ class BWGViewAlbum_extended_preview {
                   ?>
                   <div class="bwg_album_extended_div_<?php echo $bwg; ?>">
                     <div class="bwg_album_extended_thumb_div_<?php echo $bwg; ?>">
-                      <a class="bwg_album_<?php echo $bwg; ?>" <?php echo ($options_row->enable_seo ? 'href="' . esc_url(add_query_arg(array("type_" . $bwg => $def_type, "album_gallery_id_" . $bwg => $album_galallery_row->alb_gal_id, "bwg_previous_album_id_" . $bwg => $album_gallery_id . ',' . $bwg_previous_album_id , "bwg_previous_album_page_number_" . $bwg => (isset($_REQUEST['page_number_' . $bwg]) ? esc_html($_REQUEST['page_number_' . $bwg]) : 0) . ',' . $bwg_previous_album_page_number), $_SERVER['REQUEST_URI'])) . '"' : ''); ?> style="font-size: 0;" data-alb_gal_id="<?php echo $album_galallery_row->alb_gal_id; ?>" data-def_type="<?php echo $def_type; ?>" data-title="<?php htmlspecialchars(addslashes($title)); ?>">
+                      <a class="bwg_album_<?php echo $bwg; ?>" <?php echo ($wd_bwg_options->enable_seo ? 'href="' . esc_url(add_query_arg(array("type_" . $bwg => $def_type, "album_gallery_id_" . $bwg => $album_galallery_row->alb_gal_id, "bwg_previous_album_id_" . $bwg => $album_gallery_id . ',' . $bwg_previous_album_id , "bwg_previous_album_page_number_" . $bwg => (isset($_REQUEST['page_number_' . $bwg]) ? esc_html($_REQUEST['page_number_' . $bwg]) : 0) . ',' . $bwg_previous_album_page_number), $_SERVER['REQUEST_URI'])) . '"' : ''); ?> style="font-size: 0;" data-alb_gal_id="<?php echo $album_galallery_row->alb_gal_id; ?>" data-def_type="<?php echo $def_type; ?>" data-title="<?php echo htmlspecialchars(addslashes($title)); ?>">
                         <span class="bwg_album_thumb_<?php echo $bwg; ?>" style="height:inherit;">
                           <span class="bwg_album_thumb_spun1_<?php echo $bwg; ?>">
                             <span class="bwg_album_thumb_spun2_<?php echo $bwg; ?>">
@@ -328,7 +367,7 @@ class BWGViewAlbum_extended_preview {
                       <?php
                       if ($title) {
                         ?>
-                        <a class="bwg_album_<?php echo $bwg; ?>" <?php echo ($options_row->enable_seo ? 'href="' . esc_url(add_query_arg(array("type_" . $bwg => $def_type, "album_gallery_id_" . $bwg => $album_galallery_row->alb_gal_id, "bwg_previous_album_id_" . $bwg => $album_gallery_id . ',' . $bwg_previous_album_id , "bwg_previous_album_page_number_" . $bwg => (isset($_REQUEST['page_number_' . $bwg]) ? esc_html($_REQUEST['page_number_' . $bwg]) : 0) . ',' . $bwg_previous_album_page_number), $_SERVER['REQUEST_URI'])) . '"' : ''); ?> style="font-size: 0;" data-alb_gal_id="<?php echo $album_galallery_row->alb_gal_id; ?>" data-def_type="<?php echo $def_type; ?>" data-title="<?php htmlspecialchars(addslashes($title)); ?>">
+                        <a class="bwg_album_<?php echo $bwg; ?>" <?php echo ($wd_bwg_options->enable_seo ? 'href="' . esc_url(add_query_arg(array("type_" . $bwg => $def_type, "album_gallery_id_" . $bwg => $album_galallery_row->alb_gal_id, "bwg_previous_album_id_" . $bwg => $album_gallery_id . ',' . $bwg_previous_album_id , "bwg_previous_album_page_number_" . $bwg => (isset($_REQUEST['page_number_' . $bwg]) ? esc_html($_REQUEST['page_number_' . $bwg]) : 0) . ',' . $bwg_previous_album_page_number), $_SERVER['REQUEST_URI'])) . '"' : ''); ?> style="font-size: 0;" data-alb_gal_id="<?php echo $album_galallery_row->alb_gal_id; ?>" data-def_type="<?php echo $def_type; ?>" data-title="<?php echo htmlspecialchars(addslashes($title)); ?>">
                          <span class="bwg_title_spun_<?php echo $bwg; ?>"><?php echo $title; ?></span>
                         </a>
                         <?php
@@ -369,23 +408,6 @@ class BWGViewAlbum_extended_preview {
                 }
               }
               elseif ($type == 'gallery') {
-                if ($options_row->show_album_name) {
-                  ?>
-                  <div class="bwg_back_<?php echo $bwg; ?>" ><?php echo isset($_POST['title_' . $bwg]) ? esc_html($_POST['title_' . $bwg]) : ''; ?></div>
-                  <?php
-                }
-                if (!$page_nav['total']) {
-                  if ($bwg_search != '') {
-                    ?>
-                    <span class="bwg_back_<?php echo $bwg; ?>"><?php echo __('There are no images matching your search.', 'bwg'); ?></span>
-                    <?php
-                  }
-                  else {
-                    ?>
-                    <span class="bwg_back_<?php echo $bwg; ?>"><?php echo __('Gallery is empty.', 'bwg'); ?></span>
-                    <?php
-                  }
-                }
                 foreach ($image_rows as $image_row) {
                   $is_embed = preg_match('/EMBED/', $image_row->filetype) == 1 ? true : false;
                   $is_embed_video = preg_match('/VIDEO/', $image_row->filetype) == 1 ? true : false;
@@ -426,7 +448,7 @@ class BWGViewAlbum_extended_preview {
                   $thumb_left = ($params['extended_album_image_thumb_width'] - $image_thumb_width) / 2;
                   $thumb_top = ($params['extended_album_image_thumb_height'] - $image_thumb_height) / 2;
                   ?>
-                  <a <?php echo ($params['thumb_click_action'] == 'open_lightbox' ? (' class="bwg_lightbox_' . $bwg . '"' . ($options_row->enable_seo ? ' href="' . ($is_embed ? $image_row->thumb_url : site_url() . '/' . $WD_BWG_UPLOAD_DIR . $image_row->image_url) . '"' : '') . ' data-image-id="' . $image_row->id . '" data-gallery-id="' . $album_gallery_id . '"') : ($params['thumb_click_action'] == 'redirect_to_url' && $image_row->redirect_url ? 'href="' . $image_row->redirect_url . '" target="' .  ($params['thumb_link_target'] ? '_blank' : '')  . '"' : '')) ?>>
+                  <a <?php echo ($params['thumb_click_action'] == 'open_lightbox' ? (' class="bwg_lightbox_' . $bwg . '"' . ($wd_bwg_options->enable_seo ? ' href="' . ($is_embed ? $image_row->thumb_url : site_url() . '/' . $WD_BWG_UPLOAD_DIR . $image_row->image_url) . '"' : '') . ' data-image-id="' . $image_row->id . '" data-gallery-id="' . $album_gallery_id . '"') : ($params['thumb_click_action'] == 'redirect_to_url' && $image_row->redirect_url ? 'href="' . $image_row->redirect_url . '" target="' .  ($params['thumb_link_target'] ? '_blank' : '')  . '"' : '')) ?>>
                     <span class="bwg_standart_thumb_<?php echo $bwg; ?>">
                       <span class="bwg_standart_thumb_spun1_<?php echo $bwg; ?>">
                         <span class="bwg_standart_thumb_spun2_<?php echo $bwg; ?>">
@@ -485,7 +507,7 @@ class BWGViewAlbum_extended_preview {
             </div>
             <?php
             if ($params['extended_album_enable_page']  && $items_per_page && ($theme_row->page_nav_position == 'bottom') && $page_nav['total']) {
-              WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page_arr, $bwg, $album_gallery_div_id, $params['album_id'], $type, $options_row->enable_seo, $params['extended_album_enable_page']);
+              WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page_arr, $bwg, $album_gallery_div_id, $params['album_id'], $type, $wd_bwg_options->enable_seo, $params['extended_album_enable_page']);
             }
             ?>
           </div>

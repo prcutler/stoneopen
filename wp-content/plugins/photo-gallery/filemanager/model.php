@@ -30,7 +30,8 @@ class FilemanagerModel {
     ////////////////////////////////////////////////////////////////////////////////////////
     // Public Methods                                                                     //
     ////////////////////////////////////////////////////////////////////////////////////////
-    public function get_file_manager_data() {
+    public function get_file_manager_data($ajax = false, $load_count = 0) {
+      global $wd_bwg_options;
       $session_data = array();
       $session_data['sort_by'] = $this->get_from_session('sort_by', 'date_modified');
       $session_data['sort_order'] = $this->get_from_session('sort_order', 'desc');
@@ -44,11 +45,12 @@ class FilemanagerModel {
       $data['session_data'] = $session_data;
       $data['path_components'] = $this->get_path_components();
       $data['dir'] = $this->controller->get_uploads_dir() . (isset($_REQUEST['dir']) ? esc_html($_REQUEST['dir']) : '');
-      $data['files'] = $this->get_files($session_data['sort_by'], $session_data['sort_order']);
-      $data['media_library_files'] = ($this->controller->get_options_data()->enable_ML_import ? $this->get_media_library_files($session_data['sort_by'], $session_data['sort_order']) : array());
+      $get_files_data =  $this->get_files($session_data['sort_by'], $session_data['sort_order'], $ajax, $load_count);
+      $data['files'] = $get_files_data['files'];
+      $data['files_count'] = $get_files_data['files_count'];
+      $data['media_library_files'] = ($wd_bwg_options->enable_ML_import ? $this->get_media_library_files($session_data['sort_by'], $session_data['sort_order']) : array());
       $data['extensions'] = (isset($_REQUEST['extensions']) ? esc_html($_REQUEST['extensions']) : '');
       $data['callback'] = (isset($_REQUEST['callback']) ? esc_html($_REQUEST['callback']) : '');
-
       return $data;
     }
 
@@ -99,7 +101,7 @@ class FilemanagerModel {
       return $components;
     }
 
-    function get_files($sort_by, $sort_order) {
+    function get_files($sort_by, $sort_order, $ajax = false, $load_count = 0) {
       $icons_dir_path = WD_BWG_DIR . '/filemanager/images/file_icons';
       $icons_dir_url = WD_BWG_URL . '/filemanager/images/file_icons';
       $valid_types = explode(',', isset($_REQUEST['extensions']) ? strtolower(esc_html($_REQUEST['extensions'])) : '*');
@@ -166,7 +168,13 @@ class FilemanagerModel {
 
       // $result = $sort_order == 'asc' ? array_merge($dirs, $files) : array_merge($files, $dirs);
       $result = array_merge($dirs, $files);
-      return $result;
+      $files_count = count($result);
+      if ($ajax && $load_count > 0) {
+        $images_count = 100;
+        $min_count = $images_count * ($load_count - 1);
+        $result = array_slice($result, $min_count, $images_count, true);
+      }
+      return array("files" => $result, "files_count" => $files_count);
     }
 
     function get_media_library_files($sort_by, $sort_order) {
