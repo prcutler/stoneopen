@@ -12,7 +12,7 @@ class Jetpack_Core_API_Module_Toggle_Endpoint
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param WP_REST_Request $data {
+	 * @param WP_REST_Request $request {
 	 *     Array of parameters received by request.
 	 *
 	 *     @type string $slug Module slug.
@@ -21,11 +21,11 @@ class Jetpack_Core_API_Module_Toggle_Endpoint
 	 *
 	 * @return WP_REST_Response|WP_Error A REST response if the request was served successfully, otherwise an error.
 	 */
-	public function process( $data ) {
-		if ( $data['active'] ) {
-			return $this->activate_module( $data );
+	public function process( $request ) {
+		if ( $request['active'] ) {
+			return $this->activate_module( $request );
 		} else {
-			return $this->deactivate_module( $data );
+			return $this->deactivate_module( $request );
 		}
 	}
 
@@ -34,7 +34,7 @@ class Jetpack_Core_API_Module_Toggle_Endpoint
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param string|WP_REST_Request $data {
+	 * @param string|WP_REST_Request $request {
 	 *     Array of parameters received by request.
 	 *
 	 *     @type string $slug Module slug.
@@ -42,10 +42,10 @@ class Jetpack_Core_API_Module_Toggle_Endpoint
 	 *
 	 * @return bool|WP_Error True if module was activated. Otherwise, a WP_Error instance with the corresponding error.
 	 */
-	public function activate_module( $data ) {
-		$module_slug = isset( $data['slug'] )
-			? $data['slug']
-			: $data;
+	public function activate_module( $request ) {
+		$module_slug = isset( $request['slug'] )
+			? $request['slug']
+			: $request;
 
 		if ( ! Jetpack::is_module( $module_slug ) ) {
 			return new WP_Error(
@@ -74,7 +74,7 @@ class Jetpack_Core_API_Module_Toggle_Endpoint
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param string|WP_REST_Request $data {
+	 * @param string|WP_REST_Request $request {
 	 *     Array of parameters received by request.
 	 *
 	 *     @type string $slug Module slug.
@@ -82,10 +82,10 @@ class Jetpack_Core_API_Module_Toggle_Endpoint
 	 *
 	 * @return bool|WP_Error True if module was activated. Otherwise, a WP_Error instance with the corresponding error.
 	 */
-	public function deactivate_module( $data ) {
-		$module_slug = isset( $data['slug'] )
-			? $data['slug']
-			: $data;
+	public function deactivate_module( $request ) {
+		$module_slug = isset( $request['slug'] )
+			? $request['slug']
+			: $request;
 
 		if ( ! Jetpack::is_module( $module_slug ) ) {
 			return new WP_Error(
@@ -133,7 +133,7 @@ class Jetpack_Core_API_Module_List_Endpoint {
 	/**
 	 * A WordPress REST API callback method that accepts a request object and decides what to do with it.
 	 *
-	 * @param WP_REST_Request $request
+	 * @param WP_REST_Request $request The request sent to the WP REST API.
 	 *
 	 * @since 4.3.0
 	 *
@@ -180,7 +180,7 @@ class Jetpack_Core_API_Module_List_Endpoint {
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param WP_REST_Request $data {
+	 * @param WP_REST_Request $request {
 	 *     Array of parameters received by request.
 	 *
 	 *     @type string $slug Module slug.
@@ -188,12 +188,11 @@ class Jetpack_Core_API_Module_List_Endpoint {
 	 *
 	 * @return bool|WP_Error True if modules were activated. Otherwise, a WP_Error instance with the corresponding error.
 	 */
-	public static function activate_modules( $data ) {
-		$params = $data->get_json_params();
+	public static function activate_modules( $request ) {
 
 		if (
-			! isset( $params['modules'] )
-			|| is_array( $params['modules'] )
+			! isset( $request['modules'] )
+			|| ! is_array( $request['modules'] )
 		) {
 			return new WP_Error(
 				'not_found',
@@ -205,7 +204,7 @@ class Jetpack_Core_API_Module_List_Endpoint {
 		$activated = array();
 		$failed = array();
 
-		foreach ( $params['modules'] as $module ) {
+		foreach ( $request['modules'] as $module ) {
 			if ( Jetpack::activate_module( $module, false, false ) ) {
 				$activated[] = $module;
 			} else {
@@ -263,7 +262,7 @@ class Jetpack_Core_API_Module_List_Endpoint {
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param WP_REST_Request $request
+	 * @param WP_REST_Request $request The request sent to the WP REST API.
 	 *
 	 * @return bool does the current user have enough privilege.
 	 */
@@ -278,6 +277,7 @@ class Jetpack_Core_API_Module_List_Endpoint {
 
 /**
  * Class that manages updating of Jetpack module options and general Jetpack settings or retrieving module data.
+ * If no module is specified, all module settings are retrieved/updated.
  *
  * @since 4.3.0
  * @since 4.4.0 Renamed Jetpack_Core_API_Module_Endpoint from to Jetpack_Core_API_Data.
@@ -288,18 +288,23 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 
 	/**
 	 * Process request by returning the module or updating it.
+	 * If no module is specified, settings for all modules are assumed.
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param WP_REST_Request $data
+	 * @param WP_REST_Request $request
 	 *
 	 * @return bool|mixed|void|WP_Error
 	 */
-	public function process( $data ) {
-		if ( 'GET' === $data->get_method() ) {
-			return $this->get_module( $data );
+	public function process( $request ) {
+		if ( 'GET' === $request->get_method() ) {
+			if ( isset( $request['slug'] ) ) {
+				return $this->get_module( $request );
+			}
+
+			return $this->get_all_options( $request );
 		} else {
-			return $this->update_data( $data );
+			return $this->update_data( $request );
 		}
 	}
 
@@ -308,7 +313,7 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param WP_REST_Request $data {
+	 * @param WP_REST_Request $request {
 	 *     Array of parameters received by request.
 	 *
 	 *     @type string $slug Module slug.
@@ -316,12 +321,12 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 	 *
 	 * @return mixed|void|WP_Error
 	 */
-	public function get_module( $data ) {
-		if ( Jetpack::is_module( $data['slug'] ) ) {
+	public function get_module( $request ) {
+		if ( Jetpack::is_module( $request['slug'] ) ) {
 
-			$module = Jetpack::get_module( $data['slug'] );
+			$module = Jetpack::get_module( $request['slug'] );
 
-			$module['options'] = Jetpack_Core_Json_Api_Endpoints::prepare_options_for_response( $data['slug'] );
+			$module['options'] = Jetpack_Core_Json_Api_Endpoints::prepare_options_for_response( $request['slug'] );
 
 			if (
 				isset( $module['requires_connection'] )
@@ -331,7 +336,7 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 				$module['activated'] = false;
 			}
 
-			$i18n = jetpack_get_module_i18n( $data['slug'] );
+			$i18n = jetpack_get_module_i18n( $request['slug'] );
 			if ( isset( $module['name'] ) ) {
 				$module['name'] = $i18n['name'];
 			}
@@ -351,11 +356,44 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 	}
 
 	/**
+	 * Get information about all Jetpack module settings.
+	 *
+	 * @since 4.6.0
+	 *
+	 * @param WP_REST_Request $request The request sent to the WP REST API.
+	 *
+	 * @return array
+	 */
+	public function get_all_options( $request ) {
+		$response = array();
+
+		$modules = Jetpack::get_available_modules();
+		if ( is_array( $modules ) && ! empty( $modules ) ) {
+			foreach ( $modules as $module ) {
+				// Add all module options
+				$options = Jetpack_Core_Json_Api_Endpoints::prepare_options_for_response( $module );
+				foreach ( $options as $option_name => $option ) {
+					$response[ $option_name ] = $option['current_value'];
+				}
+
+				// Add the module activation state
+				$response[ $module ] = Jetpack::is_module_active( $module );
+			}
+		}
+
+		// Add the Holiday snow current value
+		$holiday_snow_option_name = Jetpack_Core_Json_Api_Endpoints::holiday_snow_option_name();
+		$response[ $holiday_snow_option_name ] = get_option( $holiday_snow_option_name ) === 'letitsnow';
+
+		return rest_ensure_response( $response );
+	}
+
+	/**
 	 * If it's a valid Jetpack module and configuration parameters have been sent, update it.
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param WP_REST_Request $data {
+	 * @param WP_REST_Request $request {
 	 *     Array of parameters received by request.
 	 *
 	 *     @type string $slug Module slug.
@@ -363,36 +401,52 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 	 *
 	 * @return bool|WP_Error True if module was updated. Otherwise, a WP_Error instance with the corresponding error.
 	 */
-	public function update_data( $data ) {
+	public function update_data( $request ) {
 
 		// If it's null, we're trying to update many module options from different modules.
-		if ( is_null( $data['slug'] ) ) {
+		if ( is_null( $request['slug'] ) ) {
 
 			// Value admitted by Jetpack_Core_Json_Api_Endpoints::get_updateable_data_list that will make it return all module options.
 			// It will not be passed. It's just checked in this method to pass that method a string or array.
-			$data['slug'] = 'any';
+			$request['slug'] = 'any';
 		} else {
-			if ( ! Jetpack::is_module( $data['slug'] ) ) {
+			if ( ! Jetpack::is_module( $request['slug'] ) ) {
 				return new WP_Error( 'not_found', esc_html__( 'The requested Jetpack module was not found.', 'jetpack' ), array( 'status' => 404 ) );
 			}
 
-			if ( ! Jetpack::is_module_active( $data['slug'] ) ) {
+			if ( ! Jetpack::is_module_active( $request['slug'] ) ) {
 				return new WP_Error( 'inactive', esc_html__( 'The requested Jetpack module is inactive.', 'jetpack' ), array( 'status' => 409 ) );
 			}
 		}
 
-		// Get parameters to update the module.
-		$params = $data->get_json_params();
+		// Get parameters to update the module. We can not simply use $request->get_params() because when we registered
+		// this route, we are adding the entire output of Jetpack_Core_Json_Api_Endpoints::get_updateable_data_list() to
+		// the current request object's params. We are interested in body of the actual request.
+		// This may be JSON:
+		$params = $request->get_json_params();
+		if ( ! is_array( $params ) ) {
+			// Or it may be standard POST key-value pairs:
+			$params = $request->get_body_params();
+		}
 
 		// Exit if no parameters were passed.
 		if ( ! is_array( $params ) ) {
 			return new WP_Error( 'missing_options', esc_html__( 'Missing options.', 'jetpack' ), array( 'status' => 404 ) );
 		}
 
+		// If $params was set via `get_body_params()` there may be some additional variables in the request that can
+		// cause validation to fail. This method verifies that each param was in fact updated and will throw a `some_updated`
+		// error if unused variables are included in the request.
+		foreach ( array_keys( $params ) as $key ) {
+			if ( is_int( $key ) || 'slug' === $key || 'context' === $key ) {
+				unset( $params[ $key ] );
+			}
+		}
+
 		// Get available module options.
-		$options = Jetpack_Core_Json_Api_Endpoints::get_updateable_data_list( 'any' === $data['slug']
+		$options = Jetpack_Core_Json_Api_Endpoints::get_updateable_data_list( 'any' === $request['slug']
 			? $params
-			: $data['slug']
+			: $request['slug']
 		);
 
 		// Prepare to toggle module if needed
@@ -677,6 +731,14 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 					$updated = get_option( $option ) != $value ? update_option( $option, (bool) $value ? 'letitsnow' : '' ) : true;
 					break;
 
+				case 'google_analytics_tracking_id':
+					$grouped_options = $grouped_options_current = (array) get_option( 'jetpack_wga' );
+					$grouped_options[ 'code' ] = $value;
+
+					// If option value was the same, consider it done.
+					$updated = $grouped_options_current != $grouped_options ? update_option( 'jetpack_wga', $grouped_options ) : true;
+					break;
+
 				case 'wp_mobile_featured_images':
 				case 'wp_mobile_excerpt':
 					$value = ( 'enabled' === $value ) ? '1' : '0';
@@ -773,7 +835,7 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param WP_REST_Request $request
+	 * @param WP_REST_Request $request The request sent to the WP REST API.
 	 *
 	 * @return bool
 	 */
@@ -877,7 +939,7 @@ class Jetpack_Core_API_Module_Data_Endpoint {
 	 *
 	 * @since 4.1.0
 	 *
-	 * @param WP_REST_Request $data {
+	 * @param WP_REST_Request $request {
 	 *     Array of parameters received by request.
 	 *
 	 *     @type string $date Date range to restrict results to.
@@ -885,9 +947,9 @@ class Jetpack_Core_API_Module_Data_Endpoint {
 	 *
 	 * @return int|string Number of spam blocked by Akismet. Otherwise, an error message.
 	 */
-	public function get_stats_data( WP_REST_Request $data ) {
+	public function get_stats_data( WP_REST_Request $request ) {
 		// Get parameters to fetch Stats data.
-		$range = $data->get_param( 'range' );
+		$range = $request->get_param( 'range' );
 
 		// If no parameters were passed.
 		if (
@@ -1100,8 +1162,6 @@ class Jetpack_Core_API_Module_Data_Endpoint {
 	 *
 	 * @since 4.3.0
 	 *
-	 * @param WP_REST_Request $request
-	 *
 	 * @return bool does a current user have enough privileges.
 	 */
 	public function can_request() {
@@ -1132,3 +1192,15 @@ function jetpack_do_after_gravatar_hovercards_deactivation() {
 	update_option( 'gravatar_disable_hovercards', 'disabled' );
 }
 add_action( 'jetpack_deactivate_module_gravatar-hovercards', 'jetpack_do_after_gravatar_hovercards_deactivation' );
+
+/**
+ * Actions performed only when Markdown is activated through the endpoint call.
+ *
+ * @since 4.7.0
+ */
+function jetpack_do_after_markdown_activation() {
+
+	// When Markdown is activated, enable support for post editing automatically.
+	update_option( 'wpcom_publish_posts_with_markdown', true );
+}
+add_action( 'jetpack_activate_module_markdown', 'jetpack_do_after_markdown_activation' );

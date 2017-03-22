@@ -424,6 +424,15 @@ class Jetpack_Protect_Module {
 	 */
 	function check_login_ability( $preauth = false ) {
 		$ip = jetpack_protect_get_ip();
+
+		// Server is misconfigured and we can't get an IP
+		if ( ! $ip && class_exists( 'Jetpack' ) ) {
+			Jetpack::deactivate_module( 'protect' );
+			ob_start();
+			Jetpack::state( 'message', 'protect_misconfigured_ip' );
+			ob_end_clean();
+			return true;
+		}
 		
 		/**
 		 * Short-circuit check_login_ability. 
@@ -539,7 +548,7 @@ class Jetpack_Protect_Module {
 		 * @param string $ip IP flagged by Protect.
 		 */
 		do_action( 'jpp_kill_login', $ip );
-		$help_url = 'http://jetpack.com/support/security/';
+		$help_url = 'https://jetpack.com/support/security-features/#unblock';
 
 		$die_string = sprintf( __( 'Your IP (%1$s) has been flagged for potential security violations.  <a href="%2$s">Find out more...</a>', 'jetpack' ), str_replace( 'http://', '', esc_url( 'http://' . $ip ) ), esc_url( $help_url ) );
 

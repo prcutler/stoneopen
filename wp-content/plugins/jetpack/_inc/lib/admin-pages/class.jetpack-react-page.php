@@ -149,7 +149,7 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 
 	function get_i18n_data() {
 
-		$i18n_json = JETPACK__PLUGIN_DIR . 'languages/json/jetpack-' . get_locale() . '.json';
+		$i18n_json = JETPACK__PLUGIN_DIR . 'languages/json/jetpack-' . jetpack_get_user_locale() . '.json';
 
 		if ( is_file( $i18n_json ) && is_readable( $i18n_json ) ) {
 			$locale_data = @file_get_contents( $i18n_json );
@@ -203,7 +203,7 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 			wp_enqueue_script( 'jp-tracks', '//stats.wp.com/w.js', array(), gmdate( 'YW' ), true );
 		}
 
-		$localeSlug = explode( '_', get_locale() );
+		$localeSlug = explode( '_', jetpack_get_user_locale() );
 		$localeSlug = $localeSlug[0];
 
 		// Collecting roles that can view site stats
@@ -228,6 +228,12 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 			$modules[ $slug ]['long_description'] = html_entity_decode( $data['long_description'] );
 		}
 
+		// Get last post, to build the link to Customizer in the Related Posts module.
+		$last_post = get_posts( array( 'posts_per_page' => 1 ) );
+		$last_post = isset( $last_post[0] ) && $last_post[0] instanceof WP_Post
+			? get_permalink( $last_post[0]->ID )
+			: get_home_url();
+
 		// Add objects to be passed to the initial state of the app
 		wp_localize_script( 'react-plugin', 'Initial_State', array(
 			'WP_API_root' => esc_url_raw( rest_url() ),
@@ -251,6 +257,7 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 			'happinessGravIds' => jetpack_get_happiness_gravatar_ids(),
 			'getModules' => $modules,
 			'showJumpstart' => jetpack_show_jumpstart(),
+			'showHolidaySnow' => function_exists( 'jetpack_show_holiday_snow_option' ) ? jetpack_show_holiday_snow_option() : false,
 			'rawUrl' => Jetpack::build_raw_urls( get_home_url() ),
 			'adminUrl' => esc_url( admin_url() ),
 			'stats' => array(
@@ -278,7 +285,8 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 				'errorDescription' => Jetpack::state( 'error_description' ),
 			),
 			'tracksUserData' => Jetpack_Tracks_Client::get_connected_user_tracks_identity(),
-			'currentIp' => function_exists( 'jetpack_protect_get_ip' ) ? jetpack_protect_get_ip() : false
+			'currentIp' => function_exists( 'jetpack_protect_get_ip' ) ? jetpack_protect_get_ip() : false,
+			'lastPostUrl' => esc_url( $last_post ),
 		) );
 	}
 }
@@ -384,9 +392,8 @@ function jetpack_current_user_data() {
 	global $current_user;
 	$is_master_user = $current_user->ID == Jetpack_Options::get_option( 'master_user' );
 	$dotcom_data    = Jetpack::get_connected_user_data();
-	// Add connected user gravatar to the returned dotcom_data
-	$avatar_data = Jetpack::get_avatar_url( $dotcom_data[ 'email' ] );
-	$dotcom_data[ 'avatar'] = $avatar_data[ 0 ];
+	// Add connected user gravatar to the returned dotcom_data.
+	$dotcom_data['avatar'] = get_avatar_url( $dotcom_data['email'] );
 
 	$current_user_data = array(
 		'isConnected' => Jetpack::is_user_connected( $current_user->ID ),
@@ -412,4 +419,24 @@ function jetpack_current_user_data() {
 	);
 
 	return $current_user_data;
+}
+
+/**
+ * Set the admin language, based on user language.
+ *
+ * @since 4.5.0
+ *
+ * @return string
+ *
+ * @todo Remove this function when WordPress 4.8 is released
+ * and replace `jetpack_get_user_locale()` in this file with `get_user_locale()`.
+ */
+function jetpack_get_user_locale() {
+	$locale = get_locale();
+
+	if ( function_exists( 'get_user_locale' ) ) {
+		$locale = get_user_locale();
+	}
+
+	return $locale;
 }
