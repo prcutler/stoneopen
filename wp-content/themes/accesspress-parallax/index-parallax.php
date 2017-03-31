@@ -38,7 +38,7 @@
 	        ?>
 				<?php 
 				if($layout != "action_template" && $layout != "blank_template" && $layout != "googlemap_template"): ?>
-					<h1><span><?php the_title(); ?></span></h1>
+					<h2><span><?php the_title(); ?></span></h2>
 
 					<div class="parallax-content">
 					<?php if(get_the_content() != "") : ?>

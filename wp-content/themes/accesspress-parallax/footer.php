@@ -58,6 +58,7 @@
 		</div>
 	</footer><!-- #colophon -->
 </div><!-- #page -->
+
 <div id="go-top"><a href="#page"><i class="fa fa-angle-up"></i></a></div>
 
 <?php wp_footer(); ?>

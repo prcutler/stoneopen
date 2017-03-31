@@ -5,9 +5,4 @@
  * @package accesspress_parallax
  */
 ?>
-	<div class="content-area">
-
-	</div><!-- #primary -->
-
-
-
+<div class="content-area"></div>

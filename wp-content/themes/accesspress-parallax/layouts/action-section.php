@@ -11,7 +11,7 @@
             $query = new WP_Query( 'page_id='.$section['page'] );
             while ( $query->have_posts() ) : $query->the_post();
         ?>
-		<h1><?php the_title(); ?></h1>
+		<h2><?php the_title(); ?></h2>
 
 		<div class="parallax-content">
 			<?php if(get_the_content() != "") : ?>
@@ -24,7 +24,4 @@
 	        endwhile;    
 	        wp_reset_postdata();
         ?>
-	</div><!-- .call-to-action -->
-
-
-
+	</div>

@@ -25,9 +25,9 @@
 			<div class="portfolio-image">
 			<?php if(has_post_thumbnail()) : 
 			$image = wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()),'portfolio-thumbnail'); ?>
-				<img src="<?php echo esc_url($image[0]); ?>" alt="<?php the_title(); ?>">
+				<img src="<?php echo esc_url($image[0]); ?>" alt="<?php echo esc_attr(get_the_title()); ?>">
 			<?php else: ?>
-				<img src="<?php echo get_template_directory_uri(); ?>/images/no-image.jpg" alt="<?php the_title(); ?>">
+				<img src="<?php echo get_template_directory_uri(); ?>/images/no-image.jpg" alt="<?php echo esc_attr(get_the_title()); ?>">
 			<?php endif; ?>
 			</div>
 			<h3><?php the_title(); ?></h3>
@@ -38,7 +38,4 @@
 			wp_reset_postdata();
 		endif;
 	?>
-	</div><!-- #primary -->
-
-
-
+	</div>

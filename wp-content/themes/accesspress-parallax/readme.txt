@@ -89,6 +89,10 @@ Images
 ---------------------------------------------
 
 == Changelog ==
+Version 1.3.0
+ * HTML validation
+ * Optmization for Better SEO
+
 Version 1.26.2
  * Fixed some escapting value
  * Updated .pot file

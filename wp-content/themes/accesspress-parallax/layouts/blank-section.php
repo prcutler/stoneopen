@@ -6,10 +6,4 @@
  */
 ?>
 
-	<div class="content-area blank-section">
-
-
-	</div><!-- #primary -->
-
-
-
+<div class="content-area blank-section"></div>

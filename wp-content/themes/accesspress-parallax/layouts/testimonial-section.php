@@ -41,6 +41,4 @@
 		<?php
 		endif;
 	?>
-	</div><!-- #primary -->
-
-
+	</div>

@@ -22,7 +22,4 @@
 	        endwhile;    
 	        wp_reset_postdata();
         ?>
-	</div><!-- #primary -->
-
-
-
+	</div>

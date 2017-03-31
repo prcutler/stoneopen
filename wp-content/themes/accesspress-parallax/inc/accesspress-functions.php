@@ -135,8 +135,8 @@ function accesspress_parallax_bxslidercb(){
 						<?php if($accesspress_show_caption == 'yes'): ?>
 						<div class="slider-caption">
 							<div class="mid-content">
-								<h1 class="caption-title"><?php the_title();?></h1>
-								<h2 class="caption-description"><?php the_content();?></h2>
+								<div class="caption-title"><?php the_title();?></div>
+								<div class="caption-description"><?php the_content();?></div>
 							</div>
 						</div>
 						<?php endif; ?>
