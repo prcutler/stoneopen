@@ -15,17 +15,6 @@ class BWGViewOptions_bwg {
     }
     global $WD_BWG_UPLOAD_DIR;
     ?>
-    <div style="clear: both; float: left; width: 99%;">
-      <div style="float:left; font-size: 14px; font-weight: bold;">
-        <?php _e("This section allows you to change settings for different views and general options.", 'bwg_back'); ?>
-        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery/editing-options/global-options.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
-      </div>
-      <div style="float: right; text-align: right;">
-        <a style="text-decoration: none;" target="_blank" href="https://web-dorado.com/files/fromPhotoGallery.php">
-          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/logo.png'; ?>" />
-        </a>
-      </div>
-    </div>
     <script>
       function bwg_add_music(files) {
         document.getElementById("slideshow_audio_url").value = files[0]['url'];
@@ -79,10 +68,12 @@ class BWGViewOptions_bwg {
       'random' => 'Random',
     );
     ?>
-    <form method="post" class="wrap bwg_form" action="admin.php?page=options_bwg" style="float: left; width: 99%;">      
+    <form method="post" class="wrap bwg_form" action="admin.php?page=options_bwg" style="float: left; width: 98%;">
       <?php wp_nonce_field( 'options_bwg', 'bwg_nonce' ); ?>
-      <span class="option-icon"></span>
-      <h2 id="ed_options"><?php _e('Edit options', 'bwg_back'); ?></h2>
+      <div>
+        <span class="option-icon"></span>
+        <h2 id="ed_options"><?php _e('Edit options', 'bwg_back'); ?></h2>
+      </div>
       <div style="display: inline-block; width: 100%;">
         <div style="float: right;">
           <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-save" type="submit" onclick="if (spider_check_required('title', 'Title')) {return false;}; spider_set_input_value('task', 'save')" value="<?php _e('Save', 'bwg_back'); ?>" />
@@ -218,7 +209,7 @@ class BWGViewOptions_bwg {
                   </td>
                 </tr>
                 <tr>
-                  <td class="spider_label_options"><label><?php _e("Thumbnail click action:", 'bwg_back'); ?> </label></td>
+                  <td class="spider_label_options"><label><?php _e("Image click action:", 'bwg_back'); ?> </label></td>
                   <td>
                     <input type="radio" name="thumb_click_action" id="thumb_click_action_1" value="open_lightbox" <?php if ($row->thumb_click_action == 'open_lightbox') echo 'checked="checked"'; ?> onClick="bwg_enable_disable('none', 'tr_thumb_link_target', 'thumb_click_action_1')" /><label for="thumb_click_action_1"><?php _e("Open lightbox", 'bwg_back'); ?></label>
                     <input type="radio" name="thumb_click_action" id="thumb_click_action_2" value="redirect_to_url" <?php if ($row->thumb_click_action == 'redirect_to_url') echo 'checked="checked"'; ?> onClick="bwg_enable_disable('', 'tr_thumb_link_target', 'thumb_click_action_2')" /><label for="thumb_click_action_2"><?php _e("Redirect to url", 'bwg_back'); ?></label>

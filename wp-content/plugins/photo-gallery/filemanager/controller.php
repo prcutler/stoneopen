@@ -36,13 +36,13 @@ class FilemanagerController {
     ////////////////////////////////////////////////////////////////////////////////////////
     // Public Methods                                                                     //
     ////////////////////////////////////////////////////////////////////////////////////////
-    public function execute($ajax = false, $load_count = 0) {
+    public function execute() {
       $task = isset($_REQUEST['task']) ? stripslashes(esc_html($_REQUEST['task'])) : 'display';
       if (method_exists($this, $task)) {
-        $this->$task($ajax, $load_count);
+        $this->$task();
       }
       else {
-        $this->display($ajax, $load_count);
+        $this->display();
       }
     }
 
@@ -54,20 +54,13 @@ class FilemanagerController {
       return $this->uploads_url;
     }
 
-    public function display($ajax = false, $load_count = 0) {
+    public function display() {
       require_once WD_BWG_DIR . '/filemanager/model.php';
       $model = new FilemanagerModel($this);
 
       require_once WD_BWG_DIR . '/filemanager/view.php';
       $view = new FilemanagerView($this, $model);
-      $view->display($ajax, $load_count);
-    }
-
-    public function get_images($load_count){
-      require_once WD_BWG_DIR . '/filemanager/model.php';
-      $model = new FilemanagerModel($this);
-      $file_manager_data = $model->get_file_manager_data(true, $load_count);
-      return $file_manager_data;
+      $view->display();
     }
 
     public function make_dir() {
@@ -98,6 +91,7 @@ class FilemanagerController {
       $file_names = explode('**#**', (isset($_REQUEST['file_names']) ? stripslashes(esc_html($_REQUEST['file_names'])) : ''));
       $file_name = $file_names[0];
       $file_name = htmlspecialchars_decode($file_name, ENT_COMPAT | ENT_QUOTES);
+      $file_name = str_replace('../', '', $file_name);
 
       $file_new_name = (isset($_REQUEST['file_new_name']) ? stripslashes(esc_html($_REQUEST['file_new_name'])) : '');
       $file_new_name = htmlspecialchars_decode($file_new_name, ENT_COMPAT | ENT_QUOTES);
@@ -107,6 +101,7 @@ class FilemanagerController {
       $original_file_path = $cur_dir_path . '/.original/' . $file_name;
 
       $msg = '';
+
       if (file_exists($file_path) == false) {
         $msg = "File doesn't exist.";
       }
@@ -143,6 +138,7 @@ class FilemanagerController {
       $msg = '';
       foreach ($file_names as $file_name) {
         $file_name = htmlspecialchars_decode($file_name, ENT_COMPAT | ENT_QUOTES);
+        $file_name = str_replace('../', '', $file_name);
         $file_path = $cur_dir_path . '/' . $file_name;
         $thumb_file_path = $cur_dir_path . '/thumb/' . $file_name;
         $original_file_path = $cur_dir_path . '/.original/' . $file_name;
@@ -185,6 +181,7 @@ class FilemanagerController {
         case 'copy':
           foreach ($file_names as $file_name) {
             $file_name = htmlspecialchars_decode($file_name, ENT_COMPAT | ENT_QUOTES);
+            $file_name = str_replace('../', '', $file_name);
             $src = $src_dir . '/' . $file_name;
             if (file_exists($src) == false) {
               $msg = "Failed to copy some of the files.";
@@ -229,6 +226,7 @@ class FilemanagerController {
           if ($src_dir != $dest_dir) {
             foreach ($file_names as $file_name) {
               $file_name = htmlspecialchars_decode($file_name, ENT_COMPAT | ENT_QUOTES);
+              $file_name = str_replace('../', '', $file_name);
               $src = $src_dir . '/' . $file_name;
               $dest = $dest_dir . '/' . $file_name;
               if (!is_dir($src_dir . '/' . $file_name)) {

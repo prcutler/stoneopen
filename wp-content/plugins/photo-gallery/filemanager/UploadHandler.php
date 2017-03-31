@@ -508,7 +508,7 @@ class bwg_UploadHandler {
       // into different directories or replacing hidden system files.
       // Also remove control characters and spaces (\x00..\x20) around the filename:
       $name = trim(stripslashes($name), ".\x00..\x20");
-      $name = str_replace(" ", "_", $name);
+      $name = str_replace(array(" ",'%'), array("_",''), $name);
       // Use a timestamp for empty filenames:
       if (!$name) {
         $name = str_replace('.', '-', microtime(true));
@@ -643,6 +643,8 @@ class bwg_UploadHandler {
         foreach ($extracted_files as $ex_file) {
           if ($ex_file != '.' && $ex_file != '..') {
             $ex_file = $target_dir . '/' . $ex_file;
+            rename($ex_file, str_replace(array( " ", "%" ), array( "_", "" ), $ex_file));
+            $ex_file = str_replace(array( " ", "%" ), array( "_", "" ), $ex_file);
             if (is_file($ex_file)) {
               $type = filetype($ex_file);
               $name = basename($ex_file);
@@ -655,12 +657,10 @@ class bwg_UploadHandler {
               $file->type = $type;
               $file->url = $this->get_download_url($file->name);
               list($img_width, $img_height) = @getimagesize(htmlspecialchars_decode($ex_file, ENT_COMPAT | ENT_QUOTES));
-
               if ($this->options['max_width'] && $this->options['max_height']) {
                 // Zip Upload.
                 $this->create_scaled_image($file->name, 'main', $this->options);
               }
-
               if (is_int($img_width)) {
                 $this->handle_image_file($ex_file, $file);
               }

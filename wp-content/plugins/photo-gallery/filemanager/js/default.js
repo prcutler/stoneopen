@@ -4,15 +4,6 @@
  * Time: 3:56 PM
  */
 
-////////////////////////////////////////////////////////////////////////////////////////
-// Events                                                                             //
-////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////
-// Constants                                                                          //
-////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////
-// Variables                                                                          //
-////////////////////////////////////////////////////////////////////////////////////////
 var keyFileSelected;
 var keyFileSelectedML;
 var filesSelected;
@@ -21,15 +12,14 @@ var dragFiles;
 var isUploading;
 
 var ajax = true;
-var item_number = 100;
-////////////////////////////////////////////////////////////////////////////////////////
-// Constructor                                                                        //
-////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////
-// Public Methods                                                                     //
-////////////////////////////////////////////////////////////////////////////////////////
+var importer_ajax = true;
+var media_lib_images = false;
+
+var all_files_selected = false;
+var no_selected_files = [];
+
 jQuery(document).ready(function () {
-  var elements = 1;
+  var elements = 2;
   var all_item_count = jQuery("#explorer_body_container #explorer_body").data("files_count");
   jQuery("#explorer_body_container").scroll(function () {
     var explorer_item_count = jQuery("#explorer_body .explorer_item").length;
@@ -38,29 +28,27 @@ jQuery(document).ready(function () {
       var scroll_position = jQuery(this).scrollTop() + jQuery(this).innerHeight();
       var scroll_Height = jQuery(this)[0].scrollHeight;
       if (scroll_position >= scroll_Height) {
-        jQuery('#loading_div').show();
-        jQuery('#opacity_div').show();
+        var start_count = (elements-1)*element_load_count;
+        var end_count = elements*element_load_count;
+        var next_files = wdb_all_files.slice(start_count, end_count);
+        ajax_print_images(next_files, jQuery("#explorer_body"), 'explorer_item', start_count);
         elements++;
-        jQuery.ajax({
-          type: "POST",
-          url: ajaxurl,
-          dataType: 'json',
-          data: {
-            action: 'addImages',
-            load_count: elements,
-            addImages_ajax: 'addImages_ajax'
-          },
-          success: function (response) {
-            if (response.files.length === 0) {
-              jQuery('#loading_div').hide();
-              jQuery('#opacity_div').hide();
-              ajax = false;
-              return;
-            } else {
-              ajax_print_images(response);
-            }
-          }
-        });
+      }
+    }
+  });
+  var media_lib_elements = 2;
+  var media_lib_item_count = jQuery("#importer_body_container #importer_body").data("files_count");
+  jQuery("#importer_body_container").scroll(function () {
+    var importer_item_count = jQuery("#importer_body .importer_item").length;
+    if (importer_ajax && importer_item_count < media_lib_item_count) {
+      var scroll_position = jQuery(this).scrollTop() + jQuery(this).innerHeight();
+      var scroll_Height = jQuery(this)[0].scrollHeight;
+      if (scroll_position >= scroll_Height) {
+        var start_count = (media_lib_elements-1)*element_load_count;
+        var end_count = media_lib_elements*element_load_count;
+        var next_files = media_library_files.slice(start_count, end_count);
+        ajax_print_images(next_files , jQuery("#importer_body"), 'importer_item', start_count);
+        media_lib_elements++;
       }
     }
   });
@@ -71,7 +59,7 @@ jQuery(document).ready(function () {
   else {
     var all_images_count = jQuery("#file_manager .item_thumb img").length;
   }
-  if(!all_images_count) {
+  if (!all_images_count) {
     setTimeout(function(){jQuery(document).trigger("onUpload")});
   }
   else {
@@ -118,12 +106,6 @@ jQuery(document).ready(function () {
   });
 });
 
-////////////////////////////////////////////////////////////////////////////////////////
-// Getters & Setters                                                                  //
-////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////
-// Private Methods                                                                    //
-////////////////////////////////////////////////////////////////////////////////////////
 function loaded() {
   jQuery("#opacity_div").hide();
   jQuery("#loading_div").hide();
@@ -134,8 +116,31 @@ function getClipboardFiles() {
 }
 
 function submit(task, sortBy, sortOrder, itemsView, destDir, fileNewName, newDirName, clipboardTask, clipboardFiles, clipboardSrc, clipboardDest) {
-  fileNames = filesSelected.join("**#**");
-  fileNamesML = filesSelectedML.join("**@**");
+  var names_array = [];
+  var lib_names_array = [];
+  if (all_files_selected === true) {
+    for (i in wdb_all_files) {
+      var index = no_selected_files.indexOf(wdb_all_files[i]["name"]);
+      if (index < 0) {
+        var all_names = wdb_all_files[i]["name"];
+        names_array.push(all_names);
+      }
+    }
+    for (i in media_library_files) {
+      var lib_index = no_selected_files.indexOf(media_library_files[i]["name"]);
+      if (lib_index < 0) {
+        var lib_all_names = media_library_files[i]["path"];
+        lib_names_array.push(lib_all_names);
+      }
+    }
+    fileNames = names_array.join("**#**");
+    fileNamesML = lib_names_array.join("**@**");
+  }
+  else {
+    fileNames = filesSelected.join("**#**");
+    fileNamesML = filesSelectedML.join("**@**");
+  }
+
   switch (task) {
     case "rename_item":
       destDir = dir;
@@ -227,43 +232,73 @@ function updateFileNames() {
   jQuery("#file_names_span span").html(result);
 }
 
-
-// submit file
 function submitFiles() {
   if (filesSelected.length == 0) {
     return;
   }
   var filesValid = [];
-  for (var i = 0; i < filesSelected.length; i++) {
-    var file_object = jQuery('.explorer_item[name="' + filesSelected[i] + '"]');
-    if (jQuery(file_object).attr("isDir") == "false") {
+  if (all_files_selected === true) {
+    for (i in wdb_all_files) {
       var fileData = [];
-      fileData['name'] = filesSelected[i];
-      fileData['filename'] = jQuery(file_object).attr("filename");
-      fileData['url'] = dir + "/" + filesSelected[i];
-      fileData['reliative_url'] = dirUrl + "/" + filesSelected[i];
-      fileData['thumb_url'] = dir + "/thumb/" + filesSelected[i];
-      fileData['thumb'] = jQuery(file_object).attr("filethumb");
-      fileData['size'] = jQuery(file_object).attr("filesize");
-      fileData['filetype'] = jQuery(file_object).attr("filetype");
-      fileData['date_modified'] = jQuery(file_object).attr("date_modified");
-      fileData['resolution'] = jQuery(file_object).attr("fileresolution");
-      fileData['aperture'] = jQuery(file_object).attr("fileAperture");
-      fileData['credit'] = jQuery(file_object).attr("fileCredit");
-      fileData['camera'] = jQuery(file_object).attr("fileCamera");
-      fileData['caption'] = jQuery(file_object).attr("fileCaption");
-      fileData['iso'] = jQuery(file_object).attr("fileIso");
-      fileData['orientation'] = jQuery(file_object).attr("fileOrientation");
-      fileData['copyright'] = jQuery(file_object).attr("fileCopyright");
-      filesValid.push(fileData);
+      if (wdb_all_files[i]["is_dir"] === false) {
+        var index = no_selected_files.indexOf(wdb_all_files[i]["name"]);
+        if (index < 0) {
+          fileData['name'] = wdb_all_files[i]["name"];
+          fileData['filename'] = wdb_all_files[i]["filename"];;
+          fileData['url'] = dir + "/" + wdb_all_files[i]["name"];
+          fileData['reliative_url'] = dirUrl + "/" + wdb_all_files[i]["name"];
+          fileData['thumb_url'] = dir + "/thumb/" + wdb_all_files[i]["name"];
+          fileData['thumb'] = wdb_all_files[i]["thumb"];
+          fileData['size'] = wdb_all_files[i]["size"];
+          fileData['filetype'] = wdb_all_files[i]["type"];
+          fileData['date_modified'] = wdb_all_files[i]["date_modified"];
+          fileData['resolution'] = wdb_all_files[i]["resolution"];
+          fileData['aperture'] = wdb_all_files[i]["aperture"];
+          fileData['credit'] = wdb_all_files[i]["credit"];
+          fileData['camera'] =wdb_all_files[i]["camera"];
+          fileData['caption'] = wdb_all_files[i]["caption"];
+          fileData['iso'] = wdb_all_files[i]["iso"];
+          fileData['orientation'] = wdb_all_files[i]["orientation"];
+          fileData['copyright'] = wdb_all_files[i]["copyright"];
+          filesValid.push(fileData);
+        }
+      }
     }
   }
+  else {
+    for (var i = 0; i < filesSelected.length; i++) {
+      var file_object = jQuery('.explorer_item[name="' + filesSelected[i] + '"]');
+      if (jQuery(file_object).attr("isDir") == "false") {
+        var fileData = [];
+        fileData['name'] = filesSelected[i];
+        fileData['filename'] = jQuery(file_object).attr("filename");
+        fileData['url'] = dir + "/" + filesSelected[i];
+        fileData['reliative_url'] = dirUrl + "/" + filesSelected[i];
+        fileData['thumb_url'] = dir + "/thumb/" + filesSelected[i];
+        fileData['thumb'] = jQuery(file_object).attr("filethumb");
+        fileData['size'] = jQuery(file_object).attr("filesize");
+        fileData['filetype'] = jQuery(file_object).attr("filetype");
+        fileData['date_modified'] = jQuery(file_object).attr("date_modified");
+        fileData['resolution'] = jQuery(file_object).attr("fileresolution");
+        fileData['aperture'] = jQuery(file_object).attr("fileAperture");
+        fileData['credit'] = jQuery(file_object).attr("fileCredit");
+        fileData['camera'] = jQuery(file_object).attr("fileCamera");
+        fileData['caption'] = jQuery(file_object).attr("fileCaption");
+        fileData['iso'] = jQuery(file_object).attr("fileIso");
+        fileData['orientation'] = jQuery(file_object).attr("fileOrientation");
+        fileData['copyright'] = jQuery(file_object).attr("fileCopyright");
+        filesValid.push(fileData);
+      }
+    }
+  }
+
   window.parent[callback](filesValid);
   window.parent.tb_remove();
 }
 
 function importFiles() {
   if (filesSelectedML.length == 0) {
+    alert();
     alert("Select at least one file to import.");
     return;
   }
@@ -309,9 +344,6 @@ function getFileExtension(file) {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////
-// Listeners                                                                          //
-////////////////////////////////////////////////////////////////////////////////////////
 //ctrls bar handlers
 function onBtnUpClick(event, obj) {
   var destDir = dir.substring(0, dir.lastIndexOf(DS));
@@ -321,7 +353,7 @@ function onBtnUpClick(event, obj) {
 function onBtnMakeDirClick(event, obj) {
   var newDirName = prompt(messageEnterDirName);
   if ((newDirName) && (newDirName != "")) {
-    submit("make_dir", null, null, null, null, null, newDirName, null, null, null, null);
+    submit("make_dir", null, null, null, null, null, newDirName.replace(/ /g, "_"), null, null, null, null);
   }
 }
 
@@ -329,20 +361,45 @@ function onBtnRenameItemClick(event, obj) {
   if (filesSelected.length != 0) {
     var newName = prompt(messageEnterNewName, getFileName(filesSelected[0]));
     if ((newName != null) && (newName != "")) {
-      submit("rename_item", null, null, null, null, newName, null, null, null, null, null);
+      submit("rename_item", null, null, null, null, newName.replace(/ /g, "_").replace(/%/g, ""), null, null, null, null, null);
     }
   }
 }
 
 function onBtnCopyClick(event, obj) {
   if (filesSelected.length != 0) {
-    submit("", null, null, null, null, null, null, "copy", filesSelected.join("**#**"), dir, null);
+    var names_list =  filesSelected.join("**#**");
+    var names_array = [];
+    if (all_files_selected === true) {
+      for (i in wdb_all_files) {
+        var index = no_selected_files.indexOf(wdb_all_files[i]["name"]);
+        if (index < 0) {
+          var all_names = wdb_all_files[i]["name"];
+          names_array.push(all_names);
+        }
+      }
+      names_list =  names_array.join("**#**");
+    }
+
+    submit("", null, null, null, null, null, null, "copy", names_list, dir, null);
   }
 }
 
 function onBtnCutClick(event, obj) {
   if (filesSelected.length != 0) {
-    submit("", null, null, null, null, null, null, "cut", filesSelected.join("**#**"), dir, null);
+    var names_list =  filesSelected.join("**#**");
+    var names_array = [];
+    if (all_files_selected === true) {
+      for (i in wdb_all_files) {
+        var index = no_selected_files.indexOf(wdb_all_files[i]["name"]);
+        if (index < 0) {
+          var all_names = wdb_all_files[i]["name"];
+          names_array.push(all_names);
+        }
+      }
+      names_list =  names_array.join("**#**");
+    }
+    submit("", null, null, null, null, null, null, "cut", names_list, dir, null);
   }
 }
 
@@ -392,6 +449,7 @@ function onPathComponentClick(event, obj, key) {
 }
 
 function onBtnShowImportClick(event, obj) {
+  media_lib_images = true;
   jQuery("#importer").fadeIn();
 }
 
@@ -416,6 +474,7 @@ function onKeyDown(e) {
   var e = e || window.event;
   var chCode1 = e.which || e.paramlist_keyCode;
   if ((e.ctrlKey || e.metaKey) && chCode1 == 65) {
+    all_files_selected = true;
     jQuery(".explorer_item").addClass("explorer_item_select");
     jQuery(".importer_item").addClass("importer_item_select");
     filesSelected = [];
@@ -458,6 +517,17 @@ function onFileClick(event, obj) {
   jQuery(".explorer_item").removeClass("explorer_item_select");
   var objName = jQuery(obj).attr("name");
   if (event.ctrlKey == true || event.metaKey == true) {
+    if (all_files_selected === true) {
+      if (filesSelected.indexOf(objName) == -1) {
+        var index = no_selected_files.indexOf(objName);
+        if (index >= 0) {
+          no_selected_files.splice( index, 1 );
+        }
+      }
+      else {
+        no_selected_files.push(objName);
+      }
+    }
     if (filesSelected.indexOf(objName) == -1) {
       filesSelected.push(objName);
       keyFileSelected = obj;
@@ -620,6 +690,7 @@ function onBtnSelectAllClick() {
       keyFileSelected = this;
     }
   });
+  all_files_selected = true;
 }
 
 function onBtnSelectAllMediLibraryClick() {
@@ -634,10 +705,32 @@ function onBtnSelectAllMediLibraryClick() {
   });
 }
 
-function ajax_print_images(response) {
-  for (i in response.files) {
-    var corent_file = response.files[i];
+function ajax_print_images(files, element, view_type, count) {
+  var element_class;
+  if (view_type === "explorer_item") {
+    element_class = "explorer_item";
+    var onmouseover = "onFileMOver(event, this);";
+    var onmouseout = "onFileMOut(event, this);";
+    var onclick = "onFileClick(event, this);";
+    var ondblclick = "onFileDblClick(event, this);";
+    var ondragstart = "onFileDragStart(event, this);";
+  }
+  else {
+    element_class = "importer_item";
+    var onmouseover = "onFileMOverML(event, this);";
+    var onmouseout = "onFileMOutML(event, this);";
+    var onclick = "onFileClickML(event, this);";
+    var ondblclick = "onFileDblClickML(event, this);";
+    var ondragstart = "";
+  }
+
+  for (i in files) {
+    var corent_file = files[i];
     var name = corent_file["name"];
+    var path = "";
+    if (view_type === "importer_item") {
+      path = corent_file["path"];
+    }
     var filename = corent_file["filename"];
     var filethumb = corent_file["thumb"];
     var filesize = corent_file["size"];
@@ -651,11 +744,7 @@ function ajax_print_images(response) {
     var fileIso = corent_file["iso"];
     var fileOrientation = corent_file["orientation"];
     var fileCopyright = corent_file["copyright"];
-    var onmouseover = "onFileMOver(event, this);";
-    var onmouseout = "onFileMOut(event, this);";
-    var onclick = "onFileClick(event, this);";
-    var ondblclick = "onFileDblClick(event, this);";
-    var ondragstart = "onFileDragStart(event, this);";
+
     var ondragover = "";
     var ondrop = "";
     if (corent_file['is_dir'] == true) {
@@ -667,22 +756,22 @@ function ajax_print_images(response) {
       isDir = 'true';
     }
 
-    item_number = item_number + i;
+    var item_number = count;
+    count++;
     var item_thumb = '<span class="item_thumb"><img src="' + corent_file['thumb'] + '"/></span>';
     var item_icon = '<span class="item_icon"><img src="'+corent_file['icon']+'"/> </span>';
     var item_name = '<span class="item_name">'+corent_file['name']+'</span>';
     var item_size = '<span class="item_size">'+corent_file['size']+'</span>';
     var item_date_modified = '<span class="item_date_modified">'+corent_file['date_modified']+'</span>';
     var item_numbering =  '<span class="item_numbering">'+item_number+'</span>';
-
-    var explorer_item = '<div class="explorer_item" ' +
+    var explorer_item = '<div class="' + element_class + '" ' +
       'name="' + name + '" ' +
+      'path="' + path + '" ' +
       'filename="' + filename + '" ' +
       'filethumb="' + filethumb + '" ' +
       'filesize="' + filesize + '" ' +
       'filetype="' + filetype + '" ' +
       'date_modified="' + date_modified + '" ' +
-      'fileresolution="' + fileresolution + '" ' +
       'fileresolution="' + fileresolution + '" ' +
       'fileCredit="' + fileCredit + '" ' +
       'fileAperture="' + fileAperture + '" ' +
@@ -699,9 +788,7 @@ function ajax_print_images(response) {
       'ondragstart="' + ondragstart + '" ' +
       'ondragover="' + ondragover + '" ' +
       'ondrop="' + ondrop + '" ' +
-      'draggable="true" >'+item_numbering + item_thumb + item_icon+item_name+item_size+item_date_modified+'</div>';
-    jQuery("#explorer_body").append(explorer_item);
-    jQuery('#loading_div').hide();
-    jQuery('#opacity_div').hide();
+      'draggable="true">'+item_numbering + item_thumb + item_icon+item_name+item_size+item_date_modified+'</div>';
+    element.append(explorer_item);
   }
 }

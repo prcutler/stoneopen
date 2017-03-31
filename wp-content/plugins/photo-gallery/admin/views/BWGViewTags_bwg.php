@@ -31,29 +31,20 @@ class BWGViewTags_bwg {
     $order_class = 'manage-column column-title sorted ' . $asc_or_desc;
     $ids_string = '';
     $per_page = $this->model->per_page();
-	$pager = 0;
+	  $pager = 0;
     $query_url = wp_nonce_url( admin_url('admin-ajax.php'), '', 'bwg_nonce' );
     $query_url = add_query_arg(array('action' => ''), $query_url);
     ?>
     <script>
       var ajax_url = "<?php echo $query_url; ?>"
     </script>
-    <div style="clear: both; float: left; width: 99%;">
-      <div style="float:left; font-size: 14px; font-weight: bold;">
-        <?php _e("This section allows you to create, edit and delete tags.", 'bwg_back'); ?>
-        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery/creating-editing-tag.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
-      </div>
-      <div style="float: right; text-align: right;">
-        <a style="text-decoration: none;" target="_blank" href="https://web-dorado.com/files/fromPhotoGallery.php">
-          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/logo.png'; ?>" />
-        </a>
-      </div>
-    </div>
-   <div id="wordpress_message_1" style="width:99%;display:none;"><div id="wordpress_message_2" class="wd_updated"><p><strong><?php echo __('Item Succesfully Saved.', 'bwg_back'); ?></strong></p></div></div>
-    <form class="wrap bwg_form" id="tags_form" method="post" action="admin.php?page=tags_bwg" style="float:left; width: 99%;">
+    <div id="wordpress_message_1" style="width:99%;display:none;"><div id="wordpress_message_2" class="wd_updated"><p><strong><?php echo __('Item Succesfully Saved.', 'bwg_back'); ?></strong></p></div></div>
+    <form class="wrap bwg_form" id="tags_form" method="post" action="admin.php?page=tags_bwg" style="float:left; width: 98%;">
       <?php wp_nonce_field( 'tags_bwg', 'bwg_nonce' ); ?>
-      <span class="tag_icon"></span>
-      <h2><?php _e("Tags", 'bwg_back'); ?></h2>
+      <div>
+        <span class="tag_icon"></span>
+        <h2><?php _e("Tags", 'bwg_back'); ?></h2>
+      </div>
       <div class="buttons_div_right">
       <span class="wd-btn wd-btn-primary-gray bwg_check_all  non_selectable " onclick="spider_check_all_items()">
         <input type="checkbox" id="check_all_items" name="check_all_items" onclick="spider_check_all_items_checkbox()" style="margin: 0; vertical-align: middle;" />

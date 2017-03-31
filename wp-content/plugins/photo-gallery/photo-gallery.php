@@ -4,7 +4,7 @@
  * Plugin Name: Photo Gallery
  * Plugin URI: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
- * Version: 1.3.30
+ * Version: 1.3.35
  * Author: WebDorado
  * Author URI: https://web-dorado.com/
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
@@ -456,8 +456,7 @@ function bwg_shortcode($params) {
       die();
     }
   }
-
-  if ($params['gallery_type'] != 'slideshow') {
+  
     shortcode_atts(array(
         'popup_fullscreen' => 0,
         'popup_autoplay' => 0,
@@ -483,7 +482,6 @@ function bwg_shortcode($params) {
         'watermark_type' => 'none',
         'popup_effect_duration' => 1,
       ), $params);
-  }
 
   switch ($params['watermark_type']) {
     case 'text': {
@@ -524,7 +522,7 @@ function bwg_shortcode($params) {
   ob_start();
   bwg_front_end($params);
   return str_replace(array("\r\n", "\n", "\r"), '', ob_get_clean());
-  // return ob_get_clean();
+  //  return ob_get_clean();
 }
 add_shortcode('Best_Wordpress_Gallery', 'bwg_shortcode');
 
@@ -1619,7 +1617,7 @@ function bwg_activate() {
     ));
   }
   $version = get_option('wd_bwg_version');
-  $new_version = '1.3.30';
+  $new_version = '1.3.35';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -1671,7 +1669,7 @@ wp_oembed_add_provider( '#https://instagr(\.am|am\.com)/p/.*#i', 'https://api.in
 
 function bwg_update_hook() {
   $version = get_option('wd_bwg_version');
-  $new_version = '1.3.30';
+  $new_version = '1.3.35';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -2106,3 +2104,140 @@ function bwg_register_admin_scripts() {
   wp_localize_script('bwg_shortcode', 'bwg_objectGGF', WDWLibrary::get_google_fonts());
 }
 add_action('admin_enqueue_scripts', 'bwg_register_admin_scripts');
+
+function bwg_topic() {
+  $page = isset($_GET['page']) ? $_GET['page'] : '';
+  $user_guide_link = 'https://web-dorado.com/wordpress-gallery/';
+  $support_forum_link = 'https://wordpress.org/support/plugin/photo-gallery';
+  $pro_link = 'https://web-dorado.com/files/fromPhotoGallery.php';
+  $support_icon = WD_BWG_URL . '/images/support.png';
+  $prefix = 'bwg_back';
+  $is_free = TRUE;
+  switch ($page) {
+    case 'galleries_bwg': {
+      $help_text = 'create, edit and delete galleries';
+      $user_guide_link .= 'creating-editing-galleries.html';
+      break;
+    }
+    case 'albums_bwg': {
+      $help_text = 'create, edit and delete albums';
+      $user_guide_link .= 'creating-editing-albums.html';
+      break;
+    }
+    case 'tags_bwg': {
+      $help_text = 'create, edit and delete tags';
+      $user_guide_link .= 'creating-editing-tag.html';
+      break;
+    }
+    case 'options_bwg': {
+      $help_text = 'change settings for different views and general options';
+      $user_guide_link .= 'global-options.html';
+      break;
+    }
+    case 'themes_bwg': {
+      $help_text = 'create, edit and delete themes';
+      $user_guide_link .= 'thumbnails.html';
+      break;
+    }
+    case 'comments_bwg': {
+      $help_text = 'manage the image comments';
+      $user_guide_link .= 'comments-editing.html';
+      break;
+    }
+    case 'rates_bwg': {
+      $help_text = 'manage the image ratings';
+      $user_guide_link .= 'ratings-editing.html';
+      break;
+    }
+    case 'licensing_bwg': {
+      $help_text = '';
+      $user_guide_link .= 'creating-editing-galleries.html';
+      break;
+    }
+    default: {
+      return '';
+      break;
+    }
+  }
+  ob_start();
+  ?>
+  <style>
+    .wd_topic {
+      background-color: #ffffff;
+      box-sizing: border-box;
+      clear: both;
+      color: #6e7990;
+      float: left;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 30px;
+      padding: 10px 15px;
+      vertical-align: middle;
+      width: 98%;
+    }
+    .wd_topic .wd_help_topic {
+      float: left;
+    }
+    .wd_topic .wd_help_topic a {
+      color: #0073aa;
+    }
+    .wd_topic .wd_help_topic a:hover {
+      color: #00A0D2;
+    }
+    .wd_topic .wd_support {
+      float: right;
+      margin: 0 10px;
+    }
+    .wd_topic .wd_support img {
+      vertical-align: middle;
+    }
+    .wd_topic .wd_support a {
+      text-decoration: none;
+      color: #6E7990;
+    }
+    .wd_topic .wd_pro {
+      float: right;
+      background-color: #45A6B7;
+      padding: 0 10px;
+    }
+    .wd_topic .wd_pro a {
+      border: none;
+      box-shadow: none !important;
+      color: #FFFFFF;
+      text-decoration: none;
+    }
+  </style>
+  <div class="wd_topic">
+    <?php
+    if ($help_text) {
+      ?>
+      <span class="wd_help_topic">
+      <?php echo sprintf(__('This section allows you to %s.', $prefix), $help_text); ?>
+        <a target="_blank" href="<?php echo $user_guide_link; ?>">
+        <?php _e('Read More in User Manual', $prefix); ?>
+      </a>
+    </span>
+      <?php
+    }
+    if ($is_free) {
+      $text = strtoupper(__('Upgrade to paid version', $prefix));
+      ?>
+      <span class="wd_pro">
+      <a target="_blank" href="<?php echo $pro_link; ?>">
+        <span><?php echo $text; ?></span>
+      </a>
+    </span>
+      <?php
+    }
+    ?>
+    <span class="wd_support">
+      <a target="_blank" href="<?php echo $support_forum_link; ?>">
+        <img src="<?php echo $support_icon; ?>" />
+        <?php _e('Support Forum', $prefix); ?>
+      </a>
+    </span>
+  </div>
+  <?php
+  echo ob_get_clean();
+}
+add_action('admin_notices', 'bwg_topic');

@@ -67,12 +67,6 @@ function save_tag(tag_id) {
 var bwg_save_count = 50;
 function spider_ajax_save(form_id, tr_group) {
   var ajax_task = jQuery("#ajax_task").val();
-  if (!tr_group) {
-    var tr_group = 1;
-  }
-  else if (ajax_task == 'ajax_apply' || ajax_task == 'ajax_save') {
-    ajax_task = '';
-  }
   var bwg_nonce = jQuery("#bwg_nonce").val();
   var name = jQuery("#name").val();
   var slug = jQuery("#slug").val();
@@ -100,6 +94,12 @@ function spider_ajax_save(form_id, tr_group) {
   var image_current_id = jQuery("#image_current_id").val();
   ids_array = ids_string.split(",");
   var tr_count = ids_array.length;
+  if (!tr_group) {
+    var tr_group = 1;
+  }
+  else if ((tr_count > bwg_save_count * tr_group) && (ajax_task == 'ajax_apply' || ajax_task == 'ajax_save')) {
+    ajax_task = '';
+  }
   if (tr_count > bwg_save_count) {
     // Remove items form begin and end of array.
     ids_array.splice(tr_group * bwg_save_count, ids_array.length);
@@ -262,19 +262,15 @@ function spider_ajax_save(form_id, tr_group) {
         jQuery('#draganddrop').show();
       }
       if (ajax_task == "ajax_save") {
-        
         var $form = jQuery('#' + form_id),
-          formAction = $form.attr( "action" );
-          
-        if ( formAction.indexOf( "?" ) != -1 ) {
+        formAction = $form.attr("action");
+        if (formAction.indexOf("?") != -1) {
           formAction += "&show_pointer=true";
         }
         else {
           formAction += "?show_pointer=true";
         }
-        
-        $form.attr( "action", formAction );
-        
+        $form.attr("action", formAction);
         $form.submit();
       }
       jQuery('#opacity_div').hide();

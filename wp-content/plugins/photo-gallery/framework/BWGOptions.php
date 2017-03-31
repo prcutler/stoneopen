@@ -1,7 +1,9 @@
 <?php
+defined('ABSPATH') || die('Access Denied');
+
 class WD_BWG_Options {
   
-  public $images_directory = '';
+  public $images_directory = null;
 
   public $masonry = 'vertical';
   public $mosaic = 'vertical';
@@ -168,22 +170,26 @@ class WD_BWG_Options {
         }
       }
     }
-    if (!$this->images_directory) {
+    if ($this->images_directory === null) {
       $upload_dir = wp_upload_dir();
       if (!isset($this->old_images_directory) && !is_dir($upload_dir['basedir'] . '/photo-gallery') && !$reset) {
-        mkdir($upload_dir['basedir'] . '/photo-gallery', 0777);
+        $this->make_directory($upload_dir['basedir']);
       }
       $this->images_directory = str_replace(ABSPATH, '', $upload_dir['basedir']);
     }
     $this->old_images_directory = $old_images_directory;
     if (!$this->watermark_url) {
-      $watermark_url = WD_BWG_URL . '/images/watermark.png';
+      $this->watermark_url = WD_BWG_URL . '/images/watermark.png';
     }
     if (!$this->built_in_watermark_url) {
-      $built_in_watermark_url = WD_BWG_URL . '/images/watermark.png';
+      $this->built_in_watermark_url = WD_BWG_URL . '/images/watermark.png';
     }
     if ($this->permissions != 'moderate_comments' && $this->permissions != 'publish_posts' && $this->permissions != 'edit_posts') {
       $this->permissions = 'manage_options';
     }
+  }
+
+  private function make_directory($upload_dir) {
+    mkdir($upload_dir . '/photo-gallery', 0777);
   }
 }

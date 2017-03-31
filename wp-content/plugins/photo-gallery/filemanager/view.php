@@ -29,7 +29,7 @@ class FilemanagerView {
     ////////////////////////////////////////////////////////////////////////////////////////
     // Public Methods                                                                     //
     ////////////////////////////////////////////////////////////////////////////////////////
-    public function display($ajax = false, $load_count = 0) {
+    public function display() {
       if (isset($_GET['filemanager_msg']) && esc_html($_GET['filemanager_msg']) != '') {
         ?>
         <div id="file_manager_message" style="height:40px;">
@@ -41,7 +41,7 @@ class FilemanagerView {
         $_GET['filemanager_msg'] = '';
       }
       global $wd_bwg_options;
-      $file_manager_data = $this->model->get_file_manager_data($ajax,$load_count);
+      $file_manager_data = $this->model->get_file_manager_data();
       $items_view = $file_manager_data['session_data']['items_view'];
       $sort_by = $file_manager_data['session_data']['sort_by'];
       $sort_order = $file_manager_data['session_data']['sort_order'];
@@ -82,6 +82,9 @@ class FilemanagerView {
         var callback = "<?php echo (isset($_REQUEST['callback']) ? esc_html($_REQUEST['callback']) : ''); ?>";
         var sortBy = "<?php echo $sort_by; ?>";
         var sortOrder = "<?php echo $sort_order; ?>";
+        var wdb_all_files = <?php echo isset($file_manager_data["all_files"]) && json_encode($file_manager_data["all_files"]) ? json_encode($file_manager_data["all_files"]) : "''"; ?>;
+        var media_library_files = <?php echo isset($file_manager_data["media_library_files_all"]) && json_encode($file_manager_data["media_library_files_all"]) ? json_encode($file_manager_data["media_library_files_all"]) : "''"; ?>;
+        var element_load_count = <?php echo isset($file_manager_data["element_load_count"]) && json_encode($file_manager_data["element_load_count"]) ? json_encode($file_manager_data["element_load_count"]) : "''"; ?>;
       </script>
       <script src="<?php echo WD_BWG_URL; ?>/filemanager/js/default.js?ver=<?php echo wd_bwg_version(); ?>"></script>
       <link href="<?php echo WD_BWG_URL; ?>/filemanager/css/default.css?ver=<?php echo wd_bwg_version(); ?>" type="text/css" rel="stylesheet">
@@ -292,7 +295,7 @@ class FilemanagerView {
             </div>
             <div id="importer_body_wrapper">
               <div id="importer_body_container">
-                <div id="importer_body">
+                <div id="importer_body" data-files_count="<?php echo $file_manager_data['importer_files_count'];?>">
                   <?php
                   foreach ($file_manager_data['media_library_files'] as $key => $file) {
                     $file['name'] = esc_html($file['name']);

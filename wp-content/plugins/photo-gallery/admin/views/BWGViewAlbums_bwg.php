@@ -33,32 +33,23 @@ class BWGViewAlbums_bwg {
     $order_class = 'manage-column column-title sorted ' . $asc_or_desc;
     $ids_string = '';
     $per_page = $this->model->per_page();
-	$pager = 0;
+	  $pager = 0;
     $album_button_array = array(
       'publish_all' => __('Publish', 'bwg_back'),
       'unpublish_all' => __('Unpublish', 'bwg_back'),
       'delete_all' => __('Delete', 'bwg_back')
     );
     ?>
-    <div style="clear: both; float: left; width: 99%;">
-      <div style="float:left; font-size: 14px; font-weight: bold;">
-        <?php _e("This section allows you to create, edit and delete albums.", 'bwg_back'); ?>
-        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery/creating-editing-albums.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
+    <form class="wrap bwg_form" id="albums_form" method="post" action="admin.php?page=albums_bwg" style="float: left; width: 98%;">
+      <?php wp_nonce_field( 'albums_bwg', 'bwg_nonce' ); ?>
+      <div>
+        <span class="album-icon"></span>
+        <h2>
+          <?php _e("Albums", 'bwg_back'); ?>
+          <a href="" class="add-new-h2" onclick="spider_set_input_value('task', 'add');
+                                                 spider_form_submit(event, 'albums_form')"><?php _e("Add new", 'bwg_back'); ?></a>
+        </h2>
       </div>
-      <div style="float: right; text-align: right;">
-        <a style="text-decoration: none;" target="_blank" href="https://web-dorado.com/files/fromPhotoGallery.php">
-          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/logo.png'; ?>" />
-        </a>
-      </div>
-    </div>
-    <form class="wrap bwg_form" id="albums_form" method="post" action="admin.php?page=albums_bwg" style="float: left; width:99%;">
-    <?php wp_nonce_field( 'albums_bwg', 'bwg_nonce' ); ?>
-      <span class="album-icon"></span>
-      <h2>
-        <?php _e("Albums", 'bwg_back'); ?>
-        <a href="" class="add-new-h2" onclick="spider_set_input_value('task', 'add');
-                                               spider_form_submit(event, 'albums_form')"><?php _e("Add new", 'bwg_back'); ?></a>
-      </h2>
       <div id="draganddrop" class="wd_updated" style="display:none;"><strong><p><?php _e("Changes made in this table should be saved.", 'bwg_back'); ?></p></strong></div>
       <?php WDWLibrary::search(__('Name','bwg_back'), $search_value, 'albums_form',''); ?>
      <div class="tablenav top buttons_div buttons_div_left">
@@ -207,17 +198,6 @@ class BWGViewAlbums_bwg {
     $page_title = (($id != 0) ? __('Edit album ',"bwg_back") . $row->name : __('Create new album',"bwg_back"));
     $per_page = $this->model->per_page();
     ?>
-    <div style="clear: both; float: left; width: 99%;">
-      <div style="float:left; font-size: 14px; font-weight: bold;">
-        <?php _e("This section allows you to add/edit album.", 'bwg_back'); ?>
-        <a style="color: blue; text-decoration: none;" target="_blank" href="https://web-dorado.com/wordpress-gallery/creating-editing-albums.html"><?php _e("Read More in User Manual", 'bwg_back'); ?></a>
-      </div>
-      <div style="float: right; text-align: right;">
-        <a style="text-decoration: none;" target="_blank" href="https://web-dorado.com/files/fromPhotoGallery.php">
-          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/logo.png'; ?>" />
-        </a>
-      </div>
-    </div>
     <script>
       function bwg_add_preview_image(files) {
         document.getElementById("preview_image").value = files[0]['thumb_url'];
@@ -274,10 +254,12 @@ class BWGViewAlbums_bwg {
         tb_remove();
       }
     </script>
-    <form class="wrap bwg_form" method="post" action="admin.php?page=albums_bwg" style="float: left; width:99%;">
+    <form class="wrap bwg_form" method="post" action="admin.php?page=albums_bwg" style="float: left; width: 98%;">
       <?php wp_nonce_field( 'albums_bwg', 'bwg_nonce' ); ?>
-      <span class="album-icon"></span>
-      <h2><?php echo $page_title; ?></h2>
+      <div>
+        <span class="album-icon"></span>
+        <h2><?php echo $page_title; ?></h2>
+      </div>
       <div style="float:right;">
         <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-save" id='save_albums' type="submit" onclick="if(spider_check_required('name', 'Name')){return false;};spider_set_input_value('task', 'save')" value="<?php _e("Save", 'bwg_back'); ?>" />
         <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-apply" type="submit" onclick="if(spider_check_required('name', 'Name')){return false;};spider_set_input_value('task', 'apply')" value="<?php _e("Apply", 'bwg_back'); ?>" />

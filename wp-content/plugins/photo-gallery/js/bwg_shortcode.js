@@ -665,7 +665,7 @@ function bwg_gallery_type(gallery_type) {
 		}
 			
   }
-  if (gallery_type != 'slideshow' && gallery_type != 'carousel') {
+  
     jQuery("#tbody_popup_other").css('display', '');
     jQuery("#tbody_popup").css('display', '');
     jQuery("#tr_popup_width_height").css('display', '');
@@ -698,7 +698,6 @@ function bwg_gallery_type(gallery_type) {
     jQuery("#tr_popup_info_always_show").css('display', '');
     bwg_popup_fullscreen();
     bwg_thumb_click_action();
-  }
   bwg_loadmore();
 }
 

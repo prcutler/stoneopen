@@ -4,28 +4,11 @@
 
 if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed.');
 
-# Converted to job_options: yes
-# Converted to array options: yes
+# Converted to multi-options (Feb 2017-) and previous options conversion removed: Yes
 
-# Migrate options to new-style storage - May 2014
-# appkey, secret, folder, updraft_dropboxtk_request_token, updraft_dropboxtk_access_token
-if (!is_array(UpdraftPlus_Options::get_updraft_option('updraft_dropbox'))) {
-	$opts = array(
-		'appkey' => UpdraftPlus_Options::get_updraft_option('updraft_dropbox_appkey'),
-		'secret' => UpdraftPlus_Options::get_updraft_option('updraft_dropbox_secret'),
-		'folder' => UpdraftPlus_Options::get_updraft_option('updraft_dropbox_folder'),
-		'tk_access_token' => UpdraftPlus_Options::get_updraft_option('updraft_dropboxtk_access_token'),
-	);
-	if (serialize($opts) != 'a:5:{s:6:"appkey";N;s:6:"secret";N;s:6:"folder";N;s:15:"tk_access_token";N;}') {
-		UpdraftPlus_Options::update_updraft_option('updraft_dropbox', $opts);
-		UpdraftPlus_Options::delete_updraft_option('updraft_dropbox_appkey');
-		UpdraftPlus_Options::delete_updraft_option('updraft_dropbox_secret');
-		UpdraftPlus_Options::delete_updraft_option('updraft_dropbox_folder');
-		UpdraftPlus_Options::delete_updraft_option('updraft_dropboxtk_access_token');
-	}
-}
+if (!class_exists('UpdraftPlus_BackupModule')) require_once(UPDRAFTPLUS_DIR.'/methods/backup-module.php');
 
-class UpdraftPlus_BackupModule_dropbox {
+class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 
 	private $current_file_hash;
 	private $current_file_size;
@@ -74,23 +57,25 @@ class UpdraftPlus_BackupModule_dropbox {
 		}
 	}
 
-	public function get_credentials() {
-		return array('updraft_dropbox');
+	public function get_supported_features() {
+		// This options format is handled via only accessing options via $this->get_options()
+		return array('multi_options');
 	}
 
-	public function get_opts() {
-		global $updraftplus;
-		$opts = $updraftplus->get_job_option('updraft_dropbox');
-		if (!is_array($opts)) $opts = array();
-		if (!isset($opts['folder'])) $opts['folder'] = '';
-		return $opts;
+	protected function get_default_options() {
+		return array(
+			'appkey' => '',
+			'secret' => '',
+			'folder' => '',
+			'tk_access_token' => '',
+		);
 	}
 
 	public function backup($backup_array) {
 
 		global $updraftplus;
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 		
 		if (empty($opts['tk_access_token'])) {
 			$updraftplus->log('You do not appear to be authenticated with Dropbox (1)');
@@ -197,7 +182,7 @@ class UpdraftPlus_BackupModule_dropbox {
 
 			// Old-style, single file put: $put = $dropbox->putFile($updraft_dir.'/'.$file, $dropbox_folder.$file);
 
-			$ufile = apply_filters('updraftplus_dropbox_modpath', $file);
+			$ufile = apply_filters('updraftplus_dropbox_modpath', $file, $this);
 
 			$updraftplus->log("Dropbox: Attempt to upload: $file to: $ufile");
 
@@ -219,7 +204,7 @@ class UpdraftPlus_BackupModule_dropbox {
 				if (preg_match("/Submitted input out of alignment: got \[(\d+)\] expected \[(\d+)\]/i", $e->getMessage(), $matches)) {
 					// Try the indicated offset
 					$we_tried = $matches[1];
-					$dropbox_wanted = $matches[2];
+					$dropbox_wanted = (int)$matches[2];
 					$updraftplus->log("Dropbox not yet aligned: tried=$we_tried, wanted=$dropbox_wanted; will attempt recovery");
 					$this->uploaded_offset = $dropbox_wanted;
 					try {
@@ -276,7 +261,7 @@ class UpdraftPlus_BackupModule_dropbox {
 	# $match: a substring to require (tested via strpos() !== false)
 	public function listfiles($match = 'backup_') {
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		if (empty($opts['tk_access_token'])) return new WP_Error('no_settings', __('No settings were found', 'updraftplus').' (dropbox)');
 
@@ -288,7 +273,7 @@ class UpdraftPlus_BackupModule_dropbox {
 			return new WP_Error('access_error', $e->getMessage());
 		}
 
-		$searchpath = '/'.untrailingslashit(apply_filters('updraftplus_dropbox_modpath', ''));
+		$searchpath = '/'.untrailingslashit(apply_filters('updraftplus_dropbox_modpath', '', $this));
 
 		try {
 			/* Some users could have a large amount of backups, the max search is 1000 entries we should continue to search until there are no more entries to bring back. */
@@ -377,7 +362,7 @@ class UpdraftPlus_BackupModule_dropbox {
 		global $updraftplus;
 		if (is_string($files)) $files=array($files);
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		if (empty($opts['tk_access_token'])) {
 			$updraftplus->log('You do not appear to be authenticated with Dropbox (3)');
@@ -395,7 +380,7 @@ class UpdraftPlus_BackupModule_dropbox {
 		if (false === $dropbox) return false;
 
 		foreach ($files as $file) {
-			$ufile = apply_filters('updraftplus_dropbox_modpath', $file);
+			$ufile = apply_filters('updraftplus_dropbox_modpath', $file, $this);
 			$updraftplus->log("Dropbox: request deletion: $ufile");
 
 			try {
@@ -418,7 +403,7 @@ class UpdraftPlus_BackupModule_dropbox {
 
 		global $updraftplus;
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		if (empty($opts['tk_access_token'])) {
 			$updraftplus->log('You do not appear to be authenticated with Dropbox (4)');
@@ -440,7 +425,7 @@ class UpdraftPlus_BackupModule_dropbox {
 
 		$try_the_other_one = false;
 
-		$ufile = apply_filters('updraftplus_dropbox_modpath', $file);
+		$ufile = apply_filters('updraftplus_dropbox_modpath', $file, $this);
 
 		try {
 			$get = $dropbox->getFile($ufile, $updraft_dir.'/'.$file, null, true);
@@ -472,9 +457,11 @@ class UpdraftPlus_BackupModule_dropbox {
 	}
 
 	public function config_print() {
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
+
+		$classes = $this->get_css_classes();
 		?>
-			<tr class="updraftplusmethod dropbox">
+			<tr class="<?php echo $classes;?>">
 				<td></td>
 				<td>
 				<img alt="<?php _e(sprintf(__('%s logo', 'updraftplus'), 'Dropbox')); ?>" src="<?php echo UPDRAFTPLUS_URL.'/images/dropbox-logo.png' ?>">
@@ -482,7 +469,7 @@ class UpdraftPlus_BackupModule_dropbox {
 				</td>
 			</tr>
 
-			<tr class="updraftplusmethod dropbox">
+			<tr class="<?php echo $classes;?>">
 			<th></th>
 			<td>
 			<?php
@@ -496,12 +483,12 @@ class UpdraftPlus_BackupModule_dropbox {
 
 			<?php
 
-				$defmsg = '<tr class="updraftplusmethod dropbox"><td></td><td><strong>'.__('Need to use sub-folders?','updraftplus').'</strong> '.__('Backups are saved in','updraftplus').' apps/UpdraftPlus. '.__('If you back up several sites into the same Dropbox and want to organise with sub-folders, then ','updraftplus').'<a href="https://updraftplus.com/shop/">'.__("there's an add-on for that.",'updraftplus').'</a></td></tr>';
+				$defmsg = '<tr class="'.$classes.'"><td></td><td><strong>'.__('Need to use sub-folders?','updraftplus').'</strong> '.__('Backups are saved in','updraftplus').' apps/UpdraftPlus. '.__('If you back up several sites into the same Dropbox and want to organise with sub-folders, then ','updraftplus').'<a href="https://updraftplus.com/shop/">'.__("there's an add-on for that.",'updraftplus').'</a></td></tr>';
 
-				$defmsg = '<tr class="updraftplusmethod dropbox"><td></td><td><strong>'.__('Need to use sub-folders?','updraftplus').'</strong> '.__('Backups are saved in','updraftplus').' apps/UpdraftPlus. '.__('If you back up several sites into the same Dropbox and want to organise with sub-folders, then ','updraftplus').'<a href="'.apply_filters("updraftplus_com_link","https://updraftplus.com/shop/").'">'.__("there's an add-on for that.",'updraftplus').'</a></td></tr>';
-				echo apply_filters('updraftplus_dropbox_extra_config', $defmsg); ?>
+				$defmsg = '<tr class="'.$classes.'"><td></td><td><strong>'.__('Need to use sub-folders?','updraftplus').'</strong> '.__('Backups are saved in','updraftplus').' apps/UpdraftPlus. '.__('If you back up several sites into the same Dropbox and want to organise with sub-folders, then ','updraftplus').'<a href="'.apply_filters("updraftplus_com_link","https://updraftplus.com/shop/").'">'.__("there's an add-on for that.",'updraftplus').'</a></td></tr>';
+				echo apply_filters('updraftplus_dropbox_extra_config', $defmsg, $this); ?>
 
-			<tr class="updraftplusmethod dropbox">
+			<tr class="<?php echo $classes;?>">
 				<th><?php echo sprintf(__('Authenticate with %s', 'updraftplus'), __('Dropbox', 'updraftplus'));?>:</th>
 				<td><p>
 					<?php 
@@ -531,19 +518,19 @@ class UpdraftPlus_BackupModule_dropbox {
 				$appkey = empty($opts['appkey']) ? '' : $opts['appkey'];
 				$secret = empty($opts['secret']) ? '' : $opts['secret'];
 			?>
-				<tr class="updraftplusmethod dropbox">
+				<tr class="<?php echo $classes;?>">
 					<th></th>
 					<td>
 						<?php echo '<p>'.htmlspecialchars(__('You must add the following as the authorised redirect URI in your Dropbox console (under "API Settings") when asked','updraftplus')).': <kbd>'.UpdraftPlus_Options::admin_page_url().'?page=updraftplus&action=updraftmethod-dropbox-auth</kbd></p>'; ?>
 					</td>
 				</tr>
-				<tr class="updraftplusmethod dropbox">
+				<tr class="<?php echo $classes;?>">
 					<th>Your Dropbox App Key:</th>
-					<td><input type="text" autocomplete="off" style="width:332px" id="updraft_dropbox_appkey" name="updraft_dropbox[appkey]" value="<?php echo esc_attr($appkey) ?>" /></td>
+					<td><input type="text" autocomplete="off" style="width:332px" <?php $this->output_settings_field_name_and_id('appkey');?> value="<?php echo esc_attr($appkey) ?>" /></td>
 				</tr>
-				<tr class="updraftplusmethod dropbox">
+				<tr class="<?php echo $classes;?>">
 					<th>Your Dropbox App Secret:</th>
-					<td><input type="text" style="width:332px" id="updraft_dropbox_secret" name="updraft_dropbox[secret]" value="<?php echo esc_attr($secret); ?>" /></td>
+					<td><input type="text" style="width:332px" <?php $this->output_settings_field_name_and_id('secret');?> value="<?php echo esc_attr($secret); ?>" /></td>
 				</tr>
 
 			<?php } ?>
@@ -555,11 +542,11 @@ class UpdraftPlus_BackupModule_dropbox {
 		if (isset($_GET['updraftplus_dropboxauth'])) {
 			// Clear out the existing credentials
 			if ('doit' == $_GET['updraftplus_dropboxauth']) {
-				$opts = $this->get_opts();
+				$opts = $this->get_options();
 				$opts['tk_access_token'] = '';
 				unset($opts['tk_request_token']);
 				$opts['ownername'] = '';
-				UpdraftPlus_Options::update_updraft_option('updraft_dropbox', $opts);
+				$this->set_options($opts, true);
 			} elseif ('deauth' == $_GET['updraftplus_dropboxauth']) {
 					
 				try {
@@ -574,7 +561,7 @@ class UpdraftPlus_BackupModule_dropbox {
 			}
 		} elseif (isset($_GET['state'])) {
 			//Get the CSRF from setting and check it matches the one returned if it does no CSRF attack has happened
-			$opts = $this->get_opts();
+			$opts = $this->get_options();
 			$CSRF = $opts['CSRF'];
 			$state = stripslashes($_GET['state']);
 			if (strcmp($CSRF, $state) == 0) {
@@ -582,7 +569,7 @@ class UpdraftPlus_BackupModule_dropbox {
 				if (isset($_GET['code'])) {
 					//set code so it can be accessed in the next authentication step
 					$opts['code'] = stripslashes($_GET['code']);
-					UpdraftPlus_Options::update_updraft_option('updraft_dropbox', $opts);
+					$this->set_options($opts, true);
 					$this->auth_token();
 				}
 			} else {
@@ -625,9 +612,9 @@ class UpdraftPlus_BackupModule_dropbox {
 				$name = $body->name->display_name;
 			}
 			$message .= ". <br>".sprintf(__('Your %s account name: %s','updraftplus'),'Dropbox', htmlspecialchars($name));
-			$opts = $this->get_opts();
+			$opts = $this->get_options();
 			$opts['ownername'] = $name;
-			UpdraftPlus_Options::update_updraft_option('updraft_dropbox', $opts);
+			$this->set_options($opts, true);
 
 			try {
 				/*
@@ -674,7 +661,7 @@ class UpdraftPlus_BackupModule_dropbox {
 
 	public function auth_token() {
 		$this->bootstrap();
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 		if (!empty($opts['tk_access_token'])) {
 			add_action('all_admin_notices', array($this, 'show_authed_admin_warning') );
 		}
@@ -703,7 +690,7 @@ class UpdraftPlus_BackupModule_dropbox {
 		require_once(UPDRAFTPLUS_DIR.'/includes/'.$dropbox_api.'/OAuth/Consumer/Curl.php');
 //		require_once(UPDRAFTPLUS_DIR.'/includes/'.$dropbox_api.'/OAuth/Consumer/WordPress.php');
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		$key = empty($opts['secret']) ? '' : $opts['secret'];
 		$sec = empty($opts['appkey']) ? '' : $opts['appkey'];
@@ -718,7 +705,7 @@ class UpdraftPlus_BackupModule_dropbox {
 		$encrypter = new Dropbox_Encrypter('ThisOneDoesNotMatterBeyondLength');
 
 		// Instantiate the storage
-		$storage = new Dropbox_WordPress($encrypter, "tk_", 'updraft_dropbox');
+		$storage = new Dropbox_WordPress($encrypter, "tk_", 'updraft_dropbox', $this);
 
 //		WordPress consumer does not yet work
 //		$OAuth = new Dropbox_ConsumerWordPress($sec, $key, $storage, $callback);

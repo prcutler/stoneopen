@@ -106,6 +106,7 @@ div[id^="bwg_container"] div[id^="bwg_container"] .bwg_img_clear {
   -webkit-animation: spin 2.5s infinite linear;*/
 }
 
+img[class^="bwg_filmstrip_thumbnail_img"],
 .bwg_filmstrip_thumbnail_img {
   max-width: none;
 }
@@ -360,3 +361,7 @@ div[id^="bwg_search_container_1_"] div[id^="bwg_search_container_2_"] .bwg_searc
   max-width: 100%;
 }
 /* end sort */
+
+.spider_popup_wrap .wd_error {
+  color: #CCCCCC;
+}

@@ -314,7 +314,7 @@ class BWGControllerGalleries_bwg {
       case 2:
         $src_img = @imagecreatefromjpeg($file_path);
         $write_image = 'imagejpeg';
-        $image_quality = 90;
+        $image_quality = 100;
         break;
       case 1:
         @imagecolortransparent($new_img, @imagecolorallocate($new_img, 0, 0, 0));

@@ -801,7 +801,7 @@ class BWGViewGalleryBox {
             $style = 'none';
             $current_image_arr = explode('/', $current_image_url);
             if (!$is_embed) {
-              $download_href = site_url() . '/' . $WD_BWG_UPLOAD_DIR . $current_image_url;
+              $download_href = site_url() . '/' . $WD_BWG_UPLOAD_DIR . str_replace('/thumb/', '/.original/', $current_thumb_url);
               $style = 'inline-block';
             }
             elseif (preg_match('/FLICKR/', $current_filetype) == 1) {
@@ -1423,7 +1423,7 @@ class BWGViewGalleryBox {
             jQuery("#bwg_download").show();
             if (!is_embed) {
               jQuery("#bwg_fullsize_image").attr("href", "<?php echo site_url() . '/' . $WD_BWG_UPLOAD_DIR; ?>" + data[key]['image_url']);
-              jQuery("#bwg_download").attr("href", "<?php echo site_url() . '/' . $WD_BWG_UPLOAD_DIR; ?>" + data[key]['image_url']);
+              jQuery("#bwg_download").attr("href", "<?php echo site_url() . '/' . $WD_BWG_UPLOAD_DIR; ?>" + data[key]['thumb_url'].replace('/thumb/', '/.original/'));
             }
             else {
               jQuery("#bwg_fullsize_image").attr("href", data[key]['image_url']);
@@ -1522,7 +1522,7 @@ class BWGViewGalleryBox {
         else {
           for (var i = 0; i < data.length; i++) {
             var is_embed = data[i]['filetype'].indexOf("EMBED_") > -1 ? true : false;
-            if (typeof data[index] != "undefined") {
+            if (typeof data[i] != "undefined") {
               if (!is_embed) {
                 jQuery("<img/>").attr("src", '<?php echo site_url() . '/' . $WD_BWG_UPLOAD_DIR; ?>' + jQuery('<span style="display: block;" />').html(data[i]["image_url"]).text());
               }
@@ -1768,6 +1768,9 @@ class BWGViewGalleryBox {
           <?php
         }
         ?>
+        jQuery('#spider_popup_wrap').bind('touchmove', function (event) {
+          event.preventDefault();
+        });
         if (typeof jQuery().swiperight !== 'undefined') {
           if (jQuery.isFunction(jQuery().swiperight)) {
             jQuery('#spider_popup_wrap').swiperight(function () {

@@ -673,14 +673,7 @@ class BWGViewBWGShortcode {
                     <td class="spider_label spider_free_version_label"><label for="slideshow_filmstrip_height"><?php _e("Slideshow Filmstrip size:", 'bwg_back'); ?> </label></td>
                     <td class="spider_free_version_label"><input disabled="disabled" type="text" name="slideshow_filmstrip_height" id="slideshow_filmstrip_height" value="<?php echo $wd_bwg_options->slideshow_filmstrip_height; ?>" class="spider_int_input spider_free_version_label" /> px</td>
                   </tr>
-                </tbody>
-              </table>
-              </div>
-              <div class="bwg_short_div" style="border-right: 1px solid #000000;">
-              <table>
-                <!--Slideshow view-->
-                <tbody id="tbody_slideshow">
-                  <tr id="tr_slideshow_enable_title">
+                    <tr id="tr_slideshow_enable_title">
                     <td class="spider_label"><label><?php _e("Enable Image Title:", 'bwg_back'); ?> </label></td>
                     <td>
                       <input type="radio" name="slideshow_enable_title" id="slideshow_title_yes" value="1" <?php echo ($wd_bwg_options->slideshow_enable_title) ? 'checked' : ''; ?> onClick="bwg_enable_disable('', 'tr_slideshow_title_position', 'slideshow_title_yes')" /><label for="slideshow_title_yes"><?php _e('Yes', 'bwg_back'); ?></label>
@@ -767,11 +760,15 @@ class BWGViewBWGShortcode {
                     </td>
                   </tr>
                 </tbody>
+              </table>
+              </div>
+              <div class="bwg_short_div" style="border-right: 1px solid #000000;">
+              <table>
 
                 <!--Lightbox view-->
                 <tbody id="tbody_popup_other">
                   <tr id="tr_thumb_click_action">
-                    <td class="spider_label"><label><?php _e("Thumb click action:", 'bwg_back'); ?> </label></td>
+                    <td class="spider_label"><label><?php _e("Image click action:", 'bwg_back'); ?> </label></td>
                     <td>
                       <input type="radio" name="thumb_click_action" id="thumb_click_action_1" value="open_lightbox" <?php if ($wd_bwg_options->thumb_click_action == 'open_lightbox') echo 'checked="checked"'; ?> onchange="bwg_thumb_click_action()" /><label for="thumb_click_action_1"><?php _e("Open lightbox", 'bwg_back'); ?></label><br />
                       <input type="radio" name="thumb_click_action" id="thumb_click_action_2" value="redirect_to_url" <?php if ($wd_bwg_options->thumb_click_action == 'redirect_to_url') echo 'checked="checked"'; ?> onchange="bwg_thumb_click_action()" /><label for="thumb_click_action_2"><?php _e("Redirect to url", 'bwg_back'); ?></label><br />
@@ -1479,127 +1476,150 @@ class BWGViewBWGShortcode {
                 }
               }
               // Lightbox.
-              if (short_code['gallery_type'] != 'slideshow') {
-                jQuery("#popup_width").val(short_code['popup_width']);
-                jQuery("#popup_height").val(short_code['popup_height']);
-                jQuery("select[id=popup_effect] option[value='" + short_code['popup_effect'] + "']").attr('selected', 'selected');
-                jQuery("#popup_interval").val(short_code['popup_interval']);
-                jQuery("#popup_effect_duration").val(short_code['popup_effect_duration']);
-                if (short_code['popup_fullscreen'] == 1) {
-                  jQuery("#popup_fullscreen_1").attr('checked', 'checked'); 
-                  jQuery("#tr_popup_width_height").css('display', 'none');
+                if (short_code['popup_width'] != undefined) {
+                  jQuery("#popup_width").val(short_code['popup_width']);
                 }
-                else {
-                  jQuery("#popup_fullscreen_0").attr('checked', 'checked');
-                  jQuery("#tr_popup_width_height").css('display', '');
+                if (short_code['popup_height'] != undefined) {
+                  jQuery("#popup_height").val(short_code['popup_height']);
                 }
-                if (short_code['popup_autoplay'] == 1) {
-                  jQuery("#popup_autoplay_1").attr('checked', 'checked'); 
+                if (short_code['popup_effect'] != undefined) {
+                  jQuery("select[id=popup_effect] option[value='" + short_code['popup_effect'] + "']").attr('selected', 'selected');
                 }
-                else {
-                  jQuery("#popup_autoplay_0").attr('checked', 'checked');
+                if (short_code['popup_interval'] != undefined) {
+                  jQuery("#popup_interval").val(short_code['popup_interval']);
                 }
-                if (short_code['popup_enable_filmstrip'] == 1) {
-                  jQuery("#popup_filmstrip_yes").attr('checked', 'checked');
-                  jQuery("#popup_filmstrip_height").val(short_code['popup_filmstrip_height']);
-                  bwg_enable_disable('', 'tr_popup_filmstrip_height', 'popup_filmstrip_yes');
+                if (short_code['popup_effect_duration'] != undefined){
+                  jQuery("#popup_effect_duration").val(short_code['popup_effect_duration']);
                 }
-                else {
-                  jQuery("#popup_filmstrip_no").attr('checked', 'checked');
-                }
-                if (short_code['popup_enable_ctrl_btn'] == 1) {
-                  jQuery("#popup_ctrl_btn_yes").attr('checked', 'checked');
-                  bwg_enable_disable('', 'tbody_popup_ctrl_btn', 'popup_ctrl_btn_yes');
-                  if (short_code['popup_enable_fullscreen'] == 1) {
-                    jQuery("#popup_fullscreen_yes").attr('checked', 'checked');
+                if(short_code['popup_fullscreen'] != undefined) {
+                  if (short_code['popup_fullscreen'] == 1) {
+                    jQuery("#popup_fullscreen_1").attr('checked', 'checked'); 
+                    jQuery("#tr_popup_width_height").css('display', 'none');
                   }
                   else {
-                    jQuery("#popup_fullscreen_no").attr('checked', 'checked');
-                  }
-                  if (short_code['popup_enable_info'] == 1 || !short_code['popup_enable_info']) {
-                    jQuery("#popup_info_yes").attr('checked', 'checked');
-                  }
-                  else {
-                    jQuery("#popup_info_no").attr('checked', 'checked');
-                  }
-                  if (short_code['show_tag_box'] == 0 || !short_code['show_tag_box']) {
-                    jQuery("#show_tag_box_0").attr('checked', 'checked');
-                  }
-                  else {
-                    jQuery("#show_tag_box_1").attr('checked', 'checked');
-                  }
-                  if (short_code['popup_info_full_width'] == 1) {
-                    jQuery("#popup_info_full_width_1").attr('checked', 'checked');
-                  }
-                  else {
-                    jQuery("#popup_info_full_width_0").attr('checked', 'checked');
-                  }
-                  if (short_code['popup_info_always_show'] == 1 && short_code['popup_info_always_show']) {
-                    jQuery("#popup_info_always_show_yes").attr('checked', 'checked');
-                  }
-                  else {
-                    jQuery("#popup_info_always_show_no").attr('checked', 'checked');
-                  }
-                  if (short_code['popup_enable_rate'] == 1 && short_code['popup_enable_rate']) {
-                    jQuery("#popup_rate_yes").attr('checked', 'checked');
-                  }
-                  else {
-                    jQuery("#popup_rate_no").attr('checked', 'checked');
-                  }
-                  if (short_code['popup_enable_comment'] == 1) {
-                    jQuery("#popup_comment_yes").attr('checked', 'checked');
-                  }
-                  else {
-                    jQuery("#popup_comment_no").attr('checked', 'checked');
-                  }
-                  if (short_code['popup_hit_counter'] == 1 && short_code['popup_hit_counter']) {
-                    jQuery("#popup_hit_counter_yes").attr('checked', 'checked');
-                  }
-                  else {
-                    jQuery("#popup_hit_counter_no").attr('checked', 'checked');
-                  }
-                  if (short_code['popup_enable_facebook'] == 1) {
-                    jQuery("#popup_facebook_yes").attr('checked', 'checked');
-                  }
-                  else {
-                    jQuery("#popup_facebook_no").attr('checked', 'checked');
-                  }
-                  if (short_code['popup_enable_twitter'] == 1) {
-                    jQuery("#popup_twitter_yes").attr('checked', 'checked');
-                  }
-                  else {
-                    jQuery("#popup_twitter_no").attr('checked', 'checked');
-                  }
-                  if (short_code['popup_enable_google'] == 1) {
-                    jQuery("#popup_google_yes").attr('checked', 'checked');
-                  }
-                  else {
-                    jQuery("#popup_google_no").attr('checked', 'checked');
-                  }
-                  if (short_code['popup_enable_pinterest'] == 1) {
-                    jQuery("#popup_pinterest_yes").attr('checked', 'checked');
-                  }
-                  else {
-                    jQuery("#popup_pinterest_no").attr('checked', 'checked');
-                  }
-                  if (short_code['popup_enable_tumblr'] == 1) {
-                    jQuery("#popup_tumblr_yes").attr('checked', 'checked');
-                  }
-                  else {
-                    jQuery("#popup_tumblr_no").attr('checked', 'checked');
+                    jQuery("#popup_fullscreen_0").attr('checked', 'checked');
+                    jQuery("#tr_popup_width_height").css('display', '');
                   }
                 }
-                else {
-                  jQuery("#popup_ctrl_btn_no").attr('checked', 'checked');
+                if(short_code['popup_autoplay'] != undefined) {
+                  if (short_code['popup_autoplay'] == 1) {
+                    jQuery("#popup_autoplay_1").attr('checked', 'checked'); 
+                  }
+                  else {
+                    jQuery("#popup_autoplay_0").attr('checked', 'checked');
+                  }
                 }
-                if (!short_code['thumb_click_action'] || short_code['thumb_click_action'] == 'undefined' || short_code['thumb_click_action'] == 'open_lightbox') {
-                  jQuery("#thumb_click_action_1").attr('checked', 'checked'); 
+                if(short_code['popup_enable_filmstrip'] != undefined) {
+                  if (short_code['popup_enable_filmstrip'] == 1) {
+                    jQuery("#popup_filmstrip_yes").attr('checked', 'checked');
+                    jQuery("#popup_filmstrip_height").val(short_code['popup_filmstrip_height']);
+                    bwg_enable_disable('', 'tr_popup_filmstrip_height', 'popup_filmstrip_yes');
+                  }
+                  else {
+                    jQuery("#popup_filmstrip_no").attr('checked', 'checked');
+                  }      
+                }
+                if (short_code['popup_enable_ctrl_btn'] != undefined){                
+                  if (short_code['popup_enable_ctrl_btn'] == 1) {
+                    jQuery("#popup_ctrl_btn_yes").attr('checked', 'checked');
+                    bwg_enable_disable('', 'tbody_popup_ctrl_btn', 'popup_ctrl_btn_yes');
+                    if (short_code['popup_enable_fullscreen'] == 1) {
+                      jQuery("#popup_fullscreen_yes").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#popup_fullscreen_no").attr('checked', 'checked');
+                    }
+                    if (short_code['popup_enable_info'] == 1 || !short_code['popup_enable_info']) {
+                      jQuery("#popup_info_yes").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#popup_info_no").attr('checked', 'checked');
+                    }
+                    if (short_code['show_tag_box'] == 0 || !short_code['show_tag_box']) {
+                      jQuery("#show_tag_box_0").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#show_tag_box_1").attr('checked', 'checked');
+                    }
+                    if (short_code['popup_info_full_width'] == 1) {
+                      jQuery("#popup_info_full_width_1").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#popup_info_full_width_0").attr('checked', 'checked');
+                    }
+                    if (short_code['popup_info_always_show'] == 1 && short_code['popup_info_always_show']) {
+                      jQuery("#popup_info_always_show_yes").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#popup_info_always_show_no").attr('checked', 'checked');
+                    }
+                    if (short_code['popup_enable_rate'] == 1 && short_code['popup_enable_rate']) {
+                      jQuery("#popup_rate_yes").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#popup_rate_no").attr('checked', 'checked');
+                    }
+                    if (short_code['popup_enable_comment'] == 1) {
+                      jQuery("#popup_comment_yes").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#popup_comment_no").attr('checked', 'checked');
+                    }
+                    if (short_code['popup_hit_counter'] == 1 && short_code['popup_hit_counter']) {
+                      jQuery("#popup_hit_counter_yes").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#popup_hit_counter_no").attr('checked', 'checked');
+                    }
+                    if (short_code['popup_enable_facebook'] == 1) {
+                      jQuery("#popup_facebook_yes").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#popup_facebook_no").attr('checked', 'checked');
+                    }
+                    if (short_code['popup_enable_twitter'] == 1) {
+                      jQuery("#popup_twitter_yes").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#popup_twitter_no").attr('checked', 'checked');
+                    }
+                    if (short_code['popup_enable_google'] == 1) {
+                      jQuery("#popup_google_yes").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#popup_google_no").attr('checked', 'checked');
+                    }
+                    if (short_code['popup_enable_ecommerce'] == 1) {
+                      jQuery("#popup_ecommerce_yes").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#popup_ecommerce_no").attr('checked', 'checked');
+                    }
+                    if (short_code['popup_enable_pinterest'] == 1) {
+                      jQuery("#popup_pinterest_yes").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#popup_pinterest_no").attr('checked', 'checked');
+                    }
+                    if (short_code['popup_enable_tumblr'] == 1) {
+                      jQuery("#popup_tumblr_yes").attr('checked', 'checked');
+                    }
+                    else {
+                      jQuery("#popup_tumblr_no").attr('checked', 'checked');
+                    }
+                  }
+                  else {
+                    jQuery("#popup_ctrl_btn_no").attr('checked', 'checked');
+                  }
+                }
+                if (!short_code['thumb_click_action'] || short_code['thumb_click_action'] == 'undefined' || short_code['thumb_click_action'] == 'do_nothing') {
+                  jQuery("#thumb_click_action_3").attr('checked', 'checked'); 
                 }
                 else if (short_code['thumb_click_action'] == 'redirect_to_url') {
                   jQuery("#thumb_click_action_2").attr('checked', 'checked');
                 }
-                else if (short_code['thumb_click_action'] == 'do_nothing') {
-                  jQuery("#thumb_click_action_3").attr('checked', 'checked');
+                else if (short_code['thumb_click_action'] == 'open_lightbox') {
+                  jQuery("#thumb_click_action_1").attr('checked', 'checked');
                 }
                 if (short_code['thumb_link_target'] == 1 || !short_code['thumb_link_target'] || short_code['thumb_link_target'] == 'undefined') {
                   jQuery("#thumb_link_target_yes").attr('checked', 'checked'); 
@@ -1608,7 +1628,7 @@ class BWGViewBWGShortcode {
                   jQuery("#thumb_link_target_no").attr('checked', 'checked');
                 }
                 bwg_thumb_click_action();
-              }
+              
               // Watermark.
               if (short_code['watermark_type'] == 'text') {
                 jQuery("#watermark_type_text").attr('checked', 'checked');
@@ -1829,7 +1849,6 @@ class BWGViewBWGShortcode {
               }
             }
             // Lightbox paramteres.
-            if (gallery_type != 'slideshow') {
               tagtext += ' thumb_click_action="' + jQuery("input[name=thumb_click_action]:checked").val() + '"';
               tagtext += ' thumb_link_target="' + jQuery("input[name=thumb_link_target]:checked").val() + '"';
               tagtext += ' popup_fullscreen="' + jQuery("input[name=popup_fullscreen]:checked").val() + '"';
@@ -1855,7 +1874,7 @@ class BWGViewBWGShortcode {
               tagtext += ' popup_enable_tumblr="' + jQuery("input[name=popup_enable_tumblr]:checked").val() + '"';
               tagtext += ' show_tag_box="' + jQuery("input[name=show_tag_box]:checked").val() + '"';
               tagtext += ' popup_effect_duration="' + jQuery("#popup_effect_duration").val() + '"';
-            }
+            
             // Watermark parameters.
             tagtext += ' watermark_type="' + jQuery("input[name=watermark_type]:checked").val() + '"';
             tagtext += ' watermark_link="' + (jQuery("#watermark_link").val()) + '"';
@@ -1877,7 +1896,7 @@ class BWGViewBWGShortcode {
             short_code += ' id="' + shortcode_id + '"' + title + ']';
             var short_id = ' id="' + shortcode_id + '"' + title;
             short_code = short_code.replace(/\[Best_Wordpress_Gallery([^\]]*)\]/g, function(d, c) {
-              return "<img src='<?php echo WD_BWG_URL; ?>/images/icons/bwg_shortcode.png' class='bwg_shortcode mceItem' title='Best_Wordpress_Gallery" + short_id + "' />";
+              return "<img src='<?php echo WD_BWG_URL; ?>/images/icons/gallery-icon.png' class='bwg_shortcode mceItem' title='Best_Wordpress_Gallery" + short_id + "' />";
             });
             <?php if (!$from_menu) { ?>
               jQuery("#task").val("save");

@@ -59,7 +59,7 @@ jQuery(window).load(function(){
     },
     _do_bwg:function (ed) {
       return ed.replace(/\[Best_Wordpress_Gallery([^\]]*)\]/g, function (d, c) {
-        return '<img src="' + bwg_plugin_url + '/images/icons/bwg_shortcode.png" class="bwg_shortcode mceItem" title="Best_Wordpress_Gallery' + tinymce.DOM.encode(c) + '" />';
+        return '<img src="' + bwg_plugin_url + '/images/icons/gallery-icon.png" class="bwg_shortcode mceItem" title="Best_Wordpress_Gallery' + tinymce.DOM.encode(c) + '" />';
       })
     },
     _get_bwg:function (b) {

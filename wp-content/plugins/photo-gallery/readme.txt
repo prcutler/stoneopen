@@ -1,14 +1,14 @@
-=== Gallery ===
+=== Photo Gallery by WD – Responsive Photo Gallery for WordPress ===
 Contributors: webdorado,wdsupport
 Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
-Tags:  content gallery, gallery, gallery image, image gallery, images gallery, lightbox gallery, media gallery, photo gallery, responsive gallery, thumbnail gallery, wordpress gallery, youtube gallery
+Tags:  photo gallery, responsive gallery, gallery, gallery image, lightbox gallery, image gallery, images gallery,  media gallery,  thumbnail gallery, wordpress gallery, youtube gallery, content gallery
 Requires at least: 3.4
 Tested up to: 4.7 
-Stable tag: 1.3.30    
+Stable tag: 1.3.35    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Gallery is an advanced plugin with a list of tools and options for adding and editing images for different views. It is fully responsive. 
+Photo Gallery is an advanced plugin with a list of tools and options for adding and editing images for different views. It is fully responsive. 
 
 == Description ==
 
@@ -174,6 +174,32 @@ We recommend to use images with the width of 1200px to 1600px. In order to speed
 To enable the feature of adding Media Library images, go to Photo Gallery > Options > Global Options and set Import from Media Library option to Yes. After that you will be able to import photos from Media Library to Photo Gallery.     
 
 == Changelog ==
+
+= 1.3.35 =
+* Added: Support forum link.     
+* Fixed: Instagram gallery blog style view.    
+* Fixed: Conflict with "Wordfence Security" plugin.    
+* Fixed: Images preload bug.    
+* Fixed: Widget slideshow.    
+* Changed: Possibility to set empty Images Directory.    
+
+= 1.3.34 =
+* Fixed: Security issue in filemanager.   
+
+= 1.3.33 =
+* Fixed: Filemanager.    
+* Fixed: Saving gallery autoupdate interval.     
+
+= 1.3.32 =
+* Fixed: Filemanager.    
+* Fixed: JPEG quality on image reset.   
+  
+= 1.3.31 =
+* Added: Open lightbox from slideshow and carousel views.    
+* Changed: Download original image from frontend.     
+* Changed: Preload images in slideshow view.    
+* Fixed: Scroll load in filemanager.    
+* Added: Header for deleted image on shared image open.    
 
 = 1.3.30 =
 * Changed: Scroll load in filemanager.   

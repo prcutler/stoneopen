@@ -81,7 +81,7 @@ class BWGControllerOptions_bwg {
       if ($name == 'autoupdate_interval') {
         $autoupdate_interval = (isset($_POST['autoupdate_interval_hour']) && isset($_POST['autoupdate_interval_min']) ? ((int) $_POST['autoupdate_interval_hour'] * 60 + (int) $_POST['autoupdate_interval_min']) : null);
         /*minimum autoupdate interval is 1 min*/
-        $autoupdate_interval = isset($autoupdate_interval) && $autoupdate_interval >= 1 ? $autoupdate_interval : 1;
+        $row->autoupdate_interval = isset($autoupdate_interval) && $autoupdate_interval >= 1 ? $autoupdate_interval : 1;
       }
       else if ($name != 'images_directory' && isset($_POST[$name])) {
         $row->$name = esc_html(stripslashes($_POST[$name]));

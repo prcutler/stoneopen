@@ -6,7 +6,7 @@
 */
 
 function spider_display_embed(embed_type, embed_id, attrs){
-
+  
   var html_to_insert = '';
   
   switch(embed_type) {
