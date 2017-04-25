@@ -54,7 +54,7 @@ class UpdraftPlus_BackupModule_ftp extends UpdraftPlus_BackupModule {
 		return array('multi_options');
 	}
 
-	protected function get_default_options() {
+	public function get_default_options() {
 		return array(
 			'host' => '',
 			'user' => '',

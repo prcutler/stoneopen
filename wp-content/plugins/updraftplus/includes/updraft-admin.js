@@ -637,9 +637,9 @@ function updraft_activejobs_update(force) {
 				var log_append_array = resp.u;
 				if (log_append_array.nonce == updraft_poplog_log_nonce) {
 					updraft_poplog_log_pointer = log_append_array.pointer;
-					if (log_append_array.html != null && log_append_array.html != '') {
+					if (log_append_array.log != null && log_append_array.log != '') {
 						var oldscroll = jQuery('#updraft-poplog').scrollTop();
-						jQuery('#updraft-poplog-content').append(log_append_array.html);
+						jQuery('#updraft-poplog-content').append(log_append_array.log);
 						if (updraft_poplog_lastscroll == oldscroll || updraft_poplog_lastscroll == -1) {
 							jQuery('#updraft-poplog').scrollTop(jQuery('#updraft-poplog-content').prop("scrollHeight"));
 							updraft_poplog_lastscroll = jQuery('#updraft-poplog').scrollTop();

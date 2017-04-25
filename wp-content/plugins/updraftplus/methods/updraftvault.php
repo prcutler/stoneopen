@@ -32,7 +32,7 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 		}
 	}
 	
-	protected function get_default_options() {
+	public function get_default_options() {
 		return array(
 			'token' => '',
 			'email' => '',

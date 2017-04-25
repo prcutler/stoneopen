@@ -92,11 +92,16 @@ class UpdraftPlus_Admin {
 		if ($return_instead_of_echo) return ob_get_clean();
 	}
 	
-	private function setup_all_admin_notices_global($service){
+	/**
+	 * Add actions for any needed dashboard notices for remote storage services
+	 *
+	 * @param String|Array $services - a list of services, or single service
+	 */
+	private function setup_all_admin_notices_global($services) {
 		
 		global $updraftplus;
 
-		if ('googledrive' === $service || (is_array($service) && in_array('googledrive', $service))) {
+		if ('googledrive' === $services || (is_array($services) && in_array('googledrive', $services))) {
 			$settings = $updraftplus->update_remote_storage_options_format('googledrive');
 			
 			if (is_wp_error($settings)) {
@@ -116,7 +121,7 @@ class UpdraftPlus_Admin {
 				}
 			}
 		}
-		if ('googlecloud' === $service || (is_array($service) && in_array('googlecloud', $service))) {
+		if ('googlecloud' === $services || (is_array($services) && in_array('googlecloud', $services))) {
 			$opts = UpdraftPlus_Options::get_updraft_option('updraft_googlecloud');
 			if (!empty($opts)) {
 				$clientid = $opts['clientid'];
@@ -125,7 +130,7 @@ class UpdraftPlus_Admin {
 			if (!empty($clientid) && empty($token)) add_action('all_admin_notices', array($this,'show_admin_warning_googlecloud'));
 		}
 		
-		if ('dropbox' === $service || (is_array($service) && in_array('dropbox', $service))) {
+		if ('dropbox' === $services || (is_array($services) && in_array('dropbox', $services))) {
 			$settings = $updraftplus->update_remote_storage_options_format('dropbox');
 			
 			if (is_wp_error($settings)) {
@@ -142,7 +147,7 @@ class UpdraftPlus_Admin {
 			}
 		}
 		
-		if ('onedrive' === $service || (is_array($service) && in_array('onedrive', $service))) {
+		if ('onedrive' === $services || (is_array($services) && in_array('onedrive', $services))) {
 			$opts = UpdraftPlus_Options::get_updraft_option('updraft_onedrive');
 			//if (((!empty($opts['clientid']) && !empty($opts['secret'])) || !empty($opts['use_master'])) && empty($opts['refresh_token'])) 
 			if((defined('UPDRAFTPLUS_CUSTOM_ONEDRIVE_APP') && UPDRAFTPLUS_CUSTOM_ONEDRIVE_APP)){
@@ -152,7 +157,7 @@ class UpdraftPlus_Admin {
 			}
 		}
 
-		if ('updraftvault' === $service || (is_array($service) && in_array('updraftvault', $service))) {
+		if ('updraftvault' === $services || (is_array($services) && in_array('updraftvault', $services))) {
 			$vault_settings = UpdraftPlus_Options::get_updraft_option('updraft_updraftvault');
 			$connected = (is_array($vault_settings) && !empty($vault_settings['token']) && !empty($vault_settings['email'])) ? true : false;
 			if (!$connected) add_action('all_admin_notices', array($this,'show_admin_warning_updraftvault') );
@@ -1658,7 +1663,7 @@ class UpdraftPlus_Admin {
 		
 		if (!empty($nonce)) {
 			$updraft_dir = $updraftplus->backups_dir_location();
-			
+
 			$potential_log_file = $updraft_dir."/log.".$nonce.".txt";
 
 			if (is_readable($potential_log_file)){
@@ -1676,6 +1681,7 @@ class UpdraftPlus_Admin {
 				
 				$new_pointer = ftell($log_file);
 				$log_content = implode("", $templog_array);
+
 				
 			} else {
 				$log_content .= __('The log file could not be read.', 'updraftplus');

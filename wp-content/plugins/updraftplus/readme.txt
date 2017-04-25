@@ -3,7 +3,7 @@ Contributors: Backup with UpdraftPlus, DavidAnderson, DNutbourne, aporter, snigh
 Tags: backup, restore, database backup, wordpress backup, cloud backup, s3, dropbox, google drive, onedrive, ftp, backups
 Requires at least: 3.2
 Tested up to: 4.7
-Stable tag: 1.12.37
+Stable tag: 1.12.40
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -125,13 +125,24 @@ Thanks for asking; yes, we've got a few. Check out this profile page - https://p
 
 The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the best place to learn in more detail about any important changes.
 
-N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.12.36 of the free version correspond to changes made in 2.12.36.x of the paid version.
+N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.12.38 of the free version correspond to changes made in 2.12.38.x of the paid version.
+
+= 1.12.40 - 01/Apr/2017 =
+
+* TWEAK: The in-page log file display had stopped continuously updating in 1.12.32
+* FIX: In some circumstances, settings for the storage modules refactored in 1.12.37 could fail to show
+* FIX: The free version of 1.12.37/38 in some circumstances could fail to complete Dropbox authentication
+
+= 1.12.38 - 31/Mar/2017 =
+
+* TWEAK: Dropbox API v2 call to de-authorise a token was failing
+* FIX: Prevent a fatal error when attempting to use a backup method with no options set
 
 = 1.12.37 - 31/Mar/2017 =
 
 * FEATURE: Browse the contents of a backup from within your WordPress dashboard, and (with Premium) download individual files from it
 * FIX: Fix an issue that could occasionally cause corruption of interrupted Dropbox backups. All Dropbox users are recommended to update asap.
-* TWEAK: Remove debugging statement inadvertantly left in 1.12.36
+* TWEAK: Remove debugging statement inadvertently left in 1.12.36
 * TWEAK: Re-factored remote storage handlers via add-ons so that there was a cleaner and more consistent class hierarchy (preparation for future improvements). N.B. If you subsequently downgrade to an older version of UpdraftPlus, you will need to re-enter the settings for some remote storage options.
 * TWEAK: List of checksum algorithms run over backups and logged now includes SHA256, and is filterable (SHA1 now considered deprecated)
 * TWEAK: Allow chunked database encryption to try and resume in the event of an error
@@ -436,4 +447,4 @@ We recognise and thank the following for code and/or libraries used and/or modif
 
 
 == Upgrade Notice ==
-* 1.12.37: Allow other WP dashboard pages to call a backup easily. Various tweaks and small improvements.
+* 1.12.40: The free version of 1.12.37/38 in some circumstances could fail to complete Dropbox authentication; and for new users, the Google Drive settings might fail to show.

@@ -3569,32 +3569,36 @@ class UpdraftPlus {
 			if (!isset($dropbox['settings'][$instance_id])) unset($opts['settings'][$instance_id]);
 		}
 		
-		foreach ($dropbox['settings'] as $instance_id => $storage_options) {
-			if (!empty($opts['settings'][$instance_id]['tk_access_token'])) {
-			
-				$current_app_key = empty($opts['settings'][$instance_id]['appkey']) ? false : $opts['settings'][$instance_id]['appkey'];
-				$new_app_key = empty($storage_options['appkey']) ? false : $storage_options['appkey'];
+		if (!empty($dropbox['settings'])) {
+		
+			foreach ($dropbox['settings'] as $instance_id => $storage_options) {
+				if (!empty($opts['settings'][$instance_id]['tk_access_token'])) {
+				
+					$current_app_key = empty($opts['settings'][$instance_id]['appkey']) ? false : $opts['settings'][$instance_id]['appkey'];
+					$new_app_key = empty($storage_options['appkey']) ? false : $storage_options['appkey'];
 
-				// If a different app key is being used, then wipe the stored token as it cannot belong to the new app
-				if ($current_app_key !== $new_app_key) {
-					unset($opts['settings'][$instance_id]['tk_access_token']);
-					unset($opts['settings'][$instance_id]['ownername']);
-					unset($opts['settings'][$instance_id]['CSRF']);
+					// If a different app key is being used, then wipe the stored token as it cannot belong to the new app
+					if ($current_app_key !== $new_app_key) {
+						unset($opts['settings'][$instance_id]['tk_access_token']);
+						unset($opts['settings'][$instance_id]['ownername']);
+						unset($opts['settings'][$instance_id]['CSRF']);
+					}
+				
 				}
-			
-			}
-			
-			// Now loop over the new options, and replace old options with them
-			foreach ($storage_options as $key => $value) { 
-				if (null === $value) {
-					unset($opts['settings'][$instance_id][$key]);
-				} else {
-					if (!isset($opts['settings'][$instance_id])) $opts['settings'][$instance_id] = array();
-					$opts['settings'][$instance_id][$key] = $value; 
+				
+				// Now loop over the new options, and replace old options with them
+				foreach ($storage_options as $key => $value) { 
+					if (null === $value) {
+						unset($opts['settings'][$instance_id][$key]);
+					} else {
+						if (!isset($opts['settings'][$instance_id])) $opts['settings'][$instance_id] = array();
+						$opts['settings'][$instance_id][$key] = $value; 
+					}
 				}
+				
+				if (!empty($opts['settings'][$instance_id]['folder']) && preg_match('#^https?://(www.)dropbox\.com/home/Apps/UpdraftPlus(.Com)?([^/]*)/(.*)$#i', $opts['settings'][$instance_id]['folder'], $matches)) $opts['settings'][$instance_id]['folder'] = $matches[3];
+				
 			}
-			
-			if (!empty($opts['settings'][$instance_id]['folder']) && preg_match('#^https?://(www.)dropbox\.com/home/Apps/UpdraftPlus(.Com)?([^/]*)/(.*)$#i', $opts['settings'][$instance_id]['folder'], $matches)) $opts['settings'][$instance_id]['folder'] = $matches[3];
 			
 		}
 		
