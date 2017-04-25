@@ -61,6 +61,12 @@ class BWGViewThumbnails {
     if (!isset($params['tag'])) {
       $params['tag'] = 0;
     }
+    if (!isset($params['show_gallery_description'])) {
+      $params['show_gallery_description'] = 0;
+    }
+    if (!isset($params['showthumbs_name'])) {
+      $params['showthumbs_name'] = 0;
+    }
     $from = (isset($params['from']) ? esc_html($params['from']) : 0);
     $sort_direction = $params['order_by'];
     global $wd_bwg_options;
@@ -140,7 +146,27 @@ class BWGViewThumbnails {
     else {
       $type = "";
     }
-
+   if (!isset($theme_row->thumb_gal_title_font_color)) {
+      $theme_row->thumb_gal_title_font_color = 'CCCCCC';
+    }
+    if (!isset($theme_row->thumb_gal_title_font_style)) {
+      $theme_row->thumb_gal_title_font_style = 'segoe ui';
+    }
+    if (!isset($theme_row->thumb_gal_title_font_size)) {
+      $theme_row->thumb_gal_title_font_size = 16;
+    }
+    if (!isset($theme_row->thumb_gal_title_font_weight)) {
+      $theme_row->thumb_gal_title_font_weight = 'bold';
+    }
+    if (!isset($theme_row->thumb_gal_title_margin)) {
+      $theme_row->thumb_gal_title_margin = '2px';
+    }
+    if (!isset($theme_row->thumb_gal_title_shadow)) {
+      $theme_row->thumb_gal_title_shadow = '0px 0px 0px #888888';
+    }
+    if (!isset($theme_row->thumb_gal_title_align)) {
+      $theme_row->thumb_gal_title_align = 'center';
+    }
     $gallery_row = WDWLibrary::get_gallery_row_data($params['gallery_id']);
     if (!$gallery_row && ($type == '') && $params["tag"] == 0) {
       echo WDWLibrary::message(__('There is no gallery selected or the gallery was deleted.', 'bwg'), 'wd_error');
@@ -214,8 +240,17 @@ class BWGViewThumbnails {
           if (isset($params['show_tag_box']) && $params['show_tag_box']) {
               WDWLibrary::ajax_html_frontend_search_tags('gal_front_form_' . $bwg, $bwg, 'bwg_standart_thumbnails_' . $bwg, $images_count, $tags_rows);
           }
+           if ($params['showthumbs_name'] && $gallery_row->name != '') {
+            ?>
+              <div class="bwg_gal_title_<?php echo $bwg; ?>"><?php echo $gallery_row->name; ?></div>
+            <?php
+          }
+          if ($params['show_gallery_description'] && $gallery_row->name != '') {
+            ?>
+              <div class="bwg_gal_title_<?php echo $bwg; ?>"><?php echo $gallery_row->description; ?></div>
+            <?php
+          }
           ?>
-          <div class="bwg_back_<?php echo $bwg; ?>"><?php echo $wd_bwg_options->showthumbs_name ? $gallery_row->name : ''; ?></div>
           <div style="background-color:rgba(0, 0, 0, 0); text-align: <?php echo $theme_row->thumb_align; ?>; width:100%; position: relative;">
             <div id="ajax_loading_<?php echo $bwg; ?>" style="position:absolute;width: 100%; z-index: 115; text-align: center; height: 100%; vertical-align: middle; display:none;">
               <div style="display: table; vertical-align: middle; width: 100%; height: 100%; background-color: #FFFFFF; opacity: 0.7; filter: Alpha(opacity=70);">
@@ -623,6 +658,17 @@ class BWGViewThumbnails {
         text-align: center;
         margin: 0 auto;
       }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_gal_title_<?php echo $bwg; ?> {
+      background-color: rgba(0, 0, 0, 0);
+      color: #<?php echo $theme_row->thumb_gal_title_font_color; ?>;
+      display: block;
+      font-family: <?php echo $theme_row->thumb_gal_title_font_style; ?>;
+      font-size: <?php echo $theme_row->thumb_gal_title_font_size; ?>px;
+      font-weight: <?php echo $theme_row->thumb_gal_title_font_weight; ?>;
+      padding: <?php echo $theme_row->thumb_gal_title_margin; ?>;
+      text-shadow: <?php echo $theme_row->thumb_gal_title_shadow; ?>;
+      text-align: <?php echo $theme_row->thumb_gal_title_align; ?>;
+    }
     <?php
     return ob_get_clean();
   }

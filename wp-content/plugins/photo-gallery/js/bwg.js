@@ -1,3 +1,9 @@
+jQuery(document).ready(function () {
+    jQuery('.bwg_requried').on("keypress", function () {
+      jQuery('.bwg_requried').removeAttr("style");
+    });
+});
+
 function edit_tag(m) {
   var name, slug, tr;
   name = jQuery("#name" + m).html();

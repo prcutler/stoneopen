@@ -23,6 +23,7 @@ class BWGModelAddAlbumsGalleries {
 
   public function get_rows_data($album_id) {
     global $wpdb;
+    $album_id = (int)$album_id;
     $where = ((isset($_POST['search_value']) && (esc_html(stripslashes($_POST['search_value'])) != '')) ? ' AND name LIKE "%' . esc_html(stripslashes($_POST['search_value'])) . '%"' : '');
     $asc_or_desc = ((isset($_POST['asc_or_desc'])) ? esc_html(stripslashes($_POST['asc_or_desc'])) : 'asc');
     $asc_or_desc = ($asc_or_desc != 'asc') ? 'desc' : 'asc';
@@ -40,6 +41,7 @@ class BWGModelAddAlbumsGalleries {
     
   public function page_nav($album_id) {
     global $wpdb;
+    $album_id = (int)$album_id;
     $where = ((isset($_POST['search_value']) && (esc_html(stripslashes($_POST['search_value'])) != '')) ? ' AND name LIKE "%' . esc_html(stripslashes($_POST['search_value'])) . '%"' : '');
     $query = "SELECT id FROM " . $wpdb->prefix . "bwg_album WHERE published=1 AND id<>" . $album_id . " " . $where . " UNION ALL SELECT id FROM " . $wpdb->prefix . "bwg_gallery WHERE published=1 " . $where;
     $total = count($wpdb->get_col($query));

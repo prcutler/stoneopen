@@ -160,7 +160,7 @@ class BWGViewUninstall_bwg {
     ?>
     <div class="wrap">
       <h2><?php _e("Uninstall Photo Gallery", 'bwg_back'); ?></h2>
-      <p><strong><a href="<?php echo $deactivate_url; ?>"><?php _e("Click Here", 'bwg_back'); ?></a> <?php _e("To Finish the Uninstallation and Photo Gallery will be Deactivated Automatically.", 'bwg_back'); ?></strong></p>
+      <p><strong><a href="<?php echo $deactivate_url; ?>" class="bwg_deactivate_link" data-uninstall="1"><?php _e("Click Here", 'bwg_back'); ?></a> <?php _e("To Finish the Uninstallation and Photo Gallery will be Deactivated Automatically.", 'bwg_back'); ?></strong></p>
       <input id="task" name="task" type="hidden" value="" />
     </div>
   <?php

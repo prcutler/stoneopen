@@ -58,7 +58,7 @@ class FilemanagerModel {
       }
       else {
         $data['media_library_files'] = array();
-        $data['importer_files_count'] = array();
+        $data['importer_files_count'] = 0;
         $data['media_library_files_all'] = array();
       }
       $data['extensions'] = (isset($_REQUEST['extensions']) ? esc_html($_REQUEST['extensions']) : '');

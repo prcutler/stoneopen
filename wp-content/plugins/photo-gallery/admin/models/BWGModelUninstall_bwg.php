@@ -20,17 +20,19 @@ class BWGModelUninstall_bwg {
   ////////////////////////////////////////////////////////////////////////////////////////
   public function delete_db_tables() {
     global $wpdb;
-    $wpdb->query("DROP TABLE " . $wpdb->prefix . "bwg_album");
-    $wpdb->query("DROP TABLE " . $wpdb->prefix . "bwg_album_gallery");
-    $wpdb->query("DROP TABLE " . $wpdb->prefix . "bwg_gallery");
-    $wpdb->query("DROP TABLE " . $wpdb->prefix . "bwg_image");
-    $wpdb->query("DROP TABLE " . $wpdb->prefix . "bwg_image_comment");
-    $wpdb->query("DROP TABLE " . $wpdb->prefix . "bwg_image_rate");
-    $wpdb->query("DROP TABLE " . $wpdb->prefix . "bwg_image_tag");
-    $wpdb->query("DROP TABLE " . $wpdb->prefix . "bwg_option");
-    $wpdb->query("DROP TABLE " . $wpdb->prefix . "bwg_theme");
-    $wpdb->query("DROP TABLE " . $wpdb->prefix . "bwg_shortcode");
+    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "bwg_album");
+    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "bwg_album_gallery");
+    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "bwg_gallery");
+    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "bwg_image");
+    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "bwg_image_comment");
+    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "bwg_image_rate");
+    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "bwg_image_tag");
+    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "bwg_option");
+    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "bwg_theme");
+    $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "bwg_shortcode");
     delete_option("wd_bwg_version");
+    delete_option("bwg_subscribe_done");
+    delete_user_meta(get_current_user_id(), 'bwg_photo_gallery');
     if (isset($_COOKIE['bwg_image_asc_or_desc'])) {
       $_COOKIE['bwg_image_asc_or_desc'] = '';
     }

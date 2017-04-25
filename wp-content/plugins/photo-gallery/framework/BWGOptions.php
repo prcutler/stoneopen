@@ -18,6 +18,7 @@ class WD_BWG_Options {
   public $image_enable_page = 1;
   public $image_title_show_hover = 'none';
   public $ecommerce_icon_show_hover = 'none';
+  public $show_gallery_description = 0;
 
   public $album_column_number = 5;
   public $albums_per_page = 30;
@@ -155,6 +156,8 @@ class WD_BWG_Options {
   public $show_hide_post_meta = 0;
   public $use_inline_stiles_and_scripts = 0;
   public $placeholder = '';
+  public $gallery_download = 0;
+  public $enable_wp_editor = 1;
 
   public function __construct($reset = false) {
     $wd_bwg_options = get_option('wd_bwg_options');

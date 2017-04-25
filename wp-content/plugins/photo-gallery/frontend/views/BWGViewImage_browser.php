@@ -47,6 +47,12 @@ class BWGViewImage_browser {
     if (!isset($params['tag'])) {
       $params['tag'] = 0;
     }
+    if (!isset($params['show_gallery_description'])) {
+      $params['show_gallery_description'] = 0;
+    }
+    if (!isset($params['showthumbs_name'])) {
+      $params['showthumbs_name'] = 0;
+    }
     if (!$theme_row) {
       echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
       return;
@@ -156,7 +162,27 @@ class BWGViewImage_browser {
        $params_array['watermark_font_size'] = ''; 
     }
     $image_browser_image_title_align = (isset($theme_row->image_browser_image_title_align)) ? $theme_row->image_browser_image_title_align : 'top';
-
+    if (!isset($theme_row->image_browser_gal_title_font_color)) {
+        $theme_row->image_browser_gal_title_font_color = 'CCCCCC';
+      }
+      if (!isset($theme_row->image_browser_gal_title_font_style)) {
+        $theme_row->image_browser_gal_title_font_style = 'segoe ui';
+      }
+      if (!isset($theme_row->image_browser_gal_title_font_size)) {
+        $theme_row->image_browser_gal_title_font_size = 16;
+      }
+      if (!isset($theme_row->image_browser_gal_title_font_weight)) {
+        $theme_row->image_browser_gal_title_font_weight = 'bold';
+      }
+      if (!isset($theme_row->image_browser_gal_title_margin)) {
+        $theme_row->image_browser_gal_title_margin = '2px';
+      }
+      if (!isset($theme_row->image_browser_gal_title_shadow)) {
+        $theme_row->image_browser_gal_title_shadow = '0px 0px 0px #888888';
+      }
+      if (!isset($theme_row->image_browser_gal_title_align)) {
+        $theme_row->image_browser_gal_title_align = 'center';
+      }
     $inline_style = $this->inline_styles($bwg, $theme_row, $params, $params_array, $text_align, $vertical_align);
     if ($wd_bwg_options->use_inline_stiles_and_scripts) {
       wp_enqueue_style('bwg_frontend');
@@ -193,6 +219,16 @@ class BWGViewImage_browser {
           <?php
           if ($params['show_search_box']) {
             WDWLibrary::ajax_html_frontend_search_box('gal_front_form_' . $bwg, $bwg, 'bwg_standart_thumbnails_' . $bwg, $images_count, $params['search_box_width'], $placeholder);
+          }
+          if ($params['showthumbs_name'] && $gallery_row->name != '') {
+            ?>
+              <div class="bwg_gal_title_<?php echo $bwg; ?>"><?php echo $gallery_row->name; ?></div>
+            <?php
+          }
+          if ($params['show_gallery_description'] && $gallery_row->name != '') {
+            ?>
+              <div class="bwg_gal_title_<?php echo $bwg; ?>"><?php echo $gallery_row->description; ?></div>
+            <?php
           }
           ?>
           <div class="image_browser_images_conteiner_<?php echo $bwg; ?>">
@@ -669,6 +705,17 @@ class BWGViewImage_browser {
         -ms-user-select: none;
         user-select: none;
       }
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_gal_title_<?php echo $bwg; ?> {
+        background-color: rgba(0, 0, 0, 0);
+        color: #<?php echo $theme_row->image_browser_gal_title_font_color; ?>;
+        display: block;
+        font-family: <?php echo $theme_row->image_browser_gal_title_font_style; ?>;
+        font-size: <?php echo $theme_row->image_browser_gal_title_font_size; ?>px;
+        font-weight: <?php echo $theme_row->image_browser_gal_title_font_weight; ?>;
+        padding: <?php echo $theme_row->image_browser_gal_title_margin; ?>;
+        text-shadow: <?php echo $theme_row->image_browser_gal_title_shadow; ?>;
+        text-align: <?php echo $theme_row->image_browser_gal_title_align; ?>;
+    }
     <?php
     return ob_get_clean();
   }

@@ -4,7 +4,7 @@
  * Plugin Name: Photo Gallery
  * Plugin URI: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
- * Version: 1.3.35
+ * Version: 1.3.37
  * Author: WebDorado
  * Author URI: https://web-dorado.com/
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
@@ -47,41 +47,42 @@ $WD_BWG_UPLOAD_DIR = $wd_bwg_options->images_directory . '/photo-gallery';
 
 // Plugin menu.
 function bwg_options_panel() {
-  $galleries_page = add_menu_page('Photo Gallery', 'Photo Gallery', 'manage_options', 'galleries_bwg', 'bwg_gallery', WD_BWG_URL . '/images/icons/best-wordpress-gallery.png');
+  $parent_slug = null;
+  if( get_option( "bwg_subscribe_done" ) == 1 ) {
+    add_menu_page('Photo Gallery', 'Photo Gallery', 'manage_options', 'galleries_bwg', 'bwg_gallery', WD_BWG_URL . '/images/icons/best-wordpress-gallery.png');
+    $parent_slug = "galleries_bwg";
+  }
 
-  $galleries_page = add_submenu_page('galleries_bwg', __('Add Galleries/Images', 'bwg_back'), __('Add Galleries/Images', 'bwg_back'), 'manage_options', 'galleries_bwg', 'bwg_gallery');
+  $galleries_page = add_submenu_page($parent_slug, __('Add Galleries/Images', 'bwg_back'), __('Add Galleries/Images', 'bwg_back'), 'manage_options', 'galleries_bwg', 'bwg_gallery');
   add_action('admin_print_styles-' . $galleries_page, 'bwg_styles');
   add_action('admin_print_scripts-' . $galleries_page, 'bwg_scripts');
   add_action('load-' . $galleries_page, 'bwg_add_galleries_per_page_option');
 
-  $albums_page = add_submenu_page('galleries_bwg', __('Albums', 'bwg_back'), __('Albums', 'bwg_back'), 'manage_options', 'albums_bwg', 'bwg_gallery');
+  $albums_page = add_submenu_page($parent_slug, __('Albums', 'bwg_back'), __('Albums', 'bwg_back'), 'manage_options', 'albums_bwg', 'bwg_gallery');
   add_action('admin_print_styles-' . $albums_page, 'bwg_styles');
   add_action('admin_print_scripts-' . $albums_page, 'bwg_scripts');
   add_action('load-' . $albums_page, 'bwg_add_albums_per_page_option');
 
-  $tags_page = add_submenu_page('galleries_bwg', __('Tags', 'bwg_back'), __('Tags', 'bwg_back'), 'manage_options', 'tags_bwg', 'bwg_gallery');
+  $tags_page = add_submenu_page($parent_slug, __('Tags', 'bwg_back'), __('Tags', 'bwg_back'), 'manage_options', 'tags_bwg', 'bwg_gallery');
   add_action('admin_print_styles-' . $tags_page, 'bwg_styles');
   add_action('admin_print_scripts-' . $tags_page, 'bwg_scripts');
   add_action('load-' . $tags_page, 'bwg_add_tags_per_page_option');
 
-  $options_page = add_submenu_page('galleries_bwg', __('Options', 'bwg_back'), __('Options', 'bwg_back'), 'manage_options', 'options_bwg', 'bwg_gallery');
+  $options_page = add_submenu_page($parent_slug, __('Options', 'bwg_back'), __('Options', 'bwg_back'), 'manage_options', 'options_bwg', 'bwg_gallery');
   add_action('admin_print_styles-' . $options_page, 'bwg_styles');
   add_action('admin_print_scripts-' . $options_page, 'bwg_options_scripts');
 
-  $themes_page = add_submenu_page('galleries_bwg', __('Themes', 'bwg_back'), __('Themes', 'bwg_back'), 'manage_options', 'themes_bwg', 'bwg_gallery');
+  $themes_page = add_submenu_page($parent_slug, __('Themes', 'bwg_back'), __('Themes', 'bwg_back'), 'manage_options', 'themes_bwg', 'bwg_gallery');
   add_action('admin_print_styles-' . $themes_page, 'bwg_styles');
   add_action('admin_print_scripts-' . $themes_page, 'bwg_options_scripts');
   add_action('load-' . $themes_page, 'bwg_add_themes_per_page_option');
 
-  add_submenu_page('galleries_bwg', __('Generate Shortcode', 'bwg_back'), __('Generate Shortcode', 'bwg_back'), 'manage_options', 'BWGShortcode', 'bwg_gallery');
+  add_submenu_page($parent_slug, __('Generate Shortcode', 'bwg_back'), __('Generate Shortcode', 'bwg_back'), 'manage_options', 'BWGShortcode', 'bwg_gallery');
   
-  $licensing_plugins_page = add_submenu_page('galleries_bwg', __('Get Pro', 'bwg_back'), __('Get Pro', 'bwg_back'), 'manage_options', 'licensing_bwg', 'bwg_gallery');
+  $licensing_plugins_page = add_submenu_page($parent_slug, __('Get Pro', 'bwg_back'), __('Get Pro', 'bwg_back'), 'manage_options', 'licensing_bwg', 'bwg_gallery');
   add_action('admin_print_styles-' . $licensing_plugins_page, 'bwg_licensing_styles');
 
-  add_submenu_page('galleries_bwg', __('Featured Plugins', 'bwg_back'), __('Featured Plugins', 'bwg_back'), 'manage_options', 'featured_plugins_bwg', 'bwg_featured');
-  add_submenu_page('galleries_bwg', __('Featured Themes', 'bwg_back'), __('Featured Themes', 'bwg_back'), 'manage_options', 'featured_themes_bwg', 'bwg_featured_themes'); 
-
-  $uninstall_page = add_submenu_page('galleries_bwg', __('Uninstall', 'bwg_back'), __('Uninstall', 'bwg_back'), 'manage_options', 'uninstall_bwg', 'bwg_gallery');
+  $uninstall_page = add_submenu_page($parent_slug, __('Uninstall', 'bwg_back'), __('Uninstall', 'bwg_back'), 'manage_options', 'uninstall_bwg', 'bwg_gallery');
   add_action('admin_print_styles-' . $uninstall_page, 'bwg_styles');
   add_action('admin_print_scripts-' . $uninstall_page, 'bwg_options_scripts');
 
@@ -99,36 +100,6 @@ function bwg_gallery() {
     $controller = new $controller_class();
     $controller->execute();
   }
-}
-
-function bwg_featured() {
-  if (function_exists('current_user_can')) {
-    if (!current_user_can('manage_options')) {
-      die('Access Denied');
-    }
-  }
-  else {
-    die('Access Denied');
-  }
-  require_once(WD_BWG_DIR . '/featured/featured.php');
-  wp_register_style('bwg_featured', WD_BWG_URL . '/featured/style.css', array(), wd_bwg_version());
-  wp_print_styles('bwg_featured');
-  spider_featured('photo-gallery');
-}
-
-function bwg_featured_themes() {
-  if (function_exists('current_user_can')) {
-    if (!current_user_can('manage_options')) {
-      die('Access Denied');
-    }
-  }
-  else {
-    die('Access Denied');
-  }
-  require_once(WD_BWG_DIR . '/featured/featured_themes.php');
-  wp_register_style('bwg_featured_themes', WD_BWG_URL . '/featured/themes_style.css', array(), wd_bwg_version());
-  wp_print_styles('bwg_featured_themes');
-  spider_featured_themes('photo-gallery');
 }
 
 function bwg_addons() {
@@ -354,7 +325,8 @@ function bwg_shortcode($params) {
         'enable_image_google' => 1,
         'watermark_type' => 'none',
         'load_more_image_count' => 15,
-        'show_tag_box' => 0
+        'show_tag_box' => 0,
+        'show_gallery_description' => 0
       ), $params);
       break;
 
@@ -382,6 +354,7 @@ function bwg_shortcode($params) {
         'enable_slideshow_music' => 0,
         'slideshow_music_url' => '',
         'slideshow_effect_duration' => 1,
+        'show_gallery_description' => 0
       ), $params);
       break;
 
@@ -396,7 +369,8 @@ function bwg_shortcode($params) {
         'image_browser_width' => 800,
         'image_browser_title_enable' => 1,
         'image_browser_description_enable' => 1,
-        'watermark_type' => 'none'
+        'watermark_type' => 'none',
+        'show_gallery_description' => 0
       ), $params);
       break;
 
@@ -421,7 +395,8 @@ function bwg_shortcode($params) {
         'compuct_album_enable_page' => 1,
         'watermark_type' => 'none',
         'compuct_album_load_more_image_count' => 15,
-        'compuct_albums_per_page_load_more' => 15
+        'compuct_albums_per_page_load_more' => 15,
+        'show_gallery_description' => 0
       ), $params);
       break;
 
@@ -446,7 +421,8 @@ function bwg_shortcode($params) {
         'extended_album_enable_page' => 1,
         'watermark_type' => 'none',
         'extended_album_load_more_image_count' => 15,
-        'extended_albums_per_page_load_more' => 15
+        'extended_albums_per_page_load_more' => 15,
+        'show_gallery_description' => 0
       ), $params);
       break;
 
@@ -1617,7 +1593,7 @@ function bwg_activate() {
     ));
   }
   $version = get_option('wd_bwg_version');
-  $new_version = '1.3.35';
+  $new_version = '1.3.37';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -1669,7 +1645,7 @@ wp_oembed_add_provider( '#https://instagr(\.am|am\.com)/p/.*#i', 'https://api.in
 
 function bwg_update_hook() {
   $version = get_option('wd_bwg_version');
-  $new_version = '1.3.35';
+  $new_version = '1.3.37';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -1709,6 +1685,7 @@ function bwg_styles() {
     $url = 'https://fonts.googleapis.com/css?family=' . $query . '&subset=greek,latin,greek-ext,vietnamese,cyrillic-ext,latin-ext,cyrillic';
     wp_enqueue_style('bwg_googlefonts_' . $i, $url, null, null);
   }
+  wp_enqueue_style('bwg_deactivate-css',  WD_BWG_URL . '/wd/assets/css/deactivate_popup.css', array(), wd_bwg_version());
 }
 
 // Plugin scripts.
@@ -1890,6 +1867,16 @@ function bwg_options_scripts() {
   ));
   require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
   wp_localize_script('bwg_admin', 'bwg_objectGGF', WDWLibrary::get_google_fonts());
+
+  wp_enqueue_script('bwg-deactivate-popup', WD_BWG_URL . '/wd/assets/js/deactivate_popup.js', array(), wd_bwg_version(), true );
+  $admin_data = wp_get_current_user();
+
+  wp_localize_script( 'bwg-deactivate-popup', 'bwgWDDeactivateVars', array(
+    "prefix" => "bwg" ,
+    "deactivate_class" =>  'bwg_deactivate_link',
+    "email" => $admin_data->data->user_email,
+    "plugin_wd_url" => "https://web-dorado.com/products/wordpress-photo-gallery-plugin.html",
+  ));
 }
 
 function bwg_front_end_scripts() {
@@ -2093,11 +2080,6 @@ function wd_bwg_version() {
   return $version;
 }
 
-if (is_admin() && (!defined('DOING_AJAX') || !DOING_AJAX)) {
-	include_once(WD_BWG_DIR . '/photo-gallery-notices.php');
-  new BWG_Notices();
-}
-
 function bwg_register_admin_scripts() {
   wp_register_script('bwg_shortcode', WD_BWG_URL . '/js/bwg_shortcode.js', FALSE, wd_bwg_version());
   require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
@@ -2110,6 +2092,7 @@ function bwg_topic() {
   $user_guide_link = 'https://web-dorado.com/wordpress-gallery/';
   $support_forum_link = 'https://wordpress.org/support/plugin/photo-gallery';
   $pro_link = 'https://web-dorado.com/files/fromPhotoGallery.php';
+  $pro_icon = WD_BWG_URL . '/images/wd_logo.png';
   $support_icon = WD_BWG_URL . '/images/support.png';
   $prefix = 'bwg_back';
   $is_free = TRUE;
@@ -2164,14 +2147,14 @@ function bwg_topic() {
   <style>
     .wd_topic {
       background-color: #ffffff;
+      border: none;
       box-sizing: border-box;
       clear: both;
       color: #6e7990;
-      float: left;
       font-size: 14px;
       font-weight: bold;
-      line-height: 30px;
-      padding: 10px 15px;
+      line-height: 44px;
+      padding: 0 0 0 15px;
       vertical-align: middle;
       width: 98%;
     }
@@ -2197,17 +2180,32 @@ function bwg_topic() {
     }
     .wd_topic .wd_pro {
       float: right;
-      background-color: #45A6B7;
-      padding: 0 10px;
+      padding: 0;
     }
     .wd_topic .wd_pro a {
       border: none;
       box-shadow: none !important;
-      color: #FFFFFF;
       text-decoration: none;
     }
+    .wd_topic .wd_pro img {
+      border: none;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .wd_topic .wd_pro a,
+    .wd_topic .wd_pro a:active,
+    .wd_topic .wd_pro a:visited,
+    .wd_topic .wd_pro a:hover {
+      background-color: #D8D8D8;
+      color: #175c8b;
+      display: inline-block;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 0 10px;
+      vertical-align: middle;
+    }
   </style>
-  <div class="wd_topic">
+  <div class="update-nag wd_topic">
     <?php
     if ($help_text) {
       ?>
@@ -2222,22 +2220,266 @@ function bwg_topic() {
     if ($is_free) {
       $text = strtoupper(__('Upgrade to paid version', $prefix));
       ?>
-      <span class="wd_pro">
-      <a target="_blank" href="<?php echo $pro_link; ?>">
-        <span><?php echo $text; ?></span>
-      </a>
-    </span>
+      <div class="wd_pro">
+        <a target="_blank" href="<?php echo $pro_link; ?>">
+          <img alt="web-dorado.com" title="<?php echo $text; ?>" src="<?php echo $pro_icon; ?>" />
+          <span><?php echo $text; ?></span>
+        </a>
+      </div>
       <?php
     }
-    ?>
-    <span class="wd_support">
+    if (FALSE) {
+      ?>
+      <span class="wd_support">
       <a target="_blank" href="<?php echo $support_forum_link; ?>">
         <img src="<?php echo $support_icon; ?>" />
         <?php _e('Support Forum', $prefix); ?>
       </a>
     </span>
+      <?php
+    }
+    ?>
   </div>
   <?php
   echo ob_get_clean();
 }
-add_action('admin_notices', 'bwg_topic');
+add_action('admin_notices', 'bwg_topic', 11);
+
+function bwg_overview() {
+  if (is_admin() && !isset($_REQUEST['ajax'])) {
+    if (!class_exists("DoradoWeb")) {
+      require_once(WD_BWG_DIR . '/wd/start.php');
+    }
+    global $bwg_options;
+    $bwg_options = array(
+      "prefix" => "bwg",
+      "wd_plugin_id" => 55,
+      "plugin_title" => "Photo Gallery",
+      "plugin_wordpress_slug" => "photo-gallery",
+      "plugin_dir" => WD_BWG_DIR,
+      "plugin_main_file" => __FILE__,
+      "description" => __('Photo Gallery is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.', 'bwg'),
+      // from web-dorado.com
+      "plugin_features" => array(
+        0 => array(
+          "title" => __("Easy Set-up and Management", "bwg"),
+          "description" => __("Create stunning, 100% responsive, SEO-friendly photo galleries in minutes. Use the File Manager with single-step and easy-to-manage functionality to rename, upload, copy, add and remove images and image directories. Otherwise use WordPress built in media uploader.", "bwg"),
+        ),
+        1 => array(
+          "title" => __("Unlimited Photos and Albums", "bwg"),
+          "description" => __("The plugin allows creating unlimited number of galleries or albums and upload images in each gallery as many as you wish. Add single/ multiple galleries into your pages and posts with the help of functional shortcode; visual shortcodes for an easier management.", "bwg"),
+        ),
+        2 => array(
+          "title" => __("Customizable", "bwg"),
+          "description" => __("The gallery plugin is easily customizable. You can edit themes changing sizes and colors for different features. Specify the number of images to display in a single row in an album. Additionally, you can customize thumbnail images by cropping, flipping and rotating them.", "bwg"),
+        ),
+        3 => array(
+          "title" => __("10 View Options", "bwg"),
+          "description" => __("Photo Gallery plugin allows displaying galleries and albums in 10 elegant and beautiful views:, Thumbnails, Masonry, Mosaic, Slideshow, Image Browser, Masonry Album, Compact Album, Extended Album, Blog Style Gallery, Ecommerce.", "bwg"),
+        ),
+        4 => array(
+          "title" => __("Audio and Video Support", "bwg"),
+          "description" => __("You can include both videos and images within a single gallery. WordPress Photo Gallery Plugin supports YouTube and Vimeo videos within Galleries. It’s also possible to add audio tracks for the image slideshow.", "bwg"),
+        )
+      ),
+      // user guide from web-dorado.com
+      "user_guide" => array(
+        0 => array(
+          "main_title" => __("Installing", "bwg"),
+          "url" => "https://web-dorado.com/wordpress-gallery/installing.html",
+          "titles" => array()
+        ),
+        1 => array(
+          "main_title" => __("Creating/Editing Galleries", "bwg"),
+          "url" => "https://web-dorado.com/wordpress-gallery/creating-editing-galleries.html",
+          "titles" => array(
+            array(
+              "title" => __("Instagram Gallery", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/creating-editing-galleries/instagram-gallery.html",
+            ),
+          )
+        ),
+        2 => array(
+          "main_title" => __("Creating/Editing Tags", "bwg"),
+          "url" => "https://web-dorado.com/wordpress-gallery/creating-editing-tag.html",
+          "titles" => array()
+        ),
+        3 => array(
+          "main_title" => __("Creating/Editing Albums", "bwg"),
+          "url" => "https://web-dorado.com/wordpress-gallery/creating-editing-albums.html",
+          "titles" => array()
+        ),
+        4 => array(
+          "main_title" => __("Editing Options", "bwg"),
+          "url" => "https://web-dorado.com/wordpress-gallery/editing-options.html",
+          "titles" => array(
+            array(
+              "title" => __("Global Options", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-options/global-options.html",
+            ),
+            array(
+              "title" => __("Watermark", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-options/watermark.html",
+            ),
+            array(
+              "title" => __("Advertisement", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-options/advertisement.html",
+            ),
+            array(
+              "title" => __("Lightbox", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-options/lightbox.html",
+            ),
+            array(
+              "title" => __("Album Options", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-options/album-options.html",
+            ),
+            array(
+              "title" => __("Slideshow", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-options/slideshow.html",
+            ),
+            array(
+              "title" => __("Thumbnail Options", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-options/thumbnail-options.html",
+            ),
+            array(
+              "title" => __("Image Options", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-options/image-options.html",
+            ),
+            array(
+              "title" => __("Social Options", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-options/social-options.html",
+            ),
+            array(
+              "title" => __("Carousel Options", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-options/carousel-options.html",
+            ),
+          )
+        ),
+        5 => array(
+          "main_title" => __("Creating/Editing Themes", "bwg"),
+          "url" => "https://web-dorado.com/wordpress-gallery/editing-themes.html",
+          "titles" => array(
+            array(
+              "title" => __("Thumbnails", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-themes/thumbnails.html",
+            ),
+            array(
+              "title" => __("Masonry", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-themes/masonry.html",
+            ),
+            array(
+              "title" => __("Mosaic", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-themes/mosaic.html",
+            ),
+            array(
+              "title" => __("Slideshow", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-themes/slideshow.html",
+            ),
+            array(
+              "title" => __("Image Browser", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-themes/image-browser.html",
+            ),
+            array(
+              "title" => __("Compact Album", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-themes/compact-album.html",
+            ),
+            array(
+              "title" => __("Masonry Album", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-themes/masonry-album.html",
+            ),
+            array(
+              "title" => __("Extended Album", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-themes/extended-album.html",
+            ),
+            array(
+              "title" => __("Blog Style", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-themes/blog-style.html",
+            ),
+            array(
+              "title" => __("Lightbox", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-themes/lightbox.html",
+            ),
+            array(
+              "title" => __("Page Navigation", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-themes/page-navigation.html",
+            ),
+            array(
+              "title" => __("Carousel", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/editing-themes/carousel.html",
+            ),
+          )
+        ),
+        6 => array(
+          "main_title" => __("Generating Shortcode", "bwg"),
+          "url" => "https://web-dorado.com/wordpress-gallery/shortcode-generating.html",
+          "titles" => array()
+        ),
+        7 => array(
+          "main_title" => __("Editing Comments", "bwg"),
+          "url" => "https://web-dorado.com/wordpress-gallery/comments-editing.html",
+          "titles" => array()
+        ),
+        8 => array(
+          "main_title" => __("Editing Ratings", "bwg"),
+          "url" => "https://web-dorado.com/wordpress-gallery/ratings-editing.html",
+          "titles" => array()
+        ),
+        9 => array(
+          "main_title" => __("Publishing the Created Photo Gallery", "bwg"),
+          "url" => "https://web-dorado.com/wordpress-gallery/publishing-gallery.html",
+          "titles" => array(
+            array(
+              "title" => __("General Parameters", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/publishing-gallery/general-parameters.html",
+            ),
+            array(
+              "title" => __("Lightbox Parameters", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/publishing-gallery/lightbox-parameters.html",
+            ),
+            array(
+              "title" => __("Advertisement", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/publishing-gallery/advertisement.html",
+            ),
+          )
+        ),
+        10 => array(
+          "main_title" => __("Publishing Photo Gallery Widgets", "bwg"),
+          "url" => "https://web-dorado.com/wordpress-gallery/publishing-gallery-widgets.html",
+          "titles" => array(
+            array(
+              "title" => __("Tag Cloud", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/publishing-gallery-widgets/tag-cloud.html",
+            ),
+            array(
+              "title" => __("Photo Gallery Tags Cloud", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/publishing-gallery-widgets/gallery-tags-cloud.html",
+            ),
+            array(
+              "title" => __("Photo Gallery Slideshow", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/publishing-gallery-widgets/gallery-slideshow.html",
+            ),
+            array(
+              "title" => __("Photo Gallery Widget", "bwg"),
+              "url" => "https://web-dorado.com/wordpress-gallery/publishing-gallery-widgets/gallery-widget.html",
+            ),
+          )
+        ),
+      ),
+      "video_youtube_id" => "4Mxg0FsFZZE",  // e.g. https://www.youtube.com/watch?v=acaexefeP7o youtube id is the acaexefeP7o
+      "plugin_wd_url" => "https://web-dorado.com/products/wordpress-photo-gallery-plugin.html",
+      "plugin_wd_demo_link" => "http://wpdemo.web-dorado.com/gallery/",
+      "plugin_wd_addons_link" => "https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons.html",
+      "after_subscribe" => admin_url('admin.php?page=overview_bwg'), // this can be plagin overview page or set up page
+      "plugin_wizard_link" => '',
+      "plugin_menu_title" => "Photo Gallery",
+      "plugin_menu_icon" => WD_BWG_URL . '/images/icons/best-wordpress-gallery.png',
+      "deactivate" => true,
+      "subscribe" => true,
+      "custom_post" => 'galleries_bwg',
+      "menu_position" => null,
+    );
+
+    dorado_web_init($bwg_options);
+  }
+}
+add_action('init', 'bwg_overview');

@@ -14,6 +14,14 @@ class BWGControllerUninstall_bwg {
   // Constructor & Destructor                                                           //
   ////////////////////////////////////////////////////////////////////////////////////////
   public function __construct() {
+    global $bwg_options;
+    if (!class_exists("DoradoWebConfig")) {
+      include_once(WD_BWG_DIR . "/wd/config.php");
+    }
+    $config = new DoradoWebConfig();
+    $config->set_options($bwg_options);
+    $deactivate_reasons = new DoradoWebDeactivate($config);
+    $deactivate_reasons->submit_and_deactivate();
   }
   ////////////////////////////////////////////////////////////////////////////////////////
   // Public Methods                                                                     //

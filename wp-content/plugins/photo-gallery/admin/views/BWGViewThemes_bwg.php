@@ -273,7 +273,7 @@ class  BWGViewThemes_bwg {
           <tbody>
           <tr>
             <td class="spider_label"><label for="name"><?php _e("Name:", 'bwg_back'); ?> <span style="color:#FF0000;"> * </span> </label></td>
-            <td><input type="text" id="name" name="name" value="<?php echo $row->name; ?>" class="spider_text_input"/></td>
+            <td><input type="text" id="name" name="name" value="<?php echo $row->name; ?>" class="spider_text_input bwg_requried"/></td>
           </tr>
           </tbody>
         </table>

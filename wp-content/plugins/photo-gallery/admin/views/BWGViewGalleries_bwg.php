@@ -213,6 +213,7 @@ class BWGViewGalleries_bwg {
     $page_title = (($id != 0) ? __('Edit gallery','bwg_back') . $row->name : __('Create new gallery','bwg_back'));
     $per_page = $this->model->per_page();
     $images_count = $this->model->get_images_count($id);
+    $enable_wp_editor = isset($wd_bwg_options->enable_wp_editor) ? $wd_bwg_options->enable_wp_editor : 1;
     ?>
     <script>
       function spider_set_href(a, number, type) {
@@ -536,7 +537,7 @@ class BWGViewGalleries_bwg {
         <tbody>
           <tr>
             <td class="spider_label_galleries"><label for="name"><?php _e("Name:", 'bwg_back'); ?> <span style="color:#FF0000;">*</span> </label></td>
-            <td><input type="text" id="name" name="name" value="<?php echo $row->name; ?>" size="39" /></td>
+            <td><input type="text" id="name" name="name" value="<?php echo $row->name; ?>" size="39" class="bwg_requried"/></td>
           </tr>
           <tr>
             <td class="spider_label_galleries"><label for="slug"><?php _e("Slug:", 'bwg_back'); ?> </label></td>
@@ -595,7 +596,7 @@ class BWGViewGalleries_bwg {
             <td>
               <div style="width:500px;">
               <?php
-              if (user_can_richedit()) {
+              if (user_can_richedit() && $enable_wp_editor) {
                 wp_editor($row->description, 'description', array('teeny' => FALSE, 'textarea_name' => 'description', 'media_buttons' => FALSE, 'textarea_rows' => 5));
               }
               else {

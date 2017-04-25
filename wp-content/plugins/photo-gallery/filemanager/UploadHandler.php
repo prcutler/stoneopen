@@ -309,7 +309,7 @@ class bwg_UploadHandler {
         error_log('Function not found: getimagesize');
         return false;
       }
-      list($img_width, $img_height) = @getimagesize(htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES));
+      list($img_width, $img_height, $type) = @getimagesize(htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES));
       if (!$img_width || !$img_height) {
         return false;
       }
@@ -349,7 +349,6 @@ class bwg_UploadHandler {
         $dst_y = 0 - ($new_height - $max_height) / 2;
         $new_img = @imagecreatetruecolor($max_width, $max_height);
       }
-      list($width, $height, $type) = getimagesize(htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES));
       // switch (strtolower(substr(strrchr($file_name, '.'), 1))) {
       switch ($type) {
         case 2:
