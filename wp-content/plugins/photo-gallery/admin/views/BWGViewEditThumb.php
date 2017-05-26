@@ -135,7 +135,7 @@ class BWGViewEditThumb {
         $img_r = imagecreatefromjpeg($filename);
         $dst_r = ImageCreateTrueColor($thumb_width, $thumb_height);
         imagecopyresampled($dst_r, $img_r, 0, 0, $x, $y, $thumb_width, $thumb_height, $w, $h);
-        imagejpeg($dst_r, $thumb_filename, 90);
+        imagejpeg($dst_r, $thumb_filename, $wd_bwg_options->jpeg_quality);
         imagedestroy($img_r);
         imagedestroy($dst_r);
       }
@@ -148,7 +148,7 @@ class BWGViewEditThumb {
         imagecopyresampled($dst_r, $img_r, 0, 0, $x, $y, $thumb_width, $thumb_height, $w, $h);
         imagealphablending($dst_r, FALSE);
         imagesavealpha($dst_r, TRUE);
-        imagepng($dst_r, $thumb_filename, 9);
+        imagepng($dst_r, $thumb_filename, $wd_bwg_options->png_quality);
         imagedestroy($img_r);
         imagedestroy($dst_r);
       }
@@ -346,10 +346,11 @@ class BWGViewEditThumb {
     <?php
     die();
   }
-  
+
   public function recover_image($id, $thumb_width, $thumb_height) {
     global $WD_BWG_UPLOAD_DIR;
     global $wpdb;
+    global $wd_bwg_options;
     $image_data = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_image WHERE id="%d"', $id));
     if (!$image_data) {
       $image_data = new stdClass();
@@ -367,7 +368,7 @@ class BWGViewEditThumb {
       $img_r = imagecreatefromjpeg($filename);
       $dst_r = ImageCreateTrueColor($thumb_width, $thumb_height);
       imagecopyresampled($dst_r, $img_r, 0, 0, 0, 0, $thumb_width, $thumb_height, $width_orig, $height_orig);
-      imagejpeg($dst_r, $thumb_filename, 100);
+      imagejpeg($dst_r, $thumb_filename, $wd_bwg_options->jpeg_quality);
       imagedestroy($img_r);
       imagedestroy($dst_r);
     }
@@ -380,7 +381,7 @@ class BWGViewEditThumb {
       imagecopyresampled($dst_r, $img_r, 0, 0, 0, 0, $thumb_width, $thumb_height, $width_orig, $height_orig);
       imagealphablending($dst_r, FALSE);
       imagesavealpha($dst_r, TRUE);
-      imagepng($dst_r, $thumb_filename, 9);
+      imagepng($dst_r, $thumb_filename, $wd_bwg_options->png_quality);
       imagedestroy($img_r);
       imagedestroy($dst_r);
     }
@@ -399,9 +400,10 @@ class BWGViewEditThumb {
     }
     @ini_restore('memory_limit');
   }
-  
+
   public function rotate() {
     global $WD_BWG_UPLOAD_DIR;
+    global $wd_bwg_options;
     $popup_width = ((int) (isset($_GET['width']) ? esc_html($_GET['width']) : '650')) - 30;
     $image_width = $popup_width - 40;
     $popup_height = ((int) (isset($_GET['height']) ? esc_html($_GET['height']) : '500')) - 55;
@@ -434,8 +436,8 @@ class BWGViewEditThumb {
         $thumb_source = imagecreatefromjpeg($thumb_filename);
         $rotate = imagerotate($source, $edit_type, 0);
         $thumb_rotate = imagerotate($thumb_source, $edit_type, 0);
-        imagejpeg($thumb_rotate, $thumb_filename, 90);
-        imagejpeg($rotate, $filename, 100);
+        imagejpeg($thumb_rotate, $thumb_filename, $wd_bwg_options->jpeg_quality);
+        imagejpeg($rotate, $filename, $wd_bwg_options->jpeg_quality);
         imagedestroy($source);
         imagedestroy($rotate);
         imagedestroy($thumb_source);
@@ -454,8 +456,8 @@ class BWGViewEditThumb {
         imagealphablending($thumb_rotate, FALSE);
         imagesavealpha($rotate, TRUE);
         imagesavealpha($thumb_rotate, TRUE);
-        imagepng($rotate, $filename, 9);
-        imagepng($thumb_rotate, $thumb_filename, 9);
+        imagepng($rotate, $filename, $wd_bwg_options->png_quality);
+        imagepng($thumb_rotate, $thumb_filename, $wd_bwg_options->png_quality);
         imagedestroy($source);
         imagedestroy($rotate);
         imagedestroy($thumb_source);
@@ -523,10 +525,10 @@ class BWGViewEditThumb {
       if ($type_rotate == 2) {
         $source = imagecreatefromjpeg($filename);
         $flip = bwg_image_flip($source, $edit_type);
-        imagejpeg($flip, $filename, 100);
+        imagejpeg($flip, $filename, $wd_bwg_options->jpeg_quality);
         $thumb_source = imagecreatefromjpeg($thumb_filename);
         $thumb_flip = bwg_image_flip($thumb_source, $edit_type);
-        imagejpeg($thumb_flip, $thumb_filename, 90);
+        imagejpeg($thumb_flip, $thumb_filename, $wd_bwg_options->jpeg_quality);
         imagedestroy($source);
         imagedestroy($flip);
         imagedestroy($thumb_source);
@@ -545,8 +547,8 @@ class BWGViewEditThumb {
         imagealphablending($thumb_flip, FALSE);
         imagesavealpha($flip, TRUE);
         imagesavealpha($thumb_flip, TRUE);
-        imagepng($flip, $filename, 9);
-        imagepng($thumb_flip, $thumb_filename, 9);
+        imagepng($flip, $filename, $wd_bwg_options->png_quality);
+        imagepng($thumb_flip, $thumb_filename, $wd_bwg_options->png_quality);
         imagedestroy($source);
         imagedestroy($flip);
         imagedestroy($thumb_source);
@@ -612,8 +614,8 @@ class BWGViewEditThumb {
         $thumb_source = imagecreatefromjpeg($thumb_filename);		
         imagefilter($source, $img_filter_type, $ratio);		
         imagefilter($thumb_source, $img_filter_type, $ratio);		       
-        imagejpeg($source, $filename, 100);
-        imagejpeg($thumb_source, $thumb_filename, 90);
+        imagejpeg($source, $filename, $wd_bwg_options->jpeg_quality);
+        imagejpeg($thumb_source, $thumb_filename, $wd_bwg_options->jpeg_quality);
         imagedestroy($source);
         imagedestroy($thumb_source);
       }
@@ -626,8 +628,8 @@ class BWGViewEditThumb {
         imagesavealpha($thumb_source, TRUE);
         imagefilter($source, $img_filter_type, $ratio);		
         imagefilter($thumb_source, $img_filter_type, $ratio);
-        imagepng($source, $filename, 9);
-        imagepng($thumb_source, $thumb_filename, 9);
+        imagepng($source, $filename, $wd_bwg_options->png_quality);
+        imagepng($thumb_source, $thumb_filename, $wd_bwg_options->png_quality);
         imagedestroy($source);
         imagedestroy($thumb_source);
       }
@@ -675,8 +677,8 @@ class BWGViewEditThumb {
         $thumb_source = imagecreatefromjpeg($thumb_filename);		
         imagefilter($source, $img_filter_type, $red, $green, $blue);		
         imagefilter($thumb_source, $img_filter_type, $red, $green, $blue);		       
-        imagejpeg($source, $filename, 100);
-        imagejpeg($thumb_source, $thumb_filename, 90);		
+        imagejpeg($source, $filename, $wd_bwg_options->jpeg_quality);
+        imagejpeg($thumb_source, $thumb_filename, $wd_bwg_options->jpeg_quality);		
         imagedestroy($source);
         imagedestroy($thumb_source);
       }
@@ -689,8 +691,8 @@ class BWGViewEditThumb {
         imagesavealpha($thumb_source, TRUE);
         imagefilter($source, $img_filter_type, $red, $green, $blue);		
         imagefilter($thumb_source, $img_filter_type, $red, $green, $blue);
-        imagepng($source, $filename, 9);
-        imagepng($thumb_source, $thumb_filename, 9);
+        imagepng($source, $filename, $wd_bwg_options->png_quality);
+        imagepng($thumb_source, $thumb_filename, $wd_bwg_options->png_quality);
         imagedestroy($source);
         imagedestroy($thumb_source);
       }

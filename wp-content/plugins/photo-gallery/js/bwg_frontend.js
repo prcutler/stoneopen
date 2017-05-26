@@ -1,4 +1,4 @@
-function spider_frontend_ajax(form_id, current_view, id, album_gallery_id, cur_album_id, type, srch_btn, title, sortByParam, load_more) {
+function spider_frontend_ajax(form_id, current_view, id, album_gallery_id, cur_album_id, type, srch_btn, title, sortByParam, load_more) {console.log("aaaaaaa");
   var masonry_loaded = 0;
   var mosaic_loaded = 0;
   if (typeof load_more == "undefined") {
@@ -56,8 +56,17 @@ function spider_frontend_ajax(form_id, current_view, id, album_gallery_id, cur_a
       if (load_more) {
         var strr = jQuery(data).find('#' + id).html();
         jQuery('#' + id).append(strr);
-        var str = jQuery(data).find('.bwg_nav_cont_'+ current_view).html();
-        jQuery('.bwg_nav_cont_'+ current_view).html(str);
+
+        jQuery("div[id^='bwg_container1_'] form").each(function () {
+          if (jQuery(this).data("current") == current_view) {
+            var str = jQuery(data).find('.bwg_nav_cont_' + current_view).html();
+            jQuery('.bwg_nav_cont_' + current_view).html(str);
+          }
+          else {
+            var str = jQuery(this).find('span[class^="bwg_nav_cont_"]').html();
+            jQuery(this).find('span[class^="bwg_nav_cont_"]').html(str);
+          }
+        });
       }
       else {
         var str = jQuery(data).find('#' + form_id).html();
@@ -66,6 +75,7 @@ function spider_frontend_ajax(form_id, current_view, id, album_gallery_id, cur_a
       // There are no images.
       if (jQuery("#bwg_search_input_" + current_view).length > 0 && album_gallery_id == 0) { // Search box exists and not album view.
         var bwg_images_count = jQuery('#bwg_images_count_' + current_view).val();
+       debugger;
         if (bwg_images_count == 0) {
           var cont = jQuery("#" + id).parent().html();
           var error_msg = '<div style="width:95%"><div class="wd_error"><p><strong>' + bwg_objectL10n.bwg_search_result + '</strong></p></div></div>';
@@ -81,7 +91,7 @@ function spider_frontend_ajax(form_id, current_view, id, album_gallery_id, cur_a
       else if (jQuery(this).attr("data-src") != '') {
         jQuery(this).attr("src", jQuery(this).attr("data-src"));
       }
-    });
+    }); 
     jQuery(".blog_style_image_buttons_conteiner_" + current_view).find(jQuery(".bwg_blog_style_img_" + current_view)).load(function(){
       jQuery(".bwg_blog_style_img_" + current_view).closest(jQuery(".blog_style_image_buttons_conteiner_" + current_view)).show();
     });

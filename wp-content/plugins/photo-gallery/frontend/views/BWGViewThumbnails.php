@@ -2,6 +2,7 @@
 class BWGViewThumbnails {
   public function display($params, $from_shortcode = 0, $bwg = 0) {
     global $WD_BWG_UPLOAD_DIR;
+    global $wd_bwg_options;
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
 
     if (!isset($params['image_title'])) {
@@ -65,11 +66,10 @@ class BWGViewThumbnails {
       $params['show_gallery_description'] = 0;
     }
     if (!isset($params['showthumbs_name'])) {
-      $params['showthumbs_name'] = 0;
+      $params['showthumbs_name'] = $wd_bwg_options->showthumbs_name;
     }
     $from = (isset($params['from']) ? esc_html($params['from']) : 0);
     $sort_direction = $params['order_by'];
-    global $wd_bwg_options;
     $placeholder = isset($wd_bwg_options->placeholder) ? $wd_bwg_options->placeholder : '';
     $play_icon = $wd_bwg_options->play_icon;
     if ($from) {
@@ -229,7 +229,7 @@ class BWGViewThumbnails {
     ?>
     <div id="bwg_container1_<?php echo $bwg; ?>">
       <div id="bwg_container2_<?php echo $bwg; ?>">
-        <form id="gal_front_form_<?php echo $bwg; ?>" method="post" action="#">
+        <form id="gal_front_form_<?php echo $bwg; ?>" method="post" action="#" data-current="<?php echo $bwg; ?>">
           <?php
           if ($params['show_search_box']) {
             WDWLibrary::ajax_html_frontend_search_box('gal_front_form_' . $bwg, $bwg, 'bwg_standart_thumbnails_' . $bwg, $images_count, $params['search_box_width'], $placeholder);
@@ -427,8 +427,8 @@ class BWGViewThumbnails {
       ?>
       function bwg_gallery_box_<?php echo $bwg; ?>(image_id) {
         var filterTags = jQuery("#bwg_tags_id_bwg_standart_thumbnails_<?php echo $bwg; ?>" ).val() ? jQuery("#bwg_tags_id_bwg_standart_thumbnails_<?php echo $bwg; ?>" ).val() : 0;
-        var filtersearchname = jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() ? jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() : '';
-        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&image_id=' + image_id + "&filter_tag_<?php echo $bwg; ?>=" +  filterTags + "&filter_search_name_<?php echo $bwg; ?>=" +  filtersearchname, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5, "<?php echo $theme_row->lightbox_ctrl_btn_pos ;?>");
+        var filtersearchname = jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() ? "&filter_search_name_<?php echo $bwg; ?>=" + jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() : '';
+        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&image_id=' + image_id + "&filter_tag_<?php echo $bwg; ?>=" +  filterTags + filtersearchname, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5, "<?php echo $theme_row->lightbox_ctrl_btn_pos ;?>");
       }
       function bwg_document_ready_<?php echo $bwg; ?>() {
         var bwg_touch_flag = false;

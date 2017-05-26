@@ -25,7 +25,7 @@ class WC_Meta_Box_Product_Data {
 	 * @param WP_Post $post
 	 */
 	public static function output( $post ) {
-		global $post, $thepostid, $product_object;
+		global $thepostid, $product_object;
 
 		$thepostid      = $post->ID;
 		$product_object = $thepostid ? wc_get_product( $thepostid ) : new WC_Product;
@@ -192,9 +192,14 @@ class WC_Meta_Box_Product_Data {
 				if ( empty( $attribute_names[ $i ] ) || ! isset( $attribute_values[ $i ] ) ) {
 					continue;
 				}
+				$attribute_id   = 0;
 				$attribute_name = wc_clean( $attribute_names[ $i ] );
-				$attribute_id   = wc_attribute_taxonomy_id_by_name( $attribute_name );
-				$options        = isset( $attribute_values[ $i ] ) ? $attribute_values[ $i ] : '';
+
+				if ( 'pa_' === substr( $attribute_name, 0, 3 ) ) {
+					$attribute_id = wc_attribute_taxonomy_id_by_name( $attribute_name );
+				}
+
+				$options = isset( $attribute_values[ $i ] ) ? $attribute_values[ $i ] : '';
 
 				if ( is_array( $options ) ) {
 					// Term ids sent as array.

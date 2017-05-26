@@ -233,9 +233,11 @@ class BWGViewSlideshow {
     if (!$images_count) {
       if ($params['tag']) {
         echo WDWLibrary::message(__('There are no images.', 'bwg'), 'wd_error');
+        return;
       }
       else {
         echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
+        return;
       }
     }
     $current_image_id = ($image_rows ? $image_rows[0]->id : 0);
@@ -299,7 +301,7 @@ class BWGViewSlideshow {
         ?>
         data_<?php echo $bwg; ?>["<?php echo $key; ?>"] = [];
         data_<?php echo $bwg; ?>["<?php echo $key; ?>"]["id"] = "<?php echo $image_row->id; ?>";
-        data_<?php echo $bwg; ?>["<?php echo $key; ?>"]["alt"] = "<?php echo $image_row->alt; ?>";
+        data_<?php echo $bwg; ?>["<?php echo $key; ?>"]["alt"] = "<?php echo str_replace(array("\r\n", "\n", "\r"), esc_html('<br />'), $image_row->alt); ?>";
         data_<?php echo $bwg; ?>["<?php echo $key; ?>"]["description"] = "<?php echo str_replace(array("\r\n", "\n", "\r"), esc_html('<br />'), $image_row->description); ?>";
         data_<?php echo $bwg; ?>["<?php echo $key; ?>"]["filetype"] = "<?php echo $image_row->filetype; ?>";
         data_<?php echo $bwg; ?>["<?php echo $key; ?>"]["filename"] = "<?php echo $image_row->filename; ?>";
@@ -346,7 +348,6 @@ class BWGViewSlideshow {
                 <div class="bwg_slider_<?php echo $bwg; ?>">
                 <?php
                 foreach ($image_rows as $key => $image_row) {
-                  
                   $is_embed = preg_match('/EMBED/',$image_row->filetype)==1 ? true :false;
                   $is_embed_video = ($is_embed && preg_match('/_VIDEO/',$image_row->filetype)==1) ? true :false;
                   $is_embed_instagram_post = preg_match('/INSTAGRAM_POST/',$image_row->filetype)==1 ? true :false;
@@ -439,7 +440,6 @@ class BWGViewSlideshow {
                                   $instagram_post_height = explode(' ', $image_resolution[1]);
                                   $instagram_post_height = $instagram_post_height[0];
                                 }
-                                
                                 WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('class'=>"bwg_embed_frame_".$bwg, 'data-width' => $instagram_post_width, 'data-height' => $instagram_post_height, 'frameborder'=>"0", 'style'=>"width:".$post_width."px; height:".$post_height."px; vertical-align:middle; display:inline-block; position:relative;"));
                               }
                               else{
@@ -571,26 +571,26 @@ class BWGViewSlideshow {
       'enable_image_tumblr' => $params['popup_enable_tumblr'],
       'watermark_type' => $params['watermark_type'],
       'slideshow_effect_duration' => isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1,
-      'tag' => (isset($params['tag']) ? $params['tag'] : 0),
-      'current_url' => urlencode($current_url)
+      'tags' => (isset($params['tag']) ? $params['tag'] : 0),
+      'current_url' => urlencode($current_url),
     );
-        if ($params['watermark_type'] != 'none') {
-          $params_array['watermark_link'] = urlencode($params['watermark_link']);
-          $params_array['watermark_opacity'] = $params['watermark_opacity'];
-          $params_array['watermark_position'] = $params['watermark_position'];
-        }
-        if ($params['watermark_type'] == 'text') {
-          $params_array['watermark_text'] = urlencode($params['watermark_text']);
-          $params_array['watermark_font_size'] = $params['watermark_font_size'];
-          $params_array['watermark_font'] = $params['watermark_font'];
-          $params_array['watermark_color'] = $params['watermark_color'];
-        }
-        elseif ($params['watermark_type'] == 'image') {
-          $params_array['watermark_url'] = urlencode($params['watermark_url']);
-          $params_array['watermark_width'] = $params['watermark_width'];
-          $params_array['watermark_height'] = $params['watermark_height'];
-        }
-   ?>
+    if ($params['watermark_type'] != 'none') {
+      $params_array['watermark_link'] = urlencode($params['watermark_link']);
+      $params_array['watermark_opacity'] = $params['watermark_opacity'];
+      $params_array['watermark_position'] = $params['watermark_position'];
+    }
+    if ($params['watermark_type'] == 'text') {
+      $params_array['watermark_text'] = urlencode($params['watermark_text']);
+      $params_array['watermark_font_size'] = $params['watermark_font_size'];
+      $params_array['watermark_font'] = $params['watermark_font'];
+      $params_array['watermark_color'] = $params['watermark_color'];
+    }
+    elseif ($params['watermark_type'] == 'image') {
+      $params_array['watermark_url'] = urlencode($params['watermark_url']);
+      $params_array['watermark_width'] = $params['watermark_width'];
+      $params_array['watermark_height'] = $params['watermark_height'];
+    }
+    ?>
       var bwg_trans_in_progress_<?php echo $bwg; ?> = false;
       var bwg_transition_duration_<?php echo $bwg; ?> = <?php echo (($slideshow_interval < 4) && ($slideshow_interval != 0)) ? ($slideshow_interval * 1000) / 4 : ($slideshow_effect_duration * 1000); ?>;
       var bwg_playInterval_<?php echo $bwg; ?>;
@@ -986,7 +986,6 @@ class BWGViewSlideshow {
         }
         return iterator;
       }
-      
       function bwg_change_image_<?php echo $bwg; ?>(current_key, key, data_<?php echo $bwg; ?>, from_effect) {
         /* Pause videos.*/
         jQuery("#bwg_slideshow_image_container_<?php echo $bwg; ?>").find("iframe").each(function () {
@@ -1033,7 +1032,6 @@ class BWGViewSlideshow {
           var next_image_class = "#image_id_<?php echo $bwg; ?>_" + data_<?php echo $bwg; ?>[key]["id"];*/
           var current_image_class = jQuery(".bwg_slideshow_image_spun_<?php echo $bwg; ?>").css("zIndex") == 2 ? ".bwg_slideshow_image_spun_<?php echo $bwg; ?>" : ".bwg_slideshow_image_second_spun_<?php echo $bwg; ?>";
           var next_image_class = current_image_class == ".bwg_slideshow_image_second_spun_<?php echo $bwg; ?>" ? ".bwg_slideshow_image_spun_<?php echo $bwg; ?>" : ".bwg_slideshow_image_second_spun_<?php echo $bwg; ?>";
-
           var is_embed = data_<?php echo $bwg; ?>[key]['filetype'].indexOf("EMBED_") > -1 ? true : false;
           var is_embed_instagram_post = data_<?php echo $bwg; ?>[key]['filetype'].indexOf('INSTAGRAM_POST') > -1 ? true :false;
           var cur_height = jQuery(current_image_class).height();
@@ -1063,7 +1061,6 @@ class BWGViewSlideshow {
                 post_height = post_width + 88;
               }
               innhtml += spider_display_embed(data_<?php echo $bwg; ?>[key]['filetype'], data_<?php echo $bwg; ?>[key]['filename'], {class:"bwg_embed_frame", 'data-width': data_<?php echo $bwg; ?>[key]['image_width'], 'data-height': data_<?php echo $bwg; ?>[key]['image_height'], frameborder: "0", allowfullscreen: "allowfullscreen", style: "width:" + post_width + "px; height:" + post_height + "px; vertical-align:middle; display:inline-block; position:relative;"});
-              
             }
             else {
               innhtml += spider_display_embed(data_<?php echo $bwg; ?>[key]['filetype'], data_<?php echo $bwg; ?>[key]['filename'], {class:"bwg_embed_frame", frameborder:"0", allowfullscreen:"allowfullscreen", style:"width:inherit; height:inherit; vertical-align:middle; display:table-cell;" });
@@ -1128,7 +1125,6 @@ class BWGViewSlideshow {
             }
           }
         }
-        
       }
       function bwg_popup_resize_<?php echo $bwg; ?>() {
         var parent_width = jQuery(".bwg_slideshow_image_wrap_<?php echo $bwg; ?>").parent().width();
@@ -1218,7 +1214,6 @@ class BWGViewSlideshow {
             });
           }
         }
-
         var isMobile = (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()));
         var bwg_click = isMobile ? 'touchend' : 'click';
         bwg_popup_resize_<?php echo $bwg; ?>();
@@ -1372,11 +1367,19 @@ class BWGViewSlideshow {
         }
         var ecommerce = openEcommerce == true ? "&open_ecommerce=1" : "";
         var filterTags = jQuery("#bwg_tags_id_bwg_standart_thumbnails_<?php echo $bwg; ?>" ).val() ? jQuery("#bwg_tags_id_bwg_standart_thumbnails_<?php echo $bwg; ?>" ).val() : 0;
-        var filtersearchname = jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() ? jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() : '';
-        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&image_id=' + image_id + "&filter_tag_<?php echo $bwg; ?>=" +  filterTags + ecommerce + "&filter_search_name_<?php echo $bwg; ?>=" +  filtersearchname, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5, "<?php echo $theme_row->lightbox_ctrl_btn_pos ;?>");
+        var filtersearchname = jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() ? "&filter_search_name_<?php echo $bwg; ?>=" + jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() : '';
+        spider_createpopup('<?php echo addslashes(add_query_arg($params_array, admin_url('admin-ajax.php'))); ?>&image_id=' + image_id + "&filter_tag_<?php echo $bwg; ?>=" +  filterTags + ecommerce + filtersearchname, '<?php echo $bwg; ?>', '<?php echo $params['popup_width']; ?>', '<?php echo $params['popup_height']; ?>', 1, 'testpopup', 5, "<?php echo $theme_row->lightbox_ctrl_btn_pos ;?>");
       }
+      var bwg_hash = window.location.hash.substring(1);
+        if (bwg_hash) {
+          if (bwg_hash.indexOf("bwg") != "-1") {
+            bwg_hash_array = bwg_hash.replace("bwg", "").split("/");
+            if(bwg_hash_array[0] == "<?php echo $params_array['gallery_id']; ?>"){
+              bwg_gallery_box_<?php echo $bwg; ?>(bwg_hash_array[1]);
+            }
+          }
+        }
        function bwg_document_ready_<?php echo $bwg; ?>() {
-         
         var bwg_touch_flag = false;
         jQuery(".bwg_lightbox_<?php echo $bwg; ?>").on("click", function () {
           if (!bwg_touch_flag) {
@@ -1386,7 +1389,6 @@ class BWGViewSlideshow {
             return false;
           }
         });
-        
         jQuery(".bwg_lightbox_<?php echo $bwg; ?> .bwg_ecommerce").on("click", function (event) {
           event.stopPropagation();
           if (!bwg_touch_flag) {
@@ -1426,8 +1428,8 @@ class BWGViewSlideshow {
     ob_start();
     ?>
     #bwg_container1_<?php echo $bwg; ?> {
-        visibility: hidden;
-      }
+      visibility: hidden;
+    }
       #bwg_container1_<?php echo $bwg; ?> * {
         -moz-user-select: none;
         -khtml-user-select: none;

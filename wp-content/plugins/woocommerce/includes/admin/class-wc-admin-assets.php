@@ -222,6 +222,8 @@ class WC_Admin_Assets {
 				'i18n_select_state_text' => esc_attr__( 'Select an option&hellip;', 'woocommerce' ),
 				'default_country'        => isset( $default_location['country'] ) ? $default_location['country'] : '',
 				'default_state'          => isset( $default_location['state'] ) ? $default_location['state'] : '',
+				'placeholder_name'       => esc_attr__( 'Name (required)', 'woocommerce' ),
+				'placeholder_value'      => esc_attr__( 'Value (required)', 'woocommerce' ),
 			) );
 		}
 		if ( in_array( $screen_id, array( 'shop_coupon', 'edit-shop_coupon' ) ) ) {
@@ -231,8 +233,7 @@ class WC_Admin_Assets {
 			$post_id  = isset( $post->ID ) ? $post->ID : '';
 			$currency = '';
 
-			if ( $post_id && in_array( get_post_type( $post_id ), wc_get_order_types( 'order-meta-boxes' ) ) ) {
-				$order    = wc_get_order( $post_id );
+			if ( $post_id && in_array( get_post_type( $post_id ), wc_get_order_types( 'order-meta-boxes' ) ) && ( $order = wc_get_order( $post_id ) ) ) {
 				$currency = $order->get_currency();
 			}
 

@@ -265,6 +265,7 @@ class BWGControllerGalleries_bwg {
   }
 
   function bwg_scaled_image($file_path, $max_width = 0, $max_height = 0, $crop = FALSE) {
+    global $wd_bwg_options;
     $file_path = htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES);
     if (!function_exists('getimagesize')) {
       error_log('Function not found: getimagesize');
@@ -314,7 +315,7 @@ class BWGControllerGalleries_bwg {
       case 2:
         $src_img = @imagecreatefromjpeg($file_path);
         $write_image = 'imagejpeg';
-        $image_quality = 100;
+        $image_quality = $wd_bwg_options->jpeg_quality;
         break;
       case 1:
         @imagecolortransparent($new_img, @imagecolorallocate($new_img, 0, 0, 0));
@@ -328,7 +329,7 @@ class BWGControllerGalleries_bwg {
         @imagesavealpha($new_img, TRUE);
         $src_img = @imagecreatefrompng($file_path);
         $write_image = 'imagepng';
-        $image_quality = 9;
+        $image_quality = $wd_bwg_options->png_quality;
         break;
       default:
         $src_img = NULL;
@@ -806,7 +807,7 @@ class BWGControllerGalleries_bwg {
           case 2:
             $src_img = @imagecreatefromjpeg($file_path);
             $write_image = 'imagejpeg';
-            $image_quality = isset($wd_bwg_options->jpeg_quality) ? $wd_bwg_options->jpeg_quality : 75;
+            $image_quality = $wd_bwg_options->jpeg_quality;
             break;
           case 1:
             @imagecolortransparent($new_img, @imagecolorallocate($new_img, 0, 0, 0));
@@ -820,7 +821,7 @@ class BWGControllerGalleries_bwg {
             @imagesavealpha($new_img, true);
             $src_img = @imagecreatefrompng($file_path);
             $write_image = 'imagepng';
-            $image_quality = isset($wd_bwg_options->png_quality) ? $wd_bwg_options->png_quality : 9;
+            $image_quality = $wd_bwg_options->png_quality;
             break;
           default:
             $src_img = null;
@@ -863,6 +864,7 @@ class BWGControllerGalleries_bwg {
   public function rotate($edit_type) {
     global $WD_BWG_UPLOAD_DIR;
     global $wpdb;
+    global $wd_bwg_options;
     $flag = FALSE;
     $gallery_id = ((isset($_POST['current_id'])) ? esc_html(stripslashes($_POST['current_id'])) : 0);
     $images_data = $wpdb->get_results($wpdb->prepare('SELECT id, image_url, thumb_url FROM ' . $wpdb->prefix . 'bwg_image WHERE gallery_id="%d"', $gallery_id));
@@ -880,8 +882,8 @@ class BWGControllerGalleries_bwg {
             $thumb_source = imagecreatefromjpeg($thumb_filename);
             $rotate = imagerotate($source, $edit_type, 0);
             $thumb_rotate = imagerotate($thumb_source, $edit_type, 0);
-            imagejpeg($thumb_rotate, $thumb_filename, 90);
-            imagejpeg($rotate, $filename, 100);
+            imagejpeg($thumb_rotate, $thumb_filename, $wd_bwg_options->jpeg_quality);
+            imagejpeg($rotate, $filename, $wd_bwg_options->jpeg_quality);
             imagedestroy($source);
             imagedestroy($rotate);
             imagedestroy($thumb_source);
@@ -900,8 +902,8 @@ class BWGControllerGalleries_bwg {
             imagealphablending($thumb_rotate, FALSE);
             imagesavealpha($rotate, TRUE);
             imagesavealpha($thumb_rotate, TRUE);
-            imagepng($rotate, $filename, 9);
-            imagepng($thumb_rotate, $thumb_filename, 9);
+            imagepng($rotate, $filename, $wd_bwg_options->png_quality);
+            imagepng($thumb_rotate, $thumb_filename, $wd_bwg_options->png_quality);
             imagedestroy($source);
             imagedestroy($rotate);
             imagedestroy($thumb_source);

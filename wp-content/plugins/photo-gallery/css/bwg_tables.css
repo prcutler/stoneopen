@@ -603,7 +603,7 @@
 }
 
 #ed_options {
-  width:180px;
+  width: 180px;
   padding: 45px 10px 20px 0; 
 }
 .wp-pointer.wp-pointer-aligned-right .wp-pointer-arrow {
@@ -716,7 +716,7 @@ a.wd-btn-primary:hover, a.wd-btn-primary:active, a.wd-btn-primary:link{
 	padding: 0px 10px 1px 36px !important;
   color:#fff;
 	background-repeat: no-repeat;
-	background-position: 10% 50%;
+	background-position: 10px 50%;
 }
 
 .wd-btn-delete{
@@ -1029,7 +1029,7 @@ textarea.bwg_popup_input {
     margin-top: 3px;
   }
   #display_default_option_panel, #display_panel {
-    float: left
+    float: left;
     display: block !important;
   }
   #preview_built_in_watermark, #preview_watermark {

@@ -83,7 +83,6 @@ class FilemanagerView {
         var sortBy = "<?php echo $sort_by; ?>";
         var sortOrder = "<?php echo $sort_order; ?>";
         var wdb_all_files = <?php echo isset($file_manager_data["all_files"]) && json_encode($file_manager_data["all_files"]) ? json_encode($file_manager_data["all_files"]) : "''"; ?>;
-        var media_library_files = <?php echo isset($file_manager_data["media_library_files_all"]) && json_encode($file_manager_data["media_library_files_all"]) ? json_encode($file_manager_data["media_library_files_all"]) : "''"; ?>;
         var element_load_count = <?php echo isset($file_manager_data["element_load_count"]) && json_encode($file_manager_data["element_load_count"]) ? json_encode($file_manager_data["element_load_count"]) : "''"; ?>;
       </script>
       <script src="<?php echo WD_BWG_URL; ?>/filemanager/js/default.js?ver=<?php echo wd_bwg_version(); ?>"></script>
@@ -125,12 +124,6 @@ class FilemanagerView {
                 <span class="ctrl_bar_btn">
                   <a id="upload_images" class="ctrl_bar_btn wd-btn wd-btn-primary wd-btn-icon wd-btn-uplaod" onclick="onBtnShowUploaderClick(event, this);"><?php echo __('Upload files', 'bwg_back'); ?></a>
                 </span>
-                <?php if ($wd_bwg_options->enable_ML_import) { ?>
-                <span class="ctrl_bar_divider"></span>
-                <span class="ctrl_bar_btn">
-                  <a class="ctrl_bar_btn wd-btn wd-btn-primary wd-btn-icon btn_import_files" onclick="onBtnShowImportClick(event, this);"><?php echo __('Media library', 'bwg_back'); ?></a>
-                </span>
-                <?php } ?>
                 <span class="ctrl_bar_divider"></span>
                 <span id="search_by_name" class="ctrl_bar_btn">
                   <input type="search" placeholder="Search" class="ctrl_bar_btn search_by_name">
@@ -211,6 +204,7 @@ class FilemanagerView {
                       <div class="explorer_item" draggable="true"
                            name="<?php echo $file['name']; ?>"
                            filename="<?php echo $file['filename']; ?>"
+                           alt="<?php echo $file['alt']; ?>"
                            filethumb="<?php echo $file['thumb']; ?>"
                            filesize="<?php echo $file['size']; ?>"
                            filetype="<?php echo strtoupper($file['type']); ?>"
@@ -273,89 +267,6 @@ class FilemanagerView {
                 <a id="add_selectid_img" class="ctrl_bar_btn btn_open wd-btn wd-btn-primary wd-btn-icon-add wd-btn-add none_select" onclick="onBtnOpenClick(event, this);"><?php echo ((isset($_REQUEST['callback']) && esc_html($_REQUEST['callback']) == 'bwg_add_image') ? __('Add selected images to gallery', 'bwg_back') : __('Add', 'bwg_back')); ?></a>
                 <span class="ctrl_bar_empty_devider"></span>
                 <a class="ctrl_bar_btn btn_cancel wd-btn wd-btn-primary wd-btn-icon wd-btn-cancel none_select" onclick="onBtnCancelClick(event, this);"><?php echo 'Cancel'; ?></a>
-              </div>
-            </div>
-          </div>
-          <div id="importer" style="display: none;">
-            <div id="importer_bg"></div>
-            <div class="ctrls_bar ctrls_bar_header">
-              <div class="ctrls_left upload_thumb">
-                <?php echo __("Thumbnail Maximum Dimensions:", 'bwg_back'); ?>
-                <input type="text" class="upload_thumb_dim" name="importer_thumb_width" id="importer_thumb_width" value="<?php echo $wd_bwg_options->upload_thumb_width; ?>" /> x 
-                <input type="text" class="upload_thumb_dim" name="importer_thumb_height" id="importer_thumb_height" value="<?php echo $wd_bwg_options->upload_thumb_height; ?>" /> px
-              </div>
-              <div class="ctrls_right">
-                <a class="ctrl_bar_btn btn_back" onclick="onBtnBackClick(event, this);" title="<?php echo __('Back', 'bwg_back'); ?>"></a>
-              </div>
-              <div class="ctrls_right_img upload_thumb">
-                <?php echo __("Image Maximum Dimensions:", 'bwg_back'); ?>
-                <input type="text" class="upload_thumb_dim" name="importer_img_width" id="importer_img_width" value="<?php echo $wd_bwg_options->upload_img_width; ?>" /> x 
-                <input type="text" class="upload_thumb_dim" name="importer_img_height" id="importer_img_height" value="<?php echo $wd_bwg_options->upload_img_height; ?>" /> px
-              </div>
-            </div>
-            <div id="importer_body_wrapper">
-              <div id="importer_body_container">
-                <div id="importer_body" data-files_count="<?php echo $file_manager_data['importer_files_count'];?>">
-                  <?php
-                  foreach ($file_manager_data['media_library_files'] as $key => $file) {
-                    $file['name'] = esc_html($file['name']);
-                    $file['filename'] = esc_html($file['filename']);
-                    $file['thumb'] = esc_html($file['thumb']);
-                    ?>
-                    <div class="importer_item" draggable="true"
-                         name="<?php echo $file['name']; ?>"
-                         path="<?php echo $file['path']; ?>"
-                         filename="<?php echo $file['filename']; ?>"
-                         filethumb="<?php echo $file['thumb']; ?>"
-                         filesize="<?php echo $file['size']; ?>"
-                         filetype="<?php echo strtoupper($file['type']); ?>"
-                         date_modified="<?php echo $file['date_modified']; ?>"
-                         fileresolution="<?php echo $file['resolution']; ?>"
-                         fileCredit="<?php echo $file['credit']; ?>"
-                         fileAperture="<?php echo $file['aperture']; ?>"
-                         fileCamera="<?php echo $file['camera']; ?>"
-                         fileCaption="<?php echo $file['caption']; ?>"
-                         fileIso="<?php echo $file['iso']; ?>"
-                         fileOrientation="<?php echo $file['orientation']; ?>"
-                         fileCopyright="<?php echo $file['copyright']; ?>"
-                         onmouseover="onFileMOverML(event, this);"
-                         onmouseout="onFileMOutML(event, this);"
-                         onclick="onFileClickML(event, this);"
-                         ondblclick="onFileDblClickML(event, this);"
-                         isDir="<?php echo $file['is_dir'] == true ? 'true' : 'false'; ?>">
-                      <span class="item_numbering"><?php echo ++$i; ?></span>
-                      <span class="item_thumb">
-                        <img src="<?php echo $file['thumb']; ?>" <?php echo $key >= 24 ? 'onload="loaded()"' : ''; ?> />
-                      </span>
-                      <span class="item_icon">
-                        <img src="<?php echo $file['icon']; ?>"/>
-                      </span>
-                      <span class="item_name">
-                        <?php echo $file['name']; ?>
-                      </span>
-                      <span class="item_size">
-                        <?php echo $file['size']; ?>
-                      </span>
-                      <span class="item_date_modified">
-                        <?php echo $file['date_modified']; ?>
-                      </span>
-                    </div>
-                    <?php
-                  }
-                  ?>
-                </div>
-              </div>
-            </div>
-            <div class="ctrls_bar ctrls_bar_footer">
-              <div class="ctrls_left">
-                <a class="ctrl_bar_btn wd-btn wd-btn-primary wd-not-image none_select" onclick="onBtnSelectAllMediLibraryClick();"><?php echo __('Select All','bwg_back'); ?></a>
-              </div>
-              <div class="ctrls_right">
-                <span id="file_names_span">
-                  <span>
-                  </span>
-                </span>
-                <a class="ctrl_bar_btn btn_open wd-btn wd-btn-primary wd-not-image none_select" onclick="onBtnImportClick(event, this);"><?php echo __("Import selected images", 'bwg_back'); ?></a>
               </div>
             </div>
           </div>

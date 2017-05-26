@@ -32,6 +32,7 @@ class BWGModelUninstall_bwg {
     $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "bwg_shortcode");
     delete_option("wd_bwg_version");
     delete_option("bwg_subscribe_done");
+    delete_option("wd_bwg_options");
     delete_user_meta(get_current_user_id(), 'bwg_photo_gallery');
     if (isset($_COOKIE['bwg_image_asc_or_desc'])) {
       $_COOKIE['bwg_image_asc_or_desc'] = '';

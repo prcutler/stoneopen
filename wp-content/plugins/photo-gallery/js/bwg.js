@@ -18,7 +18,6 @@ function save_tag(tag_id) {
   var slug = jQuery('input[name=slug'+tag_id+']').val();
   var datas = "tagname="+tagname+"&"+"slug="+slug+"&"+"tag_id="+tag_id;
   var td_check,td_name,td_slug,td_count,td_edit,td_delete,massege;
-  
   jQuery.ajax({
     type: "POST",  
     url: ajax_url + "=bwg_edit_tag",  
@@ -1082,7 +1081,6 @@ function bwg_is_instagram_gallery() {
   }
 }
 
-
 /**
  *  
  *  @param reset:bool true if reset to standard in case of not empty
@@ -1276,4 +1274,68 @@ function bwg_change_tab(box) {
     jQuery("#bwg_standart").css({'borderRight':'2px solid #E1E1E1'});
     bwg_change_option_type(jQuery("#type").val());
   }
+}
+
+/**
+ * Open Wordpress media uploader.
+ *
+ * @param e
+ * @param multiple
+ */
+function spider_media_uploader(e, multiple) {
+  if (typeof multiple == "undefined") {
+    var multiple = false;
+  }
+  var custom_uploader;
+  e.preventDefault();
+  // If the uploader object has already been created, reopen the dialog.
+  if (custom_uploader) {
+    custom_uploader.open();
+  }
+
+  custom_uploader = wp.media.frames.file_frame = wp.media({
+    title: bwg_objectL10B.choose_images,
+    library : { type : 'image'},
+    button: { text: bwg_objectL10B.insert},
+    multiple: multiple
+  });
+  // When a file is selected, grab the URL and set it as the text field's value
+  custom_uploader.on('select', function() {
+    if (multiple == false) {
+      attachment = custom_uploader.state().get('selection').first().toJSON();
+    }
+    else {
+      attachment = custom_uploader.state().get('selection').toJSON();
+    }
+
+    var filesSelectedML = [];
+    for (var image in attachment) {
+      var image_url = attachment[image].url;
+      image_url = image_url.replace(bwg_objectL10B.wp_upload_dir.baseurl + '/', '');
+      filesSelectedML.push(image_url);
+    }
+    fileNamesML = filesSelectedML.join("**@**");
+
+    jQuery.ajax({
+      url: bwg_objectL10B.ajax_url,
+      method: "GET",
+      data: {
+        action : "bwg_UploadHandler",
+        file_namesML : fileNamesML,
+        import : 1,
+      },
+      dataType: "json"
+    }).done(function( result ) {
+      for (var i in result) {
+        result[i].alt = attachment[i].alt ? attachment[i].alt : attachment[i].title;
+        result[i].description = attachment[i].description;
+      }
+      bwg_add_image(result);
+    }).fail(function( msg ) {
+      alert(bwg_objectL10B.import_failed);
+    });
+  });
+
+  // Open the uploader dialog.
+  custom_uploader.open();
 }

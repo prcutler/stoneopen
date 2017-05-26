@@ -27,7 +27,6 @@ class BWGViewGalleries_bwg {
     $rows_data = $this->model->get_rows_data();
     $page_nav = $this->model->page_nav();
     $search_value = ((isset($_POST['search_value'])) ? esc_html(stripslashes($_POST['search_value'])) : '');
-    $search_select_value = ((isset($_POST['search_select_value'])) ? (int) $_POST['search_select_value'] : 0);
     $asc_or_desc = ((isset($_POST['asc_or_desc'])) ? esc_html(stripslashes($_POST['asc_or_desc'])) : 'asc');
     $order_by = (isset($_POST['order_by']) ? esc_html(stripslashes($_POST['order_by'])) : 'order');
     $order_class = 'manage-column column-title sorted ' . $asc_or_desc;
@@ -62,9 +61,7 @@ class BWGViewGalleries_bwg {
         <?php 
         foreach($gallery_button_array as $key => $value) {
         ?>
-          <option value="<?php echo $key; ?>">
-            <?php echo $value; ?>
-          </option>
+          <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
         <?php
         }
         ?>
@@ -417,7 +414,7 @@ class BWGViewGalleries_bwg {
             input_alt.innerHTML = files[i]['name'];
           }
           else {/*uploaded images and direct URLs of images only*/
-            input_alt.innerHTML = files[i]['filename'];
+            input_alt.innerHTML = files[i]['alt'];
           }
           td_alt.appendChild(input_alt);
 
@@ -439,11 +436,10 @@ class BWGViewGalleries_bwg {
           textarea_desc.setAttribute('name', "image_description_" + bwg_j);
           textarea_desc.setAttribute('rows', "2");
           textarea_desc.setAttribute('style', "resize:vertical;");
-          if (is_embed && !is_direct_url) {
-            textarea_desc.innerHTML = files[i]['description'];
-          }
-          else if (<?php echo $wd_bwg_options->read_metadata; ?>) {
-            textarea_desc.innerHTML = files[i]['credit'] ? 'Author: ' + files[i]['credit'] + '\n' : '';
+          textarea_desc.innerHTML = files[i]['description'] ? files[i]['description'] : '';
+          if (<?php echo $wd_bwg_options->read_metadata; ?>) {
+            textarea_desc.innerHTML += files[i]['description'] ? '\n' : '';
+            textarea_desc.innerHTML += files[i]['credit'] ? 'Author: ' + files[i]['credit'] + '\n' : '';
             textarea_desc.innerHTML += ((files[i]['aperture'] != 0 && files[i]['aperture'] != '') ? 'Aperture: ' + files[i]['aperture'] + '\n' : '');
             textarea_desc.innerHTML += ((files[i]['camera'] != 0 && files[i]['camera'] != '') ? 'Camera: ' + files[i]['camera'] + '\n' : '');
             textarea_desc.innerHTML += ((files[i]['caption'] != 0 && files[i]['caption'] != '') ? 'Caption: ' + files[i]['caption'] + '\n' : '');
@@ -670,6 +666,7 @@ class BWGViewGalleries_bwg {
   }
 
   public function image_display($id) {
+    wp_enqueue_media();
     global $WD_BWG_UPLOAD_DIR;
     global $wd_bwg_options;
     $rows_data = $this->model->get_image_rows_data($id);
@@ -706,12 +703,13 @@ class BWGViewGalleries_bwg {
       <a href="<?php echo  $query_url;  ?>" id="add_image_bwg" class="wd-btn wd-btn-primary wd-btn-icon wd-btn-add thickbox thickbox-preview" id="content-add_media" title="<?php _e("Add Images", 'bwg_back'); ?>" onclick="return false;" style="margin-bottom:5px; <?php if($gallery_type !='') {echo 'display:none';} ?>" >
         <?php _e('Add Images', 'bwg_back'); ?>
       </a>
+      <input type="button" class="wd-btn wd-btn-primary wd-btn-icon wd-btn-add" onclick="spider_media_uploader(event, true); return false;" value="<?php _e("Import from Media Library", 'bwg_back'); ?>" />
       <?php
       $query_url = wp_nonce_url(admin_url('admin-ajax.php'), '', 'bwg_nonce');
       /*(re?)define ajax_url to add nonce only in admin*/
       ?>
       <script>
-        var ajax_url = "<?php echo $query_url; ?>"
+        var ajax_url = "<?php echo $query_url; ?>";
       </script>
         <input id="show_add_embed" class="wd-btn wd-btn-primary wd-btn-icon wd-btn-media"  type="button" title="<?php _e("Embed Media", 'bwg_back'); ?>" onclick="jQuery('.opacity_add_embed').show(); jQuery('#add_embed_help').hide(); return false;" value="<?php _e("Embed Media", 'bwg_back'); ?>" />
         <input id="show_bulk_embed" class="wd-btn wd-btn-primary wd-btn-icon wd-btn-bulk_media spider_free_version_button" type="button" title="<?php _e("Social Bulk Embed", 'bwg_back'); ?>" onclick="jQuery('.opacity_bulk_embed').show(); return false;" value="<?php _e("Social Bulk Embed", 'bwg_back'); ?>" />
@@ -834,9 +832,7 @@ class BWGViewGalleries_bwg {
              <span class="sorting-indicator"></span>
             </a>
           </th>
-          <th class="manage-column column-cb check-column table_small_col" style="padding-top:12px !important;"><input id="check_all" type="checkbox" onclick="spider_check_all(this)" style="margin:5px auto 0;" />
-          
-          </th>
+          <th class="manage-column column-cb check-column table_small_col" style="padding-top:12px !important;"><input id="check_all" type="checkbox" onclick="spider_check_all(this)" style="margin:5px auto 0;" /></th>
           <th class="table_small_col">#</th>
           <th class="table_extra_large_col"><?php _e('Thumbnail', 'bwg_back'); ?></th>
           <th class="sortable table_extra_large_col <?php if ($image_order_by == 'filename') {echo $order_class;} ?>">

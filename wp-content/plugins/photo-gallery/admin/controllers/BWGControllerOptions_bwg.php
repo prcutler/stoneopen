@@ -152,7 +152,7 @@ class BWGControllerOptions_bwg {
           case 2:
             $src_img = @imagecreatefromjpeg($file_path);
             $write_image = 'imagejpeg';
-            $image_quality = isset($wd_bwg_options->jpeg_quality) ? $wd_bwg_options->jpeg_quality : 75;
+            $image_quality = $wd_bwg_options->jpeg_quality;
             break;
           case 1:
             @imagecolortransparent($new_img, @imagecolorallocate($new_img, 0, 0, 0));
@@ -166,7 +166,7 @@ class BWGControllerOptions_bwg {
             @imagesavealpha($new_img, true);
             $src_img = @imagecreatefrompng($file_path);
             $write_image = 'imagepng';
-            $image_quality = isset($wd_bwg_options->png_quality) ? $wd_bwg_options->png_quality : 9;
+            $image_quality = $wd_bwg_options->png_quality;
             break;
           default:
             $src_img = null;

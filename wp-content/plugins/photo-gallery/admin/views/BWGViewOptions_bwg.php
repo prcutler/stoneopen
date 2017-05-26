@@ -1,7 +1,6 @@
 <?php
 
 class BWGViewOptions_bwg {
-
   private $model;
 
   public function __construct($model) {
@@ -1197,8 +1196,6 @@ class BWGViewOptions_bwg {
             <div class="bwg_line_option">|</div>
             <div id="div_4" class="gallery_type" onclick="bwg_change_option_type('4')"><?php _e('Slideshow', 'bwg_back'); ?></div>
             <div class="bwg_line_option">|</div>
-            <div id="div_5" class="gallery_type" onclick="bwg_change_option_type('5')"><?php _e('Album options', 'bwg_back'); ?></div>
-            <div class="bwg_line_option">|</div>
             <div id="div_6" class="gallery_type" onclick="bwg_change_option_type('6')"><?php _e('Social options', 'bwg_back'); ?></div>
             <div class="bwg_line_option">|</div>
             <div id="div_7" class="gallery_type" onclick="bwg_change_option_type('7')"><?php _e('Watermark', 'bwg_back'); ?></div>
@@ -1226,6 +1223,15 @@ class BWGViewOptions_bwg {
                     <input type="text" name="upload_img_width" id="upload_img_width" value="<?php echo $row->upload_img_width; ?>" class="spider_int_input" /> x 
                     <input type="text" name="upload_img_height" id="upload_img_height" value="<?php echo $row->upload_img_height; ?>" class="spider_int_input" /> px
                     <div class="spider_description"><?php _e("The maximum size of the uploaded image (0 for original size).", 'bwg_back'); ?></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label_options">
+                    <label for="image_quality"><?php _e('Image quality:', 'bwg_back'); ?></label>
+                  </td>
+                  <td>
+                    <input type="text" name="image_quality" id="image_quality" value="<?php echo $row->image_quality; ?>" class="spider_int_input" /> %
+                    <div class="spider_description"><?php _e('Set the quality of gallery images. Provide a value from 0 to 100%.', 'bwg_back'); ?></div>
                   </td>
                 </tr>
                 <tr>
@@ -1333,16 +1339,6 @@ class BWGViewOptions_bwg {
                   <td>
                     <input type="text" name="preload_images_count" id="preload_images_count" value="<?php echo $row->preload_images_count; ?>" class="spider_int_input" />
                     <div class="spider_description"><?php _e('Count of images to preload (0 for all).', 'bwg_back'); ?></div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="spider_label_options">
-                    <label><?php _e('Import from Media Library:', 'bwg_back'); ?></label>
-                  </td>
-                  <td>
-                    <input type="radio" name="enable_ML_import" id="enable_ML_import_1" value="1" <?php if ($row->enable_ML_import) echo 'checked="checked"'; ?> /><label for="enable_ML_import_1"><?php _e('Yes', 'bwg_back'); ?></label>
-                    <input type="radio" name="enable_ML_import" id="enable_ML_import_0" value="0" <?php if (!$row->enable_ML_import) echo 'checked="checked"'; ?> /><label for="enable_ML_import_0"><?php _e('No', 'bwg_back'); ?></label>
-                   <div class="spider_description"><?php _e('Enable import from Media Library in file manager.', 'bwg_back'); ?></div>
                   </td>
                 </tr>
                 <tr>
@@ -1582,13 +1578,6 @@ class BWGViewOptions_bwg {
                   </table>
                 </td>
               </tr>
-            </table>
-          </div>
-          <!--Album options-->
-          <div class="spider_div_options" id="div_content_5">        
-            <table>
-              <tbody>
-              </tbody>
             </table>
           </div>
           <!--Embed options-->

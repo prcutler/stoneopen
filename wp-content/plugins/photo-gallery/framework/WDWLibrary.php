@@ -1,7 +1,6 @@
 <?php
 
 class WDWLibrary {
-
   public static function get($key, $default_value = '') {
     if (isset($_GET[$key])) {
       $value = $_GET[$key];
@@ -644,7 +643,7 @@ class WDWLibrary {
   }
 
   public static function ajax_html_frontend_search_box($form_id, $current_view, $cur_gal_id, $images_count, $search_box_width = 180, $placeholder = '') {
-    $bwg_search = ((isset($_POST['bwg_search_' . $current_view]) && esc_html($_POST['bwg_search_' . $current_view]) != '') ? esc_html($_POST['bwg_search_' . $current_view]) : '');	
+    $bwg_search = ((isset($_POST['bwg_search_' . $current_view]) && esc_html($_POST['bwg_search_' . $current_view]) != '') ? esc_html($_POST['bwg_search_' . $current_view]) : '');
     $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : 'album');
     $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : 0);
    ob_start();
@@ -923,8 +922,14 @@ class WDWLibrary {
       }
     }
     else {
-      $row = new stdClass();
-      $row->name = '';
+      $row_count = $wpdb->get_var('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_gallery');
+      if (!$row_count) {
+        return false;
+      }
+      else {
+        $row = new stdClass();
+        $row->name = '';
+      }
     }
     return $row;
   }
@@ -1109,6 +1114,7 @@ class WDWLibrary {
   }
 
   public static function set_text_watermark($original_filename, $dest_filename, $watermark_text, $watermark_font, $watermark_font_size, $watermark_color, $watermark_transparency, $watermark_position) {
+    global $wd_bwg_options;
     $original_filename = htmlspecialchars_decode($original_filename, ENT_COMPAT | ENT_QUOTES);
     $dest_filename = htmlspecialchars_decode($dest_filename, ENT_COMPAT | ENT_QUOTES);
 
@@ -1145,7 +1151,7 @@ class WDWLibrary {
     if ($type == 2) {
       $image = imagecreatefromjpeg($original_filename);
       imagettftext($image, $watermark_font_size, 0, $left, $top, $watermark_color, $watermark_font, $watermark_text);
-      imagejpeg ($image, $dest_filename, 100);
+      imagejpeg ($image, $dest_filename, $wd_bwg_options->jpeg_quality);
       imagedestroy($image);  
     }
     elseif ($type == 3) {
@@ -1154,7 +1160,7 @@ class WDWLibrary {
       imageColorAllocateAlpha($image, 0, 0, 0, 127);
       imagealphablending($image, FALSE);
       imagesavealpha($image, TRUE);
-      imagepng($image, $dest_filename, 9);
+      imagepng($image, $dest_filename, $wd_bwg_options->png_quality);
       imagedestroy($image);
     }
     elseif ($type == 1) {
@@ -1172,6 +1178,7 @@ class WDWLibrary {
   }
 
   public static function set_image_watermark($original_filename, $dest_filename, $watermark_url, $watermark_height, $watermark_width, $watermark_position) {
+    global $wd_bwg_options;
     $original_filename = htmlspecialchars_decode($original_filename, ENT_COMPAT | ENT_QUOTES);
     $dest_filename = htmlspecialchars_decode($dest_filename, ENT_COMPAT | ENT_QUOTES);
     $watermark_url = htmlspecialchars_decode($watermark_url, ENT_COMPAT | ENT_QUOTES);
@@ -1214,7 +1221,7 @@ class WDWLibrary {
     else {
       return false;
     }
-    
+
     $watermark_image_resized = imagecreatetruecolor($watermark_width, $watermark_height);
     imagecolorallocatealpha($watermark_image_resized, 255, 255, 255, 127);
     imagealphablending($watermark_image_resized, FALSE);
@@ -1225,10 +1232,10 @@ class WDWLibrary {
       $image = imagecreatefromjpeg($original_filename);
       imagecopy($image, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
       if ($dest_filename <> '') {
-        imagejpeg ($image, $dest_filename, 100); 
+        imagejpeg ($image, $dest_filename, $wd_bwg_options->jpeg_quality);
       } else {
         header('Content-Type: image/jpeg');
-        imagejpeg($image, null, 100);
+        imagejpeg($image, null, $wd_bwg_options->jpeg_quality);
       };
       imagedestroy($image);  
     }
@@ -1237,7 +1244,7 @@ class WDWLibrary {
       imagecopy($image, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
       imagealphablending($image, FALSE);
       imagesavealpha($image, TRUE);
-      imagepng($image, $dest_filename, 9);
+      imagepng($image, $dest_filename, $wd_bwg_options->png_quality);
       imagedestroy($image);
     }
     elseif ($type == 1) {
@@ -1298,6 +1305,7 @@ class WDWLibrary {
   }
 
   public static function recover_image_size($width_orig, $height_orig, $width, $original_filename, $filename, $type_orig) {
+      global $wd_bwg_options;
       $percent = $width_orig / $width;
       $height = $height_orig / $percent;
       @ini_set('memory_limit', '-1');
@@ -1305,7 +1313,7 @@ class WDWLibrary {
         $img_r = imagecreatefromjpeg($original_filename);
         $dst_r = ImageCreateTrueColor($width, $height);
         imagecopyresampled($dst_r, $img_r, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-        imagejpeg($dst_r, $filename, 100);
+        imagejpeg($dst_r, $filename, $wd_bwg_options->jpeg_quality);
         imagedestroy($img_r);
         imagedestroy($dst_r);
       }
@@ -1318,7 +1326,7 @@ class WDWLibrary {
         imagecopyresampled($dst_r, $img_r, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
         imagealphablending($dst_r, FALSE);
         imagesavealpha($dst_r, TRUE);
-        imagepng($dst_r, $filename, 9);
+        imagepng($dst_r, $filename, $wd_bwg_options->png_quality);
         imagedestroy($img_r);
         imagedestroy($dst_r);
       }
@@ -1364,11 +1372,133 @@ class WDWLibrary {
       "height" => ($max_y - $min_y)
     );
   }
-  
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Return given file metadata.
+   * 
+   * @param $file
+   *
+   * @return array|bool
+   */
+  public static function read_image_metadata( $file ) {
+    if (!file_exists($file)) {
+      return false;
+    }
+    list( , , $sourceImageType ) = getimagesize($file);
+    $meta = array(
+      'aperture' => 0,
+      'credit' => '',
+      'camera' => '',
+      'caption' => '',
+      'created_timestamp' => 0,
+      'copyright' => '',
+      'focal_length' => 0,
+      'iso' => 0,
+      'shutter_speed' => 0,
+      'title' => '',
+      'orientation' => 0,
+    );
+    if ( is_callable( 'iptcparse' ) ) {
+      getimagesize( $file, $info );
+      if ( ! empty( $info['APP13'] ) ) {
+        $iptc = iptcparse( $info['APP13'] );
+        if ( ! empty( $iptc['2#105'][0] ) ) {
+          $meta['title'] = trim( $iptc['2#105'][0] );
+        } elseif ( ! empty( $iptc['2#005'][0] ) ) {
+          $meta['title'] = trim( $iptc['2#005'][0] );
+        }
+        if ( ! empty( $iptc['2#120'][0] ) ) {
+          $caption = trim( $iptc['2#120'][0] );
+          if ( empty( $meta['title'] ) ) {
+            mbstring_binary_safe_encoding();
+            $caption_length = strlen( $caption );
+            reset_mbstring_encoding();
+            if ( $caption_length < 80 ) {
+              $meta['title'] = $caption;
+            } else {
+              $meta['caption'] = $caption;
+            }
+          } elseif ( $caption != $meta['title'] ) {
+            $meta['caption'] = $caption;
+          }
+        }
+        if ( ! empty( $iptc['2#110'][0] ) ) {
+          $meta['credit'] = trim( $iptc['2#110'][0] );
+        }
+        elseif ( ! empty( $iptc['2#080'][0] ) ) {
+          $meta['credit'] = trim( $iptc['2#080'][0] );
+        }
+        if ( ! empty( $iptc['2#055'][0] ) and ! empty( $iptc['2#060'][0] ) ) {
+          $meta['created_timestamp'] = strtotime( $iptc['2#055'][0] . ' ' . $iptc['2#060'][0] );
+        }
+        if ( ! empty( $iptc['2#116'][0] ) ) {
+          $meta['copyright'] = trim( $iptc['2#116'][0] );
+        }
+      }
+    }
+    if ( is_callable( 'exif_read_data' ) && in_array( $sourceImageType, apply_filters( 'wp_read_image_metadata_types', array( IMAGETYPE_JPEG, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM ) ) ) ) {
+      $exif = @exif_read_data( $file );
+      if ( empty( $meta['title'] ) && ! empty( $exif['Title'] ) ) {
+        $meta['title'] = trim( $exif['Title'] );
+      }
+      if ( ! empty( $exif['ImageDescription'] ) ) {
+        mbstring_binary_safe_encoding();
+        $description_length = strlen( $exif['ImageDescription'] );
+        reset_mbstring_encoding();
+        if ( empty( $meta['title'] ) && $description_length < 80 ) {
+          $meta['title'] = trim( $exif['ImageDescription'] );
+          if ( empty( $meta['caption'] ) && ! empty( $exif['COMPUTED']['UserComment'] ) && trim( $exif['COMPUTED']['UserComment'] ) != $meta['title'] ) {
+            $meta['caption'] = trim( $exif['COMPUTED']['UserComment'] );
+          }
+        } elseif ( empty( $meta['caption'] ) && trim( $exif['ImageDescription'] ) != $meta['title'] ) {
+          $meta['caption'] = trim( $exif['ImageDescription'] );
+        }
+      } elseif ( empty( $meta['caption'] ) && ! empty( $exif['Comments'] ) && trim( $exif['Comments'] ) != $meta['title'] ) {
+        $meta['caption'] = trim( $exif['Comments'] );
+      }
+      if ( empty( $meta['credit'] ) ) {
+        if ( ! empty( $exif['Artist'] ) ) {
+          $meta['credit'] = trim( $exif['Artist'] );
+        } elseif ( ! empty($exif['Author'] ) ) {
+          $meta['credit'] = trim( $exif['Author'] );
+        }
+      }
+      if ( empty( $meta['copyright'] ) && ! empty( $exif['Copyright'] ) ) {
+        $meta['copyright'] = trim( $exif['Copyright'] );
+      }
+      if ( ! empty( $exif['FNumber'] ) ) {
+        $meta['aperture'] = round( wp_exif_frac2dec( $exif['FNumber'] ), 2 );
+      }
+      if ( ! empty( $exif['Model'] ) ) {
+        $meta['camera'] = trim( $exif['Model'] );
+      }
+      if ( empty( $meta['created_timestamp'] ) && ! empty( $exif['DateTimeDigitized'] ) ) {
+        $meta['created_timestamp'] = wp_exif_date2ts( $exif['DateTimeDigitized'] );
+      }
+      if ( ! empty( $exif['FocalLength'] ) ) {
+        $meta['focal_length'] = (string) wp_exif_frac2dec( $exif['FocalLength'] );
+      }
+      if ( ! empty( $exif['ISOSpeedRatings'] ) ) {
+        $meta['iso'] = is_array( $exif['ISOSpeedRatings'] ) ? reset( $exif['ISOSpeedRatings'] ) : $exif['ISOSpeedRatings'];
+        $meta['iso'] = trim( $meta['iso'] );
+      }
+      if ( ! empty( $exif['ExposureTime'] ) ) {
+        $meta['shutter_speed'] = (string) wp_exif_frac2dec( $exif['ExposureTime'] );
+      }
+      if ( ! empty( $exif['Orientation'] ) ) {
+        $meta['orientation'] = $exif['Orientation'];
+      }
+    }
+    foreach ( array( 'title', 'caption', 'credit', 'copyright', 'camera', 'iso' ) as $key ) {
+      if ( $meta[ $key ] && ! seems_utf8( $meta[ $key ] ) ) {
+        $meta[ $key ] = utf8_encode( $meta[ $key ] );
+      }
+    }
+    foreach ( $meta as &$value ) {
+      if ( is_string( $value ) ) {
+        $value = wp_kses_post( $value );
+      }
+    }
+    return $meta;
+  }
 }

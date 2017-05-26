@@ -1,10 +1,10 @@
 === Photo Gallery by WD – Responsive Photo Gallery for WordPress ===
-Contributors: webdorado,wdsupport
+Contributors: webdorado,wdsupport,photogallerysupport
 Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin, photo albums, gallery slider, gallery lightbox, wordpress photo gallery plugin, fullscreen gallery, watermarking, video gallery
 Requires at least: 3.4
 Tested up to: 4.7 
-Stable tag: 1.3.37    
+Stable tag: 1.3.42    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,13 +25,13 @@ Create 100% responsive FREE WordPress photo gallery in minutes. Easy to customiz
 
 
 = Photo Gallery Add-ons: =
-[Ecommerce Add-on](https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/gallery-ecommerce.html)- - Display your digital content and sell it directly from your website.      
+[Ecommerce Add-on](https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/gallery-ecommerce.html) - Display your digital content and sell it directly from your website.      
 [Facebook Integration Add-on](https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/facebook.html)  -  Display Facebook photos and videos within Photo Gallery Pro without additional efforts.      
 [Export/Import Add-on](https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/export-import.html)  Export/import galleries, albums and all related data from one WordPress site to another.      
 
 Photo Gallery is an advanced plugin with a list of tools and options for adding and editing images for different views. This is a fully responsive gallery plugin. The product includes plugin for adding image galleries and albums to posts and pages, as well as multiple widgets. You can add images, providing detailed gallery descriptions and tags, organize the galleries into different photo albums.
 
-The responsive photo gallery allows to upload unlimited number of pictures and create as many photo albums as you need. Want to include videos? The plugin comes with audio and video support, that will enable you to create a YouTube video gallery or a Vimeo video gallery quick and easy.
+The responsive photo gallery allows to upload unlimited number of pictures and create as many photo albums as you need. Want to include videos? The plugin comes with audio and video support, that will enable you to create a YouTube gallery or a Vimeo video gallery quick and easy.
 
 The free gallery plugin is one of the most feature rich plugins out there. With number of gallery views, including Gallery carousel, Instagram Gallery, Thumbnail gallery, Facebook Gallery and others, the image photo gallery plugin is a top gallery plugin choice.
 
@@ -81,8 +81,7 @@ If you think you found a bug in Photo Gallery or have any problem/question conce
 *   Detailed (Extended) album and compact album view  
 *   Possibility of changing the roles of who can edit the galleries/albums/images (Author/All Users)  
 *   Chances to provide details for images (tags, captions)  
-*   Thumbnail editing tools (Crop, rotate and flip)
-*   Various thumbnail customization options  
+*   Thumbnail editing tools (Crop, rotate and flip)  
 *   Possibility of changing the amount of images displayed in a single row of an album/gallery  
 *   Slideshow view with auto play and shuffle features   
 *   Audio track playback possibility with the image slideshow  
@@ -98,14 +97,13 @@ If you think you found a bug in Photo Gallery or have any problem/question conce
 *   Possibility of uploading images from the Media Library of the website.
 *   Possibility to add tags (captions) to all images at once.  
 *   Right-click disabling option for the image downloads protection.   
-*   Possibility to display images in the albums in thumbnail or masonry view upon opening 
-*   Customize thumbnail dimensions, height, number of columns of albums  
+*   Possibility to display images in the albums in thumbnail or masonry view upon opening   
 *   WordPress Search Integration by gallery and album title   
 *   Possibility to display the number of the images in the gallery lightbox (optional feature)   
 *   Resizing possibility after adding the pictures
 *   Possibility to display Search Box on the gallery page for the search based on titles   
 *   Possibility to display the number of images in the lightbox  
-*   Enable full width feature for the lightbox gallery.
+*   Enable full width feature for the lightbox.
 *   Possibility to add next/previous and play/pause buttons in carousel
 *   Possibility to enable/disable autoplay for gallery carousel
 *   Redirection option upon clicking picture thumbnail  
@@ -119,7 +117,7 @@ Upgrade to [WordPress Photo Gallery Pro](https://web-dorado.com/products/wordpre
 *   Masonry Album view   
 *   Slideshow/Lightbox 15 effects.    
 *   Editable themes.   
-*	Instagram Integration to create Instagram gallery.   
+*	Instagram Integration.   
 *   Commenting possibility with Captcha protection possibility.   
 *   Social sharing possibility (Facebook, Google+, Twitter, Pinterest and Tumblr).    
 *   Dynamic Photo Gallery Tag Cloud widget  with image tag cloud and text tag cloud options.   
@@ -189,6 +187,26 @@ We recommend to use images with the width of 1200px to 1600px. In order to speed
 To enable the feature of adding Media Library images, go to Photo Gallery > Options > Global Options and set Import from Media Library option to Yes. After that you will be able to import photos from Media Library to Photo Gallery.     
 
 == Changelog ==
+
+= 1.3.42 =
+* Fixed: Scroll load with more than one gallery in a page.     
+  
+= 1.3.41 =
+* Added: Possibility to add images from Wordpress Media Library.     
+* Fixed: Image info in lightbox with small effect duration.    
+* Changed: Effect duration now can be float.   
+
+= 1.3.40 =
+* Fixed: Images in a column      
+
+= 1.3.39 =
+* Fixed: Removed empty "filter_search_name" from lightbox URL.   
+* Fixed: Don't add Facebook/Instagram libraries if there is no need.   
+* Added: Image quality (optional).   
+
+= 1.3.38 =
+* Fixed: Gallery title for old versions.
+* Fixed: Conflict with Jetpack Photon module.
 
 = 1.3.37 =
 * Added: Show gallery title (optional from shortcode).   
@@ -1041,7 +1059,7 @@ Advertisement position. Choose the positioning of the advertisement from the ava
 5.4.3 Interval. Provide the time interval between the display of slideshow images in seconds.   
 5.4.4 Enable filmstrip. Choose whether to include the filmstrip of gallery or album images in the lightbox or not.   
 5.4.5 Filmstrip height. Define the height of the filmstrip in pixels.   
-5.4.6 Enable control buttons. Choose whether to display control buttons in the lightbox gallery or not.  
+5.4.6 Enable control buttons. Choose whether to display control buttons in the lightbox or not.  
 5.4.7 Enable fullscreen. Choose whether to have a possibility of entering Fullscreen from the lightbox or not.  
 5.4.8 Enable info. Choose whether to have possibility of displaying gallery image information (Title and description) in this view or not.  
 5.4.9 Display info by default. Choose whether to display gallery image title by default when opening the lightbox or not. The image can be hidden hitting info button.  
@@ -1495,13 +1513,13 @@ Use one of the default Photo Gallery themes or click Add new button to create a 
   
 = Step 8: Publishing the Created Photo Gallery. =   
 To insert a gallery into a Page or a Post.  
-Open the post/page you want to display the image gallery. Press the button named Photo Gallery. A camera icon will be inserted into the page/post. Click on the gallery image and select the gallery/album display you want to use for that specific page/post.  
+Open the post/page you want to display the gallery. Press the button named Photo Gallery. A camera icon will be inserted into the page/post. Click on the gallery image and select the gallery/album display you want to use for that specific page/post.  
 Each Photo Gallery shortcode uses three columns of parameters. The first column shows parameters specific for that Photo Gallery view only, the second one shows Lightbox (except Slideshow view) parameters, the third one is referred to the Advertisement.  
 In addition you can add the galllery shortcode using Shortcode Generator of the Photo Gallery.  
 8.1 General Parameters (First Column)  
 8.1.1Thumbnails  
 Theme. Select the theme to be applied to this Photo Gallery view.  
-Gallery. Select the image gallery.  
+Gallery. Select the gallery.  
 Sort by. Choose the option to use for the gallery image sequence.  
 Max. number of image columns. Provide the number of image columns in a page.  
 Images per page. Provide the maximum number of gallery images per page.  
@@ -1509,7 +1527,7 @@ Enable pagination. Choose whether to have pagination for the view or not.
 Image thumbnail dimensions. Define the thumbnail width and height in pixels.  
 8.1.2 Masonry  
 Theme. Select the theme to be applied to this Photo Gallery view.  
-Gallery. Select the images gallery.  
+Gallery. Select the gallery.  
 Sort by. Choose the option to use for image sequence.  
 Max. number of image columns. Provide the number of image columns in a page.  
 Images per page. Provide the maximum number of gallery images per page.  
@@ -1579,7 +1597,7 @@ Enable Twitter button. Choose whether to have Twitter social sharing button enab
 Enable Google+ button. Choose whether to have Google+ social sharing button enabled in the pop-up or not.  
  
 (for Slideshow View only)   
-Enable image title. Choose whether to display gallery image titles during the gallery slideshow or not.  
+Enable image title. Choose whether to display gallery image titles during the slideshow or not.  
 Title position. Set the position of the title using the available options.  
 Enable image description. Choose whether to display gallery image description during the slideshow or not.   
 Description position. Set the position of the description using the available options.   
@@ -1632,7 +1650,7 @@ Theme. Choose the theme, which will be applied to the gallery/album correspondin
 9.3.1 Title. Provide a title for the gallery slideshow.  
 9.3.2 Select Gallery. Specify the gallery you want to use for the slideshow.  
 9.3.3 Dimensions. Specify the width and height for the gallery slideshow.  
-9.3.4 Slideshow effect. Select the effect to apply to the gallery slideshow.  
+9.3.4 Slideshow effect. Select the effect to apply to the slideshow.  
 9.3.5 Time interval. Define the time interval between the change of gallery images in seconds.  
 9.3.6 Enable shuffle. Choose whether to have shuffle for the slideshow images or not.  
 9.3.7 Theme. Choose the theme to be applied to the gallery image slideshow.  
