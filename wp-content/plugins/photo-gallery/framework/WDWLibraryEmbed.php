@@ -136,6 +136,7 @@ class WDWLibraryEmbed {
         $insta_host_and_id= strtok($url, '/')."/".strtok('/')."/".strtok('/')."/".strtok('/');
         $insta_host= strtok($url, '/')."/".strtok('/')."/".strtok('/')."/";
         $filename = str_replace($insta_host, "", $insta_host_and_id);
+        $thumb_filename = $filename;
         
         $get_embed_data = wp_remote_get("http://api.instagram.com/oembed?url=http://instagram.com/p/".$filename); 
         if ( is_wp_error( $get_embed_data ) ) {
@@ -145,15 +146,15 @@ class WDWLibraryEmbed {
         if(empty($result)){
           return json_encode(array("error", wp_remote_retrieve_body($get_embed_data)));
         }              
-        list($img_width, $img_height) = @getimagesize('https://instagram.com/p/' . $filename . '/media/?size=l');
+        list($img_width, $img_height) = @getimagesize('https://instagram.com/p/' . $thumb_filename . '/media/?size=l');
         $embedData = array(
           'name' => htmlspecialchars($result->title),
           'description' => htmlspecialchars($result->title),
           'filename' => $filename,
           'url' => $url,
           'reliative_url' => $url,
-          'thumb_url' => 'https://instagram.com/p/' . $filename . '/media/?size=t',
-          'thumb' => 'https://instagram.com/p/' . $filename . '/media/?size=t',
+          'thumb_url' => 'https://instagram.com/p/' . $thumb_filename . '/media/?size=t',
+          'thumb' => 'https://instagram.com/p/' . $thumb_filename . '/media/?size=t',
           'size' => '',
           'filetype' => $embed_type,
           'date_modified' => date('d F Y, H:i'),

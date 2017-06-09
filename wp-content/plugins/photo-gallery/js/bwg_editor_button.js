@@ -4,22 +4,53 @@ jQuery(window).load(function(){
     jQuery(document).trigger("onUploadImg");
   }
     jQuery('.add_short_gall').css({'marginLeft': -50});
+    
+    jQuery('.mce-container').css({'maxWidth':'100%'});
 });
+
 (function () {
   tinymce.create('tinymce.plugins.bwg_mce', {
     init:function (ed, url) {
       var c = this;
       c.url = url;
       c.editor = ed;
+      var width_window;
+      var height_window;
+      var width = 1144;
+      var height = 520;
+      if(jQuery(window).width() < width) {
+        width_window = jQuery(window).width();
+        height_window = jQuery(window).height();
+      }
+      else {
+        width_window = width;
+        height_window = height;
+      }
       ed.addCommand('mcebwg_mce', function () {
-        ed.windowManager.open({
-          file:bwg_admin_ajax,
-          width:1100 + ed.getLang('bwg_mce.delta_width', 0),
-          height:550 + ed.getLang('bwg_mce.delta_height', 0),
-          inline:1
-        }, {
-          plugin_url:url
-        });
+          ed.windowManager.open({
+            file:bwg_admin_ajax,
+            width:width_window + ed.getLang('bwg_mce.delta_width', 0),
+            height:height_window + ed.getLang('bwg_mce.delta_height', 0),
+            inline:1
+          }, {
+            plugin_url:url
+          });
+          
+          var window = ed.windowManager.windows[ed.windowManager.windows.length - 1],
+              $window = window.$el;
+              
+          $window.css({
+            maxWidth: "100%",
+            maxHeight: "100%"
+          });
+          $window.find(".mce-window-body").css({
+            maxWidth: "100%",
+            maxHeight: "100%"
+          });
+          $window.find(".mce-container-body").find("iframe").css({
+            width:'1px',
+            minWidth:'100%',
+          });
         var e = ed.selection.getNode(), d = wp.media.gallery, f;
         if (typeof wp === "undefined" || !wp.media || !wp.media.gallery) {
           return

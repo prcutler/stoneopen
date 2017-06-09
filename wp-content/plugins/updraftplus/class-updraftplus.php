@@ -381,7 +381,7 @@ class UpdraftPlus {
 
 		// First, basic security check: must be an admin page, with ability to manage options, with the right parameters
 		// Also, only on GET because WordPress on the options page repeats parameters sometimes when POST-ing via the _wp_referer field
-		if (isset($_SERVER['REQUEST_METHOD']) && 'GET' == $_SERVER['REQUEST_METHOD'] && isset($_GET['action'])) {
+		if (isset($_SERVER['REQUEST_METHOD']) && ('GET' == $_SERVER['REQUEST_METHOD'] || 'POST' == $_SERVER['REQUEST_METHOD']) && isset($_GET['action'])) {
 			if (preg_match("/^updraftmethod-([a-z]+)-([a-z]+)$/", $_GET['action'], $matches) && file_exists(UPDRAFTPLUS_DIR.'/methods/'.$matches[1].'.php') && UpdraftPlus_Options::user_can_manage()) {
 				$_GET['page'] = 'updraftplus';
 				$_REQUEST['page'] = 'updraftplus';

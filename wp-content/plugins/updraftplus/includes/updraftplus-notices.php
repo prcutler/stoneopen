@@ -187,6 +187,15 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'supported_positions' => $this->anywhere,
 				'validity_function' => 'wp_optimize_installed',
 			),
+			'keyy' => array(
+				'prefix' => '',
+				'title' => 'Keyy',
+				'text' => __("Instant and secure logon with a wave of your phone.", "updraftplus") . ' ' . $this->url_start(true,'getkeyy.com') . __("Find out more about our revolutionary new WordPress plugin.",'updraftplus') . $this->url_end(true,'getkeyy.com'),
+				'image' => 'notices/keyy_logo.png',
+				'dismiss_time' => 'dismiss_notice',
+				'supported_positions' => $this->anywhere,
+				'validity_function' => 'keyy_installed',
+			),
 			
 			//The sale adverts content starts here
 			'blackfriday' => array(
@@ -254,14 +263,16 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'valid_to' => '2017-07-31 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
-			'2fa' => array(
+			'clef' => array(
 				'prefix' => '',
 				'title' => 'Clef Two Factor Authentication is shutting down',
-				'text' => $this->url_start(true,'blog.getclef.com/discontinuing-support-for-clef-6c89febef5f3') . __("Clef confirms that they are closing down their two factor security plugin.",'updraftplus') . $this->url_end(true,'blog.getclef.com/discontinuing-support-for-clef-6c89febef5f3') . ' ' . __("Switch to UpdraftPlus's free alternative:", "updraftplus").' <a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&amp;updraftplus_noautobackup=1&amp;plugin=two-factor-authentication'), 'install-plugin_two-factor-authentication').'">'.__("install","updraftplus") .'</a> '. __("or", "updraftplus") . ' ' .$this->url_start(true,'wordpress.org/plugins/two-factor-authentication/') . __("get more info",'updraftplus') . $this->url_end(true,'wordpress.org/plugins/two-factor-authentication/') . '.',
+				'text' => $this->url_start(true,'blog.getclef.com/discontinuing-support-for-clef-6c89febef5f3') . __("Clef confirms that they are closing down their two factor security plugin.",'updraftplus') . $this->url_end(true,'blog.getclef.com/discontinuing-support-for-clef-6c89febef5f3') . ' ' . __("Switch to UpdraftPlus's alternative:", "updraftplus").' <a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&amp;updraftplus_noautobackup=1&amp;plugin=keyy'), 'install-plugin_keyy').'">'.__("install","updraftplus") .'</a> '. __("or", "updraftplus") . ' ' .$this->url_start(true,'wordpress.org/plugins/keyy/') . __("get more info",'updraftplus') . $this->url_end(true,'wordpress.org/plugins/keyy/') . '.',
 				'image' => 'notices/updraft_logo.png',
 				'dismiss_time' => 'dismiss_notice',
 				'supported_positions' => $this->anywhere,
 				'validity_function' => 'clef_2fa_installed',
+				'valid_from' => '2017-06-01 00:00:00',
+				'valid_to' => '2017-07-07 23:59:59',
 			),
 		);
 
@@ -290,6 +301,19 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 
 		foreach ($plugins as $key => $value) {
 			if ($value['TextDomain'] == 'wp-optimize') {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	protected function keyy_installed($plugin_base_dir = null, $product_name = null) {
+		$wp_optimize_file = false;
+		if (!function_exists('get_plugins')) require_once(ABSPATH.'wp-admin/includes/plugin.php');
+		$plugins = get_plugins();
+
+		foreach ($plugins as $key => $value) {
+			if ($value['TextDomain'] == 'keyy') {
 				return false;
 			}
 		}

@@ -3097,7 +3097,17 @@ class UpdraftPlus_Admin {
 		return $value;
 	}
 
-	public function curl_check($service, $has_fallback = false, $extraclass = '', $echo = true) {
+	/**
+	 * Check if curl exists; if not, print or return appropriate error messages
+	 *
+	 * @param String  $service				  - the service description (used only for user-visible messages - so, use the description)
+	 * @param Boolean $has_fallback			  - set as true if the lack of Curl only affects the ability to connect over SSL
+	 * @param String $extraclass			  - an extra CSS class for any resulting message, passed on to show_double_warning()
+	 * @param Boolean $echo_instead_of_return - whether the result should be echoed or returned
+	 *
+	 * @returns String|Void - any resulting message, if $echo_instead_of_return was set
+	 */
+	public function curl_check($service, $has_fallback = false, $extraclass = '', $echo_instead_of_return = true) {
 
 		$ret = '';
 
@@ -3111,15 +3121,15 @@ class UpdraftPlus_Admin {
 			$curl_ssl_supported= ($curl_version['features'] & CURL_VERSION_SSL);
 			if (!$curl_ssl_supported) {
 				if ($has_fallback) {
-					$ret .= '<p><strong>'.__('Warning', 'updraftplus').':</strong> '.sprintf(__("Your web server's PHP/Curl installation does not support https access. Communications with %s will be unencrypted. ask your web host to install Curl/SSL in order to gain the ability for encryption (via an add-on).",'updraftplus'),$service).'</p>';
+					$ret .= '<p><strong>'.__('Warning', 'updraftplus').':</strong> '.sprintf(__("Your web server's PHP/Curl installation does not support https access. Communications with %s will be unencrypted. Ask your web host to install Curl/SSL in order to gain the ability for encryption (via an add-on).",'updraftplus'), $service).'</p>';
 				} else {
-					$ret .= $this->show_double_warning('<p><strong>'.__('Warning', 'updraftplus').':</strong> '.sprintf(__("Your web server's PHP/Curl installation does not support https access. We cannot access %s without this support. Please contact your web hosting provider's support. %s <strong>requires</strong> Curl+https. Please do not file any support requests; there is no alternative.",'updraftplus'),$service).'</p>', $extraclass, false);
+					$ret .= $this->show_double_warning('<p><strong>'.__('Warning', 'updraftplus').':</strong> '.sprintf(__("Your web server's PHP/Curl installation does not support https access. We cannot access %s without this support. Please contact your web hosting provider's support. %s <strong>requires</strong> Curl+https. Please do not file any support requests; there is no alternative.",'updraftplus'), $service, $service).'</p>', $extraclass, false);
 				}
 			} else {
 				$ret .= '<p><em>'.sprintf(__("Good news: Your site's communications with %s can be encrypted. If you see any errors to do with encryption, then look in the 'Expert Settings' for more help.", 'updraftplus'),$service).'</em></p>';
 			}
 		}
-		if ($echo) {
+		if ($echo_instead_of_return) {
 			echo $ret;
 		} else {
 			return $ret;
@@ -3928,12 +3938,12 @@ ENDHERE;
 	}
 	
 	public function updraft_ajax_importsettings() { 
-	    global $updraftplus; 
+		global $updraftplus; 
 	     
-	    if (empty($_POST) || empty($_POST['subaction']) || 'importsettings' != $_POST['subaction'] || !isset($_POST['nonce']) || !is_user_logged_in() || !UpdraftPlus_Options::user_can_manage() || !wp_verify_nonce($_POST['nonce'], 'updraftplus-settings-nonce')) die('Security check'); 
+		if (empty($_POST) || empty($_POST['subaction']) || 'importsettings' != $_POST['subaction'] || !isset($_POST['nonce']) || !is_user_logged_in() || !UpdraftPlus_Options::user_can_manage() || !wp_verify_nonce($_POST['nonce'], 'updraftplus-settings-nonce')) die('Security check'); 
 	     
-	    if (empty($_POST['settings']) || !is_string($_POST['settings'])) die('Invalid data'); 
-	 
+		if (empty($_POST['settings']) || !is_string($_POST['settings'])) die('Invalid data'); 
+
 		$this->import_settings($_POST);
 	} 
 	
@@ -3945,7 +3955,14 @@ ENDHERE;
 	public function import_settings($settings) {
 		global $updraftplus;
 
-		$posted_settings = json_decode(stripslashes($settings['settings']),true);
+		// A bug in UD releases around 1.12.40 - 1.13.3 meant that it was saved in URL-string format, instead of JSON
+		$perhaps_not_yet_parsed = json_decode(stripslashes($settings['settings']), true);
+
+		if (!is_array($perhaps_not_yet_parsed)) {
+			parse_str($perhaps_not_yet_parsed, $posted_settings);
+		} else {
+			$posted_settings = $perhaps_not_yet_parsed;
+		}
 
 		if (!empty($settings['updraftplus_version'])) $posted_settings['updraftplus_version'] = $settings['updraftplus_version'];
 
@@ -4002,7 +4019,7 @@ ENDHERE;
 		UpdraftPlus_Options::admin_init();
 		
 		$more_files_path_updated = false;
-		
+
 		if (isset($settings['updraftplus_version']) && $updraftplus->version == $settings['updraftplus_version']) {
 
 			$return_array = array('saved' => true);

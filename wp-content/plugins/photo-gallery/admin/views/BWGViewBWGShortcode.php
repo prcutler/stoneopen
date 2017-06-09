@@ -61,6 +61,18 @@ class BWGViewBWGShortcode {
       'monospace' => 'Monospace',
       'serif' => 'Serif',
     );
+    $gallery_types_name = array(
+      'thumbnails' => __('Thumbnails', 'bwg_back'),
+      'thumbnails_masonry' => __('Masonry', 'bwg_back'),
+      'thumbnails_mosaic' => __('Mosaic', 'bwg_back'),
+      'slideshow' => __('Slideshow', 'bwg_back'),
+      'image_browser' => __('Image Browser', 'bwg_back'),
+      'album_compact_preview' => __('Compact Album', 'bwg_back'),
+      'album_masonry_preview' => __('Masonry Album', 'bwg_back'),
+      'album_extended_preview' => __('Extended Album', 'bwg_back'),
+      'blog_style' => __('Blog Style', 'bwg_back'),
+      'carousel' => __('Carousel', 'bwg_back'),
+    );
     if (!$from_menu) {
     ?>
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -88,22 +100,14 @@ class BWGViewBWGShortcode {
         <script language="javascript" type="text/javascript" src="<?php echo WD_BWG_URL . '/js/jscolor/jscolor.js?ver='.wd_bwg_version(); ?>"></script>
         <?php
         if (!$from_menu) {
+          wp_print_styles('forms');
         ?>
         <base target="_self">
       </head>
-      <body id="link" onLoad="tinyMCEPopup.executeOnLoad('init();');document.body.style.display='';" dir="ltr" class="forceColors">
+      <body id="link" onLoad="tinyMCEPopup.executeOnLoad('init();');document.body.style.display='';" dir="ltr" class="forceColors" >
         <?php if (isset($_POST['tagtext'])) { echo '<script>tinyMCEPopup.close();</script></body></html>'; die(); } ?>
         <form method="post" action="#" id="bwg_shortcode_form">
           <?php wp_nonce_field( 'BWGShortcode', 'bwg_nonce' ); ?>
-          <div class="tabs" role="tablist" tabindex="-1">
-            <ul>
-              <li id="display_tab" class="current" role="tab" tabindex="0">
-                <span>
-                  <a href="javascript:mcTabs.displayTab('display_tab','display_panel');" onMouseDown="return false;" tabindex="-1"><?php _e("Display", 'bwg_back'); ?></a>
-                </span>
-              </li>
-            </ul>
-          </div>
           <div class="panel_wrapper">
             <div id="display_panel" class="panel current">
         <?php
@@ -116,850 +120,900 @@ class BWGViewBWGShortcode {
         <?php
         }
         ?>
-              <div style="text-align:center; height:100px;">
+              <div id="bwg_change_gallery_type">
                 <span class="gallery_type" onClick="bwg_gallery_type('thumbnails')">
-                  <div style="text-align: center;"><input type="radio" id="thumbnails" name="gallery_type" value="thumbnails"/><label for="thumbnails"><?php _e("Thumbnails", 'bwg_back'); ?></label></div>
-                  <label for="thumbnails"><img id="display_thumb" src="<?php echo WD_BWG_URL . '/images/thumbnails.jpg'; ?>" /></label>
+                  <div class="gallery_type_div"><input type="radio" class="gallery_type_radio" id="thumbnails" name="gallery_type" value="thumbnails"/><label class="gallery_type_label" for="thumbnails"><?php _e("Thumbnails", 'bwg_back'); ?></label></div>
+                  <div><label for="thumbnails"><img id="display_thumb" src="<?php echo WD_BWG_URL . '/images/thumbnails.jpg'; ?>" /></label></div>
                 </span>
-                <span title="<?php _e("This view is disabled in free version.", 'bwg_back'); ?>" class="gallery_type">
-                  <div style="text-align: center;"><input disabled="disabled" type="radio" id="thumbnails_masonry" name="gallery_type" value="thumbnails_masonry" /><label class="spider_free_version_label" for="thumbnails_masonry"><?php _e("Masonry", 'bwg_back'); ?></label></div>
-                  <label><img style="opacity:0.5; filter: Alpha(opacity=50);" disabled="disabled" src="<?php echo WD_BWG_URL . '/images/thumbnails_masonry.jpg'; ?>" /></label>
+                <span title="<?php _e("This view is available only in Paid version.", 'bwg_back'); ?><a class='wd-btn wd-btn-primary-blue wd-not-image' href='http://wpdemo.web-dorado.com/masonry-view/' target='_blank'>Demo View</a>" class="gallery_type">
+                  <div class="gallery_type_div"><input disabled="disabled" class="gallery_type_radio" type="radio" id="thumbnails_masonry" name="gallery_type" value="thumbnails_masonry" /><label class="spider_free_version_label gallery_type_label" for="thumbnails_masonry"><?php _e("Masonry", 'bwg_back'); ?></label></div>
+                  <div><label><img style="opacity:0.5; filter: Alpha(opacity=50);" disabled="disabled" src="<?php echo WD_BWG_URL . '/images/thumbnails_masonry.jpg'; ?>" /></label></div>
                 </span>
-		<span title="<?php _e("This view is disabled in free version.", 'bwg_back'); ?>" class="gallery_type">
-                  <div style="text-align: center;"><input disabled="disabled" type="radio" id="thumbnails_mosaic" name="gallery_type" value="thumbnails_mosaic" /><label class="spider_free_version_label" for="thumbnails_mosaic"><?php _e("Mosaic", 'bwg_back'); ?></label></div>
-                  <label for="thumbnails_mosaic"><img style="opacity:0.5; filter: Alpha(opacity=50);" disabled="disabled" src="<?php echo WD_BWG_URL . '/images/thumbnails_mosaic.jpg'; ?>" /></label>
+                <span title="<?php _e("This view is available only in Paid version.", 'bwg_back'); ?><a class='wd-btn wd-btn-primary-blue wd-not-image' href='http://wpdemo.web-dorado.com/mosaic-view/' target='_blank'>Demo View</a>" class="gallery_type">
+                  <div class="gallery_type_div"><input disabled="disabled" type="radio" class="gallery_type_radio" id="thumbnails_mosaic" name="gallery_type" value="thumbnails_mosaic" /><label class="spider_free_version_label gallery_type_label" for="thumbnails_mosaic"><?php _e("Mosaic", 'bwg_back'); ?></label></div>
+                  <div><label for="thumbnails_mosaic"><img style="opacity:0.5; filter: Alpha(opacity=50);" disabled="disabled" src="<?php echo WD_BWG_URL . '/images/thumbnails_mosaic.jpg'; ?>" /></label></div>
                 </span>
                 <span class="gallery_type" onClick="bwg_gallery_type('slideshow')">
-                  <div style="text-align: center;"><input type="radio" id="slideshow" name="gallery_type" value="slideshow" /><label for="slideshow"><?php _e("Slideshow", 'bwg_back'); ?></label></div>
+                  <div class="gallery_type_div"><input type="radio" id="slideshow" class="gallery_type_radio" name="gallery_type" value="slideshow" /><label class="gallery_type_label" for="slideshow"><?php _e("Slideshow", 'bwg_back'); ?></label></div>
                   <label for="slideshow"><img src="<?php echo WD_BWG_URL . '/images/slideshow.jpg'; ?>" /></label>
                 </span>
                 <span class="gallery_type" onClick="bwg_gallery_type('image_browser')">
-                  <div style="text-align: center;"><input type="radio" id="image_browser" name="gallery_type" value="image_browser" /><label for="image_browser"><?php _e("Image Browser", 'bwg_back'); ?></label></div>
-                  <label for="image_browser"><img src="<?php echo WD_BWG_URL . '/images/image_browser.jpg'; ?>" /></label>
+                  <div class="gallery_type_div"><input type="radio" class="gallery_type_radio" id="image_browser" name="gallery_type" value="image_browser" /><label class="gallery_type_label" for="image_browser"><?php _e("Image Browser", 'bwg_back'); ?></label></div>
+                  <div><label for="image_browser"><img src="<?php echo WD_BWG_URL . '/images/image_browser.jpg'; ?>" /></label></div>
                 </span>
                 <span class="gallery_type" onClick="bwg_gallery_type('album_compact_preview')">
-                  <div style="text-align: center;"><input type="radio" id="album_compact_preview" name="gallery_type" value="album_compact_preview" /><label for="album_compact_preview"><?php _e("Compact Album", 'bwg_back'); ?></label></div>
-                  <label for="album_compact_preview"><img src="<?php echo WD_BWG_URL . '/images/album_compact_preview.jpg'; ?>" /></label>
+                  <div class="album_type_div"><input type="radio" class="album_type_radio" id="album_compact_preview" name="gallery_type" value="album_compact_preview" /><label class="album_type_label" for="album_compact_preview"><?php _e("Compact Album", 'bwg_back'); ?></label></div>
+                  <div><label for="album_compact_preview"><img src="<?php echo WD_BWG_URL . '/images/album_compact_preview.jpg'; ?>" /></label></div>
                 </span>
-                <span title="<?php _e("This view is disabled in free version.", 'bwg_back'); ?>" class="gallery_type">
-                  <div style="text-align: center;"><input disabled="disabled" type="radio" id="album_masonry_preview" name="gallery_type" value="album_masonry_preview" /><label class="spider_free_version_label" for="album_masonry_preview"><?php _e("Masonry Album", 'bwg_back'); ?></label></div>
-                  <label for="album_masonry_preview"><img style="opacity:0.5; filter: Alpha(opacity=50);" disabled="disabled" src="<?php echo WD_BWG_URL . '/images/thumbnails_masonry.jpg'; ?>" /></label>
+                <span title="<?php _e("This view is available only in Paid version.", 'bwg_back'); ?><a class='wd-btn wd-btn-primary-blue wd-not-image' href='http://wpdemo.web-dorado.com/masonry-album-view/' target='_blank'>Demo View</a>" class="gallery_type">
+                  <div class="album_type_div"><input disabled="disabled" type="radio" class="album_type_radio" id="album_masonry_preview" name="gallery_type" value="album_masonry_preview" /><label class="spider_free_version_label album_type_label" for="album_masonry_preview"><?php _e("Masonry Album", 'bwg_back'); ?></label></div>
+                  <div><label for="album_masonry_preview"><img style="opacity:0.5; filter: Alpha(opacity=50);" disabled="disabled" src="<?php echo WD_BWG_URL . '/images/thumbnails_masonry.jpg'; ?>" /></label></div>
                 </span>
                 <span class="gallery_type" onClick="bwg_gallery_type('album_extended_preview')">
-                  <div style="text-align: center;"><input type="radio" id="album_extended_preview" name="gallery_type" value="album_extended_preview" /><label for="album_extended_preview"><?php _e("Extended Album", 'bwg_back'); ?></label></div>
-                  <label for="album_extended_preview"><img src="<?php echo WD_BWG_URL . '/images/album_extended_preview.jpg'; ?>" /></label>
+                  <div class="album_type_div"><input type="radio" class="album_type_radio" id="album_extended_preview" name="gallery_type" value="album_extended_preview" /><label class="album_type_label" for="album_extended_preview"><?php _e("Extended Album", 'bwg_back'); ?></label></div>
+                  <div><label for="album_extended_preview"><img src="<?php echo WD_BWG_URL . '/images/album_extended_preview.jpg'; ?>" /></label></div>
                 </span>
-                <span title="<?php _e('This view is disabled in free version.', 'bwg_back'); ?>" class="gallery_type">
-                  <div style="text-align: center;"><input disabled="disabled" type="radio" id="blog_style" name="gallery_type" value="blog_style" /><label class="spider_free_version_label" for="blog_style"><?php _e("Blog Style", 'bwg_back'); ?></label></div>
+                <span title="<?php _e("This view is available only in Paid version.", 'bwg_back'); ?><a class='wd-btn wd-btn-primary-blue wd-not-image' href='http://wpdemo.web-dorado.com/blog-style-view/' target='_blank'>Demo View</a>" class="gallery_type">
+                  <div class="gallery_type_div"><input disabled="disabled" type="radio" class="gallery_type_radio" id="blog_style" name="gallery_type" value="blog_style" /><label class="spider_free_version_label gallery_type_label" for="blog_style"><?php _e("Blog Style", 'bwg_back'); ?></label></div>
                   <label><img style="opacity:0.5; filter: Alpha(opacity=50);" disabled="disabled" src="<?php echo WD_BWG_URL . '/images/blog_style.jpg'; ?>" /></label>
                 </span>			
-		  <span title="<?php _e('This view is disabled in free version.', 'bwg_back'); ?>" class="gallery_type">
-                  <div style="text-align: center;"><input disabled="disabled" type="radio" id="carousel" name="gallery_type" value="carousel" /><label class="spider_free_version_label" for="carousel"><?php _e("Carousel", 'bwg_back'); ?></label></div>
-                  <label for="carousel"><img style="opacity:0.5; filter: Alpha(opacity=50);" disabled="disabled" src="<?php echo WD_BWG_URL . '/images/Carousel.png'; ?>" /></label>
+                <span title="<?php _e("This view is available only in Paid version.", 'bwg_back'); ?><a class='wd-btn wd-btn-primary-blue wd-not-image' href='http://wpdemo.web-dorado.com/gallery-carousel/' target='_blank'>Demo View</a>" class="gallery_type">
+                  <div class="gallery_type_div"><input disabled="disabled" type="radio" class="gallery_type_radio" id="carousel" name="gallery_type" value="carousel" /><label class="spider_free_version_label gallery_type_label" for="carousel"><?php _e("Carousel", 'bwg_back'); ?></label></div>
+                  <div><label for="carousel"><img style="opacity:0.5; filter: Alpha(opacity=50);" disabled="disabled" src="<?php echo WD_BWG_URL . '/images/Carousel.png'; ?>" /></label></div>
                 </span>
               </div>
-              <hr />
-              <div class="bwg_short_div" style="border-right: 1px solid #000000;">
-              <table>
-                <tbody>
-                  <tr id="tr_theme">
-                    <td <?php echo (get_option("wd_bwg_theme_version") ? 'title="This option is disabled in free version." class="spider_label spider_free_version_label"' : 'class="spider_label"'); ?>><label for="theme"><?php _e("Theme:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <select name="theme" class="select_icon" id="theme" style="width:150px;" <?php echo (get_option("wd_bwg_theme_version") ? 'disabled="disabled"' : ''); ?>>
-                        <option value="0" selected="selected"><?php _e("Select Theme", 'bwg_back'); ?></option>
-                        <?php
-                        foreach ($theme_rows as $theme_row) {
-                          ?>
-                          <option <?php echo ($theme_row->default_theme) ? 'selected="selected"' : ''; ?> value="<?php echo $theme_row->id; ?>"><?php echo $theme_row->name; ?></option>
-                          <?php
-                        }
-                        ?>
-                      </select>
-                    </td>
-                  </tr>
-                  <tr id="tr_gallery">
-                    <td class="spider_label"><label for="gallery"><?php _e("Gallery:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <select name="gallery" class="select_icon" id="gallery" style="width:150px;">
-                        <option value="0" selected="selected"><?php _e("All Galleries", 'bwg_back'); ?></option>
-                        <?php
-                        foreach ($gallery_rows as $gallery_row) {
-                          ?>
-                          <option value="<?php echo $gallery_row->id; ?>"><?php echo $gallery_row->name; ?></option>
-                          <?php
-                        }
-                        ?>
-                      </select>
-                    </td>
-                  </tr>
-                  <tr id="tr_album">
-                    <td title="<?php _e('The selected album expanded content will be displayed.', 'bwg_back'); ?>" class="spider_label"><label for="album"><?php _e("Album:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <select name="album" class="select_icon" id="album" style="width:150px;">
-                        <option value="0" selected="selected"><?php _e("Select Album", 'bwg_back'); ?></option>
-                        <?php
-                        foreach ($album_rows as $album_row) {
-                          ?>
-                          <option value="<?php echo $album_row->id; ?>"><?php echo $album_row->name; ?></option>
-                          <?php
-                        }
-                        ?>
-                      </select>
-                    </td>
-                  </tr>
-                  <tr id="tr_sort_by">
-                    <td class="spider_label"><label for="sort_by"><?php _e("Sort images by:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <select name="sort_by" class="select_icon" id="sort_by" style="width:150px;">
-                        <option value="order" selected="selected"><?php _e("Order", 'bwg_back'); ?></option>
-                        <option value="alt"><?php _e("Title", 'bwg_back'); ?></option>
-                        <option value="date"><?php _e("Date", 'bwg_back'); ?></option>
-                        <option value="filename"><?php _e("Filename", 'bwg_back'); ?></option>
-                        <option value="size"><?php _e("Size", 'bwg_back'); ?></option>
-                        <option value="filetype"><?php _e("Type", 'bwg_back'); ?></option>
-                        <option value="resolution"><?php _e("Resolution", 'bwg_back'); ?></option>
-                        <option value="random"><?php _e("Random", 'bwg_back'); ?></option>
-                      </select>
-                    </td>
-                  </tr>
-                   <tr id="tr_tag">
-                    <td class="spider_label"><label for="gallery"><?php echo __('Tag:', 'bwg_back'); ?> </label></td>
-                    <td>
-                      <select name="tag" id="tag" class="select_icon" style="width:150px;">
-                        <option value="0" selected="selected"><?php echo __('All Tags', 'bwg_back'); ?></option>
-                        <?php
-                        foreach ($tag_rows as $tag_row) {
-                          ?>
-                          <option value="<?php echo $tag_row->term_id; ?>"><?php echo $tag_row->name; ?></option>
-                          <?php
-                        }
-                        ?>
-                      </select>
-                    </td>
-                  </tr>
-                  <tr id="tr_order_by">
-                    <td class="spider_label"><label><?php _e("Order images", 'bwg_back'); ?>: </label></td>
-                    <td>
-                      <input type="radio" name="order_by" id="order_by_1" value="asc" checked="checked" /><label for="order_by_1"><?php _e("Ascending", 'bwg_back'); ?></label>
-                      <input type="radio" name="order_by" id="order_by_0" value="desc" /><label for="order_by_0"><?php _e("Descending", 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_show_search_box">
-                    <td class="spider_label"><label><?php _e("Show search box:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="show_search_box" id="show_search_box_1" value="1" <?php if ($wd_bwg_options->show_search_box) echo 'checked="checked"'; ?> onchange="bwg_show_search_box()" /><label for="show_search_box_1"><?php _e("Yes", 'bwg_back'); ?></label>
-                      <input type="radio" name="show_search_box" id="show_search_box_0" value="0" <?php if (!$wd_bwg_options->show_search_box) echo 'checked="checked"'; ?> onchange="bwg_show_search_box()" /><label for="show_search_box_0"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_search_box_width">
-                    <td class="spider_label"><label for="search_box_width"><?php _e("Search box width:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="search_box_width" id="search_box_width" value="<?php echo $wd_bwg_options->search_box_width; ?>" class="spider_int_input" /> px</td>
-                  </tr>
-                  <tr id="tr_show_tag_box">
-                    <td class="spider_label"><label><?php _e("Show tag box:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="show_tag_box" id="show_tag_box_1" value="1" <?php if ($wd_bwg_options->show_tag_box) echo 'checked="checked"'; ?> /><label for="show_tag_box_1"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="show_tag_box" id="show_tag_box_0" value="0" <?php if (!$wd_bwg_options->show_tag_box) echo 'checked="checked"'; ?> /><label for="show_search_box_0"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-									<tr id="tr_show_sort_images">
-                    <td class="spider_label"><label><?php _e("Show 'Order by' dropdown list:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="show_sort_images" id="show_sort_images_1" value="1" <?php if ($wd_bwg_options->show_sort_images) echo 'checked="checked"'; ?> onchange="" /><label for="show_sort_images_1"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="show_sort_images" id="show_sort_images_0" value="0" <?php if (!$wd_bwg_options->show_sort_images) echo 'checked="checked"'; ?> onchange="" /><label for="show_sort_images_0"><?php _e('No', 'bwg_back'); ?>;</label>
-                    </td>
-                  </tr>
-                  <tr id="tr_showthumbs_name">
-                    <td class="spider_label"><label><?php echo _e('Show gallery title:', 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="showthumbs_name" id="showthumbs_name_1" value="1" <?php if ($wd_bwg_options->showthumbs_name) echo 'checked="checked"'; ?> onchange="" /><label for="showthumbs_name_1"><?php echo _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="showthumbs_name" id="showthumbs_name_0" value="0" <?php if (!$wd_bwg_options->showthumbs_name) echo 'checked="checked"'; ?> onchange="" /><label for="showthumbs_name_0"><?php echo _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_show_album_name">
-                    <td class="spider_label"><label><?php echo _e('Show gallery title:', 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="show_album_name" id="show_album_name_1" value="1" <?php if ($wd_bwg_options->show_album_name) echo 'checked="checked"'; ?> onchange="" /><label for="show_album_name_1"><?php echo _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="show_album_name" id="show_album_name_0" value="0" <?php if (!$wd_bwg_options->show_album_name) echo 'checked="checked"'; ?> onchange="" /><label for="show_album_name_0"><?php echo _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_show_gallery_description">
-                    <td class="spider_label"><label><?php echo __('Show gallery description:', 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="show_gallery_description" id="show_gallery_description_1" value="1" <?php if ($wd_bwg_options->show_gallery_description) echo 'checked="checked"'; ?> onchange="" /><label for="show_gallery_description_1"><?php echo __('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="show_gallery_description" id="show_gallery_description_0" value="0" <?php if (!$wd_bwg_options->show_gallery_description) echo 'checked="checked"'; ?> onchange="" /><label for="show_gallery_description_0"><?php echo __('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <!--Thumbnails, Masonry viewies-->
-                  <tr id="tr_masonry_hor_ver">
-                    <td class="spider_label"><label><?php _e("Masonry:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="masonry_hor_ver" id="masonry_ver" value="vertical" onclick="bwg_change_label('image_column_number_label', 'Number of image rows: ');
+              <div id="bwg_select_gallery_type" style="display:none; text-align:center; height:33px;">
+                <select name="gallery_types_name" id="gallery_types_name" class="aaa select_icon select_icon_pos" style="width:100%;" onchange="bwg_gallery_type(jQuery(this).val());">
+                  <?php
+                  foreach ($gallery_types_name as $key=>$gallery_type_name) {
+                  ?>
+                    <option <?php echo selected($gallery_type_name,true); ?> <?php echo ($gallery_type_name == 'Carousel' || $gallery_type_name == 'Masonry' || $gallery_type_name == 'Mosaic' || $gallery_type_name == 'Masonry Album' || $gallery_type_name == 'Blog Style') ? 'title="'. __("This view is disabled in free version.", 'bwg_back').'" disabled="disabled"' : '';?> value="<?php echo $key; ?>"><?php echo $gallery_type_name; ?></option>
+                  <?php
+                  }
+                  ?>
+                </select>
+              </div>
+              <div class="tabs_views" style="display:none;">
+              <div class="tabs_chang_view" id="" onclick="bwg_change_views('type_them');">
+                  <a id="bwg_them" class="wd-btn wd-btn-primary wd-not-image">
+                    <div class=""><?php _e('Global', 'bwg_back'); ?></div>
+                  </a>
+              </div>
+                <div class="tabs_chang_view" id="" onclick="bwg_change_views('type_slideshow');">
+                  <a id="bwg_slideshow" class="wd-btn wd-btn-primary wd-not-image">
+                    <div class="bwg_tab_label"><?php _e('Lightbox', 'bwg_back'); ?></div>
+                  </a>
+                </div>
+                <div class="tabs_chang_view" id="" onclick="bwg_change_views('type_advertisement');">
+                  <a id="bwg_advertisement" class="wd-btn wd-btn-primary wd-not-image">
+                  <div class="bwg_tab_label">
+                    <?php _e('Advertisement', 'bwg_back'); ?>
+              
+                  </div>
+                  </a>
+                </div>
+              </div>
+              <hr class="bwg_hr_shortcode" />
+              <div class="bwg_short_div type_them" style="border-right: 1px solid #000000;">
+              <div style="display:table;width:100%;">
+                <div style="display:table-cell;">
+                <div class="gallery_album_option_left">
+                  <table style="display:inline-block;">
+                    <tbody>
+                      <tr id="tr_theme">
+                        <td <?php echo (get_option("wd_bwg_theme_version") ? 'title="This option is disabled in free version." class="spider_label spider_free_version_label"' : 'class="spider_label"'); ?>><label for="theme"><?php _e("Theme:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <select name="theme" class="select_icon" id="theme" style="width:150px;" <?php echo (get_option("wd_bwg_theme_version") ? 'disabled="disabled"' : ''); ?>>
+                            <option value="0" selected="selected"><?php _e("Select Theme", 'bwg_back'); ?></option>
+                            <?php
+                            foreach ($theme_rows as $theme_row) {
+                              ?>
+                              <option <?php echo ($theme_row->default_theme) ? 'selected="selected"' : ''; ?> value="<?php echo $theme_row->id; ?>"><?php echo $theme_row->name; ?></option>
+                              <?php
+                            }
+                            ?>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr id="tr_gallery">
+                        <td class="spider_label"><label for="gallery"><?php _e("Gallery:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <select name="gallery" class="select_icon" id="gallery" style="width:150px;">
+                            <option value="0" selected="selected"><?php _e("All Galleries", 'bwg_back'); ?></option>
+                            <?php
+                            foreach ($gallery_rows as $gallery_row) {
+                              ?>
+                              <option value="<?php echo $gallery_row->id; ?>"><?php echo $gallery_row->name; ?></option>
+                              <?php
+                            }
+                            ?>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr id="tr_album">
+                        <td title="<?php _e('The selected album expanded content will be displayed.', 'bwg_back'); ?>" class="spider_label"><label for="album"><?php _e("Album:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <select name="album" class="select_icon" id="album" style="width:150px;">
+                            <option value="0" selected="selected"><?php _e("Select Album", 'bwg_back'); ?></option>
+                            <?php
+                            foreach ($album_rows as $album_row) {
+                              ?>
+                              <option value="<?php echo $album_row->id; ?>"><?php echo $album_row->name; ?></option>
+                              <?php
+                            }
+                            ?>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr id="tr_sort_by">
+                        <td class="spider_label"><label for="sort_by"><?php _e("Sort images by:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <select name="sort_by" class="select_icon" id="sort_by" style="width:150px;">
+                            <option value="order" selected="selected"><?php _e("Order", 'bwg_back'); ?></option>
+                            <option value="alt"><?php _e("Title", 'bwg_back'); ?></option>
+                            <option value="date"><?php _e("Date", 'bwg_back'); ?></option>
+                            <option value="filename"><?php _e("Filename", 'bwg_back'); ?></option>
+                            <option value="size"><?php _e("Size", 'bwg_back'); ?></option>
+                            <option value="filetype"><?php _e("Type", 'bwg_back'); ?></option>
+                            <option value="resolution"><?php _e("Resolution", 'bwg_back'); ?></option>
+                            <option value="random"><?php _e("Random", 'bwg_back'); ?></option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr id="tr_tag">
+                        <td class="spider_label"><label for="gallery"><?php echo __('Tag:', 'bwg_back'); ?> </label></td>
+                        <td>
+                          <select name="tag" id="tag" class="select_icon" style="width:150px;">
+                            <option value="0" selected="selected"><?php echo __('All Tags', 'bwg_back'); ?></option>
+                            <?php
+                            foreach ($tag_rows as $tag_row) {
+                              ?>
+                              <option value="<?php echo $tag_row->term_id; ?>"><?php echo $tag_row->name; ?></option>
+                              <?php
+                            }
+                            ?>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr id="tr_order_by">
+                        <td class="spider_label"><label><?php _e("Order images:", 'bwg_back'); ?>: </label></td>
+                        <td>
+                          <input type="radio" name="order_by" id="order_by_1" value="asc" checked="checked" /><label for="order_by_1"><?php _e("Ascending", 'bwg_back'); ?></label>
+                          <span class="order_by_desc"><input type="radio" name="order_by" id="order_by_0" value="desc" /><label for="order_by_0"><?php _e("Descending", 'bwg_back'); ?></label></span>
+                        </td>
+                      </tr>
+                      <tr id="tr_show_search_box">
+                        <td class="spider_label"><label><?php _e("Show search box:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="show_search_box" id="show_search_box_1" value="1" <?php if ($wd_bwg_options->show_search_box) echo 'checked="checked"'; ?> onchange="bwg_show_search_box()" /><label for="show_search_box_1"><?php _e("Yes", 'bwg_back'); ?></label>
+                          <input type="radio" name="show_search_box" id="show_search_box_0" value="0" <?php if (!$wd_bwg_options->show_search_box) echo 'checked="checked"'; ?> onchange="bwg_show_search_box()" /><label for="show_search_box_0"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_search_box_width">
+                        <td class="spider_label"><label for="search_box_width"><?php _e("Search box width:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="search_box_width" id="search_box_width" value="<?php echo $wd_bwg_options->search_box_width; ?>" class="spider_int_input" /> px</td>
+                      </tr>
+                      <tr id="tr_show_tag_box">
+                        <td class="spider_label"><label><?php _e("Show tag box:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="show_tag_box" id="show_tag_box_1" value="1" <?php if ($wd_bwg_options->show_tag_box) echo 'checked="checked"'; ?> /><label for="show_tag_box_1"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="show_tag_box" id="show_tag_box_0" value="0" <?php if (!$wd_bwg_options->show_tag_box) echo 'checked="checked"'; ?> /><label for="show_search_box_0"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_show_sort_images">
+                        <td class="spider_label"><label><?php _e("Show 'Order by' dropdown list:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="show_sort_images" id="show_sort_images_1" value="1" <?php if ($wd_bwg_options->show_sort_images) echo 'checked="checked"'; ?> onchange="" /><label for="show_sort_images_1"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="show_sort_images" id="show_sort_images_0" value="0" <?php if (!$wd_bwg_options->show_sort_images) echo 'checked="checked"'; ?> onchange="" /><label for="show_sort_images_0"><?php _e('No', 'bwg_back'); ?>;</label>
+                        </td>
+                      </tr>
+                      <tr id="tr_showthumbs_name">
+                        <td class="spider_label"><label><?php echo _e('Show gallery title:', 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="showthumbs_name" id="showthumbs_name_1" value="1" <?php if ($wd_bwg_options->showthumbs_name) echo 'checked="checked"'; ?> onchange="" /><label for="showthumbs_name_1"><?php echo _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="showthumbs_name" id="showthumbs_name_0" value="0" <?php if (!$wd_bwg_options->showthumbs_name) echo 'checked="checked"'; ?> onchange="" /><label for="showthumbs_name_0"><?php echo _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_show_album_name">
+                        <td class="spider_label"><label><?php echo _e('Show gallery title:', 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="show_album_name" id="show_album_name_1" value="1" <?php if ($wd_bwg_options->show_album_name) echo 'checked="checked"'; ?> onchange="" /><label for="show_album_name_1"><?php echo _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="show_album_name" id="show_album_name_0" value="0" <?php if (!$wd_bwg_options->show_album_name) echo 'checked="checked"'; ?> onchange="" /><label for="show_album_name_0"><?php echo _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_show_gallery_description">
+                        <td class="spider_label"><label><?php echo __('Show gallery description:', 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="show_gallery_description" id="show_gallery_description_1" value="1" <?php if ($wd_bwg_options->show_gallery_description) echo 'checked="checked"'; ?> onchange="" /><label for="show_gallery_description_1"><?php echo __('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="show_gallery_description" id="show_gallery_description_0" value="0" <?php if (!$wd_bwg_options->show_gallery_description) echo 'checked="checked"'; ?> onchange="" /><label for="show_gallery_description_0"><?php echo __('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <!--Slideshow view-->
+                      <tr id="tr_slideshow_effect">
+                        <td class="spider_label"><label for="slideshow_effect"><?php _e("Slideshow Effect:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <select name="slideshow_effect" class="select_icon" id="slideshow_effect" style="width:150px;">
+                            <?php
+                            foreach ($effects as $key => $effect) {
+                              ?>
+                              <option value="<?php echo $key; ?>" <?php echo ($key != 'none' && $key != 'fade') ? 'disabled="disabled" title="' . __("This effect is disabled in free version.","bwg_back") . '"' : ''; ?> <?php echo ($wd_bwg_options->slideshow_type == $key) ? 'selected' : ''; ?>><?php echo __($effect,"bwg_back"); ?></option>
+                              <?php
+                            }
+                            ?>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr id="tr_slideshow_effect_duration">
+                        <td title="<?php echo __("Interval between two images.", 'bwg_back'); ?>" class="spider_label"><label for="slideshow_effect_duration"><?php echo __('Effect duration:', 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="slideshow_effect_duration" id="slideshow_effect_duration" value="<?php echo $wd_bwg_options->slideshow_effect_duration; ?>" class="spider_int_input" /> sec.</td>
+                      </tr>
+                      <tr id="tr_slideshow_interval">
+                        <td title="<?php _e("Interval between two images.", 'bwg_back'); ?>" class="spider_label"><label for="slideshow_interval"><?php _e("Time interval:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="slideshow_interval" id="slideshow_interval" value="<?php echo $wd_bwg_options->slideshow_interval; ?>" class="spider_int_input" /> sec.</td>
+                      </tr>
+                      <tr id="tr_slideshow_width_height">
+                        <td title="<?php _e("Maximum values for slideshow width and height.", 'bwg_back'); ?>" class="spider_label"><label for="slideshow_width"><?php _e("Slideshow dimensions:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="text" name="slideshow_width" id="slideshow_width" value="<?php echo $wd_bwg_options->slideshow_width; ?>" class="spider_int_input" /> x 
+                          <input type="text" name="slideshow_height" id="slideshow_height" value="<?php echo $wd_bwg_options->slideshow_height; ?>" class="spider_int_input" /> px
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="gallery_album_option_right">
+                  <table style="display:inline-block;">
+                    <tbody>
+                      <!--Thumbnails, Masonry viewies-->
+                      <tr id="tr_masonry_hor_ver">
+                        <td class="spider_label"><label><?php _e("Masonry:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="masonry_hor_ver" id="masonry_ver" value="vertical" onclick="bwg_change_label('image_column_number_label', 'Number of image rows: ');
                                                                                                             bwg_change_label('thumb_width_height_label', 'Image thumbnail width: ');
                                                                                                             jQuery('#thumb_width').show();
                                                                                                             jQuery('#thumb_height').hide();
                                                                                                             jQuery('#thumb_width_height_separator').hide();" <?php echo ($wd_bwg_options->masonry == 'vertical') ? 'checked' : ''; ?> /><label for="masonry_ver"><?php _e("Vertical", 'bwg_back'); ?></label>
-                      <input type="radio" name="masonry_hor_ver" id="masonry_hor" value="horizontal" onclick="bwg_change_label('image_column_number_label', '<?php _e("Max. number of image columns: ", 'bwg_back'); ?>');
+                          <input type="radio" name="masonry_hor_ver" id="masonry_hor" value="horizontal" onclick="bwg_change_label('image_column_number_label', '<?php _e("Max. number of image columns: ", 'bwg_back'); ?>');
                                                                                                               bwg_change_label('thumb_width_height_label', 'Image Thumbnail Height: ');
                                                                                                               jQuery('#thumb_width').hide();
                                                                                                               jQuery('#thumb_height').show();
                                                                                                               jQuery('#thumb_width_height_separator').hide();" <?php echo ($wd_bwg_options->masonry == 'horizontal') ? 'checked' : ''; ?> /><label for="masonry_hor"><?php _e("Horizontal", 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <!--Thumbnails, Mosaic viewies-->
-                  <tr id="tr_mosaic_hor_ver">
-                    <td class="spider_label"><label><?php _e("Mosaic:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="mosaic_hor_ver" id="mosaic_ver" value="vertical" onclick="bwg_change_label('image_column_number_label', '<?php _e("Number of image rows: ", 'bwg_back'); ?>');
+                        </td>
+                      </tr>
+                      <!--Thumbnails, Mosaic viewies-->
+                      <tr id="tr_mosaic_hor_ver">
+                        <td class="spider_label"><label><?php _e("Mosaic:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="mosaic_hor_ver" id="mosaic_ver" value="vertical" onclick="bwg_change_label('image_column_number_label', '<?php _e("Number of image rows: ", 'bwg_back'); ?>');
                                                                                                             bwg_change_label('thumb_width_height_label', '<?php _e("Image thumbnail width: ", 'bwg_back'); ?>');
                                                                                                             jQuery('#thumb_width').show();
                                                                                                             jQuery('#thumb_height').hide();
                                                                                                             jQuery('#thumb_width_height_separator').hide();" <?php echo ($wd_bwg_options->mosaic == 'vertical') ? 'checked' : ''; ?> /><label for="mosaic_ver"><?php _e("Vertical", 'bwg_back'); ?></label>
-                      <input type="radio" name="mosaic_hor_ver" id="mosaic_hor" value="horizontal" onclick="bwg_change_label('image_column_number_label', '<?php _e("Max. number of image columns:", 'bwg_back'); ?> ');
+                          <input type="radio" name="mosaic_hor_ver" id="mosaic_hor" value="horizontal" onclick="bwg_change_label('image_column_number_label', '<?php _e("Max. number of image columns:", 'bwg_back'); ?> ');
                                                                                                               bwg_change_label('thumb_width_height_label', '<?php _e("Image Thumbnail Height:", 'bwg_back'); ?> ');
                                                                                                               jQuery('#thumb_width').hide();
                                                                                                               jQuery('#thumb_height').show();
                                                                                                               jQuery('#thumb_width_height_separator').hide();" <?php echo ($wd_bwg_options->mosaic == 'horizontal') ? 'checked' : ''; ?> /><label for="mosaic_hor"><?php _e("Horizontal", 'bwg_back'); ?></label>
-                    
-                  
-                    </td>
-                  </tr>
-                  <tr id="tr_resizable_mosaic">
-                    <td title="<?php _e('Mosaic thumbnails do not have fixed size, but are proportional to the width of the parent container. This option keeps thumbs to look nice when viewed with very large or very small screen. Prevents zooming of thumbs.', 'bwg_back'); ?>" class="spider_label"><label for="resizable_mosaic"><?php _e("Resizable mosaic", 'bwg_back'); ?></label></td>
-                    <td>
-                      <input type="radio" name="resizable_mosaic" id="resizable_mosaic_1" value="1" <?php echo ($wd_bwg_options->resizable_mosaic == 1) ? 'checked' : ''; ?> /><label for="resizable_mosaic_1"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="resizable_mosaic" id="resizable_mosaic_0" value="0" <?php echo ($wd_bwg_options->resizable_mosaic == 0) ? 'checked' : ''; ?> /><label for="resizable_mosaic_0"><?php _e('No', 'bwg_back'); ?></label>
-                      <br />
-                    </td>
-                  </tr>
-                  <tr id="tr_mosaic_total_width">
-                    <td title="<?php _e("Percentage of container's width", 'bwg_back'); ?>" class="spider_label"><label for="mosaic_total_width"><?php _e("Total width of mosaic:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="mosaic_total_width" id="mosaic_total_width" value="<?php echo $wd_bwg_options->mosaic_total_width; ?>" class="spider_int_input" /> %</td>
-                  </tr>
-                 <!--Thumbnails, Masonry and Mosaic viewies-->
-                  <tr id="tr_image_column_number">
-                    <td class="spider_label"><label id="image_column_number_label" for="image_column_number"><?php _e("Max. number of image columns:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="image_column_number" id="image_column_number" value="<?php echo $wd_bwg_options->image_column_number; ?>" class="spider_int_input" /></td>
-                  </tr>
-                  <tr id="tr_images_per_page">
-                    <td title="<?php _e('If you want to display all images you should leave it blank or insert 0.', 'bwg_back'); ?>" class="spider_label"><label for="images_per_page"><?php _e("Images per page:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="images_per_page" id="images_per_page" value="<?php echo $wd_bwg_options->images_per_page; ?>" class="spider_int_input" /></td>
-                  </tr>
-                  <tr id="tr_image_title_hover">
-                    <td class="spider_label"><label><?php _e("Image title:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="image_title" id="image_title_hover" value="hover" <?php echo ($wd_bwg_options->image_title_show_hover == 'hover') ? 'checked' : ''; ?> /><label for="image_title_hover"><?php _e("Show on hover", 'bwg_back'); ?></label><br />
-                      <input type="radio" name="image_title" id="image_title_show" value="show" <?php echo ($wd_bwg_options->image_title_show_hover == 'show') ? 'checked' : ''; ?> /><label for="image_title_show"><?php _e("Always show", 'bwg_back'); ?></label><br />
-                      <input type="radio" name="image_title" id="image_title_none" value="none" <?php echo ($wd_bwg_options->image_title_show_hover == 'none') ? 'checked' : ''; ?> /><label for="image_title_none"><?php _e("Don't show", 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_image_enable_page">
-                    <td class="spider_label"><label><?php _e("Enable pagination:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="image_enable_page" class="hide_load_count" id="image_page_yes" value="1" <?php echo ($wd_bwg_options->image_enable_page == '1') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="image_page_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="image_enable_page" class="hide_load_count" id="image_page_no" value="0" <?php echo ($wd_bwg_options->image_enable_page == '0') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="image_page_no"><?php _e('No', 'bwg_back'); ?></label>
-                      <input type="radio" name="image_enable_page" id="image_page_loadmore" value="2" <?php echo ($wd_bwg_options->image_enable_page == '2') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="image_page_loadmore"><?php _e("Load More", 'bwg_back'); ?></label>
-                      <input type="radio" name="image_enable_page" id="image_page_scrol_load" value="3" <?php echo ($wd_bwg_options->image_enable_page == '3') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="image_page_scrol_load"><?php _e("Scroll Load", 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_load_more_image_count">
-                    <td class="spider_label"><label for="load_more_image_count"><?php _e("Images per load:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="load_more_image_count" id="load_more_image_count" value="<?php echo $wd_bwg_options->images_per_page; ?>" class="spider_int_input" /></td>
-                  </tr> 
-                  <tr id="tr_thumb_width_height">
-                    <td title="<?php _e('Maximum values for thumbnail dimension.', 'bwg_back'); ?>" class="spider_label"><label id="thumb_width_height_label" for="thumb_width"><?php _e("Image Thumbnail dimensions:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="text" name="thumb_width" id="thumb_width" value="<?php echo $wd_bwg_options->thumb_width; ?>" class="spider_int_input" /><span id="thumb_width_height_separator"> x </span>
-                      <input type="text" name="thumb_height" id="thumb_height" value="<?php echo $wd_bwg_options->thumb_height; ?>" class="spider_int_input" /> px
-                    </td>
-                  </tr>
+                        
+                      
+                        </td>
+                      </tr>
+                      <tr id="tr_resizable_mosaic">
+                        <td title="<?php _e('Mosaic thumbnails do not have fixed size, but are proportional to the width of the parent container. This option keeps thumbs to look nice when viewed with very large or very small screen. Prevents zooming of thumbs.', 'bwg_back'); ?>" class="spider_label"><label for="resizable_mosaic"><?php _e("Resizable mosaic", 'bwg_back'); ?></label></td>
+                        <td>
+                          <input type="radio" name="resizable_mosaic" id="resizable_mosaic_1" value="1" <?php echo ($wd_bwg_options->resizable_mosaic == 1) ? 'checked' : ''; ?> /><label for="resizable_mosaic_1"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="resizable_mosaic" id="resizable_mosaic_0" value="0" <?php echo ($wd_bwg_options->resizable_mosaic == 0) ? 'checked' : ''; ?> /><label for="resizable_mosaic_0"><?php _e('No', 'bwg_back'); ?></label>
+                          <br />
+                        </td>
+                      </tr>
+                      <tr id="tr_mosaic_total_width">
+                        <td title="<?php _e("Percentage of container's width", 'bwg_back'); ?>" class="spider_label"><label for="mosaic_total_width"><?php _e("Total width of mosaic:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="mosaic_total_width" id="mosaic_total_width" value="<?php echo $wd_bwg_options->mosaic_total_width; ?>" class="spider_int_input" /> %</td>
+                      </tr>
+                     <!--Thumbnails, Masonry and Mosaic viewies-->
+                      <tr id="tr_image_column_number">
+                        <td class="spider_label"><label id="image_column_number_label" for="image_column_number"><?php _e("Max. number of image columns:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="image_column_number" id="image_column_number" value="<?php echo $wd_bwg_options->image_column_number; ?>" class="spider_int_input" /></td>
+                      </tr>
+                      <tr id="tr_images_per_page">
+                        <td title="<?php _e('If you want to display all images you should leave it blank or insert 0.', 'bwg_back'); ?>" class="spider_label"><label for="images_per_page"><?php _e("Images per page:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="images_per_page" id="images_per_page" value="<?php echo $wd_bwg_options->images_per_page; ?>" class="spider_int_input" /></td>
+                      </tr>
+                      <tr id="tr_image_title_hover">
+                        <td class="spider_label"><label><?php _e("Image title:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="image_title" id="image_title_hover" value="hover" <?php echo ($wd_bwg_options->image_title_show_hover == 'hover') ? 'checked' : ''; ?> /><label for="image_title_hover"><?php _e("Show on hover", 'bwg_back'); ?></label><br />
+                          <input type="radio" name="image_title" id="image_title_show" value="show" <?php echo ($wd_bwg_options->image_title_show_hover == 'show') ? 'checked' : ''; ?> /><label for="image_title_show"><?php _e("Always show", 'bwg_back'); ?></label><br />
+                          <input type="radio" name="image_title" id="image_title_none" value="none" <?php echo ($wd_bwg_options->image_title_show_hover == 'none') ? 'checked' : ''; ?> /><label for="image_title_none"><?php _e("Don't show", 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_image_enable_page">
+                        <td class="spider_label"><label><?php _e("Enable pagination:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="image_enable_page" class="hide_load_count" id="image_page_yes" value="1" <?php echo ($wd_bwg_options->image_enable_page == '1') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="image_page_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="image_enable_page" class="hide_load_count" id="image_page_no" value="0" <?php echo ($wd_bwg_options->image_enable_page == '0') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="image_page_no"><?php _e('No', 'bwg_back'); ?></label>
+                          <span class="bwg_enable_page"><input type="radio" name="image_enable_page" id="image_page_loadmore" value="2" <?php echo ($wd_bwg_options->image_enable_page == '2') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="image_page_loadmore"><?php _e("Load More", 'bwg_back'); ?></label>
+                          <input type="radio" name="image_enable_page" id="image_page_scrol_load" value="3" <?php echo ($wd_bwg_options->image_enable_page == '3') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="image_page_scrol_load"><?php _e("Scroll Load", 'bwg_back'); ?></label></span>
+                        </td>
+                      </tr>
+                      <tr id="tr_load_more_image_count">
+                        <td class="spider_label"><label for="load_more_image_count"><?php _e("Images per load:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="load_more_image_count" id="load_more_image_count" value="<?php echo $wd_bwg_options->images_per_page; ?>" class="spider_int_input" /></td>
+                      </tr> 
+                      <tr id="tr_thumb_width_height">
+                        <td title="<?php _e('Maximum values for thumbnail dimension.', 'bwg_back'); ?>" class="spider_label"><label id="thumb_width_height_label" for="thumb_width"><?php _e("Image Thumbnail dimensions:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="text" name="thumb_width" id="thumb_width" value="<?php echo $wd_bwg_options->thumb_width; ?>" class="spider_int_input" /><span id="thumb_width_height_separator"> x </span>
+                          <input type="text" name="thumb_height" id="thumb_height" value="<?php echo $wd_bwg_options->thumb_height; ?>" class="spider_int_input" /> px
+                        </td>
+                      </tr>
 
-                  <!--Compact Album view-->
-                  <tr id="tr_compuct_album_column_number">
-                    <td class="spider_label"><label for="compuct_album_column_number"><?php _e("Max. number of album columns:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="compuct_album_column_number" id="compuct_album_column_number" value="<?php echo $wd_bwg_options->album_column_number; ?>" class="spider_int_input" /></td>
-                  </tr>
-                  <tr id="tr_compuct_albums_per_page">
-                    <td title="<?php _e("If you want to display all albums you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="compuct_albums_per_page"><?php _e("Albums per page:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="compuct_albums_per_page" id="compuct_albums_per_page" value="<?php echo $wd_bwg_options->albums_per_page; ?>" class="spider_int_input" /></td>
-                  </tr>
-                  <tr id="tr_compuct_album_title_hover">
-                    <td class="spider_label"><label><?php _e("Album title:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="compuct_album_title" id="compuct_album_title_hover" value="hover" <?php echo ($wd_bwg_options->album_title_show_hover == 'hover') ? 'checked' : ''; ?> /><label for="compuct_album_title_hover"><?php _e("Show on hover", 'bwg_back'); ?></label><br />
-                      <input type="radio" name="compuct_album_title" id="compuct_album_title_show" value="show" <?php echo ($wd_bwg_options->album_title_show_hover == 'show') ? 'checked' : ''; ?> /><label for="compuct_album_title_show"><?php _e("Always show", 'bwg_back'); ?></label><br />
-                      <input type="radio" name="compuct_album_title" id="compuct_album_title_none" value="none" <?php echo ($wd_bwg_options->album_title_show_hover == 'none') ? 'checked' : ''; ?> /><label for="compuct_album_title_none"><?php _e("Don't show", 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_compuct_album_thumb_width_height">
-                    <td title="<?php _e("Maximum values for album thumb width and height.", 'bwg_back'); ?>" class="spider_label"><label for="compuct_album_thumb_width"><?php _e("Album Thumbnail dimensions:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="text" name="compuct_album_thumb_width" id="compuct_album_thumb_width" value="<?php echo $wd_bwg_options->album_thumb_width; ?>" class="spider_int_input" /> x 
-                      <input type="text" name="compuct_album_thumb_height" id="compuct_album_thumb_height" value="<?php echo $wd_bwg_options->album_thumb_height; ?>" class="spider_int_input" /> px
-                    </td>
-                  </tr>
-                  <tr id="tr_compuct_album_view_type">
-                    <td title="<?php _e('The gallery images view type in the album.<br /><br />This option is disabled in free version.', 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Album view type:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="compuct_album_view_type" id="compuct_album_view_type_1" value="thumbnail" <?php if ($wd_bwg_options->album_view_type == "thumbnail") echo 'checked="checked"'; ?> onchange="bwg_change_compuct_album_view_type()" /><label for="compuct_album_view_type_1"><?php _e("Thumbnail", 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="compuct_album_view_type" id="compuct_album_view_type_0" value="masonry" <?php if ($wd_bwg_options->album_view_type == "masonry") echo 'checked="checked"'; ?> onchange="bwg_change_compuct_album_view_type()" /><label for="compuct_album_view_type_0"><?php _e("Masonry", 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="compuct_album_view_type" id="compuct_album_view_type_2" value="mosaic" <?php if ($wd_bwg_options->album_view_type == "mosaic") echo 'checked="checked"'; ?> onchange="bwg_change_compuct_album_view_type()" /><label for="compuct_album_view_type_2"><?php _e("Mosaic", 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_compuct_album_mosaic_hor_ver">
-                    <td title="<?php _e('This option is disabled in free version.', 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Mosaic:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="compuct_album_mosaic_hor_ver" id="compuct_album_mosaic_ver" value="vertical" onclick="bwg_change_label('compuct_album_image_column_number', '<?php _e("Number of image rows:", 'bwg_back'); ?> ');
+                      <!--Compact Album view-->
+                      <tr id="tr_compuct_album_column_number">
+                        <td class="spider_label"><label for="compuct_album_column_number"><?php _e("Max. number of album columns:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="compuct_album_column_number" id="compuct_album_column_number" value="<?php echo $wd_bwg_options->album_column_number; ?>" class="spider_int_input" /></td>
+                      </tr>
+                      <tr id="tr_compuct_albums_per_page">
+                        <td title="<?php _e("If you want to display all albums you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="compuct_albums_per_page"><?php _e("Albums per page:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="compuct_albums_per_page" id="compuct_albums_per_page" value="<?php echo $wd_bwg_options->albums_per_page; ?>" class="spider_int_input" /></td>
+                      </tr>
+                      <tr id="tr_compuct_album_title_hover">
+                        <td class="spider_label"><label><?php _e("Album title:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="compuct_album_title" id="compuct_album_title_hover" value="hover" <?php echo ($wd_bwg_options->album_title_show_hover == 'hover') ? 'checked' : ''; ?> /><label for="compuct_album_title_hover"><?php _e("Show on hover", 'bwg_back'); ?></label><br />
+                          <input type="radio" name="compuct_album_title" id="compuct_album_title_show" value="show" <?php echo ($wd_bwg_options->album_title_show_hover == 'show') ? 'checked' : ''; ?> /><label for="compuct_album_title_show"><?php _e("Always show", 'bwg_back'); ?></label><br />
+                          <input type="radio" name="compuct_album_title" id="compuct_album_title_none" value="none" <?php echo ($wd_bwg_options->album_title_show_hover == 'none') ? 'checked' : ''; ?> /><label for="compuct_album_title_none"><?php _e("Don't show", 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_compuct_album_thumb_width_height">
+                        <td title="<?php _e("Maximum values for album thumb width and height.", 'bwg_back'); ?>" class="spider_label"><label for="compuct_album_thumb_width"><?php _e("Album Thumbnail dimensions:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="text" name="compuct_album_thumb_width" id="compuct_album_thumb_width" value="<?php echo $wd_bwg_options->album_thumb_width; ?>" class="spider_int_input" /> x 
+                          <input type="text" name="compuct_album_thumb_height" id="compuct_album_thumb_height" value="<?php echo $wd_bwg_options->album_thumb_height; ?>" class="spider_int_input" /> px
+                        </td>
+                      </tr>
+                      <tr id="tr_compuct_album_view_type">
+                        <td title="<?php _e('The gallery images view type in the album.<br /><br />This option is disabled in free version.', 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Album view type:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="compuct_album_view_type" id="compuct_album_view_type_1" value="thumbnail" <?php if ($wd_bwg_options->album_view_type == "thumbnail") echo 'checked="checked"'; ?> onchange="bwg_change_compuct_album_view_type()" /><label for="compuct_album_view_type_1"><?php _e("Thumbnail", 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="compuct_album_view_type" id="compuct_album_view_type_0" value="masonry" <?php if ($wd_bwg_options->album_view_type == "masonry") echo 'checked="checked"'; ?> onchange="bwg_change_compuct_album_view_type()" /><label for="compuct_album_view_type_0"><?php _e("Masonry", 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="compuct_album_view_type" id="compuct_album_view_type_2" value="mosaic" <?php if ($wd_bwg_options->album_view_type == "mosaic") echo 'checked="checked"'; ?> onchange="bwg_change_compuct_album_view_type()" /><label for="compuct_album_view_type_2"><?php _e("Mosaic", 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_compuct_album_mosaic_hor_ver">
+                        <td title="<?php _e('This option is disabled in free version.', 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Mosaic:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="compuct_album_mosaic_hor_ver" id="compuct_album_mosaic_ver" value="vertical" onclick="bwg_change_label('compuct_album_image_column_number', '<?php _e("Number of image rows:", 'bwg_back'); ?> ');
                                                                                                             bwg_change_label('compuct_album_image_thumb_dimensions', '<?php _e("Image thumbnail width:", 'bwg_back'); ?> ');
                                                                                                             jQuery('#compuct_album_image_thumb_width').show();
                                                                                                             jQuery('#compuct_album_image_thumb_height').hide();
                                                                                                             jQuery('#compuct_album_image_thumb_dimensions_x').hide();" <?php echo ($wd_bwg_options->mosaic == 'vertical') ? 'checked' : ''; ?> /><label for="compuct_album_mosaic_ver"><?php _e("Vertical", 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="compuct_album_mosaic_hor_ver" id="compuct_album_mosaic_hor" value="horizontal" onclick="bwg_change_label('compuct_album_image_column_number', '<?php _e("Max. number of image columns:", 'bwg_back'); ?> ');
+                          <input disabled="disabled" type="radio" name="compuct_album_mosaic_hor_ver" id="compuct_album_mosaic_hor" value="horizontal" onclick="bwg_change_label('compuct_album_image_column_number', '<?php _e("Max. number of image columns:", 'bwg_back'); ?> ');
                                                                                                               bwg_change_label('compuct_album_image_thumb_dimensions', '<?php _e("Image thumbnail height:", 'bwg_back'); ?> ');
                                                                                                               jQuery('#compuct_album_image_thumb_width').hide();
                                                                                                               jQuery('#compuct_album_image_thumb_height').show();
                                                                                                               jQuery('#compuct_album_image_thumb_dimensions_x').hide();" <?php echo ($wd_bwg_options->mosaic == 'horizontal') ? 'checked' : ''; ?> /><label for="compuct_album_mosaic_hor"><?php _e("Horizontal", 'bwg_back'); ?></label>
                     
-                  
-                    </td>
-                  </tr>
-                  <tr id="tr_compuct_album_resizable_mosaic">
-                    <td title="<?php _e("Mosaic thumbnails do not have fixed size, but are proportional to the width of the parent container. This option keeps thumbs to look nice when viewed with very large or very small screen. Prevents zooming of thumbs.<br /><br />This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label for="compuct_album_resizable_mosaic"><?php _e("Resizable mosaic", 'bwg_back'); ?></label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="compuct_album_resizable_mosaic" id="compuct_album_resizable_mosaic_1" value="1" <?php echo ($wd_bwg_options->resizable_mosaic == 1) ? 'checked' : ''; ?> /><label for="compuct_album_resizable_mosaic_1"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="compuct_album_resizable_mosaic" id="compuct_album_resizable_mosaic_0" value="0" <?php echo ($wd_bwg_options->resizable_mosaic == 0) ? 'checked' : ''; ?> /><label for="compuct_album_resizable_mosaic_0"><?php _e('No', 'bwg_back'); ?></label>
-                      <br />
-                    </td>
-                  </tr>
-                  <tr id="tr_compuct_album_mosaic_total_width">
-                    <td title="<?php _e("Percentage of container's width", 'bwg_back'); ?>" class="spider_label"><label for="compuct_album_mosaic_total_width"><?php _e("Total width of mosaic:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="compuct_album_mosaic_total_width" id="compuct_album_mosaic_total_width" value="<?php echo $wd_bwg_options->mosaic_total_width; ?>" class="spider_int_input" /> <?php _e("percent", 'bwg_back'); ?></td>
-                  </tr>
-                  <tr id="tr_compuct_album_image_column_number">
-                    <td class="spider_label"><label for="compuct_album_image_column_number"><?php _e("Max. number of image columns: ", 'bwg_back'); ?></label></td>
-                    <td><input type="text" name="compuct_album_image_column_number" id="compuct_album_image_column_number" value="<?php echo $wd_bwg_options->image_column_number; ?>" class="spider_int_input" /></td>
-                  </tr>
-                  <tr id="tr_compuct_album_images_per_page">
-                    <td title="<?php _e("If you want to display all images you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="compuct_album_images_per_page"><?php _e("Images per page:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="compuct_album_images_per_page" id="compuct_album_images_per_page" value="<?php echo $wd_bwg_options->images_per_page; ?>" class="spider_int_input" /></td>
-                  </tr>
-                  <tr id="tr_compuct_album_image_title">
-                    <td class="spider_label"><label><?php _e("Image title:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="compuct_album_image_title" id="compuct_album_image_title_hover" value="hover" <?php echo ($wd_bwg_options->image_title_show_hover == 'hover') ? 'checked' : ''; ?> /><label for="compuct_album_image_title_hover"><?php _e("Show on hover", 'bwg_back'); ?></label><br />
-                      <input type="radio" name="compuct_album_image_title" id="compuct_album_image_title_show" value="show" <?php echo ($wd_bwg_options->image_title_show_hover == 'show') ? 'checked' : ''; ?> /><label for="compuct_album_image_title_show"><?php _e("Always show", 'bwg_back'); ?></label><br />
-                      <input type="radio" name="compuct_album_image_title" id="compuct_album_image_title_none" value="none" <?php echo ($wd_bwg_options->image_title_show_hover == 'none') ? 'checked' : ''; ?> /><label for="compuct_album_image_title_none"><?php _e("Don't show", 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_compuct_album_image_thumb_width_height">
-                    <td title="<?php _e("Maximum values for thumbnail width and height.", 'bwg_back'); ?>" class="spider_label"><label for="compuct_album_image_thumb_width" id="compuct_album_image_thumb_dimensions"><?php _e("Image thumbnail dimensions: ", 'bwg_back'); ?></label></td>
-                    <td>
-                      <input type="text" name="compuct_album_image_thumb_width" id="compuct_album_image_thumb_width" value="<?php echo $wd_bwg_options->thumb_width; ?>" class="spider_int_input" /><span id="compuct_album_image_thumb_dimensions_x" > x </span>
-                      <input type="text" name="compuct_album_image_thumb_height" id="compuct_album_image_thumb_height" value="<?php echo $wd_bwg_options->thumb_height; ?>" class="spider_int_input" /> px
-                    </td>
-                  </tr>
-                  <tr id="tr_compuct_album_enable_page">
-                    <td class="spider_label"><label><?php _e("Enable pagination:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="compuct_album_enable_page" class="hide_load_count" id="compuct_album_page_yes" value="1" <?php echo ($wd_bwg_options->album_enable_page == '1') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="compuct_album_page_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="compuct_album_enable_page"  class="hide_load_count"  id="compuct_album_page_no" value="0" <?php echo ($wd_bwg_options->album_enable_page == '0') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="compuct_album_page_no"><?php _e('No', 'bwg_back'); ?></label>  
-                      <input type="radio" name="compuct_album_enable_page" id="compuct_album_page_loadmore" value="2" <?php echo ($wd_bwg_options->album_enable_page == '2') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="compuct_album_page_loadmore"><?php _e("Load More", 'bwg_back'); ?></label>
-                       <input type="radio" name="compuct_album_enable_page" id="compuct_album_page_scrol_load" value="3" <?php echo ($wd_bwg_options->album_enable_page == '3') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="compuct_album_page_scrol_load"><?php _e("Scroll Load", 'bwg_back'); ?></label>
-                    </td>
-		  </tr>
-                   <tr id="tr_compuct_albums_per_page_load_more">
-                    <td title="<?php _e("If you want to display all albums you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="compuct_albums_per_page_load_more"><?php _e("Albums per load:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="compuct_albums_per_page_load_more" id="compuct_albums_per_page_load_more" value="<?php echo $wd_bwg_options->albums_per_page; ?>" class="spider_int_input" /></td>
-                  </tr>
-                   <tr id="tr_compuct_album_load_more_image_count">
-                    <td class="spider_label"><label for="compuct_album_load_more_image_count"><?php _e("Images per load:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="compuct_album_load_more_image_count" id="compuct_album_load_more_image_count" value="<?php echo $wd_bwg_options->images_per_page; ?>" class="spider_int_input" /></td>
-                  </tr>
+                      
+                        </td>
+                      </tr>
+                      <tr id="tr_compuct_album_resizable_mosaic">
+                        <td title="<?php _e("Mosaic thumbnails do not have fixed size, but are proportional to the width of the parent container. This option keeps thumbs to look nice when viewed with very large or very small screen. Prevents zooming of thumbs.<br /><br />This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label for="compuct_album_resizable_mosaic"><?php _e("Resizable mosaic", 'bwg_back'); ?></label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="compuct_album_resizable_mosaic" id="compuct_album_resizable_mosaic_1" value="1" <?php echo ($wd_bwg_options->resizable_mosaic == 1) ? 'checked' : ''; ?> /><label for="compuct_album_resizable_mosaic_1"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="compuct_album_resizable_mosaic" id="compuct_album_resizable_mosaic_0" value="0" <?php echo ($wd_bwg_options->resizable_mosaic == 0) ? 'checked' : ''; ?> /><label for="compuct_album_resizable_mosaic_0"><?php _e('No', 'bwg_back'); ?></label>
+                          <br />
+                        </td>
+                      </tr>
+                      <tr id="tr_compuct_album_mosaic_total_width">
+                        <td title="<?php _e("Percentage of container's width", 'bwg_back'); ?>" class="spider_label"><label for="compuct_album_mosaic_total_width"><?php _e("Total width of mosaic:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="compuct_album_mosaic_total_width" id="compuct_album_mosaic_total_width" value="<?php echo $wd_bwg_options->mosaic_total_width; ?>" class="spider_int_input" /> <?php _e("percent", 'bwg_back'); ?></td>
+                      </tr>
+                      <tr id="tr_compuct_album_image_column_number">
+                        <td class="spider_label"><label for="compuct_album_image_column_number"><?php _e("Max. number of image columns: ", 'bwg_back'); ?></label></td>
+                        <td><input type="text" name="compuct_album_image_column_number" id="compuct_album_image_column_number" value="<?php echo $wd_bwg_options->image_column_number; ?>" class="spider_int_input" /></td>
+                      </tr>
+                      <tr id="tr_compuct_album_images_per_page">
+                        <td title="<?php _e("If you want to display all images you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="compuct_album_images_per_page"><?php _e("Images per page:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="compuct_album_images_per_page" id="compuct_album_images_per_page" value="<?php echo $wd_bwg_options->images_per_page; ?>" class="spider_int_input" /></td>
+                      </tr>
+                      <tr id="tr_compuct_album_image_title">
+                        <td class="spider_label"><label><?php _e("Image title:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="compuct_album_image_title" id="compuct_album_image_title_hover" value="hover" <?php echo ($wd_bwg_options->image_title_show_hover == 'hover') ? 'checked' : ''; ?> /><label for="compuct_album_image_title_hover"><?php _e("Show on hover", 'bwg_back'); ?></label><br />
+                          <input type="radio" name="compuct_album_image_title" id="compuct_album_image_title_show" value="show" <?php echo ($wd_bwg_options->image_title_show_hover == 'show') ? 'checked' : ''; ?> /><label for="compuct_album_image_title_show"><?php _e("Always show", 'bwg_back'); ?></label><br />
+                          <input type="radio" name="compuct_album_image_title" id="compuct_album_image_title_none" value="none" <?php echo ($wd_bwg_options->image_title_show_hover == 'none') ? 'checked' : ''; ?> /><label for="compuct_album_image_title_none"><?php _e("Don't show", 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_compuct_album_image_thumb_width_height">
+                        <td title="<?php _e("Maximum values for thumbnail width and height.", 'bwg_back'); ?>" class="spider_label"><label for="compuct_album_image_thumb_width" id="compuct_album_image_thumb_dimensions"><?php _e("Image thumbnail dimensions: ", 'bwg_back'); ?></label></td>
+                        <td>
+                          <input type="text" name="compuct_album_image_thumb_width" id="compuct_album_image_thumb_width" value="<?php echo $wd_bwg_options->thumb_width; ?>" class="spider_int_input" /><span id="compuct_album_image_thumb_dimensions_x" > x </span>
+                          <input type="text" name="compuct_album_image_thumb_height" id="compuct_album_image_thumb_height" value="<?php echo $wd_bwg_options->thumb_height; ?>" class="spider_int_input" /> px
+                        </td>
+                      </tr>
+                      <tr id="tr_compuct_album_enable_page">
+                        <td class="spider_label"><label><?php _e("Enable pagination:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="compuct_album_enable_page" class="hide_load_count" id="compuct_album_page_yes" value="1" <?php echo ($wd_bwg_options->album_enable_page == '1') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="compuct_album_page_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="compuct_album_enable_page"  class="hide_load_count"  id="compuct_album_page_no" value="0" <?php echo ($wd_bwg_options->album_enable_page == '0') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="compuct_album_page_no"><?php _e('No', 'bwg_back'); ?></label>  
+                          <input type="radio" name="compuct_album_enable_page" id="compuct_album_page_loadmore" value="2" <?php echo ($wd_bwg_options->album_enable_page == '2') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="compuct_album_page_loadmore"><?php _e("Load More", 'bwg_back'); ?></label>
+                           <input type="radio" name="compuct_album_enable_page" id="compuct_album_page_scrol_load" value="3" <?php echo ($wd_bwg_options->album_enable_page == '3') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="compuct_album_page_scrol_load"><?php _e("Scroll Load", 'bwg_back'); ?></label>
+                        </td>
+                       </tr>
+                       <tr id="tr_compuct_albums_per_page_load_more">
+                        <td title="<?php _e("If you want to display all albums you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="compuct_albums_per_page_load_more"><?php _e("Albums per load:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="compuct_albums_per_page_load_more" id="compuct_albums_per_page_load_more" value="<?php echo $wd_bwg_options->albums_per_page; ?>" class="spider_int_input" /></td>
+                      </tr>
+                       <tr id="tr_compuct_album_load_more_image_count">
+                        <td class="spider_label"><label for="compuct_album_load_more_image_count"><?php _e("Images per load:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="compuct_album_load_more_image_count" id="compuct_album_load_more_image_count" value="<?php echo $wd_bwg_options->images_per_page; ?>" class="spider_int_input" /></td>
+                      </tr>
 
-                  <!--Extended Album view-->
-                  <tr id="tr_extended_albums_per_page">
-                    <td title="<?php _e("If you want to display all albums you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="extended_albums_per_page"><?php _e("Albums per page:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="extended_albums_per_page" id="extended_albums_per_page" value="<?php echo $wd_bwg_options->albums_per_page; ?>" class="spider_int_input" /></td>
-                  </tr>
-                  <tr id="tr_extended_album_height">
-                    <td class="spider_label"><label for="extended_album_height"><?php _e("Album row height:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="extended_album_height" id="extended_album_height" value="<?php echo $wd_bwg_options->extended_album_height; ?>" class="spider_int_input" /> px</td>
-                  </tr>
-                  <tr id="tr_extended_album_description_enable">
-                    <td title="<?php _e("If you disable description only the title of the album will be displayed.", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Enable album description:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="extended_album_description_enable" id="extended_album_description_yes" value="1" <?php echo ($wd_bwg_options->extended_album_description_enable) ? 'checked' : ''; ?> /><label for="extended_album_description_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="extended_album_description_enable" id="extended_album_description_no" value="0" <?php echo ($wd_bwg_options->extended_album_description_enable) ? '' : 'checked'; ?> /><label for="extended_album_description_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_extended_album_thumb_width_height">
-                    <td title="<?php _e("Maximum values for album thumb width and height.", 'bwg_back'); ?>" class="spider_label"><label for="extended_album_thumb_width"><?php _e("Album thumbnail dimensions:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="text" name="extended_album_thumb_width" id="extended_album_thumb_width" value="<?php echo $wd_bwg_options->album_thumb_width; ?>" class="spider_int_input" /> x 
-                      <input type="text" name="extended_album_thumb_height" id="extended_album_thumb_height" value="<?php echo $wd_bwg_options->album_thumb_height; ?>" class="spider_int_input" /> px
-                    </td>
-                  </tr>
-                  <tr id="tr_extended_album_view_type">
-                    <td title="<?php _e("The gallery images view type in the album.", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Album view type:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="extended_album_view_type" id="extended_album_view_type_1" value="thumbnail" <?php if ($wd_bwg_options->album_view_type == "thumbnail") echo 'checked="checked"'; ?> onchange="bwg_change_extended_album_view_type()" /><label for="extended_album_view_type_1"><?php _e("Thumbnail", 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="extended_album_view_type" id="extended_album_view_type_0" value="masonry" <?php if ($wd_bwg_options->album_view_type == "masonry") echo 'checked="checked"'; ?> onchange="bwg_change_extended_album_view_type()" /><label for="extended_album_view_type_0"><?php _e("Masonry", 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="extended_album_view_type" id="extended_album_view_type_2" value="mosaic" <?php if ($wd_bwg_options->album_view_type == "mosaic") echo 'checked="checked"'; ?> onchange="bwg_change_extended_album_view_type()" /><label for="extended_album_view_type_2"><?php _e("Mosaic", 'bwg_back'); ?></label>
-                    </td>
-                  </tr>				  
-                  <tr id="tr_extended_album_mosaic_hor_ver">
-                    <td title="<?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Mosaic:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="extended_album_mosaic_hor_ver" id="extended_album_mosaic_ver" value="vertical" onclick="bwg_change_label('extended_album_image_column_number', 'Number of image rows: ');
+                      <!--Extended Album view-->
+                      <tr id="tr_extended_albums_per_page">
+                        <td title="<?php _e("If you want to display all albums you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="extended_albums_per_page"><?php _e("Albums per page:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="extended_albums_per_page" id="extended_albums_per_page" value="<?php echo $wd_bwg_options->albums_per_page; ?>" class="spider_int_input" /></td>
+                      </tr>
+                      <tr id="tr_extended_album_height">
+                        <td class="spider_label"><label for="extended_album_height"><?php _e("Album row height:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="extended_album_height" id="extended_album_height" value="<?php echo $wd_bwg_options->extended_album_height; ?>" class="spider_int_input" /> px</td>
+                      </tr>
+                      <tr id="tr_extended_album_description_enable">
+                        <td title="<?php _e("If you disable description only the title of the album will be displayed.", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Enable album description:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="extended_album_description_enable" id="extended_album_description_yes" value="1" <?php echo ($wd_bwg_options->extended_album_description_enable) ? 'checked' : ''; ?> /><label for="extended_album_description_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="extended_album_description_enable" id="extended_album_description_no" value="0" <?php echo ($wd_bwg_options->extended_album_description_enable) ? '' : 'checked'; ?> /><label for="extended_album_description_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_extended_album_thumb_width_height">
+                        <td title="<?php _e("Maximum values for album thumb width and height.", 'bwg_back'); ?>" class="spider_label"><label for="extended_album_thumb_width"><?php _e("Album thumbnail dimensions:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="text" name="extended_album_thumb_width" id="extended_album_thumb_width" value="<?php echo $wd_bwg_options->album_thumb_width; ?>" class="spider_int_input" /> x 
+                          <input type="text" name="extended_album_thumb_height" id="extended_album_thumb_height" value="<?php echo $wd_bwg_options->album_thumb_height; ?>" class="spider_int_input" /> px
+                        </td>
+                      </tr>
+                      <tr id="tr_extended_album_view_type">
+                        <td title="<?php _e("The gallery images view type in the album.", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Album view type:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="extended_album_view_type" id="extended_album_view_type_1" value="thumbnail" <?php if ($wd_bwg_options->album_view_type == "thumbnail") echo 'checked="checked"'; ?> onchange="bwg_change_extended_album_view_type()" /><label for="extended_album_view_type_1"><?php _e("Thumbnail", 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="extended_album_view_type" id="extended_album_view_type_0" value="masonry" <?php if ($wd_bwg_options->album_view_type == "masonry") echo 'checked="checked"'; ?> onchange="bwg_change_extended_album_view_type()" /><label for="extended_album_view_type_0"><?php _e("Masonry", 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="extended_album_view_type" id="extended_album_view_type_2" value="mosaic" <?php if ($wd_bwg_options->album_view_type == "mosaic") echo 'checked="checked"'; ?> onchange="bwg_change_extended_album_view_type()" /><label for="extended_album_view_type_2"><?php _e("Mosaic", 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_extended_album_mosaic_hor_ver">
+                        <td title="<?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Mosaic:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="extended_album_mosaic_hor_ver" id="extended_album_mosaic_ver" value="vertical" onclick="bwg_change_label('extended_album_image_column_number', 'Number of image rows: ');
                                                                                                             bwg_change_label('extended_album_image_thumb_dimensions', '<?php _e("Image thumbnail width: ", 'bwg_back'); ?>');
                                                                                                             jQuery('#extended_album_image_thumb_width').show();
                                                                                                             jQuery('#extended_album_image_thumb_height').hide();
                                                                                                             jQuery('#extended_album_image_thumb_dimensions_x').hide();" <?php echo ($wd_bwg_options->mosaic == 'vertical') ? 'checked' : ''; ?> /><label for="extended_album_mosaic_ver"><?php _e("Vertical", 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="extended_album_mosaic_hor_ver" id="extended_album_mosaic_hor" value="horizontal" onclick="bwg_change_label('extended_album_image_column_number', '<?php _e("Max. number of image columns:", 'bwg_back'); ?> ');
+                          <input disabled="disabled" type="radio" name="extended_album_mosaic_hor_ver" id="extended_album_mosaic_hor" value="horizontal" onclick="bwg_change_label('extended_album_image_column_number', '<?php _e("Max. number of image columns:", 'bwg_back'); ?> ');
                                                                                                               bwg_change_label('extended_album_image_thumb_dimensions', '<?php _e("Image thumbnail height: ", 'bwg_back'); ?>');
                                                                                                               jQuery('#extended_album_image_thumb_width').hide();
                                                                                                               jQuery('#extended_album_image_thumb_height').show();
                                                                                                               jQuery('#extended_album_image_thumb_dimensions_x').hide();" <?php echo ($wd_bwg_options->mosaic == 'horizontal') ? 'checked' : ''; ?> /><label for="extended_album_mosaic_hor"><?php _e("Horizontal", 'bwg_back'); ?></label>
                     
-                  
-                    </td>
-                  </tr>
-                  <tr id="tr_extended_album_resizable_mosaic">
-                    <td title="<?php _e("Mosaic thumbnails do not have fixed size, but are proportional to the width of the parent container. This option keeps thumbs to look nice when viewed with very large or very small screen. Prevents zooming of thumbs.<br /><br />This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label for="extended_album_resizable_mosaic"><?php _e("Resizable mosaic:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="extended_album_resizable_mosaic" id="extended_album_resizable_mosaic_1" value="1" <?php echo ($wd_bwg_options->resizable_mosaic == 1) ? 'checked' : ''; ?> /><label for="extended_album_resizable_mosaic_1"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="extended_album_resizable_mosaic" id="extended_album_resizable_mosaic_0" value="0" <?php echo ($wd_bwg_options->resizable_mosaic == 0) ? 'checked' : ''; ?> /><label for="extended_album_resizable_mosaic_0"><?php _e('No', 'bwg_back'); ?></label>
-                      <br />
-                    </td>
-                  </tr>
-                  
-                  <tr id="tr_extended_album_mosaic_total_width">
-                    <td title="<?php _e("Percentage of container's width", 'bwg_back'); ?>" class="spider_label"><label for="extended_album_mosaic_total_width"><?php _e("Total width of mosaic:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="extended_album_mosaic_total_width" id="extended_album_mosaic_total_width" value="<?php echo $wd_bwg_options->mosaic_total_width; ?>" class="spider_int_input" /> <?php _e("percent", 'bwg_back'); ?></td>
-                  </tr>
-                  <tr id="tr_extended_album_image_column_number">
-                    <td class="spider_label"><label for="extended_album_image_column_number"><?php _e("Max. number of image columns:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="extended_album_image_column_number" id="extended_album_image_column_number" value="<?php echo $wd_bwg_options->image_column_number; ?>" class="spider_int_input" /></td>
-                  </tr>
-                  <tr id="tr_extended_album_images_per_page">
-                    <td title="<?php _e("If you want to display all images you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="extended_album_images_per_page"><?php _e("Images per page:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="extended_album_images_per_page" id="extended_album_images_per_page" value="<?php echo $wd_bwg_options->images_per_page; ?>" class="spider_int_input" /></td>
-                  </tr>
-                  <tr id="tr_extended_album_image_title">
-                    <td class="spider_label"><label><?php _e("Image title:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="extended_album_image_title" id="extended_album_image_title_hover" value="hover" <?php echo ($wd_bwg_options->image_title_show_hover == 'hover') ? 'checked' : ''; ?> /><label for="extended_album_image_title_hover"><?php _e("Show on hover", 'bwg_back'); ?></label><br />
-                      <input type="radio" name="extended_album_image_title" id="extended_album_image_title_show" value="show" <?php echo ($wd_bwg_options->image_title_show_hover == 'show') ? 'checked' : ''; ?> /><label for="extended_album_image_title_show"><?php _e("Always show", 'bwg_back'); ?></label><br />
-                      <input type="radio" name="extended_album_image_title" id="extended_album_image_title_none" value="none" <?php echo ($wd_bwg_options->image_title_show_hover == 'none') ? 'checked' : ''; ?> /><label for="extended_album_image_title_none"><?php _e("Don't show", 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_extended_album_image_thumb_width_height">
-                    <td title="<?php _e("Maximum values for thumbnail width and height.", 'bwg_back'); ?>" class="spider_label"><label for="extended_album_image_thumb_width" id="extended_album_image_thumb_dimensions"><?php _e("Image Thumbnail dimensions:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="text" name="extended_album_image_thumb_width" id="extended_album_image_thumb_width" value="<?php echo $wd_bwg_options->thumb_width; ?>" class="spider_int_input" /><span id="extended_album_image_thumb_dimensions_x" > x </span>
-                      <input type="text" name="extended_album_image_thumb_height" id="extended_album_image_thumb_height" value="<?php echo $wd_bwg_options->thumb_height; ?>" class="spider_int_input" /> px
-                    </td>
-                  </tr>
-                  <tr id="tr_extended_album_enable_page">
-                    <td class="spider_label"><label><?php _e("Enable pagination:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="extended_album_enable_page" id="extended_album_page_yes" value="1" <?php echo ($wd_bwg_options->album_enable_page == '1') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="extended_album_page_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="extended_album_enable_page" id="extended_album_page_no" value="0" <?php echo ($wd_bwg_options->album_enable_page == '0') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="extended_album_page_no"><?php _e('No', 'bwg_back'); ?></label>
-                      <input type="radio" name="extended_album_enable_page" id="extended_album_page_loadmore" value="2" <?php echo ($wd_bwg_options->album_enable_page == '2') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="extended_album_page_loadmore"><?php _e("Load More", 'bwg_back'); ?></label>
-                      <input type="radio" name="extended_album_enable_page" id="extended_album_page_scrol_load" value="3" <?php  echo ($wd_bwg_options->album_enable_page == '3') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="extended_album_page_scrol_load"><?php _e("Scroll Load", 'bwg_back'); ?> </label>
-                    </td>
-                  </tr>
-                   <tr id="tr_extended_albums_per_page_load_more">
-                    <td title="<?php _e("If you want to display all albums you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="extended_albums_per_page_load_more"><?php _e("Albums per load:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="extended_albums_per_page_load_more" id="extended_albums_per_page_load_more" value="<?php echo $wd_bwg_options->albums_per_page; ?>" class="spider_int_input" /></td>
-                  </tr>
-                   <tr id="tr_extended_album_load_more_image_count">
-                    <td class="spider_label"><label for="extended_album_load_more_image_count"><?php _e("Images per load:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="extended_album_load_more_image_count" id="extended_album_load_more_image_count" value="<?php echo $wd_bwg_options->images_per_page; ?>" class="spider_int_input" /></td>
-                  </tr>
+                      
+                        </td>
+                      </tr>
+                      <tr id="tr_extended_album_resizable_mosaic">
+                        <td title="<?php _e("Mosaic thumbnails do not have fixed size, but are proportional to the width of the parent container. This option keeps thumbs to look nice when viewed with very large or very small screen. Prevents zooming of thumbs.<br /><br />This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label for="extended_album_resizable_mosaic"><?php _e("Resizable mosaic:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="extended_album_resizable_mosaic" id="extended_album_resizable_mosaic_1" value="1" <?php echo ($wd_bwg_options->resizable_mosaic == 1) ? 'checked' : ''; ?> /><label for="extended_album_resizable_mosaic_1"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="extended_album_resizable_mosaic" id="extended_album_resizable_mosaic_0" value="0" <?php echo ($wd_bwg_options->resizable_mosaic == 0) ? 'checked' : ''; ?> /><label for="extended_album_resizable_mosaic_0"><?php _e('No', 'bwg_back'); ?></label>
+                          <br />
+                        </td>
+                      </tr>
+                      <tr id="tr_extended_album_mosaic_total_width">
+                        <td title="<?php _e("Percentage of container's width", 'bwg_back'); ?>" class="spider_label"><label for="extended_album_mosaic_total_width"><?php _e("Total width of mosaic:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="extended_album_mosaic_total_width" id="extended_album_mosaic_total_width" value="<?php echo $wd_bwg_options->mosaic_total_width; ?>" class="spider_int_input" /> <?php _e("percent", 'bwg_back'); ?></td>
+                      </tr>
+                      <tr id="tr_extended_album_image_column_number">
+                        <td class="spider_label"><label for="extended_album_image_column_number"><?php _e("Max. number of image columns:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="extended_album_image_column_number" id="extended_album_image_column_number" value="<?php echo $wd_bwg_options->image_column_number; ?>" class="spider_int_input" /></td>
+                      </tr>
+                      <tr id="tr_extended_album_images_per_page">
+                        <td title="<?php _e("If you want to display all images you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="extended_album_images_per_page"><?php _e("Images per page:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="extended_album_images_per_page" id="extended_album_images_per_page" value="<?php echo $wd_bwg_options->images_per_page; ?>" class="spider_int_input" /></td>
+                      </tr>
+                      <tr id="tr_extended_album_image_title">
+                        <td class="spider_label"><label><?php _e("Image title:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="extended_album_image_title" id="extended_album_image_title_hover" value="hover" <?php echo ($wd_bwg_options->image_title_show_hover == 'hover') ? 'checked' : ''; ?> /><label for="extended_album_image_title_hover"><?php _e("Show on hover", 'bwg_back'); ?></label><br />
+                          <input type="radio" name="extended_album_image_title" id="extended_album_image_title_show" value="show" <?php echo ($wd_bwg_options->image_title_show_hover == 'show') ? 'checked' : ''; ?> /><label for="extended_album_image_title_show"><?php _e("Always show", 'bwg_back'); ?></label><br />
+                          <input type="radio" name="extended_album_image_title" id="extended_album_image_title_none" value="none" <?php echo ($wd_bwg_options->image_title_show_hover == 'none') ? 'checked' : ''; ?> /><label for="extended_album_image_title_none"><?php _e("Don't show", 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_extended_album_image_thumb_width_height">
+                        <td title="<?php _e("Maximum values for thumbnail width and height.", 'bwg_back'); ?>" class="spider_label"><label for="extended_album_image_thumb_width" id="extended_album_image_thumb_dimensions"><?php _e("Image Thumbnail dimensions:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="text" name="extended_album_image_thumb_width" id="extended_album_image_thumb_width" value="<?php echo $wd_bwg_options->thumb_width; ?>" class="spider_int_input" /><span id="extended_album_image_thumb_dimensions_x" > x </span>
+                          <input type="text" name="extended_album_image_thumb_height" id="extended_album_image_thumb_height" value="<?php echo $wd_bwg_options->thumb_height; ?>" class="spider_int_input" /> px
+                        </td>
+                      </tr>
+                      <tr id="tr_extended_album_enable_page">
+                        <td class="spider_label"><label><?php _e("Enable pagination:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="extended_album_enable_page" id="extended_album_page_yes" value="1" <?php echo ($wd_bwg_options->album_enable_page == '1') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="extended_album_page_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="extended_album_enable_page" id="extended_album_page_no" value="0" <?php echo ($wd_bwg_options->album_enable_page == '0') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="extended_album_page_no"><?php _e('No', 'bwg_back'); ?></label>
+                          <input type="radio" name="extended_album_enable_page" id="extended_album_page_loadmore" value="2" <?php echo ($wd_bwg_options->album_enable_page == '2') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="extended_album_page_loadmore"><?php _e("Load More", 'bwg_back'); ?></label>
+                          <input type="radio" name="extended_album_enable_page" id="extended_album_page_scrol_load" value="3" <?php  echo ($wd_bwg_options->album_enable_page == '3') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="extended_album_page_scrol_load"><?php _e("Scroll Load", 'bwg_back'); ?> </label>
+                        </td>
+                      </tr>
+                       <tr id="tr_extended_albums_per_page_load_more">
+                        <td title="<?php _e("If you want to display all albums you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="extended_albums_per_page_load_more"><?php _e("Albums per load:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="extended_albums_per_page_load_more" id="extended_albums_per_page_load_more" value="<?php echo $wd_bwg_options->albums_per_page; ?>" class="spider_int_input" /></td>
+                      </tr>
+                       <tr id="tr_extended_album_load_more_image_count">
+                        <td class="spider_label"><label for="extended_album_load_more_image_count"><?php _e("Images per load:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="extended_album_load_more_image_count" id="extended_album_load_more_image_count" value="<?php echo $wd_bwg_options->images_per_page; ?>" class="spider_int_input" /></td>
+                      </tr>
 
-                  <!--Image Browser view-->
-                  <tr id="tr_image_browser_width_height">
-                    <td title="<?php _e("Maximum value for image width.", 'bwg_back'); ?>" class="spider_label"><label for="image_browser_width"><?php _e("Image width: ", 'bwg_back'); ?></label></td>
-                    <td>
-                      <input type="text" name="image_browser_width" id="image_browser_width" value="<?php echo $wd_bwg_options->image_browser_width; ?>" class="spider_int_input" /> px
-                    </td>
-                  </tr>
-                  <tr id="tr_image_browser_title_enable">
-                    <td class="spider_label"><label><?php _e("Enable image title:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="image_browser_title_enable" id="image_browser_title_yes" value="1" <?php echo ($wd_bwg_options->image_browser_title_enable) ? 'checked' : ''; ?> /><label for="image_browser_title_es"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="image_browser_title_enable" id="image_browser_title_no" value="0" <?php echo ($wd_bwg_options->image_browser_title_enable) ? '' : 'checked'; ?> /><label for="image_browser_title_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_image_browser_description_enable">
-                    <td class="spider_label"><label><?php _e("Enable image description:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="image_browser_description_enable" id="image_browser_description_yes" value="1" <?php echo ($wd_bwg_options->image_browser_description_enable) ? 'checked' : ''; ?> /><label for="image_browser_description_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="image_browser_description_enable" id="image_browser_description_no" value="0" <?php echo ($wd_bwg_options->image_browser_description_enable) ? '' : 'checked'; ?> /><label for="image_browser_description_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
+                      <!--Image Browser view-->
+                      <tr id="tr_image_browser_width_height">
+                        <td title="<?php _e("Maximum value for image width.", 'bwg_back'); ?>" class="spider_label"><label for="image_browser_width"><?php _e("Image width: ", 'bwg_back'); ?></label></td>
+                        <td>
+                          <input type="text" name="image_browser_width" id="image_browser_width" value="<?php echo $wd_bwg_options->image_browser_width; ?>" class="spider_int_input" /> px
+                        </td>
+                      </tr>
+                      <tr id="tr_image_browser_title_enable">
+                        <td class="spider_label"><label><?php _e("Enable image title:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="image_browser_title_enable" id="image_browser_title_yes" value="1" <?php echo ($wd_bwg_options->image_browser_title_enable) ? 'checked' : ''; ?> /><label for="image_browser_title_es"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="image_browser_title_enable" id="image_browser_title_no" value="0" <?php echo ($wd_bwg_options->image_browser_title_enable) ? '' : 'checked'; ?> /><label for="image_browser_title_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_image_browser_description_enable">
+                        <td class="spider_label"><label><?php _e("Enable image description:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="image_browser_description_enable" id="image_browser_description_yes" value="1" <?php echo ($wd_bwg_options->image_browser_description_enable) ? 'checked' : ''; ?> /><label for="image_browser_description_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="image_browser_description_enable" id="image_browser_description_no" value="0" <?php echo ($wd_bwg_options->image_browser_description_enable) ? '' : 'checked'; ?> /><label for="image_browser_description_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
 
-                  <!--Blog Style view-->
-                  <tr id="tr_blog_style_width_height">
-                    <td title="<?php _e("Maximum value for image width.", 'bwg_back'); ?>" class="spider_label"><label for="blog_style_width"><?php _e("Image width:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="text" name="blog_style_width" id="blog_style_width" value="<?php echo $wd_bwg_options->blog_style_width; ?>" class="spider_int_input" /> px
-                    </td>
-                  </tr>
-                  <tr id="tr_blog_style_title_enable">
-                    <td class="spider_label"><label><?php _e("Enable image title:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="blog_style_title_enable" id="blog_style_title_yes" value="1" <?php echo ($wd_bwg_options->blog_style_title_enable) ? 'checked' : ''; ?> /><label for="blog_style_title_es"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="blog_style_title_enable" id="blog_style_title_no" value="0" <?php echo ($wd_bwg_options->blog_style_title_enable) ? '' : 'checked'; ?> /><label for="blog_style_title_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_blog_style_images_per_page">
-                    <td title="<?php _e("If you want to display all images you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="blog_style_images_per_page"><?php _e("Images per page:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="blog_style_images_per_page" id="blog_style_images_per_page" value="<?php echo $wd_bwg_options->blog_style_images_per_page; ?>" class="spider_int_input" /></td>
-                  </tr>
-                  <tr id="tr_blog_style_enable_page">
-                    <td class="spider_label"><label><?php _e("Enable pagination:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="blog_style_enable_page" id="blog_style_page_yes" value="1" <?php echo ($wd_bwg_options->blog_style_enable_page == '1') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="blog_style_page_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="blog_style_enable_page" id="blog_style_page_no" value="0" <?php echo ($wd_bwg_options->blog_style_enable_page == '0') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="blog_style_page_no"><?php _e('No', 'bwg_back'); ?></label>
-                      <input type="radio" name="blog_style_enable_page" id="blog_style_page_loadmore" value="2" <?php echo ($wd_bwg_options->blog_style_enable_page == '2') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="blog_style_page_loadmore">Load more</label>
-                      <input type="radio" name="blog_style_enable_page" id="blog_style_page_scrol_load" value="3" <?php echo ($wd_bwg_options->blog_style_enable_page == '3') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="blog_style_page_scrol_load"><?php _e("Scroll Load", 'bwg_back'); ?> </label>
-                    </td>
-                  </tr>
-                  <tr id="tr_blog_style_load_more_image_count">
-                    <td class="spider_label"><label for="blog_style_load_more_image_count"><?php _e("Images per load:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="blog_style_load_more_image_count" id="blog_style_load_more_image_count" value="<?php echo $wd_bwg_options->blog_style_images_per_page; ?>" class="spider_int_input" /></td>
-                  </tr>
-
-                  <!--Slideshow view-->
-                  <tr id="tr_slideshow_effect">
-                    <td class="spider_label"><label for="slideshow_effect"><?php _e("Slideshow Effect:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <select name="slideshow_effect" class="select_icon" id="slideshow_effect" style="width:150px;">
-                        <?php
-                        foreach ($effects as $key => $effect) {
-                          ?>
-                          <option value="<?php echo $key; ?>" <?php echo ($key != 'none' && $key != 'fade') ? 'disabled="disabled" title="' . __("This effect is disabled in free version.","bwg_back") . '"' : ''; ?> <?php echo ($wd_bwg_options->slideshow_type == $key) ? 'selected' : ''; ?>><?php echo __($effect,"bwg_back"); ?></option>
-                          <?php
-                        }
-                        ?>
-                      </select>
-                    </td>
-                  </tr>
-                  <tr id="tr_slideshow_effect_duration">
-                    <td title="<?php echo __("Interval between two images.", 'bwg_back'); ?>" class="spider_label"><label for="slideshow_effect_duration"><?php echo __('Effect duration:', 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="slideshow_effect_duration" id="slideshow_effect_duration" value="<?php echo $wd_bwg_options->slideshow_effect_duration; ?>" class="spider_int_input" /> sec.</td>
-                  </tr>
-                  <tr id="tr_slideshow_interval">
-                    <td title="<?php _e("Interval between two images.", 'bwg_back'); ?>" class="spider_label"><label for="slideshow_interval"><?php _e("Time interval:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="slideshow_interval" id="slideshow_interval" value="<?php echo $wd_bwg_options->slideshow_interval; ?>" class="spider_int_input" /> sec.</td>
-                  </tr>
-                  <tr id="tr_slideshow_width_height">
-                    <td title="<?php _e("Maximum values for slideshow width and height.", 'bwg_back'); ?>" class="spider_label"><label for="slideshow_width"><?php _e("Slideshow dimensions:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="text" name="slideshow_width" id="slideshow_width" value="<?php echo $wd_bwg_options->slideshow_width; ?>" class="spider_int_input" /> x 
-                      <input type="text" name="slideshow_height" id="slideshow_height" value="<?php echo $wd_bwg_options->slideshow_height; ?>" class="spider_int_input" /> px
-                    </td>
-                  </tr>
-                  <tr id="tr_enable_slideshow_autoplay">
-                    <td class="spider_label"><label><?php _e("Enable Autoplay:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="enable_slideshow_autoplay" id="slideshow_autoplay_yes" value="1" <?php echo ($wd_bwg_options->slideshow_enable_autoplay) ? 'checked' : ''; ?> /><label for="slideshow_autoplay_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="enable_slideshow_autoplay" id="slideshow_autoplay_no" value="0" <?php echo ($wd_bwg_options->slideshow_enable_autoplay) ? '' : 'checked'; ?> /><label for="slideshow_autoplay_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_enable_slideshow_shuffle">
-                    <td class="spider_label"><label><?php _e("Enable Shuffle:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="enable_slideshow_shuffle" id="slideshow_shuffle_yes" value="1" <?php echo ($wd_bwg_options->slideshow_enable_shuffle) ? 'checked' : ''; ?> /><label for="slideshow_shuffle_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="enable_slideshow_shuffle" id="slideshow_shuffle_no" value="0" <?php echo ($wd_bwg_options->slideshow_enable_shuffle) ? '' : 'checked'; ?> /><label for="slideshow_shuffle_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_enable_slideshow_ctrl">
-                    <td class="spider_label"><label><?php _e("Enable control buttons:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="enable_slideshow_ctrl" id="slideshow_ctrl_yes" value="1" <?php echo ($wd_bwg_options->slideshow_enable_ctrl) ? 'checked' : ''; ?> /><label for="slideshow_ctrl_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="enable_slideshow_ctrl" id="slideshow_ctrl_no" value="0" <?php echo ($wd_bwg_options->slideshow_enable_ctrl) ? '' : 'checked'; ?> /><label for="slideshow_ctrl_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_enable_slideshow_filmstrip">
-                    <td title="<?php _e("Enable slideshow filmstrip view", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable slideshow filmstrip:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="enable_slideshow_filmstrip" id="slideshow_filmstrip_yes" value="1" onClick="bwg_enable_disable('', 'tr_slideshow_filmstrip_height', 'slideshow_filmstrip_yes')" <?php echo ($wd_bwg_options->slideshow_enable_filmstrip) ? 'checked' : ''; ?> /><label for="slideshow_filmstrip_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="enable_slideshow_filmstrip" id="slideshow_filmstrip_no" value="0" onClick="bwg_enable_disable('none', 'tr_slideshow_filmstrip_height', 'slideshow_filmstrip_no')" <?php echo ($wd_bwg_options->slideshow_enable_filmstrip) ? '' : 'checked'; ?> /><label for="slideshow_filmstrip_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_slideshow_filmstrip_height">
-                    <td class="spider_label spider_free_version_label"><label for="slideshow_filmstrip_height"><?php _e("Slideshow Filmstrip size:", 'bwg_back'); ?> </label></td>
-                    <td class="spider_free_version_label"><input disabled="disabled" type="text" name="slideshow_filmstrip_height" id="slideshow_filmstrip_height" value="<?php echo $wd_bwg_options->slideshow_filmstrip_height; ?>" class="spider_int_input spider_free_version_label" /> px</td>
-                  </tr>
-                    <tr id="tr_slideshow_enable_title">
-                    <td class="spider_label"><label><?php _e("Enable Image Title:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="slideshow_enable_title" id="slideshow_title_yes" value="1" <?php echo ($wd_bwg_options->slideshow_enable_title) ? 'checked' : ''; ?> onClick="bwg_enable_disable('', 'tr_slideshow_title_position', 'slideshow_title_yes')" /><label for="slideshow_title_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="slideshow_enable_title" id="slideshow_title_no" value="0" <?php echo ($wd_bwg_options->slideshow_enable_title) ? '' : 'checked'; ?> onClick="bwg_enable_disable('none', 'tr_slideshow_title_position', 'slideshow_title_no')" /><label for="slideshow_title_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_slideshow_title_position">
-                    <td title="<?php _e("Image title position on slideshow", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Title Position:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <table class="bws_position_table">
-                        <tbody>
-                          <tr>
-                            <td><input type="radio" value="top-left" id="slideshow_title_top-left" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'top-left') ? 'checked' : ''; ?>></td>
-                            <td><input type="radio" value="top-center" id="slideshow_title_top-center" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'top-center') ? 'checked' : ''; ?>></td>
-                            <td><input type="radio" value="top-right" id="slideshow_title_top-right" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'top-right') ? 'checked' : ''; ?>></td>
-                          </tr>
-                          <tr>
-                            <td><input type="radio" value="middle-left" id="slideshow_title_middle-left" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'middle-left') ? 'checked' : ''; ?>></td>
-                            <td><input type="radio" value="middle-center" id="slideshow_title_middle-center" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'middle-center') ? 'checked' : ''; ?>></td>
-                            <td><input type="radio" value="middle-right" id="slideshow_title_middle-right" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'middle-right') ? 'checked' : ''; ?>></td>
-                          </tr>
-                          <tr>
-                            <td><input type="radio" value="bottom-left" id="slideshow_title_bottom-left" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'bottom-left') ? 'checked' : ''; ?>></td>
-                            <td><input type="radio" value="bottom-center" id="slideshow_title_bottom-center" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'bottom-center') ? 'checked' : ''; ?>></td>
-                            <td><input type="radio" value="bottom-right" id="slideshow_title_bottom-right" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'bottom-right') ? 'checked' : ''; ?>></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                  <tr id="tr_slideshow_full_width_title">
-                    <td title="<?php _e("Display image title based on the slideshow dimensions.", 'bwg_back'); ?>" class="spider_label">
-                      <label><?php _e("Full width title:", 'bwg_back'); ?></label>
-                    </td>
-                    <td>
-                      <input type="radio" name="slideshow_title_full_width" id="slideshow_title_full_width_1" value="1" <?php if ($wd_bwg_options->slideshow_title_full_width) echo 'checked="checked"'; ?>  /><label for="slideshow_title_full_width_1"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="slideshow_title_full_width" id="slideshow_title_full_width_0" value="0" <?php if (!$wd_bwg_options->slideshow_title_full_width) echo 'checked="checked"'; ?>  /><label for="slideshow_title_full_width_0"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_slideshow_enable_description">
-                    <td class="spider_label"><label><?php _e("Enable Image Description:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="slideshow_enable_description" id="slideshow_description_yes" value="1" <?php echo ($wd_bwg_options->slideshow_enable_description) ? 'checked' : ''; ?> onClick="bwg_enable_disable('', 'tr_slideshow_description_position', 'slideshow_description_yes')" /><label for="slideshow_description_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="slideshow_enable_description" id="slideshow_description_no" value="0" <?php echo ($wd_bwg_options->slideshow_enable_description) ? '' : 'checked'; ?> onClick="bwg_enable_disable('none', 'tr_slideshow_description_position', 'slideshow_description_no')" /><label for="slideshow_description_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_slideshow_description_position">
-                    <td title="<?php _e("Image description position on slideshow", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Description Position: ", 'bwg_back'); ?></label></td>
-                    <td>
-                      <table class="bws_position_table">
-                        <tbody>
-                          <tr>
-                            <td><input type="radio" value="top-left" id="slideshow_description_top-left" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'top-left') ? 'checked' : ''; ?>></td>
-                            <td><input type="radio" value="top-center" id="slideshow_description_top-center" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'top-center') ? 'checked' : ''; ?>></td>
-                            <td><input type="radio" value="top-right" id="slideshow_description_top-right" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'top-right') ? 'checked' : ''; ?>></td>
-                          </tr>
-                          <tr>
-                            <td><input type="radio" value="middle-left" id="slideshow_description_middle-left" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'middle-left') ? 'checked' : ''; ?>></td>
-                            <td><input type="radio" value="middle-center" id="slideshow_description_middle-center" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'middle-center') ? 'checked' : ''; ?>></td>
-                            <td><input type="radio" value="middle-right" id="slideshow_description_middle-right" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'middle-right') ? 'checked' : ''; ?>></td>
-                          </tr>
-                          <tr>
-                            <td><input type="radio" value="bottom-left" id="slideshow_description_bottm-Left" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'bottom-left') ? 'checked' : ''; ?>></td>
-                            <td><input type="radio" value="bottom-center" id="slideshow_description_bottom-center" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'bottom-center') ? 'checked' : ''; ?>></td>
-                            <td><input type="radio" value="bottom-right" id="slideshow_description_bottm-right" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'bottom-right') ? 'checked' : ''; ?>></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                  <tr id="tr_enable_slideshow_music">
-                    <td class="spider_label"><label><?php _e("Enable Slideshow Music:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="enable_slideshow_music" id="slideshow_music_yes" value="1" onClick="bwg_enable_disable('', 'tr_slideshow_music_url', 'slideshow_music_yes')" <?php echo ($wd_bwg_options->slideshow_enable_music) ? 'checked' : ''; ?> /><label for="slideshow_music_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="enable_slideshow_music" id="slideshow_music_no" value="0" onClick="bwg_enable_disable('none', 'tr_slideshow_music_url', 'slideshow_music_no')" <?php echo ($wd_bwg_options->slideshow_enable_music) ? '' : 'checked'; ?> /><label for="slideshow_music_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_slideshow_music_url">
-                    <td title="<?php _e("Enter absolute audio file url or add file from Options page.", 'bwg_back'); ?>" class="spider_label">
-                      <label for="slideshow_music_url"><?php _e("Music url:", 'bwg_back'); ?> </label>
-                    </td>
-                    <td>
-                      <input type="text" id="slideshow_music_url" name="slideshow_music_url" value="<?php echo $wd_bwg_options->slideshow_audio_url; ?>" style="display:inline-block;" />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                      <!--Blog Style view-->
+                      <tr id="tr_blog_style_width_height">
+                        <td title="<?php _e("Maximum value for image width.", 'bwg_back'); ?>" class="spider_label"><label for="blog_style_width"><?php _e("Image width:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="text" name="blog_style_width" id="blog_style_width" value="<?php echo $wd_bwg_options->blog_style_width; ?>" class="spider_int_input" /> px
+                        </td>
+                      </tr>
+                      <tr id="tr_blog_style_title_enable">
+                        <td class="spider_label"><label><?php _e("Enable image title:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="blog_style_title_enable" id="blog_style_title_yes" value="1" <?php echo ($wd_bwg_options->blog_style_title_enable) ? 'checked' : ''; ?> /><label for="blog_style_title_es"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="blog_style_title_enable" id="blog_style_title_no" value="0" <?php echo ($wd_bwg_options->blog_style_title_enable) ? '' : 'checked'; ?> /><label for="blog_style_title_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_blog_style_images_per_page">
+                        <td title="<?php _e("If you want to display all images you should leave it blank or insert 0.", 'bwg_back'); ?>" class="spider_label"><label for="blog_style_images_per_page"><?php _e("Images per page:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="blog_style_images_per_page" id="blog_style_images_per_page" value="<?php echo $wd_bwg_options->blog_style_images_per_page; ?>" class="spider_int_input" /></td>
+                      </tr>
+                      <tr id="tr_blog_style_enable_page">
+                        <td class="spider_label"><label><?php _e("Enable pagination:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="blog_style_enable_page" id="blog_style_page_yes" value="1" <?php echo ($wd_bwg_options->blog_style_enable_page == '1') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="blog_style_page_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="blog_style_enable_page" id="blog_style_page_no" value="0" <?php echo ($wd_bwg_options->blog_style_enable_page == '0') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="blog_style_page_no"><?php _e('No', 'bwg_back'); ?></label>
+                          <input type="radio" name="blog_style_enable_page" id="blog_style_page_loadmore" value="2" <?php echo ($wd_bwg_options->blog_style_enable_page == '2') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="blog_style_page_loadmore">Load more</label>
+                          <input type="radio" name="blog_style_enable_page" id="blog_style_page_scrol_load" value="3" <?php echo ($wd_bwg_options->blog_style_enable_page == '3') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="blog_style_page_scrol_load"><?php _e("Scroll Load", 'bwg_back'); ?> </label>
+                        </td>
+                      </tr>
+                      <tr id="tr_blog_style_load_more_image_count">
+                        <td class="spider_label"><label for="blog_style_load_more_image_count"><?php _e("Images per load:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="blog_style_load_more_image_count" id="blog_style_load_more_image_count" value="<?php echo $wd_bwg_options->blog_style_images_per_page; ?>" class="spider_int_input" /></td>
+                      </tr>
+                      <tr id="tr_enable_slideshow_autoplay">
+                        <td class="spider_label"><label><?php _e("Enable Autoplay:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="enable_slideshow_autoplay" id="slideshow_autoplay_yes" value="1" <?php echo ($wd_bwg_options->slideshow_enable_autoplay) ? 'checked' : ''; ?> /><label for="slideshow_autoplay_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="enable_slideshow_autoplay" id="slideshow_autoplay_no" value="0" <?php echo ($wd_bwg_options->slideshow_enable_autoplay) ? '' : 'checked'; ?> /><label for="slideshow_autoplay_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_enable_slideshow_shuffle">
+                        <td class="spider_label"><label><?php _e("Enable Shuffle:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="enable_slideshow_shuffle" id="slideshow_shuffle_yes" value="1" <?php echo ($wd_bwg_options->slideshow_enable_shuffle) ? 'checked' : ''; ?> /><label for="slideshow_shuffle_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="enable_slideshow_shuffle" id="slideshow_shuffle_no" value="0" <?php echo ($wd_bwg_options->slideshow_enable_shuffle) ? '' : 'checked'; ?> /><label for="slideshow_shuffle_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_enable_slideshow_ctrl">
+                        <td class="spider_label"><label><?php _e("Enable control buttons:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="enable_slideshow_ctrl" id="slideshow_ctrl_yes" value="1" <?php echo ($wd_bwg_options->slideshow_enable_ctrl) ? 'checked' : ''; ?> /><label for="slideshow_ctrl_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="enable_slideshow_ctrl" id="slideshow_ctrl_no" value="0" <?php echo ($wd_bwg_options->slideshow_enable_ctrl) ? '' : 'checked'; ?> /><label for="slideshow_ctrl_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_enable_slideshow_filmstrip">
+                        <td title="<?php _e("Enable slideshow filmstrip view", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable slideshow filmstrip:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="enable_slideshow_filmstrip" id="slideshow_filmstrip_yes" value="1" onClick="bwg_enable_disable('', 'tr_slideshow_filmstrip_height', 'slideshow_filmstrip_yes')" <?php echo ($wd_bwg_options->slideshow_enable_filmstrip) ? 'checked' : ''; ?> /><label for="slideshow_filmstrip_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="enable_slideshow_filmstrip" id="slideshow_filmstrip_no" value="0" onClick="bwg_enable_disable('none', 'tr_slideshow_filmstrip_height', 'slideshow_filmstrip_no')" <?php echo ($wd_bwg_options->slideshow_enable_filmstrip) ? '' : 'checked'; ?> /><label for="slideshow_filmstrip_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_slideshow_filmstrip_height">
+                        <td class="spider_label spider_free_version_label"><label for="slideshow_filmstrip_height"><?php _e("Slideshow Filmstrip size:", 'bwg_back'); ?> </label></td>
+                        <td class="spider_free_version_label"><input disabled="disabled" type="text" name="slideshow_filmstrip_height" id="slideshow_filmstrip_height" value="<?php echo $wd_bwg_options->slideshow_filmstrip_height; ?>" class="spider_int_input spider_free_version_label" /> px</td>
+                      </tr>
+                      <tr id="tr_slideshow_enable_title">
+                        <td class="spider_label"><label><?php _e("Enable Image Title:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="slideshow_enable_title" id="slideshow_title_yes" value="1" <?php echo ($wd_bwg_options->slideshow_enable_title) ? 'checked' : ''; ?> onClick="bwg_enable_disable('', 'tr_slideshow_title_position', 'slideshow_title_yes')" /><label for="slideshow_title_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="slideshow_enable_title" id="slideshow_title_no" value="0" <?php echo ($wd_bwg_options->slideshow_enable_title) ? '' : 'checked'; ?> onClick="bwg_enable_disable('none', 'tr_slideshow_title_position', 'slideshow_title_no')" /><label for="slideshow_title_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_slideshow_title_position">
+                        <td title="<?php _e("Image title position on slideshow", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Title Position:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <table class="bws_position_table">
+                            <tbody>
+                              <tr>
+                                <td><input type="radio" value="top-left" id="slideshow_title_top-left" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'top-left') ? 'checked' : ''; ?>></td>
+                                <td><input type="radio" value="top-center" id="slideshow_title_top-center" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'top-center') ? 'checked' : ''; ?>></td>
+                                <td><input type="radio" value="top-right" id="slideshow_title_top-right" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'top-right') ? 'checked' : ''; ?>></td>
+                              </tr>
+                              <tr>
+                                <td><input type="radio" value="middle-left" id="slideshow_title_middle-left" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'middle-left') ? 'checked' : ''; ?>></td>
+                                <td><input type="radio" value="middle-center" id="slideshow_title_middle-center" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'middle-center') ? 'checked' : ''; ?>></td>
+                                <td><input type="radio" value="middle-right" id="slideshow_title_middle-right" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'middle-right') ? 'checked' : ''; ?>></td>
+                              </tr>
+                              <tr>
+                                <td><input type="radio" value="bottom-left" id="slideshow_title_bottom-left" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'bottom-left') ? 'checked' : ''; ?>></td>
+                                <td><input type="radio" value="bottom-center" id="slideshow_title_bottom-center" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'bottom-center') ? 'checked' : ''; ?>></td>
+                                <td><input type="radio" value="bottom-right" id="slideshow_title_bottom-right" name="slideshow_title_position" <?php echo ($wd_bwg_options->slideshow_title_position == 'bottom-right') ? 'checked' : ''; ?>></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr id="tr_slideshow_full_width_title">
+                        <td title="<?php _e("Display image title based on the slideshow dimensions.", 'bwg_back'); ?>" class="spider_label">
+                          <label><?php _e("Full width title:", 'bwg_back'); ?></label>
+                        </td>
+                        <td>
+                          <input type="radio" name="slideshow_title_full_width" id="slideshow_title_full_width_1" value="1" <?php if ($wd_bwg_options->slideshow_title_full_width) echo 'checked="checked"'; ?>  /><label for="slideshow_title_full_width_1"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="slideshow_title_full_width" id="slideshow_title_full_width_0" value="0" <?php if (!$wd_bwg_options->slideshow_title_full_width) echo 'checked="checked"'; ?>  /><label for="slideshow_title_full_width_0"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_slideshow_enable_description">
+                        <td class="spider_label"><label><?php _e("Enable Image Description:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="slideshow_enable_description" id="slideshow_description_yes" value="1" <?php echo ($wd_bwg_options->slideshow_enable_description) ? 'checked' : ''; ?> onClick="bwg_enable_disable('', 'tr_slideshow_description_position', 'slideshow_description_yes')" /><label for="slideshow_description_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="slideshow_enable_description" id="slideshow_description_no" value="0" <?php echo ($wd_bwg_options->slideshow_enable_description) ? '' : 'checked'; ?> onClick="bwg_enable_disable('none', 'tr_slideshow_description_position', 'slideshow_description_no')" /><label for="slideshow_description_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_slideshow_description_position">
+                        <td title="<?php _e("Image description position on slideshow", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Description Position: ", 'bwg_back'); ?></label></td>
+                        <td>
+                          <table class="bws_position_table">
+                            <tbody>
+                              <tr>
+                                <td><input type="radio" value="top-left" id="slideshow_description_top-left" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'top-left') ? 'checked' : ''; ?>></td>
+                                <td><input type="radio" value="top-center" id="slideshow_description_top-center" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'top-center') ? 'checked' : ''; ?>></td>
+                                <td><input type="radio" value="top-right" id="slideshow_description_top-right" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'top-right') ? 'checked' : ''; ?>></td>
+                              </tr>
+                              <tr>
+                                <td><input type="radio" value="middle-left" id="slideshow_description_middle-left" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'middle-left') ? 'checked' : ''; ?>></td>
+                                <td><input type="radio" value="middle-center" id="slideshow_description_middle-center" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'middle-center') ? 'checked' : ''; ?>></td>
+                                <td><input type="radio" value="middle-right" id="slideshow_description_middle-right" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'middle-right') ? 'checked' : ''; ?>></td>
+                              </tr>
+                              <tr>
+                                <td><input type="radio" value="bottom-left" id="slideshow_description_bottm-Left" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'bottom-left') ? 'checked' : ''; ?>></td>
+                                <td><input type="radio" value="bottom-center" id="slideshow_description_bottom-center" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'bottom-center') ? 'checked' : ''; ?>></td>
+                                <td><input type="radio" value="bottom-right" id="slideshow_description_bottm-right" name="slideshow_description_position" <?php echo ($wd_bwg_options->slideshow_description_position == 'bottom-right') ? 'checked' : ''; ?>></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr id="tr_enable_slideshow_music">
+                        <td class="spider_label"><label><?php _e("Enable Slideshow Music:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="enable_slideshow_music" id="slideshow_music_yes" value="1" onClick="bwg_enable_disable('', 'tr_slideshow_music_url', 'slideshow_music_yes')" <?php echo ($wd_bwg_options->slideshow_enable_music) ? 'checked' : ''; ?> /><label for="slideshow_music_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="enable_slideshow_music" id="slideshow_music_no" value="0" onClick="bwg_enable_disable('none', 'tr_slideshow_music_url', 'slideshow_music_no')" <?php echo ($wd_bwg_options->slideshow_enable_music) ? '' : 'checked'; ?> /><label for="slideshow_music_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_slideshow_music_url">
+                        <td title="<?php _e("Enter absolute audio file url or add file from Options page.", 'bwg_back'); ?>" class="spider_label">
+                          <label for="slideshow_music_url"><?php _e("Music url:", 'bwg_back'); ?> </label>
+                        </td>
+                        <td>
+                          <input type="text" id="slideshow_music_url" name="slideshow_music_url" value="<?php echo $wd_bwg_options->slideshow_audio_url; ?>" style="display:inline-block;" />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                </div>
               </div>
-              <div class="bwg_short_div" style="border-right: 1px solid #000000;">
-              <table>
-
+              </div>
+              <div class="bwg_short_div type_slideshow" style="border-right: 1px solid #000000;">
+              <div style="display:table;width:100%;">
                 <!--Lightbox view-->
-                <tbody id="tbody_popup_other">
-                  <tr id="tr_thumb_click_action">
-                    <td class="spider_label"><label><?php _e("Image click action:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="thumb_click_action" id="thumb_click_action_1" value="open_lightbox" <?php if ($wd_bwg_options->thumb_click_action == 'open_lightbox') echo 'checked="checked"'; ?> onchange="bwg_thumb_click_action()" /><label for="thumb_click_action_1"><?php _e("Open lightbox", 'bwg_back'); ?></label><br />
-                      <input type="radio" name="thumb_click_action" id="thumb_click_action_2" value="redirect_to_url" <?php if ($wd_bwg_options->thumb_click_action == 'redirect_to_url') echo 'checked="checked"'; ?> onchange="bwg_thumb_click_action()" /><label for="thumb_click_action_2"><?php _e("Redirect to url", 'bwg_back'); ?></label><br />
-                      <input type="radio" name="thumb_click_action" id="thumb_click_action_3" value="do_nothing" <?php if ($wd_bwg_options->thumb_click_action == 'do_nothing') echo 'checked="checked"'; ?> onchange="bwg_thumb_click_action()" /><label for="thumb_click_action_3"><?php _e("Do Nothing", 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_thumb_link_target">
-                    <td title="<?php _e("Open new window when redirecting.", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Open in new window:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="thumb_link_target" id="thumb_link_target_yes" value="1" <?php if ($wd_bwg_options->thumb_link_target) echo 'checked="checked"'; ?> /><label for="thumb_link_target_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="thumb_link_target" id="thumb_link_target_no" value="0" <?php if (!$wd_bwg_options->thumb_link_target) echo 'checked="checked"'; ?> /><label for="thumb_link_target_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                </tbody>
-                <tbody id="tbody_popup">
-                  <tr id="tr_popup_fullscreen">
-                    <td title="<?php _e("Enable full width feature for the lightbox.", 'bwg_back'); ?>" class="spider_label">
-                      <label><?php _e("Full width lightbox:", 'bwg_back'); ?></label>
-                    </td>
-                    <td>
-                      <input type="radio" name="popup_fullscreen" id="popup_fullscreen_1" value="1" <?php if ($wd_bwg_options->popup_fullscreen) echo 'checked="checked"'; ?> onchange="bwg_popup_fullscreen()" /><label for="popup_fullscreen_1"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="popup_fullscreen" id="popup_fullscreen_0" value="0" <?php if (!$wd_bwg_options->popup_fullscreen) echo 'checked="checked"'; ?> onchange="bwg_popup_fullscreen()" /><label for="popup_fullscreen_0"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>	
-                  <tr id="tr_popup_width_height">
-                    <td title="<?php _e("Maximum values for lightbox width and height.", 'bwg_back'); ?>" class="spider_label"><label for="popup_width"><?php _e("Lightbox dimensions:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="text" name="popup_width" id="popup_width" value="<?php echo $wd_bwg_options->popup_width; ?>" class="spider_int_input" /> x 
-                      <input type="text" name="popup_height" id="popup_height" value="<?php echo $wd_bwg_options->popup_height; ?>" class="spider_int_input" /> px
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_effect">
-                    <td title="<?php _e("Lightbox slideshow effect.", 'bwg_back'); ?>" class="spider_label"><label for="popup_effect"><?php _e("Lightbox effect:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <select name="popup_effect" class="select_icon" id="popup_effect" style="width:150px;">
-                        <?php
-                        foreach ($effects as $key => $effect) {
-                          ?>
-                          <option value="<?php echo $key; ?>" <?php echo ($key != 'none' && $key != 'fade') ? 'disabled="disabled" title="This effect is disabled in free version."' : ''; ?> <?php echo ($wd_bwg_options->popup_type == $key) ? 'selected' : ''; ?>><?php echo __($effect,"bwg_back"); ?></option>
-                          <?php
-                        }
-                        ?>
-                      </select>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_effect_duration">
-                    <td title="<?php echo __("Interval between two images.", 'bwg_back'); ?>" class="spider_label"><label for="popup_effect_duration"><?php echo __('Effect duration:', 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="popup_effect_duration" id="popup_effect_duration" value="<?php echo $wd_bwg_options->popup_effect_duration; ?>" class="spider_int_input" /> sec.</td>
-                  </tr>
-                  <tr id="tr_popup_autoplay">
-                    <td class="spider_label">
-                      <label><?php _e("Lightbox autoplay:", 'bwg_back'); ?> </label>
-                    </td>
-                    <td>
-                      <input type="radio" name="popup_autoplay" id="popup_autoplay_1" value="1" <?php if ($wd_bwg_options->popup_autoplay) echo 'checked="checked"'; ?>  /><label for="popup_autoplay_1"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="popup_autoplay" id="popup_autoplay_0" value="0" <?php if (!$wd_bwg_options->popup_autoplay) echo 'checked="checked"'; ?>  /><label for="popup_autoplay_0"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_interval">
-                    <td title="<?php _e("Interval between two images.", 'bwg_back'); ?>" class="spider_label"><label for="popup_interval"><?php _e("Time interval:", 'bwg_back'); ?> </label></td>
-                    <td><input type="text" name="popup_interval" id="popup_interval" value="<?php echo $wd_bwg_options->popup_interval; ?>" class="spider_int_input" /> sec.</td>
-                  </tr>
-                  <tr id="tr_popup_enable_filmstrip">
-                    <td title="<?php _e("Enable filmstrip view for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable filmstrip in lightbox:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="popup_enable_filmstrip" id="popup_filmstrip_yes" value="1" onClick="bwg_enable_disable('', 'tr_popup_filmstrip_height', 'popup_filmstrip_yes')" <?php echo ($wd_bwg_options->popup_enable_filmstrip) ? 'checked' : ''; ?> /><label for="popup_filmstrip_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="popup_enable_filmstrip" id="popup_filmstrip_no" value="0" onClick="bwg_enable_disable('none', 'tr_popup_filmstrip_height', 'popup_filmstrip_no')" <?php echo ($wd_bwg_options->popup_enable_filmstrip) ? '' : 'checked'; ?> /><label for="popup_filmstrip_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_filmstrip_height">
-                    <td title="<?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label for="popup_filmstrip_height"><?php _e("Filmstrip size:", 'bwg_back'); ?> </label></td>
-                    <td class="spider_free_version_label"><input disabled="disabled" type="text" name="popup_filmstrip_height" id="popup_filmstrip_height" value="<?php echo $wd_bwg_options->popup_filmstrip_height; ?>" class="spider_int_input spider_free_version_label" /> px</td>
-                  </tr>
-                  <tr id="tr_popup_hit_counter">
-                    <td title="<?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Display hit counter:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="popup_hit_counter" id="popup_hit_counter_yes" value="1" <?php echo ($wd_bwg_options->popup_hit_counter) ? 'checked' : ''; ?> /><label for="popup_hit_counter_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="popup_hit_counter" id="popup_hit_counter_no" value="0" <?php echo ($wd_bwg_options->popup_hit_counter) ? '' : 'checked'; ?> /><label for="popup_hit_counter_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_enable_ctrl_btn">
-                    <td title="<?php _e("Enable control buttons in lightbox", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Enable control buttons:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="popup_enable_ctrl_btn" id="popup_ctrl_btn_yes" value="1" onClick="bwg_enable_disable('', 'tbody_popup_ctrl_btn', 'popup_ctrl_btn_yes');" <?php echo ($wd_bwg_options->popup_enable_ctrl_btn) ? 'checked' : ''; ?> /><label for="popup_ctrl_btn_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="popup_enable_ctrl_btn" id="popup_ctrl_btn_no" value="0" onClick="bwg_enable_disable('none', 'tbody_popup_ctrl_btn', 'popup_ctrl_btn_no');" <?php echo ($wd_bwg_options->popup_enable_ctrl_btn) ? '' : 'checked'; ?> /><label for="popup_ctrl_btn_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                </tbody>
-                <tbody id="tbody_popup_ctrl_btn">
-                  <tr id="tr_popup_enable_fullscreen">
-                    <td title="<?php _e("Enable fullscreen view for images", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Enable fullscreen:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="popup_enable_fullscreen" id="popup_fullscreen_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_fullscreen) ? 'checked' : ''; ?> /><label for="popup_fullscreen_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="popup_enable_fullscreen" id="popup_fullscreen_no" value="0" <?php echo ($wd_bwg_options->popup_enable_fullscreen) ? '' : 'checked'; ?> /><label for="popup_fullscreen_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_enable_info">
-                    <td title="<?php _e("Enable title, description for images", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Enable info:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="popup_enable_info" id="popup_info_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_info) ? 'checked="checked"' : ''; ?> /><label for="popup_info_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="popup_enable_info" id="popup_info_no" value="0" <?php echo ($wd_bwg_options->popup_enable_info) ? '' : 'checked="checked"'; ?> /><label for="popup_info_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_info_always_show">
-                    <td class="spider_label"><label><?php _e("Display info by default:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input type="radio" name="popup_info_always_show" id="popup_info_always_show_yes" value="1" <?php echo ($wd_bwg_options->popup_info_always_show) ? 'checked="checked"' : ''; ?> /><label for="popup_info_always_show_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="popup_info_always_show" id="popup_info_always_show_no" value="0" <?php echo ($wd_bwg_options->popup_info_always_show) ? '' : 'checked="checked"'; ?> /><label for="popup_info_always_show_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_info_full_width">
-                    <td title="<?php _e("Display image information based on the lightbox dimensions.", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Full width info:", 'bwg_back'); ?></label></td>
-                    <td>
-                      <input type="radio" name="popup_info_full_width" id="popup_info_full_width_1" value="1" <?php if ($wd_bwg_options->popup_info_full_width) echo 'checked="checked"'; ?>  /><label for="popup_info_full_width_1"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input type="radio" name="popup_info_full_width" id="popup_info_full_width_0" value="0" <?php if (!$wd_bwg_options->popup_info_full_width) echo 'checked="checked"'; ?>  /><label for="popup_info_full_width_0"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_enable_rate">
-                    <td title="<?php _e("Enable rating for images", 'bwg_back'); ?><br /><br />This option is disabled in free version." class="spider_label spider_free_version_label"><label><?php _e("Enable rating:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="popup_enable_rate" id="popup_rate_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_rate) ? 'checked="checked"' : ''; ?> /><label for="popup_rate_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="popup_enable_rate" id="popup_rate_no" value="0" <?php echo ($wd_bwg_options->popup_enable_rate) ? '' : 'checked="checked"'; ?> /><label for="popup_rate_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_enable_comment">
-                    <td title="<?php _e("Enable comments for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable comments:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="popup_enable_comment" id="popup_comment_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_comment) ? 'checked' : ''; ?> /><label for="popup_comment_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="popup_enable_comment" id="popup_comment_no" value="0" <?php echo ($wd_bwg_options->popup_enable_comment) ? '' : 'checked'; ?> /><label for="popup_comment_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_enable_facebook">
-                    <td title="<?php _e("Enable Facebook share button for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable Facebook button:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="popup_enable_facebook" id="popup_facebook_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_facebook) ? 'checked' : ''; ?> /><label for="popup_facebook_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="popup_enable_facebook" id="popup_facebook_no" value="0" <?php echo ($wd_bwg_options->popup_enable_facebook) ? '' : 'checked'; ?> /><label for="popup_facebook_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_enable_twitter">
-                    <td title="<?php _e("Enable Twitter share button for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable Twitter button:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="popup_enable_twitter" id="popup_twitter_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_twitter) ? 'checked' : ''; ?> /><label for="popup_twitter_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="popup_enable_twitter" id="popup_twitter_no" value="0" <?php echo ($wd_bwg_options->popup_enable_twitter) ? '' : 'checked'; ?> /><label for="popup_twitter_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_enable_google">
-                    <td title="<?php _e("Enable Google+ share button for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable Google+ button:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="popup_enable_google" id="popup_google_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_google) ? 'checked' : ''; ?> /><label for="popup_google_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="popup_enable_google" id="popup_google_no" value="0" <?php echo ($wd_bwg_options->popup_enable_google) ? '' : 'checked'; ?> /><label for="popup_google_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_enable_pinterest">
-                    <td title="<?php _e("Enable Pinterest share button for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable Pinterest button:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="popup_enable_pinterest" id="popup_pinterest_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_pinterest) ? 'checked' : ''; ?> /><label for="popup_pinterest_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="popup_enable_pinterest" id="popup_pinterest_no" value="0" <?php echo ($wd_bwg_options->popup_enable_pinterest) ? '' : 'checked'; ?> /><label for="popup_pinterest_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                  <tr id="tr_popup_enable_tumblr">
-                    <td title="<?php _e("Enable Tumblr share button for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable Tumblr button:", 'bwg_back'); ?> </label></td>
-                    <td>
-                      <input disabled="disabled" type="radio" name="popup_enable_tumblr" id="popup_tumblr_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_tumblr) ? 'checked' : ''; ?> /><label for="popup_tumblr_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                      <input disabled="disabled" type="radio" name="popup_enable_tumblr" id="popup_tumblr_no" value="0" <?php echo ($wd_bwg_options->popup_enable_tumblr) ? '' : 'checked'; ?> /><label for="popup_tumblr_no"><?php _e('No', 'bwg_back'); ?></label>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                <div style="display:table-cell;">
+                <div class="lightbox_option_left">
+                  <table style="display:inline-block;">
+                    <tbody id="tbody_popup_other">
+                      <tr id="tr_thumb_click_action">
+                        <td class="spider_label"><label><?php _e("Image click action:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="thumb_click_action" id="thumb_click_action_1" value="open_lightbox" <?php if ($wd_bwg_options->thumb_click_action == 'open_lightbox') echo 'checked="checked"'; ?> onchange="bwg_thumb_click_action()" /><label for="thumb_click_action_1"><?php _e("Open lightbox", 'bwg_back'); ?></label><br />
+                          <input type="radio" name="thumb_click_action" id="thumb_click_action_2" value="redirect_to_url" <?php if ($wd_bwg_options->thumb_click_action == 'redirect_to_url') echo 'checked="checked"'; ?> onchange="bwg_thumb_click_action()" /><label for="thumb_click_action_2"><?php _e("Redirect to url", 'bwg_back'); ?></label><br />
+                          <input type="radio" name="thumb_click_action" id="thumb_click_action_3" value="do_nothing" <?php if ($wd_bwg_options->thumb_click_action == 'do_nothing') echo 'checked="checked"'; ?> onchange="bwg_thumb_click_action()" /><label for="thumb_click_action_3"><?php _e("Do Nothing", 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_thumb_link_target">
+                        <td title="<?php _e("Open new window when redirecting.", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Open in new window:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="thumb_link_target" id="thumb_link_target_yes" value="1" <?php if ($wd_bwg_options->thumb_link_target) echo 'checked="checked"'; ?> /><label for="thumb_link_target_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="thumb_link_target" id="thumb_link_target_no" value="0" <?php if (!$wd_bwg_options->thumb_link_target) echo 'checked="checked"'; ?> /><label for="thumb_link_target_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody id="tbody_popup">
+                      <tr id="tr_popup_fullscreen">
+                        <td title="<?php _e("Enable full width feature for the lightbox.", 'bwg_back'); ?>" class="spider_label">
+                          <label><?php _e("Full width lightbox:", 'bwg_back'); ?></label>
+                        </td>
+                        <td>
+                          <input type="radio" name="popup_fullscreen" id="popup_fullscreen_1" value="1" <?php if ($wd_bwg_options->popup_fullscreen) echo 'checked="checked"'; ?> onchange="bwg_popup_fullscreen()" /><label for="popup_fullscreen_1"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="popup_fullscreen" id="popup_fullscreen_0" value="0" <?php if (!$wd_bwg_options->popup_fullscreen) echo 'checked="checked"'; ?> onchange="bwg_popup_fullscreen()" /><label for="popup_fullscreen_0"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>	
+                      <tr id="tr_popup_width_height">
+                        <td title="<?php _e("Maximum values for lightbox width and height.", 'bwg_back'); ?>" class="spider_label"><label for="popup_width"><?php _e("Lightbox dimensions:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="text" name="popup_width" id="popup_width" value="<?php echo $wd_bwg_options->popup_width; ?>" class="spider_int_input" /> x 
+                          <input type="text" name="popup_height" id="popup_height" value="<?php echo $wd_bwg_options->popup_height; ?>" class="spider_int_input" /> px
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_effect">
+                        <td title="<?php _e("Lightbox slideshow effect.", 'bwg_back'); ?>" class="spider_label"><label for="popup_effect"><?php _e("Lightbox effect:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <select name="popup_effect" class="select_icon" id="popup_effect" style="width:150px;">
+                            <?php
+                            foreach ($effects as $key => $effect) {
+                              ?>
+                              <option value="<?php echo $key; ?>" <?php echo ($key != 'none' && $key != 'fade') ? 'disabled="disabled" title="This effect is disabled in free version."' : ''; ?> <?php echo ($wd_bwg_options->popup_type == $key) ? 'selected' : ''; ?>><?php echo __($effect,"bwg_back"); ?></option>
+                              <?php
+                            }
+                            ?>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_effect_duration">
+                        <td title="<?php echo __("Interval between two images.", 'bwg_back'); ?>" class="spider_label"><label for="popup_effect_duration"><?php echo __('Effect duration:', 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="popup_effect_duration" id="popup_effect_duration" value="<?php echo $wd_bwg_options->popup_effect_duration; ?>" class="spider_int_input" /> sec.</td>
+                      </tr>
+                      <tr id="tr_popup_autoplay">
+                        <td class="spider_label">
+                          <label><?php _e("Lightbox autoplay:", 'bwg_back'); ?> </label>
+                        </td>
+                        <td>
+                          <input type="radio" name="popup_autoplay" id="popup_autoplay_1" value="1" <?php if ($wd_bwg_options->popup_autoplay) echo 'checked="checked"'; ?>  /><label for="popup_autoplay_1"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="popup_autoplay" id="popup_autoplay_0" value="0" <?php if (!$wd_bwg_options->popup_autoplay) echo 'checked="checked"'; ?>  /><label for="popup_autoplay_0"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_interval">
+                        <td title="<?php _e("Interval between two images.", 'bwg_back'); ?>" class="spider_label"><label for="popup_interval"><?php _e("Time interval:", 'bwg_back'); ?> </label></td>
+                        <td><input type="text" name="popup_interval" id="popup_interval" value="<?php echo $wd_bwg_options->popup_interval; ?>" class="spider_int_input" /> sec.</td>
+                      </tr>
+                      <tr id="tr_popup_enable_filmstrip">
+                        <td title="<?php _e("Enable filmstrip view for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable filmstrip in lightbox:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="popup_enable_filmstrip" id="popup_filmstrip_yes" value="1" onClick="bwg_enable_disable('', 'tr_popup_filmstrip_height', 'popup_filmstrip_yes')" <?php echo ($wd_bwg_options->popup_enable_filmstrip) ? 'checked' : ''; ?> /><label for="popup_filmstrip_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="popup_enable_filmstrip" id="popup_filmstrip_no" value="0" onClick="bwg_enable_disable('none', 'tr_popup_filmstrip_height', 'popup_filmstrip_no')" <?php echo ($wd_bwg_options->popup_enable_filmstrip) ? '' : 'checked'; ?> /><label for="popup_filmstrip_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_filmstrip_height">
+                        <td title="<?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label for="popup_filmstrip_height"><?php _e("Filmstrip size:", 'bwg_back'); ?> </label></td>
+                        <td class="spider_free_version_label"><input disabled="disabled" type="text" name="popup_filmstrip_height" id="popup_filmstrip_height" value="<?php echo $wd_bwg_options->popup_filmstrip_height; ?>" class="spider_int_input spider_free_version_label" /> px</td>
+                      </tr>
+                      <tr id="tr_popup_hit_counter">
+                        <td title="<?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Display hit counter:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="popup_hit_counter" id="popup_hit_counter_yes" value="1" <?php echo ($wd_bwg_options->popup_hit_counter) ? 'checked' : ''; ?> /><label for="popup_hit_counter_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="popup_hit_counter" id="popup_hit_counter_no" value="0" <?php echo ($wd_bwg_options->popup_hit_counter) ? '' : 'checked'; ?> /><label for="popup_hit_counter_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="lightbox_option_right">
+                  <table style="display:inline-block;">
+                    <tr id="tr_popup_enable_ctrl_btn">
+                      <td title="<?php _e("Enable control buttons in lightbox", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Enable control buttons:", 'bwg_back'); ?> </label></td>
+                      <td>
+                        <input type="radio" name="popup_enable_ctrl_btn" id="popup_ctrl_btn_yes" value="1" onClick="bwg_enable_disable('', 'tbody_popup_ctrl_btn', 'popup_ctrl_btn_yes');" <?php echo ($wd_bwg_options->popup_enable_ctrl_btn) ? 'checked' : ''; ?> /><label for="popup_ctrl_btn_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                        <input type="radio" name="popup_enable_ctrl_btn" id="popup_ctrl_btn_no" value="0" onClick="bwg_enable_disable('none', 'tbody_popup_ctrl_btn', 'popup_ctrl_btn_no');" <?php echo ($wd_bwg_options->popup_enable_ctrl_btn) ? '' : 'checked'; ?> /><label for="popup_ctrl_btn_no"><?php _e('No', 'bwg_back'); ?></label>
+                      </td>
+                    </tr>
+                    <tbody id="tbody_popup_ctrl_btn">
+                      <tr id="tr_popup_enable_fullscreen">
+                        <td title="<?php _e("Enable fullscreen view for images", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Enable fullscreen:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="popup_enable_fullscreen" id="popup_fullscreen_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_fullscreen) ? 'checked' : ''; ?> /><label for="popup_fullscreen_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="popup_enable_fullscreen" id="popup_fullscreen_no" value="0" <?php echo ($wd_bwg_options->popup_enable_fullscreen) ? '' : 'checked'; ?> /><label for="popup_fullscreen_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_enable_info">
+                        <td title="<?php _e("Enable title, description for images", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Enable info:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="popup_enable_info" id="popup_info_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_info) ? 'checked="checked"' : ''; ?> /><label for="popup_info_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="popup_enable_info" id="popup_info_no" value="0" <?php echo ($wd_bwg_options->popup_enable_info) ? '' : 'checked="checked"'; ?> /><label for="popup_info_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_info_always_show">
+                        <td class="spider_label"><label><?php _e("Display info by default:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input type="radio" name="popup_info_always_show" id="popup_info_always_show_yes" value="1" <?php echo ($wd_bwg_options->popup_info_always_show) ? 'checked="checked"' : ''; ?> /><label for="popup_info_always_show_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="popup_info_always_show" id="popup_info_always_show_no" value="0" <?php echo ($wd_bwg_options->popup_info_always_show) ? '' : 'checked="checked"'; ?> /><label for="popup_info_always_show_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_info_full_width">
+                        <td title="<?php _e("Display image information based on the lightbox dimensions.", 'bwg_back'); ?>" class="spider_label"><label><?php _e("Full width info:", 'bwg_back'); ?></label></td>
+                        <td>
+                          <input type="radio" name="popup_info_full_width" id="popup_info_full_width_1" value="1" <?php if ($wd_bwg_options->popup_info_full_width) echo 'checked="checked"'; ?>  /><label for="popup_info_full_width_1"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input type="radio" name="popup_info_full_width" id="popup_info_full_width_0" value="0" <?php if (!$wd_bwg_options->popup_info_full_width) echo 'checked="checked"'; ?>  /><label for="popup_info_full_width_0"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_enable_rate">
+                        <td title="<?php _e("Enable rating for images", 'bwg_back'); ?><br /><br />This option is disabled in free version." class="spider_label spider_free_version_label"><label><?php _e("Enable rating:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="popup_enable_rate" id="popup_rate_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_rate) ? 'checked="checked"' : ''; ?> /><label for="popup_rate_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="popup_enable_rate" id="popup_rate_no" value="0" <?php echo ($wd_bwg_options->popup_enable_rate) ? '' : 'checked="checked"'; ?> /><label for="popup_rate_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_enable_comment">
+                        <td title="<?php _e("Enable comments for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable comments:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="popup_enable_comment" id="popup_comment_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_comment) ? 'checked' : ''; ?> /><label for="popup_comment_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="popup_enable_comment" id="popup_comment_no" value="0" <?php echo ($wd_bwg_options->popup_enable_comment) ? '' : 'checked'; ?> /><label for="popup_comment_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_enable_facebook">
+                        <td title="<?php _e("Enable Facebook share button for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable Facebook button:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="popup_enable_facebook" id="popup_facebook_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_facebook) ? 'checked' : ''; ?> /><label for="popup_facebook_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="popup_enable_facebook" id="popup_facebook_no" value="0" <?php echo ($wd_bwg_options->popup_enable_facebook) ? '' : 'checked'; ?> /><label for="popup_facebook_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_enable_twitter">
+                        <td title="<?php _e("Enable Twitter share button for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable Twitter button:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="popup_enable_twitter" id="popup_twitter_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_twitter) ? 'checked' : ''; ?> /><label for="popup_twitter_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="popup_enable_twitter" id="popup_twitter_no" value="0" <?php echo ($wd_bwg_options->popup_enable_twitter) ? '' : 'checked'; ?> /><label for="popup_twitter_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_enable_google">
+                        <td title="<?php _e("Enable Google+ share button for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable Google+ button:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="popup_enable_google" id="popup_google_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_google) ? 'checked' : ''; ?> /><label for="popup_google_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="popup_enable_google" id="popup_google_no" value="0" <?php echo ($wd_bwg_options->popup_enable_google) ? '' : 'checked'; ?> /><label for="popup_google_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_enable_pinterest">
+                        <td title="<?php _e("Enable Pinterest share button for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable Pinterest button:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="popup_enable_pinterest" id="popup_pinterest_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_pinterest) ? 'checked' : ''; ?> /><label for="popup_pinterest_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="popup_enable_pinterest" id="popup_pinterest_no" value="0" <?php echo ($wd_bwg_options->popup_enable_pinterest) ? '' : 'checked'; ?> /><label for="popup_pinterest_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                      <tr id="tr_popup_enable_tumblr">
+                        <td title="<?php _e("Enable Tumblr share button for images", 'bwg_back'); ?><br /><br /><?php _e("This option is disabled in free version.", 'bwg_back'); ?>" class="spider_label spider_free_version_label"><label><?php _e("Enable Tumblr button:", 'bwg_back'); ?> </label></td>
+                        <td>
+                          <input disabled="disabled" type="radio" name="popup_enable_tumblr" id="popup_tumblr_yes" value="1" <?php echo ($wd_bwg_options->popup_enable_tumblr) ? 'checked' : ''; ?> /><label for="popup_tumblr_yes"><?php _e('Yes', 'bwg_back'); ?></label>
+                          <input disabled="disabled" type="radio" name="popup_enable_tumblr" id="popup_tumblr_no" value="0" <?php echo ($wd_bwg_options->popup_enable_tumblr) ? '' : 'checked'; ?> /><label for="popup_tumblr_no"><?php _e('No', 'bwg_back'); ?></label>
+                        </td>
+                      </tr>
+                    </tbody>  
+                  </table>  
+                </div>
+                </div>
               </div>
-              <div class="bwg_short_div">
+              </div>
+              <div class="bwg_short_div type_advertisement">
               <table>
                 <tbody>
                   <tr id="tr_watermark_type">
@@ -1071,12 +1125,12 @@ class BWGViewBWGShortcode {
             </div>
           </div>
           <div class="mceActionPanel">
-            <div style="float:left;">
-              <a id="bwg_pro_version_link" class="wd-btn wd-btn-primary-blue wd-not-image" target="_blank" style="line-height: 25px; padding: 0 5px; text-decoration: none; vertical-align: middle; width: inherit; float: left;" href="http://wpdemo.web-dorado.com/thumbnails-view-2/"><?php _e("Please see Pro ", 'bwg_back'); ?><span id="bwg_pro_version"><?php _e("Thumbnail", 'bwg_back'); ?></span> <?php _e("View", 'bwg_back'); ?></a>
-            </div>
             <div style="float:right;">
               <input type="button" id="insert" name="insert" value="<?php _e("Insert", 'bwg_back'); ?>" onClick="bwg_insert_shortcode('');" />
               <input type="button" id="cancel" name="cancel" value="<?php _e("Cancel", 'bwg_back'); ?>" onClick="tinyMCEPopup.close();" />
+            </div>
+            <div style="float:left;">
+              <a id="bwg_pro_version_link"  class="bwg_link_shortcode" target="_blank" href="http://wpdemo.web-dorado.com/thumbnails-view-2/"><?php _e("Please see Pro ", 'bwg_back'); ?><span id="bwg_pro_version"><?php _e("Thumbnail", 'bwg_back'); ?></span> <?php _e("View", 'bwg_back'); ?></a>
             </div>
           </div>
           <?php
@@ -1091,7 +1145,7 @@ class BWGViewBWGShortcode {
               $tagfunction = "<?php echo photo_gallery(" . $currrent_id . "); ?>";
             }
             ?>
-            <hr style="float: left; width: 100%;" />
+            <hr class="bwg_hr_shortcode" style="float: left; width: 100%;" />
             <span style="float: left; width: 100%;">
               <a id="bwg_pro_version_link" class="wd-btn wd-btn-primary-blue wd-not-image" target="_blank" style="display: table; margin-bottom: 5px;" href="https://web-dorado.com/files/fromPhotoGallery.php"><?php _e("Please see Pro", 'bwg_back'); ?> <span id="bwg_pro_version"><?php _e("Thumbnail", 'bwg_back'); ?></span> <?php _e("View", 'bwg_back'); ?></a>
               <input type="button" class="wd-btn wd-btn-primary-blue wd-not-image" id="insert" name="insert" value="<?php echo __("Generate", 'bwg_back'); ?>" onclick="bwg_insert_shortcode(''); jQuery('#loading_div').show(); jQuery('#opacity_div').show();" />
@@ -1168,6 +1222,7 @@ class BWGViewBWGShortcode {
             <?php } ?>
               jQuery('#insert').attr('onclick', "bwg_insert_shortcode(content)");
               jQuery("select[id=theme] option[value='" + short_code['theme_id'] + "']").attr('selected', 'selected');
+              jQuery("select[id=gallery_types_name] option[value='" + short_code['gallery_type'] + "']").attr('selected', 'selected');
               switch (short_code['gallery_type']) {
                 case 'thumbnails': {
                   jQuery("select[id=gallery] option[value='" + short_code['gallery_id'] + "']").attr('selected', 'selected');
@@ -2014,8 +2069,12 @@ class BWGViewBWGShortcode {
               });
             <?php } ?>
           }
-          jQuery(document).ready(function () {
+           jQuery(document).ready(function () {
             bwg_loadmore();
+            bwg_change_tab();
+          });
+          jQuery(window).resize(function (){
+            bwg_change_tab();
           });
           var bwg_image_thumb = '<?php echo addslashes(__('Image thumbnail dimensions:', 'bwg_back')); ?>';
           var bwg_image_thumb_width = '<?php echo addslashes(__('Image thumbnail width: ', 'bwg_back')); ?>';
@@ -2028,7 +2087,9 @@ class BWGViewBWGShortcode {
     <?php
     include_once (WD_BWG_DIR .'/includes/bwg_pointers.php');
     new BWG_pointers();
-    die();
+    if (!$from_menu) {
+      die();
+    }
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////

@@ -30,6 +30,7 @@ class FilemanagerModel {
     $data['session_data'] = $session_data;
     $data['path_components'] = $this->get_path_components();
     $data['dir'] = $this->controller->get_uploads_dir() . (isset($_REQUEST['dir']) ? esc_html($_REQUEST['dir']) : '');
+    $data['dir'] = str_replace('../', '', $data['dir']);
     $get_files_data =  $this->get_files($session_data['sort_by'], $session_data['sort_order']);
     $data['files'] = $get_files_data['files'];
     $data['files_count'] = $get_files_data['files_count'];
@@ -51,7 +52,7 @@ class FilemanagerModel {
   }
 
   public function get_path_components() {
-    $dir_names = explode('/', (isset($_REQUEST['dir']) ? esc_html($_REQUEST['dir']) : ''));
+    $dir_names = explode('/', (isset($_REQUEST['dir']) ? str_replace('../', '', esc_html($_REQUEST['dir'])) : ''));
     $path = '';
 
     $components = array();
@@ -78,8 +79,9 @@ class FilemanagerModel {
     $icons_dir_path = WD_BWG_DIR . '/filemanager/images/file_icons';
     $icons_dir_url = WD_BWG_URL . '/filemanager/images/file_icons';
     $valid_types = explode(',', isset($_REQUEST['extensions']) ? strtolower(esc_html($_REQUEST['extensions'])) : '*');
-    $dir = (isset($_REQUEST['dir']) ? '/' . htmlspecialchars_decode(stripslashes(esc_html($_REQUEST['dir'])), ENT_COMPAT | ENT_QUOTES) : '');
+    $dir = (isset($_REQUEST['dir']) ? '/' . htmlspecialchars_decode(stripslashes(esc_html(str_replace('../', '', $_REQUEST['dir']))), ENT_COMPAT | ENT_QUOTES) : '');
     $parent_dir = $this->controller->get_uploads_dir() . $dir;
+    $parent_dir = str_replace('../', '', $parent_dir);
     $parent_dir_url = $this->controller->get_uploads_url() . $dir;
 
     $file_names = $this->get_sorted_file_names($parent_dir, $sort_by, $sort_order);

@@ -2,8 +2,8 @@
 Contributors: Backup with UpdraftPlus, DavidAnderson, DNutbourne, aporter, snightingale
 Tags: backup, restore, database backup, wordpress backup, cloud backup, s3, dropbox, google drive, onedrive, ftp, backups
 Requires at least: 3.2
-Tested up to: 4.7
-Stable tag: 1.13.1
+Tested up to: 4.8
+Stable tag: 1.13.4
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -38,7 +38,7 @@ Backup and restoration made easy. Complete backups; manual or scheduled (backup 
 
 From our <a href="https://www.youtube.com/user/UpdraftPlus/videos">YouTube channel</a>, here's how to install:
 
-https://www.youtube.com/watch?v=7ReY7Z19h2I&rel=0
+<a href="https://www.youtube.com/watch?v=7ReY7Z19h2I&rel=0">https://www.youtube.com/watch?v=7ReY7Z19h2I&rel=0</a>
 
 = Don't risk your backups on anything less =
 
@@ -89,13 +89,13 @@ Check out <a href="https://updraftplus.com/updraftplus-full-feature-list/">our f
 
 = I found a bug. What do I do? =
 
-Note - this FAQ is for users of the free plugin. If you're a paying customer, then you should go here: https://updraftplus.com/support/ - please don't ask question in the WordPress.Org forum about purchases, as that's against their rules.
+Note - this FAQ is for users of the free plugin. If you're a paying customer, then you should go here: <a href="https://updraftplus.com/support/">https://updraftplus.com/support/</a> - please don't ask question in the WordPress.Org forum about purchases, as that's against their rules.
 
 Next, please make sure you read this FAQ through - it may already have the answer you need. If it does, then please consider a donation (e.g. buy our "No Adverts" add-on - <a href="https://updraftplus.com/shop/">https://updraftplus.com/shop/</a>); it takes time to develop this plugin and FAQ.
 
 If it does not, then contact us (<a href="http://wordpress.org/support/plugin/updraftplus">the forum is the best way</a>)! This is a complex backup plugin and the only way we can ensure it's robust is to get bug reports and fix the problems that crop up. Please make sure you are using the latest version of the plugin, and that you include the version in your bug report - if you are not using the latest, then the first thing you will be asked to do is upgrade.
 
-Please include the backup log if you can find it (there are links to download logs on the UpdraftPlus settings page; or you may be emailed it; failing that, it is in the directory wp-content/updraft, so FTP in and look for it there). If you cannot find the log, then I may not be able to help so much, but you can try - include as much information as you can when reporting (PHP version, your blog's site, the error you saw and how you got to the page that caused it, any other relevant plugins you have installed, etcetera). http://pastebin.com is a good place to post the log.
+Please include the backup log if you can find it (there are links to download logs on the UpdraftPlus settings page; or you may be emailed it; failing that, it is in the directory wp-content/updraft, so FTP in and look for it there). If you cannot find the log, then I may not be able to help so much, but you can try - include as much information as you can when reporting (PHP version, your blog's site, the error you saw and how you got to the page that caused it, any other relevant plugins you have installed, etcetera). <a href="https://pastebin.com">https://pastebin.com</a> is a good place to post the log.
 
 If you know where to find your PHP error logs (often a file called error_log, possibly in your wp-admin directory (check via FTP)), then that's even better (don't send multi-megabytes; just send the few lines that appear when you run a backup, if any).
 
@@ -107,7 +107,7 @@ After you have set up UpdraftPlus, you must check that your WordPress backups ar
 
 = My enormous website is hosted by a dirt-cheap provider who starve my account of resources, and UpdraftPlus runs out of time! Help! Please make UpdraftPlus deal with this situation so that I can save two dollars! =
 
-UpdraftPlus supports resuming backup runs right from the beginning, so that it does not need to do everything in a single go; but this has limits. If your website is huge and your web hosting company gives your tiny resources on an over-loaded server, then go into the "Expert settings" and reduce the size at which zip files are split (versions 1.6.53 onwards). UpdraftPlus is known to successfully back up websites that run into the multiple-gigabytes on web servers that are not resource-starved.
+UpdraftPlus supports resuming backup runs right from the beginning, so that it does not need to do everything in a single go; but this has limits. If your website is huge and your web hosting company gives your tiny resources on an over-loaded server, then go into the "Expert settings" and reduce the size at which zip files are split. UpdraftPlus is known to successfully back up websites that run into the range of several tens of gigabytes on web servers that are not resource-starved.
 
 = My site was hacked, and I have no backups! I thought UpdraftPlus was working! Can I kill you? =
 
@@ -119,7 +119,7 @@ Yes; especially before you submit any support requests.
 
 = Do you have any other free plugins? =
 
-Thanks for asking; yes, we've got a few. Check out this profile page - https://profiles.wordpress.org/DavidAnderson/ .
+Thanks for asking; yes, we've got a few. Check out this profile page - <a href="https://profiles.wordpress.org/DavidAnderson">https://profiles.wordpress.org/DavidAnderson/</a>.
 
 == Changelog ==
 
@@ -127,11 +127,30 @@ The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the b
 
 N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.13.1 of the free version correspond to changes made in 2.13.1.x of the paid version.
 
+= 1.13.4 - 08/Jun/2017 =
+
+* FIX: Import function had a regression and was not coping with all formats
+* TWEAK: When the import function failed, the error was not shown to the user
+
+= 1.13.3 - 07/Jun/2017 =
+
+* FIX: Revert Dropbox authentication change in 1.13.2, which was not working on all sites
+
+= 1.13.2 - 07/Jun/2017 =
+
+* TWEAK: Marked as tested and compatible on WordPress 4.8
+* TWEAK: Dropbox authentication flow can now use POST for the final step, side-stepping (arbitrary) parameter length restrictions on some Apache mod_security setups
+* TWEAK: Prevent a possible PHP notice when curl is not present
+* TWEAK: Point Clef users towards Keyy
+* TWEAK: Do not open an alert box when the user changes their site ID in 'Advanced Tools'
+* TWEAK: Fix parameters to updraft_check_overduecrons() JS function
+
 = 1.13.1 - 09/May/2017 =
 
 * REFACTOR: Completed re-factoring of the remote storage modules, so that now all remote storage code has completed this current stage of re-factoring (more to come in future - laying the foundation for a significant new feature)
 * FIX: Added a nonce to the Dropbox deauth link. This is a minor security issue - someone personally targetting you, who knew that you were logged in to your WordPress admin, and who could persuade you to visit a personally-crafted web page, could cause the connection between UpdraftPlus and your Dropbox to be broken. The only impact of this is that the sending of your next backup to Dropbox would fail, and you would be alerted about the need to re-connect.
 * FIX: Import settings now handle the new remote storage options format
+* FIX: The zip file browser was not working in free versions
 * TWEAK: Added a version check when saving settings to prevent errors or lost settings
 * TWEAK: 'Existing Backups' table now shows an icon for each remote destination that the backup was sent to
 * TWEAK: Update SSL CA certificates file
@@ -458,4 +477,4 @@ We recognise and thank the following for code and/or libraries used and/or modif
 
 
 == Upgrade Notice ==
-* 1.13.1: Complete remote storage module re-factoring. Minor Dropbox security fix. Fix import settings function. Other small tweaks.
+* 1.13.4: Import function had a regression and was not coping with all formats
