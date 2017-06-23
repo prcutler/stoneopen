@@ -94,7 +94,7 @@ class FilemanagerView {
         </div>
         <div id="file_manager">
           <div class="ctrls_bar ctrls_bar_header">
-            <div class="ctrls_left">
+            <div class="ctrls_left header_bar">
               <a class="ctrl_bar_btn btn_up" onclick="onBtnUpClick(event, this);" title="<?php echo __('Up', 'bwg_back'); ?>"></a>
               <a class="ctrl_bar_btn btn_make_dir" onclick="onBtnMakeDirClick(event, this);" title="<?php echo __('Make a directory', 'bwg_back'); ?>"></a>
               <a class="ctrl_bar_btn btn_rename_item" onclick="onBtnRenameItemClick(event, this);" title="<?php echo __('Rename item', 'bwg_back'); ?>"></a>
@@ -103,18 +103,22 @@ class FilemanagerView {
               <a class="ctrl_bar_btn btn_cut" onclick="onBtnCutClick(event, this);" title="<?php echo __('Cut', 'bwg_back'); ?>"></a>
               <a class="ctrl_bar_btn btn_paste" onclick="onBtnPasteClick(event, this);" title="<?php echo __('Paste', 'bwg_back'); ?>"> </a>
               <a class="ctrl_bar_btn btn_remove_items" onclick="onBtnRemoveItemsClick(event, this);" title="<?php echo __('Remove items', 'bwg_back'); ?>"></a>
-              <span class="ctrl_bar_divider"></span>
-              <span class="ctrl_bar_btn">
-                <a id="upload_images" class="ctrl_bar_btn wd-btn wd-btn-primary wd-btn-icon wd-btn-uplaod" onclick="onBtnShowUploaderClick(event, this);"><?php echo __('Upload files', 'bwg_back'); ?></a>
-              </span>
-              <span class="ctrl_bar_divider"></span>
-              <span id="search_by_name" class="ctrl_bar_btn">
-                <input type="search" placeholder="Search" class="ctrl_bar_btn search_by_name">
-              </span>
+              <span class="ctrl_bar_divider divider_upload"></span>
             </div>
             <div class="ctrls_right">
               <a class="ctrl_bar_btn btn_view_thumbs" onclick="onBtnViewThumbsClick(event, this);" title="<?php echo __('View thumbs', 'bwg_back'); ?>"></a>
               <a class="ctrl_bar_btn btn_view_list" onclick="onBtnViewListClick(event, this);" title="<?php echo __('View list', 'bwg_back'); ?>"></a>
+            </div>
+            <div class="ctrls_left header_bar">
+              <span class="ctrl_bar_btn">
+                <a id="upload_images" class="ctrl_bar_btn wd-btn wd-btn-primary wd-btn-icon wd-btn-uplaod" onclick="onBtnShowUploaderClick(event, this);"><?php echo __('Upload files', 'bwg_back'); ?></a>
+              </span>
+              <span class="ctrl_bar_divider divider_search"></span>
+            </div>
+            <div class="ctrls_left header_bar">
+              <span id="search_by_name" class="ctrl_bar_btn">
+                <input type="search" placeholder="Search" class="ctrl_bar_btn search_by_name">
+              </span>
             </div>
           </div>
           <div id="path">
@@ -247,9 +251,16 @@ class FilemanagerView {
                 <span>
                 </span>
               </span>
-              <a id="add_selectid_img" class="ctrl_bar_btn btn_open wd-btn wd-btn-primary wd-btn-icon-add wd-btn-add none_select" onclick="onBtnOpenClick(event, this);"><?php echo ((isset($_REQUEST['callback']) && esc_html($_REQUEST['callback']) == 'bwg_add_image') ? __('Add selected images to gallery', 'bwg_back') : __('Add', 'bwg_back')); ?></a>
+              <?php
+              $add_image_btn = (isset($_REQUEST['callback']) && esc_html($_REQUEST['callback']) == 'bwg_add_image') ? __('Add selected images to gallery', 'bwg_back') : __('Add', 'bwg_back');
+              ?>
+              <a id="add_selectid_img" title="<?php echo $add_image_btn; ?>" class="ctrl_bar_btn btn_open wd-btn wd-btn-primary wd-btn-icon-add wd-btn-add none_select" onclick="onBtnOpenClick(event, this);">
+                <div id="bwg_img_add"><?php echo $add_image_btn; ?></div>
+              </a>
               <span class="ctrl_bar_empty_devider"></span>
-              <a class="ctrl_bar_btn btn_cancel wd-btn wd-btn-primary wd-btn-icon wd-btn-cancel none_select" onclick="onBtnCancelClick(event, this);"><?php echo 'Cancel'; ?></a>
+              <a class="ctrl_bar_btn btn_cancel wd-btn wd-btn-primary wd-btn-icon wd-btn-cancel none_select" title="<?php _e('Cancel', 'bwg_back'); ?>" onclick="onBtnCancelClick(event, this);">
+                <div id="bwg_img_cancel"><?php _e('Cancel', 'bwg_back'); ?></div>
+              </a>
             </div>
           </div>
         </div>
@@ -257,7 +268,8 @@ class FilemanagerView {
           <div id="uploader_bg"></div>
           <div class="ctrls_bar ctrls_bar_header">
             <div class="ctrls_left upload_thumb">
-              <?php echo __("Thumbnail Maximum Dimensions:", 'bwg_back'); ?>
+              <div class="upload_thumb thumb_full_title"><?php _e("Thumbnail Maximum Dimensions:", 'bwg_back'); ?></div>
+              <div class="upload_thumb thumb_title"><?php _e("Thumbnail:", 'bwg_back'); ?></div>
               <input type="text" class="upload_thumb_dim" name="upload_thumb_width" id="upload_thumb_width" value="<?php echo $wd_bwg_options->upload_thumb_width; ?>" /> x
               <input type="text" class="upload_thumb_dim" name="upload_thumb_height" id="upload_thumb_height" value="<?php echo $wd_bwg_options->upload_thumb_height; ?>" /> px
             </div>
@@ -265,7 +277,8 @@ class FilemanagerView {
               <a class="ctrl_bar_btn btn_back" onclick="onBtnBackClick(event, this);" title="<?php echo __('Back', 'bwg_back'); ?>"></a>
             </div>
             <div class="ctrls_right_img upload_thumb">
-              <?php echo __("Image Maximum Dimensions:", 'bwg_back'); ?>
+              <div class="upload_thumb thumb_full_title"><?php _e("Image Maximum Dimensions:", 'bwg_back'); ?></div>
+              <div class="upload_thumb thumb_title"><?php _e("Image:", 'bwg_back'); ?></div>
               <input type="text" class="upload_thumb_dim" name="upload_img_width" id="upload_img_width" value="<?php echo $wd_bwg_options->upload_img_width; ?>" /> x
               <input type="text" class="upload_thumb_dim" name="upload_img_height" id="upload_img_height" value="<?php echo $wd_bwg_options->upload_img_height; ?>" /> px
             </div>

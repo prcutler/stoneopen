@@ -53,6 +53,7 @@ class bwg_UploadHandler {
     );
 
     function __construct($options = null, $initialize = true, $error_messages = null) {
+      global $wd_bwg_options;
       $this->options = array(
         'media_library_folder' => 'imported_from_media_libray' . '/',
         'script_url' => $this->get_full_url() . '/',
@@ -93,8 +94,8 @@ class bwg_UploadHandler {
         // The maximum number of files for the upload directory:
         'max_number_of_files' => null,
         // Image resolution restrictions:
-        'max_width' => ((isset($_REQUEST['file_namesML']) && esc_html($_REQUEST['file_namesML'])) ? (isset($_REQUEST['importer_img_width']) ? (int) $_REQUEST['importer_img_width'] : 1200) : (isset($_POST['upload_img_width']) ? (int) $_POST['upload_img_width'] : 1200)),
-        'max_height' => ((isset($_REQUEST['file_namesML']) && esc_html($_REQUEST['file_namesML'])) ? (isset($_REQUEST['importer_img_height']) ? (int) $_REQUEST['importer_img_height'] : 1200) : (isset($_POST['upload_img_height']) ? (int) $_POST['upload_img_height'] : 1200)),	
+        'max_width' => (isset($_POST['upload_img_width']) ? (int) $_POST['upload_img_width'] : $wd_bwg_options->upload_img_width),
+        'max_height' => (isset($_POST['upload_img_height']) ? (int) $_POST['upload_img_height'] : $wd_bwg_options->upload_img_height),
         'min_width' => 1,
         'min_height' => 1,
         // Set the following option to false to enable resumable uploads:
@@ -106,7 +107,6 @@ class bwg_UploadHandler {
         $this->options['max_width'] = NULL;
         $this->options['max_height'] = NULL;
       }
-      global $wd_bwg_options;
       $this->options += array(
         'image_versions' => array(
           '.original' => array(
@@ -120,8 +120,8 @@ class bwg_UploadHandler {
             'jpeg_quality' => $wd_bwg_options->jpeg_quality
           ),
           'thumb' => array(
-            'max_width' => ((isset($_REQUEST['file_namesML']) && esc_html($_REQUEST['file_namesML'])) ? (isset($_REQUEST['importer_thumb_width']) ? (int) $_REQUEST['importer_thumb_width'] : 300) : ((isset($_POST['upload_thumb_width']) && (int) $_POST['upload_thumb_width']) ? (int) $_POST['upload_thumb_width'] : 300)),
-            'max_height' => ((isset($_REQUEST['file_namesML']) && esc_html($_REQUEST['file_namesML'])) ? (isset($_REQUEST['importer_thumb_height']) ? (int) $_REQUEST['importer_thumb_height'] : 300) : ((isset($_POST['upload_thumb_height']) && (int) $_POST['upload_thumb_height']) ? (int) $_POST['upload_thumb_height'] : 300)),
+            'max_width' => ((isset($_POST['upload_thumb_width']) && (int) $_POST['upload_thumb_width']) ? (int) $_POST['upload_thumb_width'] : $wd_bwg_options->upload_thumb_width),
+            'max_height' => ((isset($_POST['upload_thumb_height']) && (int) $_POST['upload_thumb_height']) ? (int) $_POST['upload_thumb_height'] : $wd_bwg_options->upload_thumb_height),
             'jpeg_quality' => $wd_bwg_options->jpeg_quality
           ),
         )
