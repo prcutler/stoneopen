@@ -4,7 +4,7 @@ Responsive CSS
 @media screen and (max-width: 1200px){
 	.mid-content{
 		width: 100%;
-		padding: 0 10px;
+		padding: 0 20px;
 	}
 
 	.service-list .service-image{
@@ -25,6 +25,15 @@ Responsive CSS
 }
 
 @media screen and (max-width: 1000px){
+    #masthead .flex-box{
+        display: block;
+    }
+    #site-logo{
+        width: 80%;
+    }
+    .main-navigation{
+        width: 40px;
+    }
 	.main-navigation > ul{
 		display: none;
 	}
@@ -65,6 +74,7 @@ Responsive CSS
 	}
 	.main-navigation > ul > li > a{
 		color:#FFF;
+        padding: 10px;
 	}
 	.main-navigation > ul > li.current a, 
 	.main-navigation li:hover > a,
@@ -83,7 +93,7 @@ Responsive CSS
 
 @media screen and (max-width: 768px){
 	h1{
-	font-size: 24px;
+	   font-size: 24px;
 	}
 	h2{
 		font-size: 20px;
@@ -112,13 +122,10 @@ Responsive CSS
 	.service-list{
 		width: 100%;
 	}
-	.portfolio-list, .portfolio-list:nth-child(4n){
-		width: 32%;
-		margin-right: 2%;
+	.portfolio-list{
+		width: 50%;
 	}
-	.portfolio-list:nth-child(3n){
-		margin-right: 0;
-	}
+
 	.blog-listing .blog-list{
 		width: 80%;
 		margin: 0 auto 20px;
@@ -190,6 +197,12 @@ Responsive CSS
         background-attachment: scroll !important;
         background-repeat: repeat !important;
     }
+    body.parallax-on #masthead{
+        position: relative;
+    }
+    #content{
+        padding-top: 0 !important;
+    }
 }
 @media screen and (max-width: 480px){
 	.parallax-section h1{
@@ -217,12 +230,8 @@ Responsive CSS
 	.team-tab .bx-wrapper .bx-viewport{
 		border-radius: 0;
 	}
-	.portfolio-list, .portfolio-list:nth-child(3n), .portfolio-list:nth-child(4n){
-		width: 49%;
-		margin-right: 2%;
-	}
-	.portfolio-list:nth-child(2n){
-		margin-right: 0;
+	.portfolio-list{
+		width: 100%;
 	}
 	.blog-listing .blog-list{
 		width: 100%;
@@ -245,20 +254,30 @@ Responsive CSS
 		width: 80%;
 		text-align:left;
 	}
-	.main-navigation > ul{
-		max-height:320px 
-	}
 	.slider-caption{
 		display: none;
 	}
+    
+    .hentry,
+    #comments,
+    #secondary .widget{
+        padding: 20px;
+    }
+    
+    .entry-thumb{
+        margin: -20px -20px 30px;
+    }
+    
+    .comment-navigation [class*='nav-'], 
+    .paging-navigation [class*='nav-'], 
+    .post-navigation [class*='nav-'], 
+    .posts-navigation [class*='nav-']{
+        width: 100%;
+        float: none;
+    }
 	
 }
 
-@media screen and (max-width: 480px) and (orientation : landscape){
-	.main-navigation > ul{
-		max-height:220px 
-	}
-}
 
 @media screen and (min-width: 1001px){
 	.main-navigation > ul{

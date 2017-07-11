@@ -1,6 +1,6 @@
     <section class="parallax-section clearfix service_template" id="features">
         <div class="mid-content">
-            <h1><span>Features</span></h1>
+            <h2><span>Features</span></h2>
             <div class="parallax-content">
                 <div class="page-content">
                     <p style="text-align: center;"><?php _e('Curabitur eget interdum risus. Curabitur dictum, libero ut mattis consequat, lectus mauris congue risus, et volutpat nulla eros vel arcu.','accesspress-parallax'); ?></p>
@@ -83,7 +83,7 @@
     <section class="parallax-section clearfix portfolio_template" id="portfolio">
         <div class="overlay"></div>
         <div class="mid-content">
-            <h1><span>Portfolio</span></h1>
+            <h2><span>Portfolio</span></h2>
             <div class="parallax-content">
                 <div class="page-content">
                     <p style="text-align: center;"><?php _e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec iaculis metus vitae ligula elementum ut luctus lorem facilisis.', 'accesspress-parallax' ); ?></p>
@@ -91,67 +91,83 @@
             </div> 
             <div class="portfolio-listing clearfix">
                 <a href="#" class="portfolio-list wow fadeInUp" data-wow-delay="0.25s">
-                    <div class="portfolio-overlay"><span>+</span></div>
-                    <div class="portfolio-image">
-                        <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio1.jpg">
+                    <div class="portfolio-wrap">
+                        <div class="portfolio-overlay"><span>+</span></div>
+                        <div class="portfolio-image">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio1.jpg">
+                        </div>
+                        <h3><?php _e( 'Product 11', 'accesspress-parallax' ); ?></h3>
                     </div>
-                    <h3><?php _e( 'Product 11', 'accesspress-parallax' ); ?></h3>
                 </a>
                 <a href="#" class="portfolio-list wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="portfolio-overlay"><span>+</span></div>
-                    <div class="portfolio-image">
-                        <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio2.jpg">
+                    <div class="portfolio-wrap">
+                        <div class="portfolio-overlay"><span>+</span></div>
+                        <div class="portfolio-image">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio2.jpg">
+                        </div>
+                        <h3><?php _e( 'Product 10', 'accesspress-parallax' ); ?></h3>
                     </div>
-                    <h3><?php _e( 'Product 10', 'accesspress-parallax' ); ?></h3>
                 </a>
                 <a href="#" class="portfolio-list wow fadeInUp" data-wow-delay="0.75s">
-                    <div class="portfolio-overlay"><span>+</span></div>
-                    <div class="portfolio-image">
-                        <img src="<?php  echo get_template_directory_uri(); ?>/images/demo/portfolio3.jpg">
+                    <div class="portfolio-wrap">
+                        <div class="portfolio-overlay"><span>+</span></div>
+                        <div class="portfolio-image">
+                            <img src="<?php  echo get_template_directory_uri(); ?>/images/demo/portfolio3.jpg">
+                        </div>
+                        <h3><?php _e( 'Product 9', 'accesspress-parallax' ); ?></h3>
                     </div>
-                    <h3><?php _e( 'Product 9', 'accesspress-parallax' ); ?></h3>
                 </a>
                 <a href="#" class="portfolio-list wow fadeInUp" data-wow-delay="1s">
-                    <div class="portfolio-overlay"><span>+</span></div>
-                    <div class="portfolio-image">
-                        <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio4.jpg">
+                    <div class="portfolio-wrap">
+                        <div class="portfolio-overlay"><span>+</span></div>
+                        <div class="portfolio-image">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio4.jpg">
+                        </div>
+                        <h3><?php _e( 'Product 8', 'accesspress-parallax' ); ?></h3>
                     </div>
-                    <h3><?php _e( 'Product 8', 'accesspress-parallax' ); ?></h3>
                 </a>
                 <a href="#" class="portfolio-list wow fadeInUp" data-wow-delay="1.25s">
-                    <div class="portfolio-overlay"><span>+</span></div>
-                    <div class="portfolio-image">
-                        <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio5.jpg">
+                    <div class="portfolio-wrap">
+                        <div class="portfolio-overlay"><span>+</span></div>
+                        <div class="portfolio-image">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio5.jpg">
+                        </div>
+                        <h3><?php _e( 'Product 7', 'accesspress-parallax' ); ?></h3>
                     </div>
-                    <h3><?php _e( 'Product 7', 'accesspress-parallax' ); ?></h3>
                 </a>
                 <a href="#" class="portfolio-list wow fadeInUp" data-wow-delay="1.5s">
-                    <div class="portfolio-overlay"><span>+</span></div>
-                    <div class="portfolio-image">
-                        <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio6.jpg">
+                    <div class="portfolio-wrap">
+                        <div class="portfolio-overlay"><span>+</span></div>
+                        <div class="portfolio-image">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio6.jpg">
+                        </div>
+                        <h3><?php _e( 'Product 6', 'accesspress-parallax' ); ?></h3>
                     </div>
-                    <h3><?php _e( 'Product 6', 'accesspress-parallax' ); ?></h3>
                 </a>
                 <a href="#" class="portfolio-list wow fadeInUp" data-wow-delay="1.75s">
-                    <div class="portfolio-overlay"><span>+</span></div>
-                    <div class="portfolio-image">
-                        <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio7.jpg">
+                    <div class="portfolio-wrap">
+                        <div class="portfolio-overlay"><span>+</span></div>
+                        <div class="portfolio-image">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio7.jpg">
+                        </div>
+                        <h3><?php _e( 'Product 5', 'accesspress-parallax' ); ?></h3>
                     </div>
-                    <h3><?php _e( 'Product 5', 'accesspress-parallax' ); ?></h3>
                 </a>
                 <a href="#" class="portfolio-list wow fadeInUp" data-wow-delay="2s">
-                    <div class="portfolio-overlay"><span>+</span></div>
-                    <div class="portfolio-image">
-                        <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio8.jpg">
+                    <div class="portfolio-wrap">
+                        <div class="portfolio-overlay"><span>+</span></div>
+                        <div class="portfolio-image">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/demo/portfolio8.jpg">
+                        </div>
+                        <h3><?php _e( 'Product 4', 'accesspress-parallax' ); ?></h3>
                     </div>
-                    <h3><?php _e( 'Product 4', 'accesspress-parallax' ); ?></h3>
                 </a>
             </div><!-- #primary -->
         </div>
     </section>
     <section class="parallax-section clearfix team_template" id="team">
         <div class="mid-content">
-            <h1><span>Team</span></h1>
+            <h2><span>Team</span></h2>
             <div class="parallax-content">
             </div> 
             <div class="team-listing clearfix">
@@ -272,7 +288,7 @@
     </section>
     <section class="parallax-section clearfix testimonial_template" id="testimonials">
         <div class="mid-content">
-            <h1><span><?php _e( 'Testimonials', 'accesspress-parallax' ); ?></span></h1>
+            <h2><span><?php _e( 'Testimonials', 'accesspress-parallax' ); ?></span></h2>
             <div class="parallax-content">
             </div> 
             <div class="testimonial-listing clearfix wow fadeInUp">
@@ -309,7 +325,7 @@
     <section class="parallax-section clearfix blog_template" id="blog">
         <div class="overlay"></div>
         <div class="mid-content">
-            <h1><span>Blog</span></h1>
+            <h2><span>Blog</span></h2>
             <div class="parallax-content">
                 <div class="page-content">
                     <p style="text-align: center;"><?php _e( 'Read our latest blog', 'accesspress-parallax' ); ?></p>
@@ -359,7 +375,7 @@
         <div class="overlay"></div>
         <div class="mid-content">
             <div class="call-to-action">
-                <h1><?php _e( 'For News and Updates Subscribe us', 'accesspress-parallax' ); ?></h1>
+                <h2><?php _e( 'For News and Updates Subscribe us', 'accesspress-parallax' ); ?></h2>
                 <div class="parallax-content">
                     <div class="page-content">
                         <p><?php _e( 'Here can be some text as well', 'accesspress-parallax' ); ?></p>
@@ -372,7 +388,7 @@
     <section class="parallax-section clearfix default_template" id="contact">
     <div class="overlay"></div>
         <div class="mid-content">
-            <h1><span>Contact</span></h1>
+            <h2><span>Contact</span></h2>
             <div class="parallax-content">
                 <div class="page-content">
                     <div class="row">
@@ -440,4 +456,5 @@
 #google-map{ background:url() no-repeat scroll top left ; background-size:auto; color:}
 #google-map .overlay { background:url(<?php echo get_template_directory_uri(); ?>/images/overlay0.png);}
 #content{margin:0 !important}
+.portfolio-list img{width: 100%;}
 </style>

@@ -25,6 +25,8 @@
 <div id="page" class="hfeed site">
 	<header id="masthead" class="<?php echo of_get_option('header_layout'); ?>">
 		<div class="mid-content clearfix">
+        
+        <div class="flex-box">
 		<div id="site-logo">
 		<?php if ( get_header_image() ) : ?>
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
@@ -37,6 +39,7 @@
 		</div>
 
 		<nav id="site-navigation" class="main-navigation">
+        
 		<div class="menu-toggle"><?php _e( 'Menu', 'accesspress-parallax' ); ?></div>
 					
 			<?php 
@@ -79,6 +82,7 @@
 			endif; ?>
 		
 		</nav><!-- #site-navigation -->
+        </div>
 		</div>
 
 

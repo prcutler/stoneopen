@@ -4,7 +4,7 @@ Theme URI: https://accesspressthemes.com/wordpress-themes/accesspress-parallax/
 Author: AccessPress Themes
 Author URI: https://accesspressthemes.com/
 Description: AccessPress Parallax is a beautiful WordPress theme with Parallax design. Parallax design has become popular and is widely implemented these days. This is probably the most beautiful, feature rich and complete free WordPress parallax theme with features like: fully responsive, advance theme option panel, featured slider, advance post settings, services/team/blog/portfolio/testimonial layout, Google map integration, custom logo/fav icon, call to action, CSS animation, SEO friendly, translation ready, RTL support, custom CSS/JS and more! More over the theme is fully translation ready, WooCommerce Compatible, bbPress Compatible and fully support multilanguage via POLYLANG plugin. Demo: http://accesspressthemes.com/theme-demos/?theme=accesspress-parallax Support forum: https://accesspressthemes.com/support/ Pro version: https://accesspressthemes.com/wordpress-themes/accesspress-parallax-pro/ 
-Version: 1.30
+Version: 1.50
 License: GNU General Public License v3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: accesspress-parallax
@@ -52,8 +52,7 @@ html {
 	box-sizing:         border-box;
 }
 body {
-	background: #fff; /* Fallback for when there is no custom background color defined. */
-	background: url(images/bg.png);
+	background: #F1F1F1; /* Fallback for when there is no custom background color defined. */
 }
 article,
 aside,
@@ -106,8 +105,8 @@ textarea {
 	font-size: 16px;
 }
 h1, h2, h3, h4, h5, h6 {
-	font-family: 'Oxygen', sans-serif;
 	margin-bottom: 10px;
+    font-weight: bold;
 }
 h1{
 	font-size: 24px;
@@ -447,7 +446,8 @@ Widgets
 
 #secondary .widget{
 	background: #FFF;
-	padding: 15px;
+	padding: 30px;
+    margin-bottom: 40px;
 }
 
 /*--------------------------------------------------------------
@@ -463,13 +463,13 @@ Content
 }
 
 .parallax-section h2{
-	font-size: 34px;
+	font-size: 38px;
 	text-transform: uppercase;
 	line-height: 1.2;
 	text-align: center;
 	padding: 0 20px;
-	font-weight: 300;
-	margin-bottom: 50px;
+	font-weight: 700;
+	margin-bottom: 60px;
 }
 .parallax-section h2 span{
 	position: relative;
@@ -502,19 +502,15 @@ Content
 }
 
 .parallax-section .page-content{
-	margin: 0 0 40px;
-}
-
-.parallax-section .page-content:last-child{
-    margin-bottom: 0;
+	margin: 0 0 60px;
 }
 
 #content > .mid-content{
-	margin-top: 30px;
+	margin-top: 50px;
 }
 
 #primary{
-	width: 70%;
+	width: 69%;
 	float: left;
 }
 #secondary{
@@ -527,17 +523,18 @@ Content
 	margin-left: 0;
 }
 #secondary ul li{
-
+    padding-bottom: 6px;
 }
 #secondary ul li a{
 	text-decoration: none;
 	color: #333;
 }
 #secondary h2.widget-title{
-	border-bottom: 1px solid #E66432;
-	margin-bottom: 10px;
+	border-bottom: 3px solid #E66432;
+	margin-bottom: 20px;
 	line-height: 1.2;
 	font-size: 18px;
+    text-transform: uppercase;
 }
 #secondary h2.widget-title span{
 	color: #333;
@@ -568,14 +565,17 @@ Posts and pages
 	margin-bottom: 0;
 }
 .hentry {
-	margin: 0 0 20px;
+	margin: 0 0 40px;
 	background: #FFF;
-	padding: 20px;
+	padding: 40px;
 	margin-bottom: 40px;
 	position: relative;
 }
 .single .hentry {
-	margin-bottom: 15px;
+	margin-bottom: 0;
+}
+.archive .hentry {
+	margin-bottom: 60px;
 }
 .byline,
 .updated {
@@ -602,7 +602,6 @@ Posts and pages
 	margin: 0 0 20px;
 }
 .entry-header h1.entry-title{
-	font-weight: 300;
 	margin-left: 80px;
 }
 .entry-header h1.entry-title.no-date{
@@ -623,7 +622,6 @@ Posts and pages
 	width: 60px;
 	text-align: center;
 	color: #FFF;
-	font-family: "Oxygen",sans-serif;
 	font-size: 14px;
 	padding: 10px;
 	line-height: 1.2;
@@ -654,7 +652,7 @@ Posts and pages
 }
 .entry-footer{
 	font-size: 14px;
-	font-family: "Oxygen",sans-serif;
+	margin-top: 30px;
 }
 .entry-footer span{
 	margin-right: 15px;
@@ -665,7 +663,6 @@ Posts and pages
 }
 .entry-footer a{
 	text-decoration: none;
-	font-style: italic;
 	color: #333;
 }
 .edit-link{
@@ -690,12 +687,14 @@ Posts and pages
 }
 .page-header{
 	background: #FFF;
-	padding: 10px;
-	margin-bottom: 30px;
-	border-bottom: 3px solid #E66432;
+	padding: 30px 40px;
+	margin-bottom: 40px;
+}
+.page-header h1{
+    margin-bottom: 0;
 }
 .entry-thumb{
-	margin: -20px -20px 15px;
+	margin: -40px -40px 30px;
 	text-align: center;
 }
 /*--------------------------------------------------------------
@@ -711,8 +710,8 @@ Comments
 --------------------------------------------------------------*/
 #comments{
 	background: #FFF;
-	padding: 15px;
-	margin-bottom: 15px;
+	padding: 40px;
+	margin-bottom: 40px;
 	font-size: 16px;
 }
 #comments p{
@@ -814,9 +813,6 @@ textarea#comment{
     line-height: 1;
     padding: 2px 10px;
     text-decoration: none;
-}
-#respond{
-	margin-top: 10px;
 }
 #commentform .form-submit{
 	margin-bottom: 0;
@@ -963,9 +959,18 @@ Main Header
 	width: 100%;
 	z-index: 99999;
 	background: #FFF;
-	padding: 10px 0;
+	padding: 24px 0;
 	border-bottom: 3px solid #E66432;
 	position: relative;
+}
+#masthead .flex-box{
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    justify-content: space-between;
+    align-items: center
 }
 #masthead.logo-top{
 	text-align: center;
@@ -989,6 +994,7 @@ body.parallax-on .wpcf7-not-valid-tip{
 }
 #site-logo{
 	float: left;
+    width: 20%;
 }
 .logo-top #site-logo{
 	float: none;
@@ -998,7 +1004,6 @@ body.parallax-on .wpcf7-not-valid-tip{
 .main-navigation {
 	float: right;
 	max-width: 80%;
-	margin-top: 15px;
 }
 .logo-top .main-navigation{
 	float: none;
@@ -1010,7 +1015,7 @@ body.parallax-on .wpcf7-not-valid-tip{
 	list-style: none;
 	margin: 0;
 	padding-left: 0;
-	display: inline-block;
+	float: right;
 }
 .main-navigation ul li{
 	position: relative;
@@ -1018,13 +1023,12 @@ body.parallax-on .wpcf7-not-valid-tip{
 .main-navigation > ul > li {
 	float: left;
 	position: relative;
-	font-family: 'Oxygen', sans-serif;	
     font-weight: 400;
 }
 .main-navigation > ul > li > a{
 	text-transform: uppercase;
 	font-size:14px;
-	padding: 5px 15px;
+	padding: 5px 10px;
 }
 .main-navigation > ul > li.current a{
 	color: #E66432;
@@ -1081,8 +1085,9 @@ body.parallax-on .wpcf7-not-valid-tip{
 .site-main .paging-navigation,
 .site-main .post-navigation,
 .site-main .posts-navigation {
-	margin: 0 0 20px;
+	margin: 0 0 40px;
 	overflow: hidden;
+    background: #FFF;
 }
 .comment-navigation .nav-previous,
 .paging-navigation .nav-previous,
@@ -1090,6 +1095,7 @@ body.parallax-on .wpcf7-not-valid-tip{
 .posts-navigation .nav-previous {
 	float: left;
 	width: 50%;
+    padding: 10px;
 }
 .comment-navigation .nav-previous a .fa,
 .paging-navigation .nav-previous a .fa,
@@ -1105,6 +1111,7 @@ body.parallax-on .wpcf7-not-valid-tip{
 	float: right;
 	text-align: right;
 	width: 50%;
+    padding: 10px;
 }
 .comment-navigation .nav-next a .fa,
 .paging-navigation .nav-next a .fa,
@@ -1118,12 +1125,11 @@ body.parallax-on .wpcf7-not-valid-tip{
 .site-main .post-navigation a,
 .site-main .posts-navigation a{
 	background: #333;
-	padding: 8px 25px;
+	padding: 20px 40px;
 	color: #FFF;
 	text-decoration: none;
 	font-size: 14px;
-	font-family: "Oxygen",sans-serif;
-	display: inline-block;
+	display: block;
 }
 
 .pagination{
@@ -1131,18 +1137,14 @@ body.parallax-on .wpcf7-not-valid-tip{
 	margin-bottom: 30px;
 }
 
-.page-numbers{
-	display: inline-block;
-	background: #E66432;
-	margin: 0 2px;
-	color: #FFF;
-	padding: 4px 15px;
-	border-radius: 2px;
-}
-
-.page-numbers.current,
-.page-numbers:hover{
-	background: #333;
+.pagination .nav-links a,
+.pagination .nav-links span{
+    display: inline-block;
+    background: #E66432;
+    padding: 10px;
+    color: #FFF;
+    line-height: 1;
+    margin: 0 2px;
 }
 
 /*--------------------------------------------------------------
@@ -1157,6 +1159,10 @@ Main SLider
 #main-slider.full-screen-,
 .page-template-home-page-php #main-slider{
 	margin-bottom: 0;
+}
+
+#main-slider.full-screen-yes{
+    min-height: 80vh;
 }
 
 #main-slider .overlay{
@@ -1183,13 +1189,15 @@ Main SLider
 }
 
 .slider-caption .caption-title{
-	font-size: 42px;
+	font-size: 54px;
 	font-weight: bold;
 	text-transform: uppercase;
 	color:#FFF;
 	position: relative;
-	text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-	margin-bottom: 20px;
+	margin: 0 auto 20px;
+    width: 80%;
+    line-height: 1.3;
+    text-shadow: 5px 5px 10px rgba(0,0,0,0.4);
 }
 
 .slider-caption .caption-description{
@@ -1198,6 +1206,8 @@ Main SLider
 	position: relative;
 	text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 	font-weight: 300;
+    margin: 0 auto 20px;
+    width: 70%;
 }
 
 .slider-caption .caption-description p{
@@ -1273,15 +1283,14 @@ Default Section
 .parallax-section input[type="search"], 
 .parallax-section input[type="tel"], 
 .parallax-section textarea{
-	background:rgba(0, 0, 0, 0.1);
-	border:1px solid;
-    border-color:inherit;
-	color:inherit; 
-	padding: 5px 10px;
-	line-height: 32px;
-	width: 100%;
-	margin: 0 auto;
-	display: block;
+	border: 1px solid #E66432;
+    color: inherit;
+    padding: 10px 15px;
+    height: 42px;
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+    background: rgba( 255,255,255,0.4);
 }
 
 .parallax-section textarea{
@@ -1296,10 +1305,10 @@ Default Section
     width:100%;
     margin: 0 auto;
     display: block;
-    background: rgba(0, 0, 0, 0.1);
+    background: #E66432;
 }
 .parallax-section .wpcf7-form p{
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 .parallax-section .slider-caption .caption-description a, 
 .parallax-section .btn{
@@ -1309,23 +1318,26 @@ Default Section
 /*--------------------------------------------------------------
 Service Section
 --------------------------------------------------------------*/
+.service_template{
+    padding-bottom: 40px;
+}
 .service-list{
 	width: 48%;
-	margin-bottom: 20px;
+	margin-bottom: 40px;
 }
 .service-list h3{
-	margin-bottom: 10px;
-	line-height: 1.2;
+    margin-bottom: 15px;
+    line-height: 1.2;
+    font-size: 18px;
+    font-weight: 700;
 }
 .service-list .service-image{
 	height:80px;
 	width: 80px;
-	border-radius:50%;
 	margin-top: 15px;
 	overflow: hidden;
-	border:1px solid;
-    border-color: inherit;
-	background:rgba(255,255,255,0.1);
+	border:3px solid;
+    border-color: #EEE;
 }
 .service-list .service-image img{
 	padding: 15px;
@@ -1355,9 +1367,6 @@ Service Section
 /*--------------------------------------------------------------
 Testimonial Section
 --------------------------------------------------------------*/
-.testimonial-listing{
-	padding-bottom: 40px;
-}
 .testimonial-list{
 	text-align: center;
 }
@@ -1374,29 +1383,21 @@ Testimonial Section
 	left: 0;
 	top:0;
 	content: '\f10d';
-	font-size: 24px;
+	font-size: 32px;
 	line-height: 1;
 	height: 30px;
 	font-family: "FontAwesome";
-}
-.testimonial-list .testimonial-content:after{
-	position: absolute;
-	right: 30px;
-	bottom:0;
-	content: "\f10e";
-	font-size: 24px;
-	line-height: 1;
-	height: 30px;
-	font-family: "FontAwesome";
+    opacity: 0.5;
 }
 .testimonial-list h3{
-	font-size: 24px;
+	font-size: 20px;
+    font-weight: bold;
 }
 .testimonial-list .testimonial-image{
 	width: 100px;
 	height: 100px;
 	border-radius: 50%;
-	margin: 30px auto 20px;
+	margin: 30px auto 50px;
 }
 .testimonial-list .testimonial-image img{
 	border-radius: 50%;
@@ -1437,17 +1438,21 @@ Testimonial Section
 /*--------------------------------------------------------------
 Portfolio Section
 --------------------------------------------------------------*/
+.portfolio-listing{
+    margin: 0 -15px;
+}
 .portfolio-list{
-	width: 24%;
-	margin-right: 1.3333%;
+	width: 33.333%;
 	float: left;
-	margin-bottom: 1.5%;
 	position: relative;
-	overflow: hidden;
 }
-.portfolio-list:nth-child(4n){
-	margin-right: 0;
+
+.portfolio-wrap{
+    margin: 15px;
+    overflow: hidden;
+    position: relative;
 }
+
 .portfolio-list .portfolio-overlay{
 	position: absolute;
 	width: 100%;
@@ -1464,7 +1469,7 @@ Portfolio Section
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	background: #E66432;
+	border: 2px solid #FFF;
 	border-radius: 50%;
 	font-size: 30px;
 	text-align: center;
@@ -1477,13 +1482,14 @@ Portfolio Section
 .portfolio-list h3{
 	position: absolute;
 	width: 100%;
-	padding:15px 10px;
+	padding:20px;
 	bottom: 0;
 	left: 0;
 	color: #FFF;
 	background: url(images/portfolio-text-bg.png) repeat-x top left;
 	font-size: 16px;
     margin: 0;
+    text-transform: uppercase;
 }
 .portfolio-list:hover h3{
 	display: none;
@@ -1573,18 +1579,19 @@ Team Section
 }
 .team-detail h3{
 	font-size: 30px;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 	line-height: 1.2;
 }
 .team-detail h4{
 	font-size: 20px;
-	font-style: italic;
-	margin-bottom: 15px;
+	margin-bottom: 25px;
+    opacity: 0.8;
 }
 .team-tab .bx-wrapper .bx-viewport{
 	border-radius: 66px;
 }
 .team-tab .bx-wrapper .bx-controls-direction a{
+    position: absolute;
 	text-indent: 0;
 	font-size: 46px;
 	text-decoration: none;
@@ -1593,6 +1600,7 @@ Team Section
 	margin-top: -30px;
 	color: inherit;
 	font-weight: normal;
+    top: 50%
 }
 .team-tab .bx-wrapper .bx-prev{
 	background: none;
@@ -1604,6 +1612,7 @@ Team Section
 }
 .blank-section{
 	min-height: 300px;
+    height: 60vh;
 }
 /*--------------------------------------------------------------
 Google Map Section
@@ -1660,8 +1669,8 @@ Blog Section
 --------------------------------------------------------------*/
 .blog-list{
 	float: left;
-	width: 32%;
-	margin-right: 2%;
+	width: 30%;
+	margin-right: 3.33%;
 	background: #FFF;
 	text-decoration: none;
 	color: #333;
@@ -1676,19 +1685,21 @@ Blog Section
 	margin-right: 0;
 }
 .blog-list h3{
-	font-size: 24px;
-	margin:8px 0 5px;
+    font-size: 16px;
+    text-transform: uppercase;
+    margin: 15px 0 10px;
+    font-weight: bold;
 }
 .blog-list .blog-excerpt{
-	padding: 0 15px 50px;
+	padding: 0 20px 60px;
 	border-bottom: 3px solid #E66432;
 	position: relative;
 }
 .blog-list .blog-excerpt .posted-date{
-	font-size: 14px;
-	font-style: italic;
-	margin-bottom: 5px;
+	font-size: 13px;
+	margin-bottom: 15px;
 	color: #E66432;
+    text-align: right;
 }
 .blog-list .blog-excerpt .posted-date .fa{
 	margin-right: 5px;
@@ -1724,7 +1735,7 @@ Footer Section
 
 .top-footer{
 	background: #272727;
-	padding: 30px 0;
+	padding: 55px 0;
 }
 .top-footer ul{
 	list-style: none;
@@ -1735,7 +1746,7 @@ Footer Section
 }
 .top-footer h2{
 	font-size: 18px;
-	margin-bottom: 25px;
+	margin-bottom: 32px;
 	position: relative;
 }
 .top-footer h2:after{
