@@ -239,3 +239,14 @@ function accesspress_parallax_get_my_option(){
 add_action("wp_ajax_get_my_option", "accesspress_parallax_get_my_option");
 
 define( 'OPTIONS_FRAMEWORK_DIRECTORY', get_template_directory_uri() . '/inc/options-framework/' );
+
+// Add WooCommerce custom code to display 12 products
+
+add_filter( 'loop_shop_per_page', 'new_loop_shop_per_page', 20 );
+
+function new_loop_shop_per_page( $cols ) {
+  // $cols contains the current number of products per page based on the value stored on Options -> Reading
+  // Return the number of products you wanna show per page.
+  $cols = 9;
+  return $cols;
+}
