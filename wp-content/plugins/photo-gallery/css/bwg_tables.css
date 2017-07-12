@@ -56,6 +56,7 @@
 #TB_window,
 #TB_iframeContent {
   width: 800px !important;
+  height: 500px !important;
   max-height: 100% !important;
   max-width: 100% !important;
 }

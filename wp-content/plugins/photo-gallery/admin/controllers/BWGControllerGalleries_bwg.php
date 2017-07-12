@@ -1,23 +1,6 @@
 <?php
 
 class BWGControllerGalleries_bwg {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  public function __construct() {
-  }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function execute() {
     $task = ((isset($_POST['task'])) ? esc_html(stripslashes($_POST['task'])) : '');
     $id = ((isset($_POST['current_id'])) ? esc_html(stripslashes($_POST['current_id'])) : 0);
@@ -265,8 +248,8 @@ class BWGControllerGalleries_bwg {
   }
 
   function bwg_scaled_image($file_path, $max_width = 0, $max_height = 0, $crop = FALSE) {
-    global $wd_bwg_options;
     $file_path = htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES);
+    global $wd_bwg_options;
     if (!function_exists('getimagesize')) {
       error_log('Function not found: getimagesize');
       return FALSE;
@@ -434,12 +417,10 @@ class BWGControllerGalleries_bwg {
           $image_id = $new_image_id;
         }
         else {
+          // Don't update image and thumbnail URLs.
           $save = $wpdb->update($wpdb->prefix . 'bwg_image', array(
             'gallery_id' => $gal_id,
             'slug' => WDWLibrary::spider_replace4byte($alt),
-            'filename' => $filename,
-            'image_url' => $image_url,
-            'thumb_url' => $thumb_url,
             'description' => WDWLibrary::spider_replace4byte($description),
             'alt' => WDWLibrary::spider_replace4byte($alt),
             'date' => $date,
@@ -563,17 +544,22 @@ class BWGControllerGalleries_bwg {
     $autogallery_image_number = (isset($_POST['autogallery_image_number']) ? (int) $_POST['autogallery_image_number'] : 12);
     $published = (isset($_POST['published']) ? (int) $_POST['published'] : 1);
     if ($id != 0) {
-      $save = $wpdb->update($wpdb->prefix . 'bwg_gallery', array(
+      $data = array(
         'name' => $name,
         'slug' => $slug,
         'description' => $description,
-        'preview_image' => $preview_image,
         'random_preview_image' => $random_preview_image,
         'gallery_type' => $gallery_type,
         'gallery_source' => $gallery_source,
         'autogallery_image_number' => $autogallery_image_number,
         'update_flag' => $update_flag,
-        'published' => $published), array('id' => $id));
+        'published' => $published
+      );
+      // To prevent saving preview image wrong URL after moving the image.
+      if ( file_exists(ABSPATH . $WD_BWG_UPLOAD_DIR . $preview_image) ) {
+        $data['preview_image'] = $preview_image;
+      }
+      $save = $wpdb->update($wpdb->prefix . 'bwg_gallery', $data, array('id' => $id));
       /* Update data in corresponding posts.*/
       $query2 = "SELECT ID, post_content FROM " . $wpdb->posts . " WHERE post_type = 'bwg_gallery'";
       $posts = $wpdb->get_results($query2, OBJECT);
@@ -939,13 +925,4 @@ class BWGControllerGalleries_bwg {
 		  echo WDWLibrary::message(__('Items successfully rotated.', 'bwg_back'), 'wd_updated');
 	  }
   }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
 }

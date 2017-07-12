@@ -107,6 +107,7 @@ class FilemanagerController {
     $original_file_path = $cur_dir_path . '/.original/' . $file_name;
 
     $msg = '';
+    global $wpdb;
 
     if (file_exists($file_path) == false) {
       $msg = __("File doesn't exist.", 'bwg');
@@ -115,14 +116,35 @@ class FilemanagerController {
       if (rename($file_path, $cur_dir_path . '/' . sanitize_file_name($file_new_name)) == false) {
         $msg = __("Can't rename the file.", 'bwg');
       }
+      else {
+        $wpdb->query('UPDATE ' . $wpdb->prefix . 'bwg_image SET
+          image_url = INSERT(image_url, LOCATE("' . $input_dir . '/' . $file_name . '", image_url), CHAR_LENGTH("' . $input_dir . '/' . $file_name . '"), "' . $input_dir . '/' . $file_new_name . '"),
+          thumb_url = INSERT(thumb_url, LOCATE("' . $input_dir . '/' . $file_name . '", thumb_url), CHAR_LENGTH("' . $input_dir . '/' . $file_name . '"), "' . $input_dir . '/' . $file_new_name . '")');
+        $wpdb->query('UPDATE ' . $wpdb->prefix . 'bwg_gallery SET
+          preview_image = INSERT(preview_image, LOCATE("' . $input_dir . '/' . $file_name . '", preview_image), CHAR_LENGTH("' . $input_dir . '/' . $file_name . '"), "' . $input_dir . '/' . $file_new_name . '")');
+      }
     }
     elseif ((strrpos($file_name, '.') !== false)) {
       $file_extension = substr($file_name, strrpos($file_name, '.') + 1);
       if (rename($file_path, $cur_dir_path . '/' . $file_new_name . '.' . $file_extension) == false) {
         $msg = __("Can't rename the file.", 'bwg');
       }
-      rename($thumb_file_path, $cur_dir_path . '/thumb/' . $file_new_name . '.' . $file_extension);
-      rename($original_file_path, $cur_dir_path . '/.original/' . $file_new_name . '.' . $file_extension);
+      else {
+        $wpdb->update($wpdb->prefix . 'bwg_image', array(
+          'filename' => $file_new_name,
+          'image_url' => $input_dir . '/' . $file_new_name . '.' . $file_extension,
+          'thumb_url' => $input_dir . '/thumb/' . $file_new_name . '.' . $file_extension,
+          ), array(
+            'thumb_url' =>  $input_dir . '/thumb/' . $file_name,
+        ));
+        $wpdb->update($wpdb->prefix . 'bwg_gallery', array(
+          'preview_image' => $input_dir . '/thumb/' . $file_new_name . '.' . $file_extension,
+          ), array(
+            'preview_image' =>  $input_dir . '/thumb/' . $file_name));
+
+        rename($thumb_file_path, $cur_dir_path . '/thumb/' . $file_new_name . '.' . $file_extension);
+        rename($original_file_path, $cur_dir_path . '/.original/' . $file_new_name . '.' . $file_extension);
+      }
     }
     else {
       $msg = __("Can't rename the file.", 'bwg');
@@ -165,7 +187,7 @@ class FilemanagerController {
         $msg = __("Some of the files couldn't be removed.", 'bwg');
       }
       else {
-        $this->remove_file_dir($file_path);
+        $this->remove_file_dir($file_path, $input_dir, $file_name);
         if (file_exists($thumb_file_path)) {
           $this->remove_file_dir($thumb_file_path);
         }
@@ -198,9 +220,11 @@ class FilemanagerController {
     $input_dir = $this->esc_dir($input_dir);
 
     $msg = '';
+    $flag = TRUE;
 
     $file_names = explode('**#**', (isset($_REQUEST['clipboard_files']) ? stripslashes($_REQUEST['clipboard_files']) : ''));
     $src_dir = (isset($_REQUEST['clipboard_src']) ? stripslashes($_REQUEST['clipboard_src']) : '');
+    $relative_source_dir = $src_dir;
     $src_dir = $src_dir == '' ? $this->uploads_dir : $this->uploads_dir . '/' . $src_dir;
     $src_dir = htmlspecialchars_decode($src_dir, ENT_COMPAT | ENT_QUOTES);
     $src_dir = $this->esc_dir($src_dir);
@@ -256,30 +280,56 @@ class FilemanagerController {
         }
         break;
       case 'cut':
-        if ($src_dir != $dest_dir) {
-          foreach ($file_names as $file_name) {
+        if ( $src_dir != $dest_dir ) {
+          foreach ( $file_names as $file_name ) {
             $file_name = htmlspecialchars_decode($file_name, ENT_COMPAT | ENT_QUOTES);
             $file_name = str_replace('../', '', $file_name);
             $src = $src_dir . '/' . $file_name;
             $dest = $dest_dir . '/' . $file_name;
-            if (!is_dir($src_dir . '/' . $file_name)) {
-              $thumb_src = $src_dir . '/thumb/' . $file_name;
-              $thumb_dest = $dest_dir . '/thumb/' . $file_name;
-              if (!is_dir($dest_dir . '/thumb')) {
-                mkdir($dest_dir . '/thumb', 0777);
-              }
-              $original_src = $src_dir . '/.original/' . $file_name;
-              $original_dest = $dest_dir . '/.original/' . $file_name;
-              if (!is_dir($dest_dir . '/.original')) {
-                mkdir($dest_dir . '/.original', 0777);
-              }
+            if ( (file_exists($src) == FALSE) || (file_exists($dest) == TRUE) ) {
+              $flag = FALSE;
             }
-            if ((file_exists($src) == false) || (file_exists($dest) == true) || (!rename($src, $dest))) {
+            else {
+              $flag = rename($src, $dest);
+            }
+            if ( !$flag ) {
               $msg = __("Failed to move some of the files.", 'bwg');
             }
-            if (!is_dir($src_dir . '/' . $file_name)) {
-              rename($thumb_src, $thumb_dest);
-              rename($original_src, $original_dest);
+            else {
+              global $wpdb;
+              if ( is_dir($dest_dir . '/' . $file_name) ) {
+                $wpdb->query('UPDATE ' . $wpdb->prefix . 'bwg_image SET
+                  image_url = INSERT(image_url, LOCATE("' . str_replace($this->uploads_dir . '/', '', $src) . '", image_url), CHAR_LENGTH("' . str_replace($this->uploads_dir . '/', '', $src) . '"), "' . str_replace(str_replace($input_dir, '', $dest_dir), '', $dest) . '"),
+                  thumb_url = INSERT(thumb_url, LOCATE("' . str_replace($this->uploads_dir . '/', '', $src) . '", thumb_url), CHAR_LENGTH("' . str_replace($this->uploads_dir . '/', '', $src) . '"), "' . str_replace(str_replace($input_dir, '', $dest_dir), '', $dest) . '")');
+                $wpdb->query('UPDATE ' . $wpdb->prefix . 'bwg_gallery SET
+                  preview_image = INSERT(preview_image, LOCATE("' . str_replace($this->uploads_dir . '/', '', $src) . '", preview_image), CHAR_LENGTH("' . str_replace($this->uploads_dir . '/', '', $src) . '"), "' . str_replace(str_replace($input_dir, '', $dest_dir), '', $dest) . '")');
+              }
+              else {
+                $thumb_src = $src_dir . '/thumb/' . $file_name;
+                $thumb_dest = $dest_dir . '/thumb/' . $file_name;
+                if ( !is_dir($dest_dir . '/thumb') ) {
+                  mkdir($dest_dir . '/thumb', 0777);
+                }
+                $original_src = $src_dir . '/.original/' . $file_name;
+                $original_dest = $dest_dir . '/.original/' . $file_name;
+                if ( !is_dir($dest_dir . '/.original') ) {
+                  mkdir($dest_dir . '/.original', 0777);
+                }
+                rename($thumb_src, $thumb_dest);
+                rename($original_src, $original_dest);
+                $wpdb->update($wpdb->prefix . 'bwg_image', array(
+                  'filename' => $file_name,
+                  'image_url' => str_replace(str_replace($input_dir, '', $dest_dir), '', $dest),
+                  'thumb_url' => $input_dir . '/thumb/' . $file_name,
+                ), array(
+                  'thumb_url' => $relative_source_dir . '/thumb/' . $file_name,
+                ));
+                $wpdb->update($wpdb->prefix . 'bwg_gallery', array(
+                  'preview_image' => $input_dir . '/thumb/' . $file_name,
+                ), array(
+                  'preview_image' => $relative_source_dir . '/thumb/' . $file_name,
+                ));
+              }
             }
           }
         }
@@ -322,20 +372,28 @@ class FilemanagerController {
     exit;
   }
 
-  private function remove_file_dir($del_file_dir) {
+  private function remove_file_dir($del_file_dir, $input_dir = FALSE, $file_name = FALSE) {
     $del_file_dir = $this->esc_dir($del_file_dir);
 
     if (is_dir($del_file_dir) == true) {
       $files_to_remove = scandir($del_file_dir);
       foreach ($files_to_remove as $file) {
         if ($file != '.' and $file != '..') {
-          $this->remove_file_dir($del_file_dir . '/' . $file);
+          $this->remove_file_dir($del_file_dir . '/' . $file, $input_dir . '/' . $file_name, $file);
         }
       }
       rmdir($del_file_dir);
     }
     else {
       unlink($del_file_dir);
+      if ( $input_dir !== FALSE && $file_name !== FALSE ) {
+        global $wpdb;
+        $wpdb->delete($wpdb->prefix . 'bwg_image', array(
+         'thumb_url' => $input_dir . '/thumb/' . $file_name ));
+        $wpdb->update($wpdb->prefix . 'bwg_gallery', array(
+          'preview_image' => '',
+        ), array( 'preview_image' => $input_dir . '/thumb/' . $file_name ));
+      }
     }
   }
 

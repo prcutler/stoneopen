@@ -79,9 +79,6 @@ class BWGViewBWGShortcode {
       <head>
         <title><?php _e("Photo Gallery", 'bwg_back'); ?></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script language="javascript" type="text/javascript" src="<?php echo site_url(); ?>/wp-includes/js/tinymce/tiny_mce_popup.js"></script>
-        <script language="javascript" type="text/javascript" src="<?php echo site_url(); ?>/wp-includes/js/tinymce/utils/mctabs.js"></script>
-        <script language="javascript" type="text/javascript" src="<?php echo site_url(); ?>/wp-includes/js/tinymce/utils/form_utils.js"></script>
       <?php
       wp_print_scripts('jquery');
       bwg_register_admin_scripts();
@@ -102,10 +99,60 @@ class BWGViewBWGShortcode {
         if (!$from_menu) {
           wp_print_styles('forms');
         ?>
+        <style>
+        #WD-PhotoGallery .ui-widget-content a {
+          margin-top: 3px;
+          display: inline-block;
+          line-height: 22px;
+          height: 24px;
+        }
+        #WD-PhotoGallery #bwg_change_gallery_type {
+          padding-top: 13px;
+        }
+		#WD-PhotoGallery .mceActionPanel {
+			margin-top: 10px;
+			padding-top: 10px;
+			border-top: 1px solid;
+			border-color: #919B9C ;
+		}
+        #WD-PhotoGallery .mceActionPanel #bwg_pro_version_link,
+        #WD-PhotoGallery .mceActionPanel #insert {
+          float: right;
+          outline:none;
+          display: inline-block;
+          text-decoration: none;
+          font-size: 13px;
+          line-height: 26px;
+          height: 28px;
+          margin: 0 10px 0 0;
+          padding: 0 10px 1px;
+          cursor: pointer;
+          border-width: 1px;
+          border-style: solid;
+          -webkit-appearance: none;
+          -webkit-border-radius: 3px;
+          -webkit-box-sizing: border-box;
+          -webkit-box-shadow: 0 1px 0 #ccc;
+          box-shadow: 0 1px 0 #ccc;
+          border-radius: 3px;
+          white-space: nowrap;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box;
+          background: #0085ba;
+          border-color: #0073aa #006799 #006799;
+          -webkit-box-shadow: 0 1px 0 #006799;
+          box-shadow: 0 1px 0 #006799;
+          color: #fff;
+          text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
+        }
+        #WD-PhotoGallery .mceActionPanel #bwg_pro_version_link {
+		  float: left;
+        }
+      </style>
         <base target="_self">
       </head>
-      <body id="link" onLoad="tinyMCEPopup.executeOnLoad('init();');document.body.style.display='';" dir="ltr" class="forceColors" >
-        <?php if (isset($_POST['tagtext'])) { echo '<script>tinyMCEPopup.close();</script></body></html>'; die(); } ?>
+      <body id="WD-PhotoGallery">
+        <?php if (isset($_POST['tagtext'])) { echo '<script>top.tinyMCE.activeEditor.windowManager.close(window);</script></body></html>'; die(); } ?>
         <form method="post" action="#" id="bwg_shortcode_form">
           <?php wp_nonce_field( 'BWGShortcode', 'bwg_nonce' ); ?>
           <div class="panel_wrapper">
@@ -156,7 +203,7 @@ class BWGViewBWGShortcode {
                 <span title="<?php _e("This view is available only in Paid version.", 'bwg_back'); ?><a class='wd-btn wd-btn-primary-blue wd-not-image' href='http://wpdemo.web-dorado.com/blog-style-view/' target='_blank'>Demo View</a>" class="gallery_type">
                   <div class="gallery_type_div"><input disabled="disabled" type="radio" class="gallery_type_radio" id="blog_style" name="gallery_type" value="blog_style" /><label class="spider_free_version_label gallery_type_label" for="blog_style"><?php _e("Blog Style", 'bwg_back'); ?></label></div>
                   <label><img style="opacity:0.5; filter: Alpha(opacity=50);" disabled="disabled" src="<?php echo WD_BWG_URL . '/images/blog_style.jpg'; ?>" /></label>
-                </span>			
+                </span>
                 <span title="<?php _e("This view is available only in Paid version.", 'bwg_back'); ?><a class='wd-btn wd-btn-primary-blue wd-not-image' href='http://wpdemo.web-dorado.com/gallery-carousel/' target='_blank'>Demo View</a>" class="gallery_type">
                   <div class="gallery_type_div"><input disabled="disabled" type="radio" class="gallery_type_radio" id="carousel" name="gallery_type" value="carousel" /><label class="spider_free_version_label gallery_type_label" for="carousel"><?php _e("Carousel", 'bwg_back'); ?></label></div>
                   <div><label for="carousel"><img style="opacity:0.5; filter: Alpha(opacity=50);" disabled="disabled" src="<?php echo WD_BWG_URL . '/images/Carousel.png'; ?>" /></label></div>
@@ -188,7 +235,7 @@ class BWGViewBWGShortcode {
                   <a id="bwg_advertisement" class="wd-btn wd-btn-primary wd-not-image">
                   <div class="bwg_tab_label">
                     <?php _e('Advertisement', 'bwg_back'); ?>
-              
+
                   </div>
                   </a>
                 </div>
@@ -354,7 +401,7 @@ class BWGViewBWGShortcode {
                       <tr id="tr_slideshow_width_height">
                         <td title="<?php _e("Maximum values for slideshow width and height.", 'bwg_back'); ?>" class="spider_label"><label for="slideshow_width"><?php _e("Slideshow dimensions:", 'bwg_back'); ?> </label></td>
                         <td>
-                          <input type="text" name="slideshow_width" id="slideshow_width" value="<?php echo $wd_bwg_options->slideshow_width; ?>" class="spider_int_input" /> x 
+                          <input type="text" name="slideshow_width" id="slideshow_width" value="<?php echo $wd_bwg_options->slideshow_width; ?>" class="spider_int_input" /> x
                           <input type="text" name="slideshow_height" id="slideshow_height" value="<?php echo $wd_bwg_options->slideshow_height; ?>" class="spider_int_input" /> px
                         </td>
                       </tr>
@@ -394,8 +441,8 @@ class BWGViewBWGShortcode {
                                                                                                               jQuery('#thumb_width').hide();
                                                                                                               jQuery('#thumb_height').show();
                                                                                                               jQuery('#thumb_width_height_separator').hide();" <?php echo ($wd_bwg_options->mosaic == 'horizontal') ? 'checked' : ''; ?> /><label for="mosaic_hor"><?php _e("Horizontal", 'bwg_back'); ?></label>
-                        
-                      
+
+
                         </td>
                       </tr>
                       <tr id="tr_resizable_mosaic">
@@ -439,7 +486,7 @@ class BWGViewBWGShortcode {
                       <tr id="tr_load_more_image_count">
                         <td class="spider_label"><label for="load_more_image_count"><?php _e("Images per load:", 'bwg_back'); ?> </label></td>
                         <td><input type="text" name="load_more_image_count" id="load_more_image_count" value="<?php echo $wd_bwg_options->images_per_page; ?>" class="spider_int_input" /></td>
-                      </tr> 
+                      </tr>
                       <tr id="tr_thumb_width_height">
                         <td title="<?php _e('Maximum values for thumbnail dimension.', 'bwg_back'); ?>" class="spider_label"><label id="thumb_width_height_label" for="thumb_width"><?php _e("Image Thumbnail dimensions:", 'bwg_back'); ?> </label></td>
                         <td>
@@ -468,7 +515,7 @@ class BWGViewBWGShortcode {
                       <tr id="tr_compuct_album_thumb_width_height">
                         <td title="<?php _e("Maximum values for album thumb width and height.", 'bwg_back'); ?>" class="spider_label"><label for="compuct_album_thumb_width"><?php _e("Album Thumbnail dimensions:", 'bwg_back'); ?> </label></td>
                         <td>
-                          <input type="text" name="compuct_album_thumb_width" id="compuct_album_thumb_width" value="<?php echo $wd_bwg_options->album_thumb_width; ?>" class="spider_int_input" /> x 
+                          <input type="text" name="compuct_album_thumb_width" id="compuct_album_thumb_width" value="<?php echo $wd_bwg_options->album_thumb_width; ?>" class="spider_int_input" /> x
                           <input type="text" name="compuct_album_thumb_height" id="compuct_album_thumb_height" value="<?php echo $wd_bwg_options->album_thumb_height; ?>" class="spider_int_input" /> px
                         </td>
                       </tr>
@@ -493,8 +540,8 @@ class BWGViewBWGShortcode {
                                                                                                               jQuery('#compuct_album_image_thumb_width').hide();
                                                                                                               jQuery('#compuct_album_image_thumb_height').show();
                                                                                                               jQuery('#compuct_album_image_thumb_dimensions_x').hide();" <?php echo ($wd_bwg_options->mosaic == 'horizontal') ? 'checked' : ''; ?> /><label for="compuct_album_mosaic_hor"><?php _e("Horizontal", 'bwg_back'); ?></label>
-                    
-                      
+
+
                         </td>
                       </tr>
                       <tr id="tr_compuct_album_resizable_mosaic">
@@ -536,7 +583,7 @@ class BWGViewBWGShortcode {
                         <td class="spider_label"><label><?php _e("Enable pagination:", 'bwg_back'); ?> </label></td>
                         <td>
                           <input type="radio" name="compuct_album_enable_page" class="hide_load_count" id="compuct_album_page_yes" value="1" <?php echo ($wd_bwg_options->album_enable_page == '1') ? 'checked' : ''; ?> onchange="bwg_loadmore()"/><label for="compuct_album_page_yes"><?php _e('Yes', 'bwg_back'); ?></label>
-                          <input type="radio" name="compuct_album_enable_page"  class="hide_load_count"  id="compuct_album_page_no" value="0" <?php echo ($wd_bwg_options->album_enable_page == '0') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="compuct_album_page_no"><?php _e('No', 'bwg_back'); ?></label>  
+                          <input type="radio" name="compuct_album_enable_page"  class="hide_load_count"  id="compuct_album_page_no" value="0" <?php echo ($wd_bwg_options->album_enable_page == '0') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="compuct_album_page_no"><?php _e('No', 'bwg_back'); ?></label>
                           <input type="radio" name="compuct_album_enable_page" id="compuct_album_page_loadmore" value="2" <?php echo ($wd_bwg_options->album_enable_page == '2') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="compuct_album_page_loadmore"><?php _e("Load More", 'bwg_back'); ?></label>
                            <input type="radio" name="compuct_album_enable_page" id="compuct_album_page_scrol_load" value="3" <?php echo ($wd_bwg_options->album_enable_page == '3') ? 'checked' : ''; ?> onchange="bwg_loadmore()" /><label for="compuct_album_page_scrol_load"><?php _e("Scroll Load", 'bwg_back'); ?></label>
                         </td>
@@ -569,7 +616,7 @@ class BWGViewBWGShortcode {
                       <tr id="tr_extended_album_thumb_width_height">
                         <td title="<?php _e("Maximum values for album thumb width and height.", 'bwg_back'); ?>" class="spider_label"><label for="extended_album_thumb_width"><?php _e("Album thumbnail dimensions:", 'bwg_back'); ?> </label></td>
                         <td>
-                          <input type="text" name="extended_album_thumb_width" id="extended_album_thumb_width" value="<?php echo $wd_bwg_options->album_thumb_width; ?>" class="spider_int_input" /> x 
+                          <input type="text" name="extended_album_thumb_width" id="extended_album_thumb_width" value="<?php echo $wd_bwg_options->album_thumb_width; ?>" class="spider_int_input" /> x
                           <input type="text" name="extended_album_thumb_height" id="extended_album_thumb_height" value="<?php echo $wd_bwg_options->album_thumb_height; ?>" class="spider_int_input" /> px
                         </td>
                       </tr>
@@ -594,8 +641,8 @@ class BWGViewBWGShortcode {
                                                                                                               jQuery('#extended_album_image_thumb_width').hide();
                                                                                                               jQuery('#extended_album_image_thumb_height').show();
                                                                                                               jQuery('#extended_album_image_thumb_dimensions_x').hide();" <?php echo ($wd_bwg_options->mosaic == 'horizontal') ? 'checked' : ''; ?> /><label for="extended_album_mosaic_hor"><?php _e("Horizontal", 'bwg_back'); ?></label>
-                    
-                      
+
+
                         </td>
                       </tr>
                       <tr id="tr_extended_album_resizable_mosaic">
@@ -860,11 +907,11 @@ class BWGViewBWGShortcode {
                           <input type="radio" name="popup_fullscreen" id="popup_fullscreen_1" value="1" <?php if ($wd_bwg_options->popup_fullscreen) echo 'checked="checked"'; ?> onchange="bwg_popup_fullscreen()" /><label for="popup_fullscreen_1"><?php _e('Yes', 'bwg_back'); ?></label>
                           <input type="radio" name="popup_fullscreen" id="popup_fullscreen_0" value="0" <?php if (!$wd_bwg_options->popup_fullscreen) echo 'checked="checked"'; ?> onchange="bwg_popup_fullscreen()" /><label for="popup_fullscreen_0"><?php _e('No', 'bwg_back'); ?></label>
                         </td>
-                      </tr>	
+                      </tr>
                       <tr id="tr_popup_width_height">
                         <td title="<?php _e("Maximum values for lightbox width and height.", 'bwg_back'); ?>" class="spider_label"><label for="popup_width"><?php _e("Lightbox dimensions:", 'bwg_back'); ?> </label></td>
                         <td>
-                          <input type="text" name="popup_width" id="popup_width" value="<?php echo $wd_bwg_options->popup_width; ?>" class="spider_int_input" /> x 
+                          <input type="text" name="popup_width" id="popup_width" value="<?php echo $wd_bwg_options->popup_width; ?>" class="spider_int_input" /> x
                           <input type="text" name="popup_height" id="popup_height" value="<?php echo $wd_bwg_options->popup_height; ?>" class="spider_int_input" /> px
                         </td>
                       </tr>
@@ -1007,8 +1054,8 @@ class BWGViewBWGShortcode {
                           <input disabled="disabled" type="radio" name="popup_enable_tumblr" id="popup_tumblr_no" value="0" <?php echo ($wd_bwg_options->popup_enable_tumblr) ? '' : 'checked'; ?> /><label for="popup_tumblr_no"><?php _e('No', 'bwg_back'); ?></label>
                         </td>
                       </tr>
-                    </tbody>  
-                  </table>  
+                    </tbody>
+                  </table>
                 </div>
                 </div>
               </div>
@@ -1043,7 +1090,7 @@ class BWGViewBWGShortcode {
                   <tr id="tr_watermark_width_height">
                     <td title="<?php _e("Maximum values for watermark image width and height.", 'bwg_back'); ?>" class="spider_label"><label for="watermark_width"><?php _e("Advertisement dimensions:", 'bwg_back'); ?> </label></td>
                     <td>
-                      <input type="text" name="watermark_width" id="watermark_width" value="<?php echo $wd_bwg_options->watermark_width; ?>" class="spider_int_input" /> x 
+                      <input type="text" name="watermark_width" id="watermark_width" value="<?php echo $wd_bwg_options->watermark_width; ?>" class="spider_int_input" /> x
                       <input type="text" name="watermark_height" id="watermark_height" value="<?php echo $wd_bwg_options->watermark_height; ?>" class="spider_int_input" /> px
                     </td>
                   </tr>
@@ -1125,11 +1172,7 @@ class BWGViewBWGShortcode {
             </div>
           </div>
           <div class="mceActionPanel">
-            <div style="float:right;">
               <input type="button" id="insert" name="insert" value="<?php _e("Insert", 'bwg_back'); ?>" onClick="bwg_insert_shortcode('');" />
-              <input type="button" id="cancel" name="cancel" value="<?php _e("Cancel", 'bwg_back'); ?>" onClick="tinyMCEPopup.close();" />
-            </div>
-            <div style="float:left;">
               <a id="bwg_pro_version_link"  class="bwg_link_shortcode" target="_blank" href="http://wpdemo.web-dorado.com/thumbnails-view-2/"><?php _e("Please see Pro ", 'bwg_back'); ?><span id="bwg_pro_version"><?php _e("Thumbnail", 'bwg_back'); ?></span> <?php _e("View", 'bwg_back'); ?></a>
             </div>
           </div>
@@ -1174,6 +1217,7 @@ class BWGViewBWGShortcode {
           <input type="hidden" id="task" name="task" value="" />
         </form>
         <script type="text/javascript">
+          var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
           var shortcodes = [];
           var shortcode_id = 1;
           <?php
@@ -1189,7 +1233,7 @@ class BWGViewBWGShortcode {
           var bwg_insert = 1;
           bwg_update_shortcode();
           <?php if (!$from_menu) { ?>
-          var content = tinyMCE.activeEditor.selection.getContent();
+          var content = top.tinyMCE.activeEditor.selection.getContent();
           <?php } else { ?>
           var content = jQuery("#bwg_shortcode").val();
           <?php } ?>
@@ -1457,10 +1501,10 @@ class BWGViewBWGShortcode {
                   else if (short_code['compuct_album_enable_page'] == 3) {
                     jQuery("#compuct_album_page_scrol_load").attr('checked', 'checked');
                   }
-                  if (short_code['compuct_album_view_type'] == 'thumbnail') {				  
-                    jQuery("#compuct_album_view_type_1").attr('checked', 'checked');								  
+                  if (short_code['compuct_album_view_type'] == 'thumbnail') {
+                    jQuery("#compuct_album_view_type_1").attr('checked', 'checked');
                   }
-                  else if (short_code['compuct_album_view_type'] == 'masonry'){ 
+                  else if (short_code['compuct_album_view_type'] == 'masonry'){
                     jQuery("#compuct_album_view_type_0").attr('checked', 'checked');
                   }
                   else{
@@ -1498,7 +1542,7 @@ class BWGViewBWGShortcode {
                     jQuery("#show_album_name_0").attr('checked', 'checked');
                   }
                   break;
-       
+
                 }
                 case 'album_extended_preview': {
                   jQuery("select[id=album] option[value='" + short_code['album_id'] + "']").attr('selected', 'selected');
@@ -1555,7 +1599,7 @@ class BWGViewBWGShortcode {
                   else if (short_code['extended_album_enable_page'] == 3){
                     jQuery("#extended_album_page_scrol_load").attr('checked', 'checked');
                   }
-                  if (short_code['extended_album_view_type'] == 'thumbnail') {  
+                  if (short_code['extended_album_view_type'] == 'thumbnail') {
                     jQuery("#extended_album_view_type_1").attr('checked', 'checked');
                   }
                   else if(short_code['extended_album_view_type'] == 'masonry'){
@@ -1617,7 +1661,7 @@ class BWGViewBWGShortcode {
                 }
                 if(short_code['popup_fullscreen'] != undefined) {
                   if (short_code['popup_fullscreen'] == 1) {
-                    jQuery("#popup_fullscreen_1").attr('checked', 'checked'); 
+                    jQuery("#popup_fullscreen_1").attr('checked', 'checked');
                     jQuery("#tr_popup_width_height").css('display', 'none');
                   }
                   else {
@@ -1627,7 +1671,7 @@ class BWGViewBWGShortcode {
                 }
                 if(short_code['popup_autoplay'] != undefined) {
                   if (short_code['popup_autoplay'] == 1) {
-                    jQuery("#popup_autoplay_1").attr('checked', 'checked'); 
+                    jQuery("#popup_autoplay_1").attr('checked', 'checked');
                   }
                   else {
                     jQuery("#popup_autoplay_0").attr('checked', 'checked');
@@ -1641,9 +1685,9 @@ class BWGViewBWGShortcode {
                   }
                   else {
                     jQuery("#popup_filmstrip_no").attr('checked', 'checked');
-                  }      
+                  }
                 }
-                if (short_code['popup_enable_ctrl_btn'] != undefined){                
+                if (short_code['popup_enable_ctrl_btn'] != undefined){
                   if (short_code['popup_enable_ctrl_btn'] == 1) {
                     jQuery("#popup_ctrl_btn_yes").attr('checked', 'checked');
                     bwg_enable_disable('', 'tbody_popup_ctrl_btn', 'popup_ctrl_btn_yes');
@@ -1737,7 +1781,7 @@ class BWGViewBWGShortcode {
                   }
                 }
                 if (!short_code['thumb_click_action'] || short_code['thumb_click_action'] == 'undefined' || short_code['thumb_click_action'] == 'do_nothing') {
-                  jQuery("#thumb_click_action_3").attr('checked', 'checked'); 
+                  jQuery("#thumb_click_action_3").attr('checked', 'checked');
                 }
                 else if (short_code['thumb_click_action'] == 'redirect_to_url') {
                   jQuery("#thumb_click_action_2").attr('checked', 'checked');
@@ -1746,13 +1790,13 @@ class BWGViewBWGShortcode {
                   jQuery("#thumb_click_action_1").attr('checked', 'checked');
                 }
                 if (short_code['thumb_link_target'] == 1 || !short_code['thumb_link_target'] || short_code['thumb_link_target'] == 'undefined') {
-                  jQuery("#thumb_link_target_yes").attr('checked', 'checked'); 
+                  jQuery("#thumb_link_target_yes").attr('checked', 'checked');
                 }
                 else {
                   jQuery("#thumb_link_target_no").attr('checked', 'checked');
                 }
                 bwg_thumb_click_action();
-              
+
               // Watermark.
               if (short_code['watermark_type'] == 'text') {
                 jQuery("#watermark_type_text").attr('checked', 'checked');
@@ -1792,7 +1836,7 @@ class BWGViewBWGShortcode {
           }
           // in_array
           function in_array(what, where) {
-           var t = false; 
+           var t = false;
             for (var i in where) {
               if (what == where[i]) {
                 t = true;
@@ -1809,7 +1853,7 @@ class BWGViewBWGShortcode {
           // Get shortcodes attributes.
           function get_params(module_name) {
             <?php if (!$from_menu) { ?>
-            var selected_text = tinyMCE.activeEditor.selection.getContent();
+            var selected_text = top.tinyMCE.activeEditor.selection.getContent();
             <?php } else { ?>
             var selected_text = jQuery("#bwg_shortcode").val();
             <?php } ?>
@@ -1890,7 +1934,7 @@ class BWGViewBWGShortcode {
                 tagtext += ' slideshow_filmstrip_height="' + jQuery("#slideshow_filmstrip_height").val() + '"';
                 tagtext += ' slideshow_enable_title="' + jQuery("input[name=slideshow_enable_title]:checked").val() + '"';
                 tagtext += ' slideshow_title_position="' + jQuery("input[name=slideshow_title_position]:checked").val() + '"';
-                tagtext += ' slideshow_title_full_width="' + jQuery("input[name=slideshow_title_full_width]:checked").val() + '"';  				
+                tagtext += ' slideshow_title_full_width="' + jQuery("input[name=slideshow_title_full_width]:checked").val() + '"';
                 tagtext += ' slideshow_enable_description="' + jQuery("input[name=slideshow_enable_description]:checked").val() + '"';
                 tagtext += ' slideshow_description_position="' + jQuery("input[name=slideshow_description_position]:checked").val() + '"';
                 tagtext += ' enable_slideshow_music="' + jQuery("input[name=enable_slideshow_music]:checked").val() + '"';
@@ -1944,7 +1988,7 @@ class BWGViewBWGShortcode {
                 tagtext += ' show_tag_box="' + jQuery("input[name=show_tag_box]:checked").val() + '"';
 								title = ' gal_title="' + jQuery.trim(jQuery('#album option:selected').text().replace("'", "").replace('"', '')) + '"';
                 tagtext += ' show_gallery_description="' + jQuery("input[name=show_gallery_description]:checked").val() + '"';
-                tagtext += ' show_album_name="' + jQuery("input[name=show_album_name]:checked").val() + '"';  
+                tagtext += ' show_album_name="' + jQuery("input[name=show_album_name]:checked").val() + '"';
                 break;
 
               }
@@ -1975,7 +2019,7 @@ class BWGViewBWGShortcode {
                 tagtext += ' show_tag_box="' + jQuery("input[name=show_tag_box]:checked").val() + '"';
 								title = ' gal_title="' + jQuery.trim(jQuery('#album option:selected').text().replace("'", "").replace('"', '')) + '"';
                 tagtext += ' show_gallery_description="' + jQuery("input[name=show_gallery_description]:checked").val() + '"';
-                tagtext += ' show_album_name="' + jQuery("input[name=show_album_name]:checked").val() + '"';  
+                tagtext += ' show_album_name="' + jQuery("input[name=show_album_name]:checked").val() + '"';
                 break;
 
               }
@@ -1984,7 +2028,7 @@ class BWGViewBWGShortcode {
               tagtext += ' thumb_click_action="' + jQuery("input[name=thumb_click_action]:checked").val() + '"';
               tagtext += ' thumb_link_target="' + jQuery("input[name=thumb_link_target]:checked").val() + '"';
               tagtext += ' popup_fullscreen="' + jQuery("input[name=popup_fullscreen]:checked").val() + '"';
-              tagtext += ' popup_autoplay="' + jQuery("input[name=popup_autoplay]:checked").val() + '"';			  
+              tagtext += ' popup_autoplay="' + jQuery("input[name=popup_autoplay]:checked").val() + '"';
               tagtext += ' popup_width="' + jQuery("#popup_width").val() + '"';
               tagtext += ' popup_height="' + jQuery("#popup_height").val() + '"';
               tagtext += ' popup_effect="' + jQuery("#popup_effect").val() + '"';
@@ -2006,7 +2050,7 @@ class BWGViewBWGShortcode {
               tagtext += ' popup_enable_tumblr="' + jQuery("input[name=popup_enable_tumblr]:checked").val() + '"';
               tagtext += ' show_tag_box="' + jQuery("input[name=show_tag_box]:checked").val() + '"';
               tagtext += ' popup_effect_duration="' + jQuery("#popup_effect_duration").val() + '"';
-            
+
             // Watermark parameters.
             tagtext += ' watermark_type="' + jQuery("input[name=watermark_type]:checked").val() + '"';
             tagtext += ' watermark_link="' + (jQuery("#watermark_link").val()) + '"';
@@ -2037,16 +2081,16 @@ class BWGViewBWGShortcode {
               jQuery("#title").val(title);
               jQuery("#bwg_insert").val((content && !bwg_insert) ? 0 : 1);
               jQuery("#bwg_shortcode_form").submit();
-            if (window.tinymce.isIE && content) {
+            if (top.tinymce.isIE && content) {
               // IE and Update.
-              var all_content = tinyMCE.activeEditor.getContent();
+              var all_content = top.tinyMCE.activeEditor.getContent();
               all_content = all_content.replace('<p></p><p>[Best_Wordpress_Gallery', '<p>[Best_Wordpress_Gallery');
-              tinyMCE.activeEditor.setContent(all_content.replace(content, '[Best_Wordpress_Gallery id="' + shortcode_id + '"' + title + ']'));
+              top.tinyMCE.activeEditor.setContent(all_content.replace(content, '[Best_Wordpress_Gallery id="' + shortcode_id + '"' + title + ']'));
             }
             else {
-              window.tinyMCE.execCommand('mceInsertContent', false, short_code);
+              top.tinyMCE.execCommand('mceInsertContent', false, short_code);
             }
-            tinyMCEPopup.editor.execCommand('mceRepaint');
+            top.tinyMCE.execCommand('mceRepaint');
             <?php } else { ?>
               var post_data = {};
               var url = jQuery("#bwg_insert_shortcode").attr('action');

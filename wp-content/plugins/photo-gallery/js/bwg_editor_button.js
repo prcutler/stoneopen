@@ -31,7 +31,8 @@ jQuery(window).load(function(){
             file:bwg_admin_ajax,
             width:width_window + ed.getLang('bwg_mce.delta_width', 0),
             height:height_window + ed.getLang('bwg_mce.delta_height', 0),
-            inline:1
+            inline:1,
+			title:'Photo Gallery'
           }, {
             plugin_url:url
           });

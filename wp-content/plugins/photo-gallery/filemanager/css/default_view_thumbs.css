@@ -56,7 +56,7 @@
 #importer_body_container {
   display: inline-block;
   margin: 0 auto;
-  text-align: center;
+  text-align: left;
 }
 
 #explorer_body_container,
