@@ -4,7 +4,7 @@
  * Plugin Name: Photo Gallery
  * Plugin URI: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
- * Version: 1.3.47
+ * Version: 1.3.52
  * Author: Photo Gallery Team
  * Author URI: https://web-dorado.com/
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
@@ -536,13 +536,16 @@ add_action('wp_ajax_BWGShortcode', 'bwg_ajax');
 add_filter('mce_external_plugins', 'bwg_register');
 add_filter('mce_buttons', 'bwg_add_button', 0);
 
-// Photo Gallery Widget.
-if (class_exists('WP_Widget')) {
+function bwg_register_widgets() {
   require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
   require_once(WD_BWG_DIR . '/admin/controllers/BWGControllerWidget.php');
-  add_action('widgets_init', create_function('', 'return register_widget("BWGControllerWidget");'));
+  register_widget("BWGControllerWidget");
   require_once(WD_BWG_DIR . '/admin/controllers/BWGControllerWidgetSlideshow.php');
-  add_action('widgets_init', create_function('', 'return register_widget("BWGControllerWidgetSlideshow");'));
+  register_widget("BWGControllerWidgetSlideshow");
+}
+// Photo Gallery Widget.
+if (class_exists('WP_Widget')) {
+  add_action('widgets_init', 'bwg_register_widgets');
 }
 // Intro tour
 function bwg_pointer_init() {
@@ -1701,7 +1704,7 @@ function bwg_activate() {
     ));
   }
   $version = get_option('wd_bwg_version');
-  $new_version = '1.3.47';
+  $new_version = '1.3.52';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -1753,7 +1756,7 @@ wp_oembed_add_provider( '#https://instagr(\.am|am\.com)/p/.*#i', 'https://api.in
 
 function bwg_update_hook() {
   $version = get_option('wd_bwg_version');
-  $new_version = '1.3.47';
+  $new_version = '1.3.52';
   if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
     bwg_update($version);
@@ -2596,4 +2599,4 @@ function bwg_overview() {
     dorado_web_init($bwg_options);
   }
 }
-add_action('init', 'bwg_overview');
+add_action('init', 'bwg_overview', 9);

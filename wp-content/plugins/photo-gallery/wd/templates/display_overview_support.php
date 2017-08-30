@@ -3,7 +3,7 @@
         <?php echo sprintf( __("You may contact us by filling in this form or by email %s any time you need professional support or have any questions. You can also fill in the form to leave your comments or feedback.", $wd_options->prefix), "<span class='support_email'>(support@web-dorado.com)</span>") ;?>
     </p>
 	<div class="wd-overview-site-deatils">
-		<h2><?php _e( "Site Deatils", $wd_options->prefix ); ?></h2>
+		<h2><?php _e( "Site Details", $wd_options->prefix ); ?></h2>
 		<p>
 			<?php _e( "When contacting support, consider copying and pasting this information in your support request.", $wd_options->prefix ); ?>
 			<br>

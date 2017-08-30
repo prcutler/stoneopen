@@ -570,17 +570,19 @@ class UpdraftPlus_Admin {
 	private function ensure_sufficient_jquery_and_enqueue() {
 		global $updraftplus, $wp_version;
 		
-		$enqueue_version = @constant('WP_DEBUG') ? $updraftplus->version.'-'.time() : $updraftplus->version;
+		$enqueue_version = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? $updraftplus->version.'.'.time() : $updraftplus->version;
+		$min_or_not = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
 		
 		if (version_compare($wp_version, '3.3', '<')) {
 			// Require a newer jQuery (3.2.1 has 1.6.1, so we go for something not too much newer). We use .on() in a way that is incompatible with < 1.7
 			wp_deregister_script('jquery');
-			wp_register_script('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', false, '1.7.2', false);
+			$jquery_enqueue_version = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '1.7.2'.'.'.time() : '1.7.2';
+			wp_register_script('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery'.$min_or_not.'.js', false, $jquery_enqueue_version, false);
 			wp_enqueue_script('jquery');
 			// No plupload until 3.3
-			wp_enqueue_script('updraftplus-admin', UPDRAFTPLUS_URL.'/includes/updraft-admin.js', array('jquery', 'jquery-ui-dialog'), $enqueue_version, true);
+			wp_enqueue_script('updraftplus-admin', UPDRAFTPLUS_URL.'/includes/updraft-admin'.$min_or_not.'.js', array('jquery', 'jquery-ui-dialog'), $enqueue_version, true);
 		} else {
-			wp_enqueue_script('updraftplus-admin', UPDRAFTPLUS_URL.'/includes/updraft-admin.js', array('jquery', 'jquery-ui-dialog', 'plupload-all'), $enqueue_version);
+			wp_enqueue_script('updraftplus-admin', UPDRAFTPLUS_URL.'/includes/updraft-admin'.$min_or_not.'.js', array('jquery', 'jquery-ui-dialog', 'plupload-all'), $enqueue_version);
 		}
 		
 	}
@@ -589,24 +591,26 @@ class UpdraftPlus_Admin {
 	public function admin_enqueue_scripts() {
 
 		global $updraftplus, $wp_locale;
+		
+		$enqueue_version = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? $updraftplus->version.'.'.time() : $updraftplus->version;
+		$min_or_not = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
 
 		// Defeat other plugins/themes which dump their jQuery UI CSS onto our settings page
 		wp_deregister_style('jquery-ui');
-		wp_enqueue_style('jquery-ui', UPDRAFTPLUS_URL.'/includes/jquery-ui.custom.css', array(), '1.11.4');
-		
-		$our_version = @constant('SCRIPT_DEBUG') ? $updraftplus->version.'.'.time() : $updraftplus->version;
+		$jquery_ui_css_enqueue_version = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '1.11.4'.'.'.time() : '1.11.4';
+		wp_enqueue_style('jquery-ui', UPDRAFTPLUS_URL.'/includes/jquery-ui.custom'.$min_or_not.'.css', array(), $jquery_ui_css_enqueue_version);		
 	
-		wp_enqueue_style('updraft-admin-css', UPDRAFTPLUS_URL.'/css/admin.css', array(), $our_version);
+		wp_enqueue_style('updraft-admin-css', UPDRAFTPLUS_URL.'/css/admin'.$min_or_not.'.css', array(), $enqueue_version);
 // 		add_filter('style_loader_tag', array($this, 'style_loader_tag'), 10, 2);
 
 		$this->ensure_sufficient_jquery_and_enqueue();
-		
-		wp_enqueue_script('jquery-blockui', UPDRAFTPLUS_URL.'/includes/jquery.blockUI.js', array('jquery'), '2.70.0');
+		$jquery_blockui_enqueue_version = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '2.70.0'.'.'.time() : '2.70.0';
+		wp_enqueue_script('jquery-blockui', UPDRAFTPLUS_URL.'/includes/jquery.blockUI'.$min_or_not.'.js', array('jquery'), $jquery_blockui_enqueue_version);
 	
-		wp_enqueue_script('jquery-labelauty', UPDRAFTPLUS_URL.'/includes/labelauty/jquery-labelauty.js', array('jquery'), '20160622-ud');
-		wp_enqueue_style('jquery-labelauty', UPDRAFTPLUS_URL.'/includes/labelauty/jquery-labelauty.css', array(), '20150925');
-
-		wp_enqueue_script('jquery.serializeJSON', UPDRAFTPLUS_URL.'/includes/jquery.serializeJSON/jquery.serializejson.min.js', array('jquery'), '2.8.1');
+		wp_enqueue_script('jquery-labelauty', UPDRAFTPLUS_URL.'/includes/labelauty/jquery-labelauty'.$min_or_not.'.js', array('jquery'), $enqueue_version);
+		wp_enqueue_style('jquery-labelauty', UPDRAFTPLUS_URL.'/includes/labelauty/jquery-labelauty'.$min_or_not.'.css', array(), $enqueue_version);
+		$serialize_js_enqueue_version = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '2.8.1'.'.'.time() : '2.8.1';
+		wp_enqueue_script('jquery.serializeJSON', UPDRAFTPLUS_URL.'/includes/jquery.serializeJSON/jquery.serializejson'.$min_or_not.'.js', array('jquery'), $serialize_js_enqueue_version);
 
 		$this->enqueue_jstree();
 		
@@ -748,7 +752,7 @@ class UpdraftPlus_Admin {
 			'updraftplus_version' => $updraftplus->version
 		) );
 	}
-
+	
 	// Despite the name, this fires irrespective of what capabilities the user has (even none - so be careful)
 	public function core_upgrade_preamble() {
 		// They need to be able to perform backups, and to perform updates
@@ -1692,7 +1696,16 @@ class UpdraftPlus_Admin {
 		do_action($event, apply_filters('updraft_backupnow_options', $options, $request));
 	}
 	
-	public function fetch_log($backup_nonce, $log_pointer = 0) {
+	/**
+	 * Get the contents of a log file
+	 *
+	 * @param String  $backup_nonce	 - the backup id; or empty, for the most recently modified
+	 * @param Integer $log_pointer	 - the byte count to fetch from
+	 * @param String  $output_format - the format to return in; allowed as 'html' (which will escape HTML entities in what is returned) and 'raw'
+	 *
+	 * @return String
+	 */
+	public function fetch_log($backup_nonce = '', $log_pointer = 0, $output_format = 'html') {
 		global $updraftplus;
 
 		if (empty($backup_nonce)) {
@@ -1735,6 +1748,8 @@ class UpdraftPlus_Admin {
 		} else {
 			$log_content .= __('The log file could not be read.', 'updraftplus');
 		}
+		
+		if ('html' == $output_format) $log_content = htmlspecialchars($log_content);
 		
 		$ret_array = array(
 			'log' => $log_content,
@@ -4089,7 +4104,7 @@ ENDHERE;
 				}
 			}
 		} else {
-			$return_array = array('saved' => false, 'error_message' => sprintf(__('UpdraftPlus seems to have been updated to version (%s) different to the version running when this settings page was loaded. Please reload the settings page before trying to save settings.', 'updraftplus'), $updraftplus->version));
+			$return_array = array('saved' => false, 'error_message' => sprintf(__('UpdraftPlus seems to have been updated to version (%s), which is different to the version running when this settings page was loaded. Please reload the settings page before trying to save settings.', 'updraftplus'), $updraftplus->version));
 		}
 		
 		// Checking for various possible messages
@@ -4120,11 +4135,11 @@ ENDHERE;
 		
 		do_action('all_admin_notices');
 		
-		if (!$really_is_writable){ //Check if writable
+		if (!$really_is_writable) { //Check if writable
 			$this->show_admin_warning_unwritable();
 		}
 		
-		if ($return_array['saved']){ //
+		if ($return_array['saved']) { //
 			$this->show_admin_warning(__('Your settings have been saved.', 'updraftplus'), 'updated fade');
 		} else {
 			if (isset($return_array['error_message'])) {
@@ -4366,8 +4381,10 @@ ENDHERE;
 		if ($already_enqueued) return;
 		
 		$already_enqueued = true; 
+		$jstree_enqueue_version = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '3.3'.'.'.time() : '3.3';
+		$min_or_not = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
 		// Include jstree components
-		wp_enqueue_script('jstree', UPDRAFTPLUS_URL.'/includes/jstree/jstree.min.js', array('jquery'), '3.3');
-		wp_enqueue_style('jstree', UPDRAFTPLUS_URL.'/includes/jstree/themes/default/style.min.css', array(), '3.3'); 
+		wp_enqueue_script('jstree', UPDRAFTPLUS_URL.'/includes/jstree/jstree'.$min_or_not.'.js', array('jquery'), $jstree_enqueue_version);
+		wp_enqueue_style('jstree', UPDRAFTPLUS_URL.'/includes/jstree/themes/default/style'.$min_or_not.'.css', array(), $jstree_enqueue_version); 
 	}
 }

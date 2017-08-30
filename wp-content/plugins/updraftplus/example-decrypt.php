@@ -24,7 +24,7 @@ gunzip output.sql.gz
 
 function rijndael_decrypt_file($file, $key) {
 
-	require_once(dirname(__FILE__).'/includes/phpseclib/Crypt/Rijndael.php');
+	require_once(dirname(__FILE__).'/vendor/phpseclib/phpseclib/phpseclib/Crypt/Rijndael.php');
 
 	$rijndael = new Crypt_Rijndael();
 

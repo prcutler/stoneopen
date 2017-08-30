@@ -1501,4 +1501,13 @@ class WDWLibrary {
     }
     return $meta;
   }
+
+  /**
+   * Validate integer value.
+   *
+   * @param $value
+   */
+  public static function validate_integers(&$value) {
+    $value = (int)$value;
+  }
 }

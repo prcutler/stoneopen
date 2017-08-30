@@ -76,7 +76,18 @@
 				});
 				</script>
 			<?php
-			require ( $wd_options->wd_dir_templates . '/display_deactivation_popup.php' );
+
+					$deactivate_url =
+						add_query_arg(
+							array(
+								'action' => 'deactivate',
+								'plugin' => plugin_basename( $wd_options->plugin_main_file ),
+								'_wpnonce' => wp_create_nonce( 'deactivate-plugin_' . plugin_basename( $wd_options->plugin_main_file ) )
+							),
+							admin_url( 'plugins.php' )
+						);
+					
+					require ( $wd_options->wd_dir_templates . '/display_deactivation_popup.php' );
 		}
 
 
@@ -108,7 +119,7 @@
 						
 						$data["reason"] = isset($_POST[$wd_options->prefix . "_reasons"]) ? $_POST[$wd_options->prefix . "_reasons"] : "";
 						$data["site_url"] = site_url();
-						$data["plugin_slug"] = $wd_options->plugin_wordpress_slug;
+						$data["plugin_id"] = $wd_options->wd_plugin_id;
 						
 						$data["additional_details"] = isset($_POST[$wd_options->prefix . "_additional_details"]) ? $_POST[$wd_options->prefix . "_additional_details"] : "";
 						$admin_data = wp_get_current_user();
@@ -129,8 +140,8 @@
 							'cookies' => array()
 							)
 						);
-						
-						$response_body = isset( $response["body"] ) ? json_decode( $response["body"], true ) : null;
+
+						$response_body = (!is_wp_error($response) && isset( $response["body"] )) ? json_decode( $response["body"], true ) : null;
 						if( is_array( $response_body ) && $response_body["body"]["msg"] == "Access" )	{
 							 
 						}						

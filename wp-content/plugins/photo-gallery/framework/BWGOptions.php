@@ -13,8 +13,8 @@ class WD_BWG_Options {
   public $images_per_page = 30;
   public $thumb_width = 180;
   public $thumb_height = 90;
-  public $upload_thumb_width = 300;
-  public $upload_thumb_height = 300;
+  public $upload_thumb_width = 500;
+  public $upload_thumb_height = 500;
   public $image_enable_page = 1;
   public $image_title_show_hover = 'none';
   public $ecommerce_icon_show_hover = 'none';

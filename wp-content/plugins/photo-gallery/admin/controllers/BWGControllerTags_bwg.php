@@ -126,7 +126,7 @@ class BWGControllerTags_bwg {
     global $wpdb;
     $flag = FALSE; 
     $id = ((isset($_REQUEST['tag_id'])) ? esc_html(stripslashes($_REQUEST['tag_id'])) : '');
-    $query = "SELECT count FROM " . $wpdb->prefix . "term_taxonomy WHERE term_id=" . $id;
+    $query = $wpdb->prepare("SELECT count FROM " . $wpdb->prefix . "term_taxonomy WHERE term_id=%d", $id);
     $count = $wpdb->get_var($query);
     $name = ((isset($_REQUEST['tagname'])) ? esc_html(stripslashes($_REQUEST['tagname'])) : '');
     $name = $this->bwg_get_unique_name($name, $id);

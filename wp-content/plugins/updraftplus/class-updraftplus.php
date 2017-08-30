@@ -155,8 +155,6 @@ class UpdraftPlus {
 
 	public function ensure_phpseclib($classes = false, $class_paths = false) {
 
-		if (false === strpos(get_include_path(), UPDRAFTPLUS_DIR.'/includes/phpseclib')) set_include_path(UPDRAFTPLUS_DIR.'/includes/phpseclib'.PATH_SEPARATOR.get_include_path());
-
 		$this->no_deprecation_warnings_on_php7();
 
 		if ($classes) {
@@ -169,9 +167,11 @@ class UpdraftPlus {
 		}
 
 		if ($class_paths) {
+			$phpseclib_dir = UPDRAFTPLUS_DIR.'/vendor/phpseclib/phpseclib/phpseclib';
+			if (false === strpos(get_include_path(), $phpseclib_dir)) set_include_path(get_include_path().PATH_SEPARATOR.$phpseclib_dir);
 			if (is_string($class_paths)) $class_paths = array($class_paths);
 			foreach ($class_paths as $cp) {
-				require_once(UPDRAFTPLUS_DIR.'/includes/phpseclib/'.$cp.'.php');
+				require_once($phpseclib_dir.'/'.$cp.'.php');
 			}
 		}
 	}
@@ -4011,9 +4011,10 @@ class UpdraftPlus {
 		// De-register to defeat any plugins that may have registered incompatible versions (e.g. WooCommerce 2.5 beta1 still has the Select 2 3.5 series)
 		wp_deregister_script('select2');
 		wp_deregister_style('select2');
-		$select2_version = '4.0.3';
-		wp_enqueue_script('select2', UPDRAFTPLUS_URL."/includes/select2/select2.min.js", array('jquery'), $select2_version);
-		wp_enqueue_style('select2', UPDRAFTPLUS_URL."/includes/select2/select2.min.css", array(), $select2_version);
+		$select2_version = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '4.0.3'.'.'.time() : '4.0.3';
+		$min_or_not = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
+		wp_enqueue_script('select2', UPDRAFTPLUS_URL."/includes/select2/select2".$min_or_not.".js", array('jquery'), $select2_version);
+		wp_enqueue_style('select2', UPDRAFTPLUS_URL."/includes/select2/select2".$min_or_not.".css", array(), $select2_version);
 	}
 	
 	public function memory_check_current($memory_limit = false) {
@@ -4457,9 +4458,9 @@ CREATE TABLE $wpdb->signups (
 
 			if (empty($all_tables) && !empty($dbhandle->last_error)) {
 				$all_tables = $dbhandle->get_results("SHOW TABLES", ARRAY_N);
-				$all_tables = array_map(create_function('$a', 'return array("name" => $a[0], "type" => "BASE TABLE");'), $all_tables);
+				$all_tables = array_map(array($this, 'cb_get_name_base_type'), $all_tables);
 			} else {
-				$all_tables = array_map(create_function('$a', 'return array("name" => $a[0], "type" => $a[1]);'), $all_tables);
+				$all_tables = array_map(array($this, 'cb_get_name_type'), $all_tables);
 			}
 
 			# If this is not the WP database, then we do not consider it a fatal error if there are no tables
@@ -4472,11 +4473,44 @@ CREATE TABLE $wpdb->signups (
 			$updraftplus_database_utility = new UpdraftPlus_Database_Utility($key, $table_prefix_raw, $dbhandle);
 			usort($all_tables, array($updraftplus_database_utility, 'backup_db_sorttables'));
 
-			$all_table_names = array_map(create_function('$a', 'return $a["name"];'), $all_tables);
+			$all_table_names = array_map(array($this, 'cb_get_name'), $all_tables);
 			$db_tables_array[$key] = $all_table_names;
 		}
 
 		return $db_tables_array;
+	}
+
+	/**
+	 * Returns the member of the array with key (int)0, as a new array. This function is used as a callback for array_map().
+	 *
+	 * @param Array $a - the array
+	 *
+	 * @return Array - with keys 'name' and 'type'
+	 */
+	private function cb_get_name_base_type($a) {
+		return array('name' => $a[0], 'type' => 'BASE TABLE');
+	}
+
+	/**
+	 * Returns the members of the array with keys (int)0 and (int)1, as part of a new array.
+	 *
+	 * @param Array $a - the array
+	 *
+	 * @return Array - keys are 'name' and 'type'
+	 */
+	private function cb_get_name_type($a) {
+		return array('name' => $a[0], 'type' => $a[1]);
+	}
+
+	/**
+	 * Returns the member of the array with key (string)'name'. This function is used as a callback for array_map().
+	 *
+	 * @param Array $a - the array
+	 *
+	 * @return Mixed - the value with key (string)'name'
+	 */
+	private function cb_get_name($a) {
+		return $a['name'];
 	}
 
 }

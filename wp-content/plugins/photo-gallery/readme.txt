@@ -4,7 +4,7 @@ Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin, photo albums, gallery slider, gallery lightbox, wordpress photo gallery plugin, fullscreen gallery, watermarking, video gallery
 Requires at least: 3.4
 Tested up to: 4.8 
-Stable tag: 1.3.47    
+Stable tag: 1.3.52    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -188,6 +188,21 @@ To enable the feature of adding Media Library images, go to Photo Gallery > Opti
 
 == Changelog ==
 
+= 1.3.52 =
+* Fixed: Bug on old versions of PHP    
+
+= 1.3.51 =
+* Fixed: Security issue   
+
+= 1.3.50 =
+* Fixed: Conflict with Jetpack Contact Form module.    
+
+= 1.3.49 =
+* Changed: Increased generated thumbnails default dimensions.  
+
+= 1.3.48 =
+* Fixed: Updated library to prevent conflict with PHP version 7.    
+ 
 = 1.3.47 =
 * Improved: Resemble changes in gallery images, while deleting, moving or renaming images using Photo Gallery File Manager.   
 

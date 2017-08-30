@@ -283,7 +283,7 @@ class BWGViewAlbums_bwg {
               <div style="width:500px;">
               <?php
               if (user_can_richedit() && $enable_wp_editor) {
-                wp_editor($row->description, 'description', array('teeny' => FALSE, 'textarea_name' => 'description', 'media_buttons' => FALSE, 'textarea_rows' => 5));
+                wp_editor($row->description, 'description', array('teeny' => TRUE, 'textarea_name' => 'description', 'media_buttons' => FALSE, 'textarea_rows' => 5));
               }
               else {
               ?>

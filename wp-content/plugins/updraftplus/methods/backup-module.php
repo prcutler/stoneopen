@@ -5,20 +5,16 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed.');
 abstract class UpdraftPlus_BackupModule {
 
 	private $_options;
+
 	private $_instance_id;
 	
 	/**
 	 * Store options (within this class) for this remote storage module. There is also a parameter for saving to the permanent storage (i.e. database).
-	 * 
-	 * @param $options Array - array of options to store
-	 * @param $save Boolean - whether or not to also save the options to the database
-	 * @param $instance_id null|String - optionally set the instance ID for this instance at the same time. This is required if you have not already set an instance ID with set_instance_id()
-	 * 
-	 * @throws Exception (via save_options) if trying to save options without indicating an instance_id, or if the remote storage module does not have the multi-option capability
-	 * 
-	 * @uses save_options()
-	 * 
-	 * @returns void|Boolean If saving to DB, then the result of the DB save operation is returned.
+	 *
+	 * @param  array       $options     array of options to store
+	 * @param  boolean     $save        whether or not to also save the options to the database
+	 * @param  null|String $instance_id optionally set the instance ID for this instance at the same time. This is required if you have not already set an instance ID with set_instance_id()
+	 * @return void|Boolean If saving to DB, then the result of the DB save operation is returned.
 	 */
 	public function set_options($options, $save = false, $instance_id = null) {
 	
@@ -32,7 +28,7 @@ abstract class UpdraftPlus_BackupModule {
 	
 	/**
 	 * Saves the current options to the database. This is a private function; external callers should use set_options().
-	 * 
+	 *
 	 * @throws Exception if trying to save options without indicating an instance_id, or if the remote storage module does not have the multi-option capability
 	 */
 	private function save_options() {
@@ -62,7 +58,7 @@ abstract class UpdraftPlus_BackupModule {
 	/**
 	 * Retrieve default options for this remote storage module.
 	 * This method would normally be over-ridden by the child.
-	 * 
+	 *
 	 * @return Array - an array of options
 	 */
 	public function get_default_options() {
@@ -73,22 +69,22 @@ abstract class UpdraftPlus_BackupModule {
 	 * Retrieve a list of supported features for this storage method
 	 * This method should be over-ridden by methods supporting new
 	 * features.
-	 * 
+	 *
 	 * Keys are strings, and values are booleans.
-	 * 
+	 *
 	 * Currently known features:
-	 * 
+	 *
 	 * - multi_options : indicates that the remote storage module
 	 * can handle its options being in the Feb-2017 multi-options
 	 * format. N.B. This only indicates options handling, not any
 	 * other multi-destination options.
-	 * 
+	 *
 	 * - multi_servers : not implemented yet: indicates that the
 	 * remote storage module can handle multiple servers at backup
 	 * time. This should not be specified without multi_options.
 	 * multi_options without multi_servers is fine - it will just
 	 * cause only the first entry in the options array to be used.
-	 * 
+	 *
 	 * @return Array - an array of supported features (any features not
 	 * mentioned are assumed to not be supported)
 	 */
@@ -98,12 +94,11 @@ abstract class UpdraftPlus_BackupModule {
 
 	/**
 	 * Outputs id and name fields, as if currently within an input tag
-	 * 
+	 *
 	 * This assumes standardised options handling (i.e. that the options array is updraft_(method-id))
-	 * 
-	 * @param Array|String $field - the field identifiers
-	 * @param Boolean $return_instead_of_echo - tells the method if it should return the output or echo it to page
-	 * 
+	 *
+	 * @param Array|String $field                  - the field identifiers
+	 * @param Boolean      $return_instead_of_echo - tells the method if it should return the output or echo it to page
 	 */
 	public function output_settings_field_name_and_id($field, $return_instead_of_echo = false) {
 	
@@ -134,7 +129,7 @@ abstract class UpdraftPlus_BackupModule {
 	/**
 	 * Prints out the configuration section.
 	 * This deals with any boiler-plate, prior to calling config_print()
-	 * 
+	 *
 	 * @uses self::config_print()
 	 */
 	public function print_configuration() {
@@ -147,6 +142,7 @@ abstract class UpdraftPlus_BackupModule {
 
 	/**
 	 * Over-ride this to allow methods to not use the hidden version field, if they do not output any settings (to prevent their saved settings being over-written by just this hidden field
+	 *
 	 * @return [boolean] - return true to output the version field or false to not output the field
 	 */
 	public function print_shared_settings_fields() {
@@ -183,11 +179,10 @@ abstract class UpdraftPlus_BackupModule {
 	/**
 	 *
 	 * Returns HTML for a row for a test button
-	 * 
+	 *
 	 * @param String $title - The text to be used in the button
-	 * 
+	 *
 	 * @returns String - The HTML to be inserted into the settings page
-	 * 
 	 */
 	protected function get_test_button_html($title) {
 		ob_start();
@@ -202,7 +197,7 @@ abstract class UpdraftPlus_BackupModule {
 	
 	/**
 	 * Get the backup method identifier for this class
-	 * 
+	 *
 	 * @return String - the identifier
 	 */
 	private function get_id() {
@@ -231,9 +226,9 @@ abstract class UpdraftPlus_BackupModule {
 	
 	/**
 	 * Check whether this storage module supports a mentioned feature
-	 * 
+	 *
 	 * @param String $feature - the feature concerned
-	 * 
+	 *
 	 * @returns Boolean
 	 */
 	public function supports_feature($feature) {
@@ -242,7 +237,7 @@ abstract class UpdraftPlus_BackupModule {
 	
 	/**
 	 * Retrieve options for this remote storage module
-	 * 
+	 *
 	 * @uses get_default_options
 	 *
 	 * @return Array - array of options. This will include default values for any options not set.
@@ -313,5 +308,4 @@ abstract class UpdraftPlus_BackupModule {
 		return $options;
 		
 	}
-
 }

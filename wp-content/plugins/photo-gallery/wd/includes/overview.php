@@ -120,7 +120,8 @@
             unset($plugins[$wd_options->plugin_wordpress_slug]) ; 
             
             // foreach ( $plugins as $wp_slug => &$plugin ){
-                // $wp_data = $this->remote_get($wp_slug);
+                // $wp_data = $this->
+            //remote_get($wp_slug);
                 // $plugin["downloaded"] = $wp_data["downloaded"];
                 // $plugin["rating"] = $wp_data["rating"];
             // } 
@@ -167,13 +168,6 @@
             if ( empty( $sql_mode ) ) 
                 $sql_mode = __( 'Not set', $wd_options->prefix );
             $server_info["SQL Mode"] = $sql_mode;
-
-            // Get PHP Safe Mode
-            if( ini_get( 'safe_mode' ) ) 
-                $safe_mode = __( 'On', $wd_options->prefix );
-            else 
-                $safe_mode = __( 'Off', $wd_options->prefix );
-            $server_info["PHP Safe Mode"] = $safe_mode;
                 
             // Get PHP allow_url_fopen
             if( ini_get( 'allow_url_fopen' ) )  

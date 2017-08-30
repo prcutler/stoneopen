@@ -1408,9 +1408,9 @@ class UpdraftPlus_Backup {
 		
 		if (empty($all_tables) && !empty($this->wpdb_obj->last_error)) {
 			$all_tables = $this->wpdb_obj->get_results("SHOW TABLES", ARRAY_N);
-			$all_tables = array_map(create_function('$a', 'return array("name" => $a[0], "type" => "BASE TABLE");'), $all_tables);
+			$all_tables = array_map(array($this, 'cb_get_name_base_type'), $all_tables);
 		} else {
-			$all_tables = array_map(create_function('$a', 'return array("name" => $a[0], "type" => $a[1]);'), $all_tables);
+			$all_tables = array_map(array($this, 'cb_get_name_type'), $all_tables);
 		}
 
 		# If this is not the WP database, then we do not consider it a fatal error if there are no tables
@@ -1424,7 +1424,7 @@ class UpdraftPlus_Backup {
 		// Put the options table first
 		usort($all_tables, array($this, 'backup_db_sorttables'));
 		
-		$all_table_names = array_map(create_function('$a', 'return $a["name"];'), $all_tables);
+		$all_table_names = array_map(array($this, 'cb_get_name'), $all_tables);
 
 		if (!$updraftplus->really_is_writable($this->updraft_dir)) {
 			$updraftplus->log("The backup directory (".$this->updraft_dir.") could not be written to (could be account/disk space full, or wrong permissions).");
@@ -1462,7 +1462,9 @@ class UpdraftPlus_Backup {
 			if ('wp' == $whichdb && (strtolower($this->table_prefix_raw.'options') == strtolower($table) || ($is_multisite && (strtolower($this->table_prefix_raw.'sitemeta') == strtolower($table) || strtolower($this->table_prefix_raw.'1_options') == strtolower($table))))) $found_options_table = true;
 
 			if (file_exists($this->updraft_dir.'/'.$table_file_prefix.'.gz')) {
-				$updraftplus->log("Table $table: corresponding file already exists; moving on");
+				$stitched = count($stitch_files);
+				$skip_dblog = (($stitched > 10 && 0 != $stitched % 20) || ($stitched > 100 && 0 != $stitched % 100));
+				$updraftplus->log("Table $table: corresponding file already exists; moving on", 'notice', false, $skip_dblog);
 				$stitch_files[] = $table_file_prefix;
 			} else {
 				# === is needed, otherwise 'false' matches (i.e. prefix does not match)
@@ -3079,6 +3081,39 @@ class UpdraftPlus_Backup {
 		$this->index++;
 		$this->job_file_entities[$youwhat]['index'] = $this->index;
 		$updraftplus->jobdata_set('job_file_entities', $this->job_file_entities);
+	}
+
+	/**
+	 * Returns the member of the array with key (int)0, as a new array. This function is used as a callback for array_map().
+	 *
+	 * @param Array $a - the array
+	 *
+	 * @return Array - with keys 'name' and 'type'
+	 */
+	private function cb_get_name_base_type($a) {
+		return array('name' => $a[0], 'type' => 'BASE TABLE');
+	}
+
+	/**
+	 * Returns the members of the array with keys (int)0 and (int)1, as part of a new array.
+	 *
+	 * @param Array $a - the array
+	 *
+	 * @return Array - keys are 'name' and 'type'
+	 */
+	private function cb_get_name_type($a) {
+		return array('name' => $a[0], 'type' => $a[1]);
+	}
+
+	/**
+	 * Returns the member of the array with key (string)'name'. This function is used as a callback for array_map().
+	 *
+	 * @param Array $a - the array
+	 *
+	 * @return Mixed - the value with key (string)'name'
+	 */
+	private function cb_get_name($a) {
+		return $a['name'];
 	}
 
 }
