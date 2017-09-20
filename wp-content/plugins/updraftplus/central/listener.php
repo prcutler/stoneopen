@@ -93,7 +93,7 @@ class UpdraftPlus_UpdraftCentral_Listener {
 	/**
 	 * Do verification before calling this method
 	 *
-	 * @param  WP_User|Object $user         user object
+	 * @param  WP_User|Object $user         user object for autologin
 	 * @param  boolean        $redirect_url Redirect URL
 	 */
 	private function autologin_user($user, $redirect_url = false) {

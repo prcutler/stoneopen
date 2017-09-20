@@ -4,7 +4,7 @@ Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin, photo albums, gallery slider, gallery lightbox, wordpress photo gallery plugin, fullscreen gallery, watermarking, video gallery
 Requires at least: 3.4
 Tested up to: 4.8 
-Stable tag: 1.3.52    
+Stable tag: 1.3.54    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,8 +78,7 @@ If you think you found a bug in Photo Gallery or have any problem/question conce
 *   Unlimited quantity of photos in gallery    
 *   Possibility of adding unlimited quantity of galleries/albums   
 *   Detailed three-column visual shortcode for adding created gallery/galleries and album/albums into the posts and pages.    
-*   Detailed (Extended) album and compact album view  
-*   Possibility of changing the roles of who can edit the galleries/albums/images (Author/All Users)  
+*   Detailed (Extended) album and compact album view   
 *   Chances to provide details for images (tags, captions)  
 *   Thumbnail editing tools (Crop, rotate and flip)  
 *   Possibility of changing the amount of images displayed in a single row of an album/gallery  
@@ -123,7 +122,7 @@ Upgrade to [WordPress Photo Gallery Pro](https://web-dorado.com/products/wordpre
 *   Dynamic Photo Gallery Tag Cloud widget  with image tag cloud and text tag cloud options.   
 *   Possibility to include both videos and images within a single simple gallery.     
 *   Add ons support.      
-
+*   Possibility of changing the roles of who can edit the galleries/albums/images (Author/All Users)  
 
 
 == Installation ==    
@@ -187,6 +186,12 @@ We recommend to use images with the width of 1200px to 1600px. In order to speed
 To enable the feature of adding Media Library images, go to Photo Gallery > Options > Global Options and set Import from Media Library option to Yes. After that you will be able to import photos from Media Library to Photo Gallery.     
 
 == Changelog ==
+
+= 1.3.54 =
+* Changed: Show notification to install Backup WD plugin only on plugin pages.    
+
+= 1.3.53 =
+* Added: Show notice to install Backup WD plugin.    
 
 = 1.3.52 =
 * Fixed: Bug on old versions of PHP    

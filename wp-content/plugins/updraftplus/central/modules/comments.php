@@ -761,8 +761,8 @@ class UpdraftCentral_Comments_Commands extends UpdraftCentral_Commands {
 				if ($parent_comment) $comment->in_reply_to = $parent_comment->comment_author;
 			}
 
-			//We're formatting the comment_date to be exactly the same
-			//with that of WP Comments table (e.g. 2016/12/21 at 10:30 PM)
+			// We're formatting the comment_date to be exactly the same
+			// with that of WP Comments table (e.g. 2016/12/21 at 10:30 PM)
 
 			$comment->comment_date = date('Y/m/d \a\t g:i a', strtotime($comment->comment_date));
 

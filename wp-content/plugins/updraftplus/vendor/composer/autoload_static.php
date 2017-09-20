@@ -4,17 +4,39 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita374db1a877247f8dc792d1a6f28bfc1
+class ComposerStaticInit2f865a0910fe1d724e305a7823c0e1af
 {
     public static $files = array (
+        'ce89ac35a6c330c55f4710717db9ff78' => __DIR__ . '/..' . '/kriswallsmith/assetic/src/functions.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
         '3919eeb97e98d4648304477f8ef734ba' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/Crypt/Random.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Symfony\\Component\\Process\\' => 26,
+            'Symfony\\Component\\EventDispatcher\\' => 34,
+        ),
+        'P' => 
+        array (
+            'Psr\\Log\\' => 8,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Symfony\\Component\\Process\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/process',
+        ),
+        'Symfony\\Component\\EventDispatcher\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -45,6 +67,13 @@ class ComposerStaticInita374db1a877247f8dc792d1a6f28bfc1
             'Math' => 
             array (
                 0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
+            ),
+        ),
+        'H' => 
+        array (
+            'Handlebars' => 
+            array (
+                0 => __DIR__ . '/..' . '/xamin/handlebars.php/src',
             ),
         ),
         'G' => 
@@ -78,12 +107,20 @@ class ComposerStaticInita374db1a877247f8dc792d1a6f28bfc1
             array (
                 0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
             ),
+            'ComponentInstaller' => 
+            array (
+                0 => __DIR__ . '/..' . '/robloach/component-installer/src',
+            ),
         ),
         'A' => 
         array (
             'Aws' => 
             array (
                 0 => __DIR__ . '/..' . '/aws/aws-sdk-php/src',
+            ),
+            'Assetic' => 
+            array (
+                0 => __DIR__ . '/..' . '/kriswallsmith/assetic/src',
             ),
         ),
     );
@@ -115,10 +152,10 @@ class ComposerStaticInita374db1a877247f8dc792d1a6f28bfc1
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita374db1a877247f8dc792d1a6f28bfc1::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita374db1a877247f8dc792d1a6f28bfc1::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInita374db1a877247f8dc792d1a6f28bfc1::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInita374db1a877247f8dc792d1a6f28bfc1::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit2f865a0910fe1d724e305a7823c0e1af::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit2f865a0910fe1d724e305a7823c0e1af::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit2f865a0910fe1d724e305a7823c0e1af::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit2f865a0910fe1d724e305a7823c0e1af::$classMap;
 
         }, null, ClassLoader::class);
     }

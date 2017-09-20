@@ -456,9 +456,9 @@ class UpdraftCentral_Users_Commands extends UpdraftCentral_Commands {
 		}
 		
 		if (wp_delete_user($user_id, $assign_user_id)) {
-			$result = array("error" => false,  "message" => "user_deleted");
+			$result = array("error" => false, "message" => "user_deleted");
 		} else {
-			$result = array("error" => true,  "message" => "user_delete_failed");
+			$result = array("error" => true, "message" => "user_delete_failed");
 		}
 		
 		// Here, we're restoring to the current (default) blog before we

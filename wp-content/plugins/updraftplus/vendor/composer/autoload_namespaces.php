@@ -10,10 +10,13 @@ return array(
     'OpenCloud' => array($vendorDir . '/rackspace/php-opencloud/lib', $vendorDir . '/rackspace/php-opencloud/tests'),
     'Net' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Math' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'Handlebars' => array($vendorDir . '/xamin/handlebars.php/src'),
     'Guzzle\\Tests' => array($vendorDir . '/guzzle/guzzle/tests'),
     'Guzzle' => array($vendorDir . '/guzzle/guzzle/src'),
     'File' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Eher\\OAuth' => array($vendorDir . '/eher/oauth/src'),
     'Crypt' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'ComponentInstaller' => array($vendorDir . '/robloach/component-installer/src'),
     'Aws' => array($vendorDir . '/aws/aws-sdk-php/src'),
+    'Assetic' => array($vendorDir . '/kriswallsmith/assetic/src'),
 );

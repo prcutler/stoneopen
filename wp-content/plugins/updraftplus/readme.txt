@@ -3,7 +3,7 @@ Contributors: Backup with UpdraftPlus, DavidAnderson, DNutbourne, aporter, snigh
 Tags: backup, restore, database backup, wordpress backup, cloud backup, s3, dropbox, google drive, onedrive, ftp, backups
 Requires at least: 3.2
 Tested up to: 4.8
-Stable tag: 1.13.5
+Stable tag: 1.13.7
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -149,7 +149,42 @@ Unfortunately not; since this is free software, there’s no warranty and no gua
 
 The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the best place to learn in more detail about any important changes.
 
-N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.13.5 of the free version correspond to changes made in 2.13.5.x of the paid version.
+N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.13.7 of the free version correspond to changes made in 2.13.7.x of the paid version.
+
+= 1.13.7 - 06/Sep/2017 =
+
+* FIX: UpdraftCentral connectivity for various operations restored (regression in 1.13.6)
+* FIX: No error message was being shown when a backup to local storage was missing upon restore
+* COMPATIBILITY: Replace uses of the deprecated (PHP 7.2+) each() function
+* TRANSLATION: Portuguese (Portugal) and Romanian translations are now complete and supplied from wordpress.org, so can be removed from the free plugin zip
+* TWEAK: Fix some wrongly-called translation functions, and pull more known strings into the Premium version
+* TWEAK: Remove the legacy parameter for setting storage upload job status data (only useful for version downgrades of more than 1 release during in-progress backups)
+* TWEAK: Exclude some unnecessary build and unused files from the release zip (reduce disk space and download size)
+
+= 1.13.6 - 05/Sep/2017 =
+
+* FEATURE: Google Drive authorisation now goes via an officially registered app for easier connections to Google Drive.
+* FEATURE: Include commands for UpdraftCentral's (https://updraftcentral.com) Google Analytics management facility (check the changelog for the release)
+* FIX: Correct handling of OneDrive folder names featuring spaces (possibly a regression/change in the handling at OneDrive's end)
+* TWEAK: Prevent messy layout when the last log message is very long
+* TWEAK: Log catchable fatal errors and exceptions during backup in PHP 7
+* TWEAK: Log catchable fatal errors and exceptions during restore in PHP 7
+* TWEAK: Log catchable fatal errors and exceptions during backup download in PHP 7
+* TWEAK: Reduce amount of database logging during existing zip analysis, database backup and pruning stages
+* TWEAK: In AJAX/JSON responses, automatically detect and handle corrupted output (e.g. setups where PHP debugging notices are configured to come to the browser)
+* TWEAK: Catches and more elegantly handles errors when a settings import file cannot be JSON-parsed
+* TWEAK: Request list of available add-ons (paid versions) from the mothership in current format
+* TWEAK: Added custom backup message parameter backupnow_message in function updraft_backupnow_inpage_go()
+* TWEAK: General code tidy-up, making older code conform to our current standards
+* TWEAK: Add the possibility of passing back associated data with test results, and log it in the browser console
+* TWEAK: When carrying out a remote storage test, pass the state of the 'debug' setting
+* TWEAK: When testing SFTP settings, if debug is activated, activate debug logging and pass the results back in the event of test failure
+* TWEAK: Optimise away a database query in the case of no UpdraftCentral keys existing
+* TWEAK: Removed "Reduced Redundancy" storage class from Amazon S3 remote storage options, because Amazon are deprecating it (and it now costs more, for inferior redundancy - https://updraftplus.com/forums/topic/amazon-is-phasing-out-reduced-redundancy-storage/)
+* TWEAK: Backup files missing error message corrected
+* TWEAK: Add the handlebars-js and xamin/handlebars.php libraries
+* TWEAK: The FTP storage module has been ported to outputing its configuration via a template
+* TWEAK: Introduce internal API and port all job data saved in storage modules to be instance-local
 
 = 1.13.5 - 08/Aug/2017 =
 
@@ -519,4 +554,4 @@ We recognise and thank the following for code and/or libraries used and/or modif
 
 
 == Upgrade Notice ==
-* 1.13.5: Various minor improvements (recommended update for all)
+* 1.13.7: Easier Google Drive setup. Lots of small tweaks and improvements. Fix UpdraftCentral regression in 1.13.6. Recommended update for all.

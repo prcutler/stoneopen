@@ -376,6 +376,5 @@ function bwg_update($version) {
     $bwg_options_row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_option WHERE id="%d"', 1));
     add_option('wd_bwg_options', json_encode($bwg_options_row), '', 'no');
 	}
-	return;
+    return;
 }
-?>
