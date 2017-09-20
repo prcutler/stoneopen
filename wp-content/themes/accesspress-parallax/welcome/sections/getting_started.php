@@ -7,9 +7,9 @@
 	</div>
 
 	<div class="theme-steps">
-		<h3><?php echo esc_html__('Step 2 - Customizer Options Panel', 'accesspress-parallax'); ?></h3>
+		<h3><?php echo esc_html__('Step 2 - Theme Options Panel', 'accesspress-parallax'); ?></h3>
 		<p><?php echo esc_html__('Using the WordPress Customizer you can easily customize every aspect of the theme.', 'accesspress-parallax'); ?></p>
-		<a class="button button-primary" href="<?php echo esc_url(admin_url('customize.php')); ?>"><?php echo esc_html__('Go to Customizer Panels', 'accesspress-parallax'); ?></a>
+		<a class="button button-primary" href="<?php echo esc_url(admin_url('themes.php?page=theme-options')); ?>"><?php echo esc_html__('Go to Theme Options Panels', 'accesspress-parallax'); ?></a>
 	</div>
 
 </div>

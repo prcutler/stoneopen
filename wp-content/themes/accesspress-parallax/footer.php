@@ -52,7 +52,6 @@
 				<div class="site-info">
 				WordPress Theme:
 				<a href="<?php echo esc_url('https://accesspressthemes.com/wordpress-themes/accesspress-parallax'); ?>" title="WordPress Free Themes" target="_blank">AccessPress Parallax</a>
-					<?php _e('by','accesspress-parallax'); ?> AccessPress Themes
 				</div><!-- .site-info -->
 			</div>
 		</div>

@@ -4,7 +4,7 @@ Theme URI: https://accesspressthemes.com/wordpress-themes/accesspress-parallax/
 Author: AccessPress Themes
 Author URI: https://accesspressthemes.com/
 Description: AccessPress Parallax is a beautiful WordPress theme with Parallax design. Parallax design has become popular and is widely implemented these days. This is probably the most beautiful, feature rich and complete free WordPress parallax theme with features like: fully responsive, advance theme option panel, featured slider, advance post settings, services/team/blog/portfolio/testimonial layout, Google map integration, custom logo/fav icon, call to action, CSS animation, SEO friendly, translation ready, RTL support, custom CSS/JS and more! More over the theme is fully translation ready, WooCommerce Compatible, bbPress Compatible and fully support multilanguage via POLYLANG plugin. Demo: http://accesspressthemes.com/theme-demos/?theme=accesspress-parallax Support forum: https://accesspressthemes.com/support/ Pro version: https://accesspressthemes.com/wordpress-themes/accesspress-parallax-pro/ 
-Version: 1.50
+Version: 1.54
 License: GNU General Public License v3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: accesspress-parallax
@@ -975,6 +975,9 @@ Main Header
 #masthead.logo-top{
 	text-align: center;
 }
+#masthead.logo-top .flex-box{
+	display: block;
+}
 body.parallax-on #masthead{
 	position: fixed;
 	left: 0;
@@ -1010,12 +1013,17 @@ body.parallax-on .wpcf7-not-valid-tip{
 	width: auto;
 	text-align: center;
 	max-width: none;
+	margin-top: 15px;
 }
 .main-navigation ul {
 	list-style: none;
 	margin: 0;
 	padding-left: 0;
 	float: right;
+}
+
+.logo-top .main-navigation ul{
+	float: none;
 }
 .main-navigation ul li{
 	position: relative;
@@ -1044,7 +1052,6 @@ body.parallax-on .wpcf7-not-valid-tip{
 	top: 100%;
 	left:0;
 	z-index: 99999;
-	padding:0 10px;
 	font-size: 15px;
 	box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 	display: none;
@@ -1055,15 +1062,13 @@ body.parallax-on .wpcf7-not-valid-tip{
 }
 .main-navigation ul ul a {
 	min-width: 200px;
-}
-.main-navigation ul ul li {
+	padding: 10px;
 	border-bottom: 1px solid #EEE;
-	padding: 8px 0;
 }
 .logo-top .main-navigation ul ul li{
 	text-align: left;
 }
-.main-navigation ul ul li:last-child{
+.main-navigation ul ul li:last-child a{
 	border:none;
 }
 .main-navigation li:hover > a {

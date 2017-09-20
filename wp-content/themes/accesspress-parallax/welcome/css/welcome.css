@@ -154,3 +154,95 @@
     font-size: 20px;
     margin-top: 0;
 }
+
+table.comparison-table {
+    background:#F6F6F6;
+    border:#ccc 1px solid;
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 3px;
+}
+
+table.comparison-table th,
+table.comparison-table td{
+    border:1px solid #CCC;
+    padding: 15px;
+    text-align: left;
+}
+
+table.comparison-table th:nth-child(2),
+table.comparison-table td:nth-child(2),
+table.comparison-table th:nth-child(3),
+table.comparison-table td:nth-child(3){
+    text-align: center;
+}
+
+table.comparison-table th {
+    background: #ededed;
+    font-size: 20px;
+    padding: 25px 15px;
+}
+
+
+table.comparison-table th p:last-child,
+table.comparison-table td p:last-child{
+    margin-bottom: 0;
+}
+
+table.comparison-table td span{
+    font-weight: bold;
+}
+
+table.comparison-table tr:hover{
+    background: #EEE;
+}
+
+a.buy-pro-btn {
+    display: block;
+    background: #b92424;
+    color: #fff;
+    text-decoration: none;
+    padding: 15px 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+a.buy-pro-btn:hover{
+    background: #981f1f
+}
+
+.about-wrap .three-col .support-process.col:last-child{
+    background: #0073aa;
+    color: #FFF;
+}
+
+.about-wrap .three-col .support-process.col:last-child h3{
+    color: #FFF;
+}
+
+.about-wrap .three-col .support-process.col:last-child{
+   background: #0073aa;
+   color: #FFF;
+}
+
+.about-wrap .three-col .support-process.col:last-child h3{
+   color: #FFF;
+}
+
+.free_vs_pro .three-col h4{
+   font-weight: bold;
+}
+
+.free_vs_pro .three-col{
+ margin-bottom: 30px;
+}
+
+.free_vs_pro .three-col .col{
+ border: 5px solid #E0E0E0;
+ padding: 15px 30px;
+ text-align: center;
+}
+
+.free_vs_pro .three-col .col:hover{
+   background: #EEE;
+}

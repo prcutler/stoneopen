@@ -22,20 +22,8 @@
 				$this->theme_name = $theme->Name;
 				$this->theme_version = $theme->Version;
 
-				$this->companion_plugins = array();
-
 				/** List of Companion Plugins **/
-				$this->companion_plugins = array(
-					'woocommerce' => array(
-						'slug' => 'woocommerce',
-						'name' => esc_html__('Woocommerce', 'accesspress-parallax'),
-						'filename' =>'woocommerce.php',
-						'class' => 'WooCommerce',
-						'github_repo' => false,
-						'bundled' => false,
-						'info' => esc_html__('WooCommerce is a free eCommerce plugin that allows you to sell anything, beautifully.', 'accesspress-parallax'),
-					),
-				);
+				$this->companion_plugins = array();
 
 				/** List of required Plugins **/
 				$this->req_plugins = array(
@@ -56,14 +44,18 @@
 				/** Define Tabs Sections **/
 				$this->tab_sections = array(
 					'getting_started' => __('Getting Started', 'accesspress-parallax'),
-					'actions_required' => __('Actions Required', 'accesspress-parallax'),
 					'recommended_plugins' => __('Recommended Plugins', 'accesspress-parallax'),
-					//'import_demo' => __('Import Demo', 'accesspress-parallax'),
 					'support' => __('Support', 'accesspress-parallax'),
+					'free_vs_pro' => __('Free vs Pro', 'accesspress-parallax'),
 				);
 
 				/** List of Recommended Free Plugins **/
 				$this->free_plugins = array(
+					'woocommerce' => array(
+						'slug' => 'woocommerce',
+						'filename' =>'woocommerce.php',
+						'class' => 'WooCommerce',
+					),
 
 					'accesspress-social-icons' => array(
 						'slug' => 'accesspress-social-icons',
@@ -127,7 +119,7 @@
 			public function get_required_plugin_notification() {
 				
 				$req_plugins = $this->companion_plugins;
-				$notif_counter = count($this->req_plugins);
+				$notif_counter = count($this->companion_plugins);
 
 				foreach($req_plugins as $plugin) {
 					$folder_name = $plugin['slug'];
@@ -139,6 +131,7 @@
 						}
 					}
 				}
+
 				return $notif_counter;
 			}
 

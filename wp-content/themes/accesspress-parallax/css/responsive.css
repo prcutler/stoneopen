@@ -80,7 +80,7 @@ Responsive CSS
 	.main-navigation li:hover > a,
 	.main-navigation .current_page_item > a, 
 	.main-navigation .current-menu-item > a{
-		color: #CCC;
+		color: #EEE;
 	}
 	.slider-caption{
 		padding-left: 70px;
@@ -163,6 +163,10 @@ Responsive CSS
 		float: none;
 		text-align: center;
 	}
+	.main-navigation > ul{
+		padding: 0;
+		z-index: 99;
+	}
 	.main-navigation > ul > li{
 		display: block;
 		border-bottom: 1px solid #DB5E39;
@@ -170,9 +174,9 @@ Responsive CSS
 	.main-navigation ul ul {
 		background: #db5e39;
 		position: static;
-		padding:0 10px;
 		font-size: 15px;
 		display: none;
+		float: none;
 	}
 	#primary, #secondary{
 		float: none;
@@ -187,8 +191,9 @@ Responsive CSS
 	.main-navigation ul ul a{
 		color: #FFF;
 	}
-	.main-navigation ul ul li{
-		padding: 5px 0;
+	.main-navigation ul ul li a{
+		padding: 10px 0;
+		border: 0;
 	}
 	.main-navigation ul ul{
 		box-shadow: none;

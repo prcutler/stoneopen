@@ -89,6 +89,20 @@ Images
 ---------------------------------------------
 
 == Changelog ==
+Version 1.54
+ * Design issue of submenu in responsive fixed
+
+Version 1.5.3
+ * Updated bxSlider Plugin
+ * Update Fontawesome
+
+Version 1.5.2
+ * Minor Bug Fixes
+
+Version 1.5.1
+ * Alignment Issue with Center Header fixed
+ * Unwanted text removed.
+
 Version 1.5.0
  * Minor Bug Fixes
 
