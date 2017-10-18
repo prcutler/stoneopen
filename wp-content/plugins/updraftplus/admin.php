@@ -13,6 +13,8 @@ class UpdraftPlus_Admin {
 
 	private $template_directories;
 
+	private $backups_instance_ids;
+
 	public function __construct() {
 		$this->admin_init();
 	}
@@ -754,7 +756,9 @@ class UpdraftPlus_Admin {
 			'search' => __('Search', 'updraftplus'),
 			'download_timeout' => __('Unable to download file. This could be caused by a timeout. It would be best to download the zip to your computer.', 'updraftplus'),
 			'loading_log_file' => __('Loading log file', 'updraftplus'),
-			'updraftplus_version' => $updraftplus->version
+			'updraftplus_version' => $updraftplus->version,
+			'updraftcentral_wizard_empty_url' => __('Please enter the URL where your UpdraftCentral dashboard is hosted.'),
+			'updraftcentral_wizard_invalid_url' => __('Please enter a valid URL e.g http://example.com', 'updraftplus') 
 		) );
 	}
 	
@@ -1004,6 +1008,9 @@ class UpdraftPlus_Admin {
 		return $updraft_dir;
 	}
 
+	/**
+	 * Start a download of a backup. This method is called via the AJAX action updraft_download_backup. May die instead of returning depending upon the mode in which it is called.
+	 */
 	public function updraft_download_backup() {
 
 		if (empty($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'updraftplus_download')) die;
@@ -1023,7 +1030,18 @@ class UpdraftPlus_Admin {
 		die();
 	}
 	
-	// This function may die(), depending on the request being made in $stage
+	/**
+	 * Ensure that a specified backup is present, downloading if necessary (or delete it, if the parameters so indicate). N.B. This function may die(), depending on the request being made in $stage
+	 *
+	 * @param Integer		   $findex					  - the index number of the backup archive requested
+	 * @param String		   $type					  - the entity type (e.g. 'plugins') being requested
+	 * @param Integer		   $timestamp				  - identifier for the backup being requested (UNIX epoch time)
+	 * @param Mixed			   $stage					  - the stage; valid values include (have not audited for other possibilities) at least 'delete' and 2.
+	 * @param Callable|Boolean $close_connection_callable - function used to close the connection to the caller; an array of data to return is passed. If false, then UpdraftPlus::close_browser_connection is called with a JSON version of the data.
+	 * @param String		   $file_path				  - an over-ride for where to download the file to (basename only)
+	 *
+	 * @return Array - sumary of the results. May also just die.
+	 */
 	public function do_updraft_download_backup($findex, $type, $timestamp, $stage, $close_connection_callable = false, $file_path = '') {
 	
 		@set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);
@@ -1058,14 +1076,14 @@ class UpdraftPlus_Admin {
 		$updraftplus->jobdata_set('job_time_ms', $updraftplus->job_time_ms);
 
 		// Retrieve the information from our backup history
-		$backup_history = $updraftplus->get_backup_history();
+		$backup_history = UpdraftPlus_Backup_History::get_history();
 		// Base name
 		$file = $backup_history[$timestamp][$type];
 
 		// Deal with multi-archive sets
 		if (is_array($file)) $file = $file[$findex];
 
-		if (strpos($file_path, '..') !== false) {
+		if (false !== strpos($file_path, '..')) {
 			error_log("UpdraftPlus_Admin::do_updraft_download_backup : invalid file_path: $file_path");
 			return array('result' => __('Error: invalid path', 'updraftplus'));
 		}
@@ -1149,23 +1167,7 @@ class UpdraftPlus_Admin {
 			} else {
 				$updraftplus->close_browser_connection(json_encode($msg));
 			}
-			
-			$is_downloaded = false;
-			add_action('http_request_args', array($updraftplus, 'modify_http_options'));
-			foreach ($services as $service) {
-				if ($is_downloaded) continue;
-				$download = $this->download_file($file, $service);
-				if (is_readable($fullpath) && $download !== false) {
-					clearstatcache();
-					$updraftplus->log('Remote fetch was successful (file size: '.round(filesize($fullpath)/1024,1).' KB)');
-					$is_downloaded = true;
-				} else {
-					clearstatcache();
-					if (0 === @filesize($fullpath)) @unlink($fullpath);
-					$updraftplus->log('Remote fetch failed');
-				}
-			}
-			remove_action('http_request_args', array($updraftplus, 'modify_http_options'));
+			$this->get_remote_file($services, $file, $timestamp);
 		}
 
 		// Now, be ready to spool the thing to the browser
@@ -1196,41 +1198,115 @@ class UpdraftPlus_Admin {
 	}
 
 	/**
+	 * This method gets the remote storage information and objects and loops over each of them until we get a successful download of the passed in file.
+	 *
+	 * @param  Array   $services  - a list of connected service identifiers (e.g. 'dropbox', 's3', etc.)
+	 * @param  String  $file      - the name of the file
+	 * @param  Integer $timestamp - the backup timestamp
+	 * @param  Boolean $restore   - a boolean to indicate if the caller of this method is a restore or not; if so, different messages are logged
+	 */
+	private function get_remote_file($services, $file, $timestamp, $restore = false) {
+		global $updraftplus;
+		
+		$fullpath = $updraftplus->backups_dir_location().'/'.$file;
+
+		$storage_objects_and_ids = $updraftplus->get_storage_objects_and_ids($services);
+
+		$is_downloaded = false;
+
+		$updraftplus->register_wp_http_option_hooks();
+
+		foreach ($services as $service) {
+
+			if (empty($service) || 'none' == $service) continue;
+		
+			if ($restore) {
+				$service_description = empty($updraftplus->backup_methods[$service]) ? $service : $updraftplus->backup_methods[$service];
+				$updraftplus->log(__("File is not locally present - needs retrieving from remote storage",'updraftplus')." ($service_description)", 'notice-restore');
+			}
+
+			$object = $storage_objects_and_ids[$service]['object'];
+
+			if (!$object->supports_feature('multi_options')) { 
+				error_log("UpdraftPlus_Admin::get_remote_file(): Multi-options not supported by: ".$service); 
+				continue; 
+			}
+			
+			$instance_ids = $storage_objects_and_ids[$service]['instance_settings'];
+			$backups_instance_ids = isset($backup_history[$timestamp]['service_instance_ids'][$service]) ? $backup_history[$timestamp]['service_instance_ids'][$service] : array(false);
+
+			foreach ($backups_instance_ids as $instance_id) {
+
+				if (isset($instance_ids[$instance_id])) {
+					$options = $instance_ids[$instance_id];
+				} else {
+					// If we didn't find a instance id match, it could be a new UpdraftPlus upgrade or a wipe settings with the same details entered so try the default options saved.
+					$options = $object->get_options();
+				}
+
+				$object->set_options($options, false, $instance_id);
+
+				$download = $this->download_file($file, $object);
+
+				if (is_readable($fullpath) && false !== $download) {
+					if ($restore) {
+						$updraftplus->log(__("OK", 'updraftplus'), 'notice-restore');
+					} else {
+						clearstatcache();
+						$updraftplus->log('Remote fetch was successful (file size: '.round(filesize($fullpath)/1024, 1).' KB)');
+					}
+					break 2;
+				} else {
+					if ($restore) {
+						$updraftplus->log(__("Error", 'updraftplus'), 'notice-restore');
+					} else {
+						clearstatcache();
+						if (0 === @filesize($fullpath)) @unlink($fullpath);
+						$updraftplus->log('Remote fetch failed');
+					}
+				}
+			}
+		}
+		$updraftplus->register_wp_http_option_hooks(false);
+	}
+
+	/**
 	 * Downloads a specified file into UD's directory
 	 *
 	 * @param String $file - The name of the file
-	 * @param String $service - The identifier of the service to download from. You cannot pass multiple services.
-	 * 
+	 * @param UpdraftPlus_BackupModule $object - The object of the service to use to download with.
+	 *
 	 * @return Boolean - Whether the operation succeeded. Inherited from the storage module's download() method. N.B. At the time of writing it looks like not all modules necessarily return true upon success; but false can be relied upon for detecting failure.
 	 */
-	private function download_file($file, $service) {
+	private function download_file($file,  $object) {
 
 		global $updraftplus;
 
 		@set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);
 
+		$service = $object->get_id();
+		
 		$updraftplus->log("Requested file from remote service: $service: $file");
 
-		$method_include = UPDRAFTPLUS_DIR.'/methods/'.$service.'.php';
-		if (file_exists($method_include)) require_once($method_include);
-
-		$objname = "UpdraftPlus_BackupModule_${service}";
-		if (method_exists($objname, "download")) {
+		if (method_exists($object, 'download')) {
 		
 			try {
-				$remote_obj = new $objname;
-				return $remote_obj->download($file);
+				return $object->download($file);
 			} catch (Exception $e) {
 				$log_message = 'Exception ('.get_class($e).') occurred during download: '.$e->getMessage().' (Code: '.$e->getCode().', line '.$e->getLine().' in '.$e->getFile().')';
-				$updraftplus->log($log_message);
 				error_log($log_message);
+				// @codingStandardsIgnoreLine
+				if (function_exists('wp_debug_backtrace_summary')) $log_message .= ' Backtrace: '.wp_debug_backtrace_summary();
+				$updraftplus->log($log_message);
 				$updraftplus->log(sprintf(__('A PHP exception (%s) has occurred: %s', 'updraftplus'), get_class($e), $e->getMessage()), 'error');
 				return false;
 			// @codingStandardsIgnoreLine
 			} catch (Error $e) {
-				$log_message = 'PHP Fatal error ('.get_class($e).') has occurred. Error Message: '.$e->getMessage().' (Code: '.$e->getCode().', line '.$e->getLine().' in '.$e->getFile().')';
-				$updraftplus->log($log_message);
+				$log_message = 'PHP Fatal error ('.get_class($e).') has occurred during download. Error Message: '.$e->getMessage().' (Code: '.$e->getCode().', line '.$e->getLine().' in '.$e->getFile().')';
 				error_log($log_message);
+				// @codingStandardsIgnoreLine
+				if (function_exists('wp_debug_backtrace_summary')) $log_message .= ' Backtrace: '.wp_debug_backtrace_summary();
+				$updraftplus->log($log_message);
 				$updraftplus->log(sprintf(__('A PHP fatal error (%s) has occurred: %s', 'updraftplus'), get_class($e), $e->getMessage()), 'error');
 				return false;
 			}
@@ -1372,12 +1448,20 @@ class UpdraftPlus_Admin {
 		
 	}
 	
-	// Relevant options (array keys): backup_timestamp, delete_remote, [remote_delete_limit]
+	/**
+	 * Delete a backup set, whilst respecting limits on how much to delete in one go
+	 *
+	 * @uses remove_backup_set_cleanup()
+	 *
+	 * @param Array $opts - deletion options; with keys backup_timestamp, delete_remote, [remote_delete_limit]
+	 *
+	 * @return Array - as from remove_backup_set_cleanup()
+	 */
 	public function delete_set($opts) {
 		
 		global $updraftplus;
 		
-		$backups = $updraftplus->get_backup_history();
+		$backups = UpdraftPlus_Backup_History::get_history();
 		$timestamps = (string)$opts['backup_timestamp'];
 
 		$remote_delete_limit = (isset($opts['remote_delete_limit']) && $opts['remote_delete_limit'] > 0) ? (int)$opts['remote_delete_limit'] : PHP_INT_MAX;
@@ -1416,6 +1500,7 @@ class UpdraftPlus_Admin {
 			if ($delete_remote) {
 				// Locate backup set
 				if (isset($backups[$timestamp]['service'])) {
+					// Convert to an array so that there is no uncertainty about how to process it
 					$services = is_string($backups[$timestamp]['service']) ? array($backups[$timestamp]['service']) : $backups[$timestamp]['service'];
 					if (is_array($services)) {
 						foreach ($services as $service) {
@@ -1443,8 +1528,8 @@ class UpdraftPlus_Admin {
 				$files_to_delete['log'] = "log.$nonce.txt";
 			}
 			
-			add_action('http_request_args', array($updraftplus, 'modify_http_options'));
-			
+			$updraftplus->register_wp_http_option_hooks();
+
 			foreach ($files_to_delete as $key => $files) {
 
 				if (is_string($files)) {
@@ -1459,14 +1544,25 @@ class UpdraftPlus_Admin {
 				}
 
 				if ('log' != $key && count($delete_from_service) > 0) {
+
+					$storage_objects_and_ids = $updraftplus->get_storage_objects_and_ids($delete_from_service);
+
 					foreach ($delete_from_service as $service) {
-						if ('email' == $service) continue;
-						if (file_exists(UPDRAFTPLUS_DIR."/methods/$service.php")) require_once(UPDRAFTPLUS_DIR."/methods/$service.php");
-						$objname = "UpdraftPlus_BackupModule_".$service;
+					
+						if ('email' == $service || 'none' == $service || !$service) continue;
+
 						$deleted = -1;
-						if (class_exists($objname)) {
-							# TODO: Re-use the object (i.e. prevent repeated connection setup/teardown)
-							$remote_obj = new $objname;
+
+						$remote_obj = $storage_objects_and_ids[$service]['object'];
+
+						$instance_settings = $storage_objects_and_ids[$service]['instance_settings'];
+						$this->backups_instance_ids = empty($backups[$timestamp]['service_instance_ids'][$service]) ? array() : $backups[$timestamp]['service_instance_ids'][$service];
+
+						uksort($instance_settings, array($this, 'instance_ids_sort'));
+
+						foreach ($instance_settings as $instance_id => $options) {
+
+							$remote_obj->set_options($options, false, $instance_id);
 
 							foreach ($files as $index => $file) {
 								if ($remote_deleted == $remote_delete_limit) {
@@ -1475,9 +1571,9 @@ class UpdraftPlus_Admin {
 
 								$deleted = $remote_obj->delete($file);
 								
-								if ($deleted === -1) {
+								if (-1 === $deleted) {
 									//echo __('Did not know how to delete from this cloud service.', 'updraftplus');
-								} elseif ($deleted !== false) {
+								} elseif (false !== $deleted) {
 									$remote_deleted++;
 								}
 								
@@ -1497,8 +1593,7 @@ class UpdraftPlus_Admin {
 								}
 								
 								// If we don't save the array back, then the above section will fire again for the same files - and the remote storage will be requested to delete already-deleted files, which then means no time is actually saved by the browser-backend loop method.
-								UpdraftPlus_Options::update_updraft_option('updraft_backup_history', $backups);
-								
+								UpdraftPlus_Backup_History::save_history($backups);
 							}
 						}
 					}
@@ -1506,22 +1601,47 @@ class UpdraftPlus_Admin {
 			}
 
 			unset($backups[$timestamp]);
-			UpdraftPlus_Options::update_updraft_option('updraft_backup_history', $backups);
+			UpdraftPlus_Backup_History::save_history($backups);
 			$sets_removed++;
 		}
-
 
 		return $this->remove_backup_set_cleanup(true, $backups, $local_deleted, $remote_deleted, $sets_removed);
 
 	}
 
+	/**
+	 * This function sorts the array of instance ids currently saved so that any instance id that is in both the saved settings and the backup history move to the top of the array, as these are likely to work. Then values that don't appear in the backup history move to the bottom.
+	 *
+	 * @param  String $a  - the first instance id
+	 * @param  String $b  - the second instance id
+	 * @return Integer    - returns an integer to indicate what position the $b value should be moved in
+	 */
+	public function instance_ids_sort($a, $b) {
+		if (in_array($a, $this->backups_instance_ids)) {
+			if (in_array($b, $this->backups_instance_ids)) return 0;
+			return -1;
+		}
+		return in_array($b, $this->backups_instance_ids) ? 1 : 0;
+	}
+
+	/**
+	 * Called by self::delete_set() to finish up before returning (whether the complete deletion is finished or not)
+	 *
+	 * @param Boolean $delete_complete - whether the whole set is now gone (i.e. last round)
+	 * @param Array	  $backups		   - the backup history
+	 * @param Integer $local_deleted   - how many backup archives were deleted from local storage
+	 * @param Integer $remote_deleted  - how many backup archives were deleted from remote storage
+	 * @param Integer $sets_removed	   - how many complete sets were removed
+	 *
+	 * @return Array - information on the status, suitable for returning to the UI
+	 */
 	public function remove_backup_set_cleanup($delete_complete, $backups, $local_deleted, $remote_deleted, $sets_removed) {
 
 		global $updraftplus;
 
-		remove_action('http_request_args', array($updraftplus, 'modify_http_options'));
-					
-		UpdraftPlus_Options::update_updraft_option('updraft_backup_history', $backups);
+		$updraftplus->register_wp_http_option_hooks(false);
+
+		UpdraftPlus_Backup_History::save_history($backups);
 
 		$updraftplus->log("Local files deleted: $local_deleted. Remote files deleted: $remote_deleted");
 
@@ -1545,9 +1665,8 @@ class UpdraftPlus_Admin {
 	
 		global $updraftplus;
 	
-		if ($rescan) $messages = $updraftplus->rebuild_backup_history($remotescan);
-		$backup_history = UpdraftPlus_Options::get_updraft_option('updraft_backup_history');
-		$backup_history = (is_array($backup_history)) ? $backup_history : array();
+		if ($rescan) $messages = UpdraftPlus_Backup_History::rebuild($remotescan);
+		$backup_history = UpdraftPlus_Backup_History::get_history();
 		$output = $this->existing_backup_table($backup_history);
 		$data = array();
 
@@ -2137,7 +2256,7 @@ class UpdraftPlus_Admin {
 			if (empty($updraftplus->errors) && $backup_success === true) {
 // TODO: Deal with the case of some of the work having been deferred
 				// If we restored the database, then that will have out-of-date information which may confuse the user - so automatically re-scan for them.
-				$updraftplus->rebuild_backup_history();
+				UpdraftPlus_Backup_History::rebuild();
 				echo '<p><strong>';
 				$updraftplus->log_e('Restore successful!');
 				echo '</strong></p>';
@@ -2285,12 +2404,13 @@ class UpdraftPlus_Admin {
 				echo '</div>';
 			}
 
-			$backup_history = UpdraftPlus_Options::get_updraft_option('updraft_backup_history');
+			$backup_history = UpdraftPlus_Backup_History::get_history();
 			if (empty($backup_history)) {
-				$updraftplus->rebuild_backup_history();
-				$backup_history = UpdraftPlus_Options::get_updraft_option('updraft_backup_history');
+				UpdraftPlus_Backup_History::rebuild();
+				$backup_history = UpdraftPlus_Backup_History::get_history();
 			}
-			$backup_history = is_array($backup_history) ? $backup_history : array();
+
+			
 			?>
 
 		<?php 
@@ -2946,10 +3066,10 @@ class UpdraftPlus_Admin {
 	}
 
 	/**
-	 * Outputs html for a storage method using the parameters passed in, this version of the method is compatible with multi storage options
-	 * @param  [String] $classes - a list of classes to be used when
-	 * @param  [String] $header - the table header content
-	 * @param  [String] $contents - the table contents
+	 * Outputs html for a storage method using the parameters passed in. This version of the method is compatible with multi storage options
+	 * @param String $classes  - a list of classes to be used when
+	 * @param String $header   - the table header content
+	 * @param String $contents - the table contents
 	 */
 	public function storagemethod_row_multi($classes, $header, $contents) {
 		?>
@@ -3341,11 +3461,18 @@ class UpdraftPlus_Admin {
 		return esc_attr($rawbackup);
 	}
 
+	/**
+	 * Get the HTML for the table of existing backups
+	 *
+	 * @param Array|Boolean $backup_history - a list of backups to use, or false to get the current list from the database
+	 *
+	 * @return String - HTML for the table
+	 */
 	public function existing_backup_table($backup_history = false) {
 
 		global $updraftplus;
 
-		if (false === $backup_history) $backup_history = UpdraftPlus_Options::get_updraft_option('updraft_backup_history');
+		if (false === $backup_history) $backup_history = UpdraftPlus_Backup_History::get_history();
 		
 		if (!is_array($backup_history) || empty($backup_history)) return "<p><em>".__('You have not yet made any backups.', 'updraftplus')."</em></p>";
 
@@ -3508,7 +3635,7 @@ class UpdraftPlus_Admin {
 	}
 
 	public function delete_button($key, $nonce, $backup) {
-		$sval = ((isset($backup['service']) && $backup['service'] != 'email' && $backup['service'] != 'none')) ? '1' : '0';
+		$sval = (!empty($backup['service']) && $backup['service'] != 'email' && $backup['service'] != 'none' && $backup['service'] !== array('email') && $backup['service'] !== array('none')) ? '1' : '0';
 		return '<div class="updraftplus-remove" style="float: left; clear: none;" data-hasremote="'.$sval.'">
 					<a data-hasremote="'.$sval.'" data-nonce="'.$nonce.'" data-key="'.$key.'" class="no-decoration updraft-delete-link" href="#" title="'.esc_attr(__('Delete this backup set', 'updraftplus')).'">'.__('Delete', 'updraftplus').'</a>
 				</div>';
@@ -3552,11 +3679,13 @@ ENDHERE;
 	 */
 	private function restore_backup($timestamp, $continuation_data = null) {
 
+		global $wp_filesystem, $updraftplus;
+		
 		@set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);
 
-		global $wp_filesystem, $updraftplus;
-		$backup_history = UpdraftPlus_Options::get_updraft_option('updraft_backup_history');
-		if (!isset($backup_history[$timestamp]) || !is_array($backup_history[$timestamp])) {
+		$backup_set = UpdraftPlus_Backup_History::get_history($timestamp);
+		
+		if (empty($backup_set)) {
 			echo '<p>'.__('This backup does not exist in the backup history - restoration aborted. Timestamp:', 'updraftplus')." $timestamp</p><br>";
 			return new WP_Error('does_not_exist', __('Backup does not exist in the backup history', 'updraftplus'));
 		}
@@ -3612,13 +3741,12 @@ ENDHERE;
 		$updraft_dir = trailingslashit($updraftplus->backups_dir_location());
 		$foreign_known = apply_filters('updraftplus_accept_archivename', array());
 
-		$service = (isset($backup_history[$timestamp]['service'])) ? $backup_history[$timestamp]['service'] : false;
-		if (!is_array($service)) $service = array($service);
+		$service = isset($backup_set['service']) ? $backup_set['service'] : array('none');
+		if (is_string($service)) $service = array($service);
 
 		// Now, need to turn any updraft_restore_<entity> fields (that came from a potential WP_Filesystem form) back into parts of the _POST array (which we want to use)
 		if (empty($_POST['updraft_restore']) || (!is_array($_POST['updraft_restore']))) $_POST['updraft_restore'] = array();
 
-		$backup_set = $backup_history[$timestamp];
 		$entities_to_restore = array();
 		foreach ($_POST['updraft_restore'] as $entity) {
 			if (empty($backup_set['meta_foreign'])) {
@@ -3749,25 +3877,12 @@ ENDHERE;
 					continue;
 				}
 
-				add_action('http_request_args', array($updraftplus, 'modify_http_options'));
-				foreach ($service as $serv) {
-					if (!is_readable($fullpath)) {
-						$sd = (empty($updraftplus->backup_methods[$serv])) ? $serv : $updraftplus->backup_methods[$serv];
-						$updraftplus->log(__("File is not locally present - needs retrieving from remote storage",'updraftplus')." ($sd)", 'notice-restore');
-						$this->download_file($file, $serv);
-						if (!is_readable($fullpath)) {
-							$updraftplus->log(__("Error", 'updraftplus'), 'notice-restore');
-						} else {
-							$updraftplus->log(__("OK", 'updraftplus'), 'notice-restore');
-						}
-					}
-				}
-				remove_action('http_request_args', array($updraftplus, 'modify_http_options'));
+				$this->get_remote_file($service, $file, $timestamp, true);
 
 				$index = ($ind == 0) ? '' : $ind;
 				// If a file size is stored in the backup data, then verify correctness of the local file
-				if (isset($backup_history[$timestamp][$type.$index.'-size'])) {
-					$fs = $backup_history[$timestamp][$type.$index.'-size'];
+				if (isset($backup_set[$type.$index.'-size'])) {
+					$fs = $backup_set[$type.$index.'-size'];
 					$print_message = __("Archive is expected to be size:",'updraftplus')." ".round($fs/1024, 1)." KB: ";
 					$as = @filesize($fullpath);
 					if ($as == $fs) {
@@ -3830,7 +3945,7 @@ ENDHERE;
 		
 		}
 
-		$updraftplus_restorer->delete = (UpdraftPlus_Options::get_updraft_option('updraft_delete_local')) ? true : false;
+		$updraftplus_restorer->delete = UpdraftPlus_Options::get_updraft_option('updraft_delete_local') ? true : false;
 		if ('none' === $service || 'email' === $service || empty($service) || (is_array($service) && 1 == count($service) && (in_array('none', $service) || in_array('', $service) || in_array('email', $service))) || !empty($updraftplus_restorer->ud_foreign)) {
 			if ($updraftplus_restorer->delete) $updraftplus->log_e('Will not delete any archives after unpacking them, because there was no cloud storage for this backup');
 			$updraftplus_restorer->delete = false;
@@ -3854,7 +3969,7 @@ ENDHERE;
 		update_site_option('updraft_restore_in_progress', $updraftplus->nonce);
 
 		foreach ($second_loop as $type => $files) {
-			# Types: uploads, themes, plugins, others, db
+			// Types: uploads, themes, plugins, others, db
 			$info = (isset($backupable_entities[$type])) ? $backupable_entities[$type] : array();
 
 			echo ('db' == $type) ? "<h2>".__('Database', 'updraftplus')."</h2>" : "<h2>".$info['description']."</h2>";
@@ -3867,8 +3982,10 @@ ENDHERE;
 					$val = $updraftplus_restorer->restore_backup($file, $type, $info, $last_one);
 				} catch (Exception $e) {
 					$log_message = 'Exception ('.get_class($e).') occurred during restore: '.$e->getMessage().' (Code: '.$e->getCode().', line '.$e->getLine().' in '.$e->getFile().')';
-					error_log($log_message);
 					$display_log_message = sprintf(__('A PHP exception (%s) has occurred: %s', 'updraftplus'), get_class($e), $e->getMessage());
+					error_log($log_message);
+					// @codingStandardsIgnoreLine
+					if (function_exists('wp_debug_backtrace_summary')) $log_message .= ' Backtrace: '.wp_debug_backtrace_summary();
 					$updraftplus->log($log_message);
 					$updraftplus->log($display_log_message, 'notice-restore');
 					die();
@@ -3876,8 +3993,10 @@ ENDHERE;
 				} catch (Error $e) {
 					$log_message = 'PHP Fatal error ('.get_class($e).') has occurred. Error Message: '.$e->getMessage().' (Code: '.$e->getCode().', line '.$e->getLine().' in '.$e->getFile().')';
 					error_log($log_message);
-					$display_log_message = sprintf(__('A PHP fatal error (%s) has occurred: %s', 'updraftplus'), get_class($e), $e->getMessage());
+					// @codingStandardsIgnoreLine
+					if (function_exists('wp_debug_backtrace_summary')) $log_message .= ' Backtrace: '.wp_debug_backtrace_summary();
 					$updraftplus->log($log_message);
+					$display_log_message = sprintf(__('A PHP fatal error (%s) has occurred: %s', 'updraftplus'), get_class($e), $e->getMessage());
 					$updraftplus->log($display_log_message, 'notice-restore');
 					die();
 				}
@@ -3934,12 +4053,12 @@ ENDHERE;
 			add_filter('pre_option_'.$opt, array($this, 'option_filter_'.$opt));
 		}
 
-		# Clear any cached pages after the restore
+		// Clear any cached pages after the restore
 		$updraftplus_restorer->clear_cache();
 
 		if (!function_exists('validate_current_theme')) require_once(ABSPATH.WPINC.'/themes');
 
-		# Have seen a case where the current theme in the DB began with a capital, but not on disk - and this breaks migrating from Windows to a case-sensitive system
+		// Have seen a case where the current theme in the DB began with a capital, but not on disk - and this breaks migrating from Windows to a case-sensitive system
 		$template = get_option('template');
 		if (!empty($template) && $template != WP_DEFAULT_THEME && $template != strtolower($template)) {
 
@@ -3959,9 +4078,10 @@ ENDHERE;
 			echo '</strong>';
 		}
 
-		echo '</div>'; //close the updraft_restore_progress div
+		echo '</div>'; // Close the updraft_restore_progress div
 
 		restore_error_handler();
+		
 		return true;
 	}
 
@@ -4318,15 +4438,22 @@ ENDHERE;
 		}
 	}
 
-	//This will bring back all the details for raw backup and file list
-	public function show_raw_backups($no_pre_tags = false){
+	/**
+	 * This will return all the details for raw backup and file list, in HTML format
+	 *
+	 * @param Boolean $no_pre_tags - if set, then <pre></pre> tags will be removed from the output
+	 *
+	 * @return String
+	 */
+	public function show_raw_backups($no_pre_tags = false) {
 		global $updraftplus;
 		
 		$response = array();
 		
 		$response['html'] = '<h3 id="ud-debuginfo-rawbackups">'.__('Known backups (raw)', 'updraftplus').'</h3><pre>';
 		ob_start();
-			var_dump($updraftplus->get_backup_history());
+		$history = UpdraftPlus_Backup_History::get_history();
+		var_dump($history);
 		$response["html"] .= ob_get_clean(); 
 		$response['html'] .= '</pre>';
 

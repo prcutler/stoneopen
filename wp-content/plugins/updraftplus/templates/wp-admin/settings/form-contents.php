@@ -126,7 +126,6 @@ foreach ($default_options as $k => $v) {
 			}
 		?>
 		
-		
 		<?php
 			if (false === apply_filters('updraftplus_storage_printoptions', false, $active_service)) {
 				echo '</div>';
@@ -144,7 +143,7 @@ foreach ($default_options as $k => $v) {
 
 	<?php
 		$storage_objects_and_ids = $updraftplus->get_storage_objects_and_ids(array_keys($updraftplus->backup_methods));
-		
+
 		foreach ($storage_objects_and_ids as $method => $method_information) {
 			$storage_object = $method_information['object'];
 			if (!$storage_object->supports_feature('multi_options')) {
@@ -153,7 +152,6 @@ foreach ($default_options as $k => $v) {
 			} else {
 				foreach ($method_information['instance_settings'] as $instance_id => $storage_options) {
 					$storage_object->set_options($storage_options, false, $instance_id);
-					do_action('updraftplus_config_print_before_storage', $method, $storage_object);
 					$storage_object->print_configuration();
 				}
 			}

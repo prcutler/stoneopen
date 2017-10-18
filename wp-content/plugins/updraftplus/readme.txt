@@ -3,7 +3,7 @@ Contributors: Backup with UpdraftPlus, DavidAnderson, DNutbourne, aporter, snigh
 Tags: backup, restore, database backup, wordpress backup, cloud backup, s3, dropbox, google drive, onedrive, ftp, backups
 Requires at least: 3.2
 Tested up to: 4.8
-Stable tag: 1.13.7
+Stable tag: 1.13.11
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -14,7 +14,7 @@ Backup and restoration made easy. Complete backups; manual or scheduled (backup 
 
 <a href="https://updraftplus.com">UpdraftPlus</a> simplifies backups and restoration. It is the world's highest ranking and most popular scheduled backup plugin, with over a million currently-active installs. Backup your files and database backups into the cloud and restore with a single click!
 
-Backup into the cloud directly to Dropbox, Google Drive, Amazon S3 (or compatible), Rackspace Cloud, DreamObjects, FTP, Openstack Swift, Updraft Vault and email. The paid version also backs up to Microsoft OneDrive, Microsoft Azure, Google Cloud Storage, SFTP, SCP, and WebDAV.
+Backup into the cloud directly to Dropbox, Google Drive, Amazon S3 (or compatible), Rackspace Cloud, DreamObjects, FTP, Openstack Swift, Updraft Vault and email. The paid version also backs up to Microsoft OneDrive, Microsoft Azure, Google Cloud Storage, Backblaze B2, SFTP, SCP, and WebDAV.
 
 [vimeo https://vimeo.com/154870690]
 
@@ -85,7 +85,7 @@ For other useful free plugins see <a href="https://profiles.wordpress.org/davida
 Our free version of UpdraftPlus is fully functional: it performs full, manual or scheduled backups of all your WordPress files, databases, plugins and themes, and restores them direct from your WordPress control panel.
 
 It also: 
-* Backs up to multiple cloud storage options: Amazon S3 (or compatible), Dropbox, Google Drive, Rackspace Cloud, DreamObjects, FTP, Openstack Swift, UpdraftPlus Vault and email.
+* Backs up to multiple cloud storage options: Dropbox, Google Drive, Amazon S3 (or compatible, e.g. DigitalOcean Spaces), UpdraftPlus Vault, Rackspace Cloud, FTP, DreamObjects, Openstack Swift, and email.
 * Can split your website into multiple archives
 * Downloads backup archives directly from your WordPress dashboard
 * Automatically resumes and retries failed uploads
@@ -98,10 +98,10 @@ Extra features, including full guaranteed support, are available for purchase vi
 
 The free version of UpdraftPlus works just fine, but if you need more features and functionality, including migration and multisite compatibility, you can purchase our Premium version.
 
-Here are some of the key features of UpdraftPremium:
+Here are some of the key features of UpdraftPlus Premium:
 
-* Easily duplicates or migrates websites (with Updraft Migrator)
-* Backs up non WP files and databases to multiple remote destinations and to more cloud storage options (WebDAV, Microsoft OneDrive, Google Cloud, Microsoft Azure, SFTP/SCP, encrypted FTP)
+* Easily duplicates or migrates websites (using the built-in Migrator)
+* Backs up non WP files and databases to multiple remote destinations and to more cloud storage options (WebDAV, Microsoft OneDrive, Google Cloud, Microsoft Azure, Backblaze B2, SFTP/SCP, encrypted FTP)
 * Restores and migrates backup sets from other backup plugins: BackWPUp, BackupWordPress, Simple Backup, WordPress Backup to Dropbox
 * Encrypts sensitive databases; has lock access settings
 * Offers sophisticated reporting and scheduling
@@ -149,7 +149,44 @@ Unfortunately not; since this is free software, there’s no warranty and no gua
 
 The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the best place to learn in more detail about any important changes.
 
-N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.13.7 of the free version correspond to changes made in 2.13.7.x of the paid version.
+N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.13.10 of the free version correspond to changes made in 2.13.10.x of the paid version.
+
+= 1.13.11 - 27/Sep/2017 =
+
+* FIX: Fix a failure (regression in 1.13.8+) to download some backup sets which pre-date the existence of instances
+* FIX: Fix a failure to backup in the short-lived 1.13.10 (many apologies)
+* TWEAK: When logging an Exception or Error, include a backtrace (WP 3.4+)
+* TWEAK: Prevent a PHP warning during a save of the backup history
+* TWEAK: Added a MetaSlider notice in the notices collection
+* TWEAK: Put a try/catch block that will catch PHP exceptions/fatals (PHP 7.0+) during encryption phase, so that any issues can be logged
+
+= 1.13.9 - 25/Sep/2017 =
+
+* FEATURE: Backblaze B2 (https://www.backblaze.com/b2/) support in UpdraftPlus Premium
+* TWEAK: Port job data used by Azure, Google Cloud and OneDrive storage to being instance-local (now believed to all be ported)
+* TWEAK: The automatic correcting of wrongly-input S3 and FTP settings had regressed in a recent version
+* TWEAK: Various small fixes to the standards compliance of the HTML output in the remote storage settings area
+* TWEAK: When deleting backups with multiple remote storage instances of the same type, order the attempts
+
+= 1.13.8 - 21/Sep/2017 =
+
+* FEATURE: When importing a database, warn the user if the current MySQL server does not support a used character set, and offer to replace it (with a link explaining the risks)
+* FEATURE: Generic S3 storage module can now use non-default ports (specify by appending :(port number) to the host name)
+* FIX: Re-scanning of remote storage would fail to detect a file manually uploaded to a secondary remote storage location if not also present locally. Various other (unlikely) corner-case rescanning scenarios also tested and fixed.
+* TWEAK: Some enhancements to the S3 internals, to make the "S3 Generic" module behave better (it already worked) with the forthcoming DigitalOcean Spaces (object storage) (see: https://updraftplus.com/use-updraftplus-digital-ocean-spaces/)
+* TWEAK: UpdraftCentral will no longer show updates which WordPress core lists which appear to be of the same version number
+* TWEAK: Handle trying to download a zero-sized file through the browser more elegantly
+* TWEAK: When pressing 'Delete', the "also delete remote backup" checkbox was showing even for backups without remote storage
+* TWEAK: Abstract history handling into a separate class, UpdraftPlus_Backup_History, for easier maintenance
+* TWEAK: Remove a use of count() on a string to prevent a new PHP notice on PHP 7.2+
+* TWEAK: Some changes to the UpdraftCentral connection tool to make it more user-friendly
+* TWEAK: Clarified and documented the re-scanning code, and made it compatible with the increased flexibility needed for incremental backups in future
+* TWEAK: Tweaked UpdraftCentral GA handler to support Tracking ID editing and disconnection.
+* TWEAK: In the free version, if the only difference between backup and site URLs is http/https, then show a different message to make the situation clearer
+* TWEAK: Make the UPDRAFTPLUS_IPV4_ONLY constant take effect more widely
+* TWEAK: Do not duplicate remote instance ID records in the backup history when re-scanning
+* TWEAK: Keep the remote instance ID list consistent with the remote service list when re-scanning
+* TWEAK: Prevent a PHP notice that could appear for locally stored backups in UpdraftPlus::get_storage_objects_and_ids()
 
 = 1.13.7 - 06/Sep/2017 =
 
@@ -554,4 +591,4 @@ We recognise and thank the following for code and/or libraries used and/or modif
 
 
 == Upgrade Notice ==
-* 1.13.7: Easier Google Drive setup. Lots of small tweaks and improvements. Fix UpdraftCentral regression in 1.13.6. Recommended update for all.
+* 1.13.11: Fix a failure to download some backup sets created with older versions, and a failure to backup in the short-lived 1.13.10. 1.13.9: Backblaze B2 support, and other small tweaks

@@ -1,36 +1,18 @@
 <?php
 
 class BWGControllerBWGShortcode {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function __construct() {
   }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
+
   public function execute() {
     $task = WDWLibrary::get('task');
-    
     $from_menu = ((isset($_GET['page']) && (esc_html($_GET['page']) == 'BWGShortcode')) ? TRUE : FALSE);
-    
-    if($task != '' && $from_menu){
-      if(!WDWLibrary::verify_nonce('BWGShortcode')){
+    if ( $task != '' && $from_menu ) {
+      if ( !WDWLibrary::verify_nonce('BWGShortcode') ) {
         die('Sorry, your nonce did not verify.');
       }
     }
-
-    
-    if (method_exists($this, $task)) {
+    if ( method_exists($this, $task) ) {
       $this->$task();
     }
     $this->display();
@@ -52,12 +34,12 @@ class BWGControllerBWGShortcode {
       $id = ((isset($_POST['currrent_id'])) ? (int) esc_html(stripslashes($_POST['currrent_id'])) : 0);
       $insert = ((isset($_POST['bwg_insert'])) ? (int) esc_html(stripslashes($_POST['bwg_insert'])) : 0);
       if (!$insert) {
-        $save = $wpdb->update($wpdb->prefix . 'bwg_shortcode', array(
+        $wpdb->update($wpdb->prefix . 'bwg_shortcode', array(
         'tagtext' => $tagtext
         ), array('id' => $id));
       }
       else {
-        $save = $wpdb->insert($wpdb->prefix . 'bwg_shortcode', array(
+        $wpdb->insert($wpdb->prefix . 'bwg_shortcode', array(
           'id' => $id,
           'tagtext' => $tagtext
         ), array(
@@ -67,13 +49,4 @@ class BWGControllerBWGShortcode {
       }
     }
   }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
 }

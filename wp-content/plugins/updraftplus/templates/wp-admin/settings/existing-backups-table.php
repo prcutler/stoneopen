@@ -59,16 +59,17 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 					<div class="backup_date_label">
 						<?php echo $date_label;?>
 						<?php
+							if (!isset($backup['service'])) $backup['service'] = array();
 							if (!is_array($backup['service'])) $backup['service'] = array($backup['service']);
 							foreach ($backup['service'] as $service) {
-							if ('none' === $service || '' === $service || (is_array($service) && (empty($service) || array('none') === $service))) {
-								// Do nothing
-							} else {
-								$image_url = file_exists($image_folder.$service.'.png') ? $image_folder_url.$service.'.png' : $image_folder_url.'folder.png';
-								?>
-								<img class="stored_icon" src="<?php echo esc_attr($image_url);?>" title="<?php echo esc_attr(sprintf(__('Stored at: %s', 'updraftplus'), $updraftplus->backup_methods[$service]));?>">
-													<?php
-							}
+								if ('none' === $service || '' === $service || (is_array($service) && (empty($service) || array('none') === $service))) {
+									// Do nothing
+								} else {
+									$image_url = file_exists($image_folder.$service.'.png') ? $image_folder_url.$service.'.png' : $image_folder_url.'folder.png';
+									?>
+									<img class="stored_icon" src="<?php echo esc_attr($image_url);?>" title="<?php echo esc_attr(sprintf(__('Stored at: %s', 'updraftplus'), $updraftplus->backup_methods[$service]));?>">
+									<?php
+								}
 							}
 						?>
 					</div>

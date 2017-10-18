@@ -29,17 +29,15 @@ jQuery(window).load(function(){
       ed.addCommand('mcebwg_mce', function () {
           ed.windowManager.open({
             file:bwg_admin_ajax,
-            width:width_window + ed.getLang('bwg_mce.delta_width', 0),
-            height:height_window + ed.getLang('bwg_mce.delta_height', 0),
-            inline:1,
-			title:'Photo Gallery'
+            width: width_window + ed.getLang('bwg_mce.delta_width', 0),
+            height: height_window + ed.getLang('bwg_mce.delta_height', 0),
+            inline: 1,
+            title: 'Photo Gallery'
           }, {
             plugin_url:url
           });
-          
           var window = ed.windowManager.windows[ed.windowManager.windows.length - 1],
               $window = window.$el;
-              
           $window.css({
             maxWidth: "100%",
             maxHeight: "100%"
@@ -51,7 +49,7 @@ jQuery(window).load(function(){
           $window.find(".mce-container-body").find("iframe").css({
             width:'1px',
             minWidth:'100%',
-          });
+        });
         var e = ed.selection.getNode(), d = wp.media.gallery, f;
         if (typeof wp === "undefined" || !wp.media || !wp.media.gallery) {
           return

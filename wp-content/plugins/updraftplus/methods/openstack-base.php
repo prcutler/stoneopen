@@ -152,6 +152,13 @@ class UpdraftPlus_BackupModule_openstack_base extends UpdraftPlus_BackupModule {
 		return $results;
 	}
 
+	/**
+	 * Called when all chunks have been uploaded, to allow any required finishing actions to be carried out
+	 *
+	 * @param String $file - the basename of the file being uploaded
+	 *
+	 * @return Boolean - success or failure state of any finishing actions
+	 */
 	public function chunked_upload_finish($file) {
 
 		$chunk_path = 'chunk-do-not-delete-'.$file;
@@ -176,14 +183,15 @@ class UpdraftPlus_BackupModule_openstack_base extends UpdraftPlus_BackupModule {
 	/**
 	 * N.B. Since we use varying-size chunks, we must be careful as to what we do with $chunk_index
 	 *
-	 * @param  string $file 		   Filename
-	 * @param  string $fp 			   Filepath to be used in chunked upload
-	 * @param  string $chunk_index 	   Index of chunked upload
-	 * @param  string $upload_size 	   Size of the upload, in bytes
-	 * @param  string $upload_start    Upload start file size
-	 * @param  string $upload_end 	   Upload end file size
-	 * @param  string $total_file_size Total file size
-	 * @return boolean
+	 * @param  String	$file 			 Full path for the file being uploaded
+	 * @param  Resource $fp 			 File handle to read upload data from
+	 * @param  Integer	$chunk_index 	 Index of chunked upload
+	 * @param  Integer	$upload_size 	 Size of the upload, in bytes
+	 * @param  Integer	$upload_start    How many bytes into the file the upload process has got
+	 * @param  Integer	$upload_end 	 How many bytes into the file we will be after this chunk is uploaded
+	 * @param  Integer	$total_file_size Total file size
+	 *
+	 * @return Boolean
 	 */
 	public function chunked_upload($file, $fp, $chunk_index, $upload_size, $upload_start, $upload_end, $total_file_size) {
 

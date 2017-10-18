@@ -20,7 +20,7 @@ abstract class UpdraftPlus_BackupModule {
 	
 		$this->_options = $options;
 		
-		if (null !== $instance_id) $this->set_instance_id($instance_id);
+		if ($instance_id) $this->set_instance_id($instance_id);
 		
 		if ($save) return $this->save_options();
 
@@ -34,11 +34,11 @@ abstract class UpdraftPlus_BackupModule {
 	private function save_options() {
 	
 		if (!$this->supports_feature('multi_options')) {
-			throw new Exception('set_options() can only be called on a storage method which supports multi_options (this module, '.$this->get_id().', does not)');
+			throw new Exception('save_options() can only be called on a storage method which supports multi_options (this module, '.$this->get_id().', does not)');
 		}
 	
 		if (!$this->_instance_id) {
-			throw new Exception('set_options() requires an instance ID, but was called without setting one (either directly or via set_instance_id())');
+			throw new Exception('save_options() requires an instance ID, but was called without setting one (either directly or via set_instance_id())');
 		}
 		
 		global $updraftplus;
@@ -46,7 +46,7 @@ abstract class UpdraftPlus_BackupModule {
 		$current_db_options = $updraftplus->update_remote_storage_options_format($this->get_id());
 
 		if (is_wp_error($current_db_options)) {
-			throw new Exception('set_options(): options fetch/update failed ('.$current_db_options->get_error_code().': '.$current_db_options->get_error_message().')');
+			throw new Exception('save_options(): options fetch/update failed ('.$current_db_options->get_error_code().': '.$current_db_options->get_error_message().')');
 		}
 
 		$current_db_options['settings'][$this->_instance_id] = $this->_options;
@@ -116,7 +116,9 @@ abstract class UpdraftPlus_BackupModule {
 	public function output_settings_field_name_and_id($field, $return_instead_of_echo = false) {
 	
 		$method_id = $this->get_id();
-		$instance_id = $this->_instance_id;
+		
+		$instance_id = $this->supports_feature('config_templates') ? '{{instance_id}}' : $this->_instance_id;
+		
 		$id = '';
 		$name = '';
 
@@ -155,7 +157,11 @@ abstract class UpdraftPlus_BackupModule {
 		
 		if ($this->supports_feature('config_templates')) {
 
-			$template = $this->get_configuration_template();
+			ob_start();
+			do_action('updraftplus_config_print_before_storage', $this->get_id(), $this);
+			$template = ob_get_clean();
+			
+			$template .= $this->get_configuration_template();
 			
 			$opts = $this->get_options();
 			
@@ -181,6 +187,8 @@ abstract class UpdraftPlus_BackupModule {
 			}
 			
 		} else {
+
+			do_action('updraftplus_config_print_before_storage', $this->get_id(), $this);
 
 			// N.B. These are mutually exclusive: config_print() is not used if config_templates is supported. So, even during transition, the UpdraftPlus_BackupModule instance only needs to support one of the two, not both.
 			$this->config_print();
@@ -253,7 +261,7 @@ abstract class UpdraftPlus_BackupModule {
 	 *
 	 * @return String - the identifier
 	 */
-	private function get_id() {
+	public function get_id() {
 		$class = get_class($this);
 		// UpdraftPlus_BackupModule_
 		return substr($class, 25);
@@ -303,12 +311,10 @@ abstract class UpdraftPlus_BackupModule {
 		$supports_multi_options = $this->supports_feature('multi_options');
 
 		if (is_array($this->_options)) {
-		
 			// First, prioritise any options that were explicitly set. This is the eventual goal for all storage modules.
 			$options = $this->_options;
 			
 		} elseif (is_callable(array($this, 'get_opts'))) {
-		
 			// Next, get any options available via a legacy / over-ride method.
 		
 			if ($supports_multi_options) {
@@ -319,7 +325,7 @@ abstract class UpdraftPlus_BackupModule {
 			$options = $this->get_opts();
 			
 		} else {
-		
+
 			// Next, look for job options (which in turn, falls back to saved settings if no job options were set)
 	
 			$options = $updraftplus->get_job_option('updraft_'.$this->get_id());

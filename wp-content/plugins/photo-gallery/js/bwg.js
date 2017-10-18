@@ -8,7 +8,7 @@ function edit_tag(m) {
   var name, slug, tr;
   name = jQuery("#name" + m).html();
   slug = jQuery("#slug" + m).html();
-  tr = ' <td id="td_check_'+m+'" ></td> <td id="td_id_'+m+'" ></td> <td id="td_name_'+m+'" class="edit_input"><input id="edit_tagname" name="tagname'+m+'" class="input_th2" type="text" value="'+name+'"></td> <td id="td_slug_'+m+'" class="edit_input"><input id="edit_slug" class="input_th2"  name="slug'+m+'" type="text" value="'+slug+'"></td> <td id="td_count_'+m+'" ></td> <td id="td_edit_'+m+'" class="table_big_col"><a class="wd-btn wd-btn-primary wd-btn-icon wd-btn-save button-small" title="'+ bwg_objectL10B.save_tag +'" onclick="save_tag('+m+')" >'+bwg_objectL10B.save_tag+' </a></td><td id="td_delete_'+m+'" class="table_big_col" ></td> ';
+  tr = ' <td id="td_check_'+m+'" ></td> <td id="td_id_'+m+'" ></td> <td id="td_name_'+m+'" class="edit_input"><input id="edit_tagname'+m+'" name="tagname'+m+'" class="input_th2" type="text" value="'+name+'" data-old-name"'+name+'"></td> <td id="td_slug_'+m+'" class="edit_input"><input id="edit_slug'+m+'" class="input_th2"  name="slug'+m+'" type="text" value="'+slug+'" data-old-slug="'+slug+'"><input id="edit_old_slug'+m+'" class="input_th2"  name="old_slug'+m+'" type="hidden" value="'+slug+'"></td> <td id="td_count_'+m+'" ></td> <td id="td_edit_'+m+'" class="table_big_col"><a class="wd-btn wd-btn-primary wd-btn-icon wd-btn-save button-small" title="'+ bwg_objectL10B.save_tag +'" onclick="save_tag('+m+')" >'+bwg_objectL10B.save_tag+' </a></td><td id="td_delete_'+m+'" class="table_big_col" ></td> ';
   jQuery("#tr_" + m).html(tr);
   jQuery("#td_id_" + m).attr('class', 'table_big_col');
 }
@@ -16,7 +16,8 @@ function edit_tag(m) {
 function save_tag(tag_id) {
   var tagname=jQuery('input[name=tagname'+tag_id+']').val();
   var slug = jQuery('input[name=slug'+tag_id+']').val();
-  var datas = "tagname="+tagname+"&"+"slug="+slug+"&"+"tag_id="+tag_id;
+  var old_slug = jQuery('input[name=old_slug'+tag_id+']').val();
+  var datas = "tagname="+tagname+"&old_slug="+old_slug+"&slug="+slug+"&tag_id="+tag_id;
   var td_check,td_name,td_slug,td_count,td_edit,td_delete,massege;
   jQuery.ajax({
     type: "POST",  
@@ -75,6 +76,7 @@ function spider_ajax_save(form_id, tr_group) {
   var bwg_nonce = jQuery("#bwg_nonce").val();
   var name = jQuery("#name").val();
   var slug = jQuery("#slug").val();
+  var old_slug = jQuery("#old_slug").val();
 
   if ((typeof tinyMCE != "undefined") && tinyMCE.activeEditor && !tinyMCE.activeEditor.isHidden() && tinyMCE.activeEditor.getContent) {
     var description = tinyMCE.activeEditor.getContent();
@@ -116,7 +118,7 @@ function spider_ajax_save(form_id, tr_group) {
   post_data["bwg_nonce"] = bwg_nonce;
   post_data["name"] = name;
   post_data["slug"] = slug;
-
+  post_data["old_slug"] = old_slug;  
   post_data["description"] = description;
   post_data["preview_image"] = preview_image;
   post_data["published"] = published;
@@ -194,6 +196,7 @@ function spider_ajax_save(form_id, tr_group) {
       spider_run_checkbox();
 
       if (ajax_task == 'ajax_apply') {
+        jQuery('#old_slug').val(jQuery('#slug').val());
         jQuery('#message_div').html("<strong><p>" + bwg_objectL10B.saved + "</p></strong>");
         jQuery('#message_div').show();
       }

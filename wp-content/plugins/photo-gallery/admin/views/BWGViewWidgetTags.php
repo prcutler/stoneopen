@@ -1,27 +1,13 @@
 <?php
 
 class BWGViewWidgetTags {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  private $model;
 
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
+  private $model;
+  
   public function __construct($model) {
     $this->model = $model;
   }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
-
+  
   public function display() {
   }
 
@@ -111,47 +97,47 @@ class BWGViewWidgetTags {
     </script>
     <script src="<?php echo WD_BWG_URL . '/js/jscolor/jscolor.js?ver='.wd_bwg_version(); ?>" type="text/javascript" charset="utf-8"></script>
     <p>
-      <label for="<?php echo $id_title; ?>"><?php _e("Title:", 'bwg_back'); ?></label>
+      <label for="<?php echo $id_title; ?>"><?php _e('Title:', 'bwg_back'); ?></label>
       <input class="widefat" id="<?php echo $id_title; ?>" name="<?php echo $name_title; ?>'" type="text" value="<?php echo $instance['title']; ?>"/>
     </p>    
     <p>
-      <input type="radio" name="<?php echo $name_type; ?>" id="<?php echo $id_type . "_1"; ?>" value="text" class="sel_text" <?php if ($instance['type'] == "text") echo 'checked="checked"'; ?> onclick="bwg_change_type_tag(event, this)" /><label for="<?php echo $id_type . "_1"; ?>"><?php _e("Text", 'bwg_back'); ?></label>
-      <input type="radio" name="<?php echo $name_type; ?>" id="<?php echo $id_type . "_2"; ?>" value="image" class="sel_image" <?php if ($instance['type'] == "image") echo 'checked="checked"'; ?> onclick="bwg_change_type_tag(event, this)" /><label for="<?php echo $id_type . "_2"; ?>"><?php _e("Image", 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_type; ?>" id="<?php echo $id_type . "_1"; ?>" value="text" class="sel_text" <?php if ($instance['type'] == "text") echo 'checked="checked"'; ?> onclick="bwg_change_type_tag(event, this)" /><label for="<?php echo $id_type . "_1"; ?>"><?php echo __('Text', 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_type; ?>" id="<?php echo $id_type . "_2"; ?>" value="image" class="sel_image" <?php if ($instance['type'] == "image") echo 'checked="checked"'; ?> onclick="bwg_change_type_tag(event, this)" /><label for="<?php echo $id_type . "_2"; ?>"><?php echo __('Image', 'bwg_back'); ?></label>
       <input type="hidden" name="<?php echo $name_type; ?>" id="<?php echo $id_type; ?>" value="<?php echo $instance['type']; ?>" class="bwg_hidden" />
     </p>
     <p id="p_show_name" style="display:<?php echo ($instance['type'] == 'image') ? "" : "none" ?>;">
-      <label><?php _e("Show Tag Names:", 'bwg_back'); ?></label>
-      <input type="radio" name="<?php echo $name_show_name; ?>" id="<?php echo $id_show_name . "_1"; ?>" value="1" <?php if ($instance['show_name']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "1");' /><label for="<?php echo $id_show_name . "_1"; ?>"><?php _e("Yes", 'bwg_back'); ?></label>
-      <input type="radio" name="<?php echo $name_show_name; ?>" id="<?php echo $id_show_name . "_0"; ?>" value="0" <?php if (!$instance['show_name']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "0");' /><label for="<?php echo $id_show_name . "_0"; ?>"><?php _e("No", 'bwg_back'); ?></label>
+      <label><?php _e('Show Tag Names:', 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_show_name; ?>" id="<?php echo $id_show_name . "_1"; ?>" value="1" <?php if ($instance['show_name']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "1");' /><label for="<?php echo $id_show_name . "_1"; ?>"><?php _e('Yes', 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_show_name; ?>" id="<?php echo $id_show_name . "_0"; ?>" value="0" <?php if (!$instance['show_name']) echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "0");' /><label for="<?php echo $id_show_name . "_0"; ?>"><?php _e('No', 'bwg_back'); ?></label>
       <input type="hidden" name="<?php echo $name_show_name; ?>" id="<?php echo $id_show_name; ?>" value="<?php echo $instance['show_name']; ?>" class="bwg_hidden" />
     </p>
     <p>
-      <label><?php _e("Open in:", 'bwg_back'); ?> </label>
-      <input type="radio" name="<?php echo $name_open_option; ?>" id="<?php echo $id_open_option . "_1"; ?>" value="page" <?php if ($instance['open_option'] == 'page') echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "page");' /><label for="<?php echo $id_open_option . "_1"; ?>"> <?php _e("page", 'bwg_back'); ?></label>
-      <input type="radio" name="<?php echo $name_open_option; ?>" id="<?php echo $id_open_option . "_0"; ?>" value="lightbox" <?php if ($instance['open_option'] == 'lightbox') echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "lightbox");' /><label for="<?php echo $id_open_option . "_0"; ?>"> <?php _e("lightbox", 'bwg_back'); ?></label>
+      <label><?php _e('Open in:', 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_open_option; ?>" id="<?php echo $id_open_option . "_1"; ?>" value="page" <?php if ($instance['open_option'] == 'page') echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "page");' /><label for="<?php echo $id_open_option . "_1"; ?>"> <?php _e('page', 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_open_option; ?>" id="<?php echo $id_open_option . "_0"; ?>" value="lightbox" <?php if ($instance['open_option'] == 'lightbox') echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "lightbox");' /><label for="<?php echo $id_open_option . "_0"; ?>"> <?php _e('lightbox', 'bwg_back'); ?></label>
       <input type="hidden" name="<?php echo $name_open_option; ?>" id="<?php echo $id_open_option; ?>" value="<?php echo $instance['open_option']; ?>" class="bwg_hidden" />
     </p>
     <p>
-      <label for="<?php echo $id_count; ?>"><?php _e("Number (0 for all):", 'bwg_back'); ?></label>
+      <label for="<?php echo $id_count; ?>"><?php _e('Number (0 for all):', 'bwg_back'); ?></label>
       <input class="widefat" style="width:25%;" id="<?php echo $id_count; ?>" name="<?php echo $name_count; ?>'" type="text" value="<?php echo $instance['count']; ?>"/>
     </p>
     <p>
-      <label for="<?php echo $id_width; ?>"><?php _e("Dimensions:", 'bwg_back'); ?></label>
+      <label for="<?php echo $id_width; ?>"><?php _e('Dimensions:', 'bwg_back'); ?></label>
       <input class="widefat" style="width:25%;" id="<?php echo $id_width; ?>" name="<?php echo $name_width; ?>'" type="text" value="<?php echo $instance['width']; ?>"/> x 
       <input class="widefat" style="width:25%;" id="<?php echo $id_height; ?>" name="<?php echo $name_height; ?>'" type="text" value="<?php echo $instance['height']; ?>"/> px
     </p>
     <p>
-      <label><?php _e("Transparent Background:", 'bwg_back'); ?></label>
-      <input type="radio" name="<?php echo $name_background_transparent; ?>" id="<?php echo $id_background_transparent . "_1"; ?>" value="1" <?php if ($instance['background_transparent']) echo 'checked="checked"'; ?> onclick="bwg_change_bg_transparency(event, this)" class="bg_transparent" /><label for="<?php echo $id_background_transparent . "_1"; ?>"><?php _e("Yes", 'bwg_back'); ?></label>
-      <input type="radio" name="<?php echo $name_background_transparent; ?>" id="<?php echo $id_background_transparent . "_0"; ?>" value="0" <?php if (!$instance['background_transparent']) echo 'checked="checked"'; ?> onclick="bwg_change_bg_transparency(event, this)" /><label for="<?php echo $id_background_transparent . "_0"; ?>"><?php _e("No", 'bwg_back'); ?></label>
+      <label><?php _e('Transparent Background:', 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_background_transparent; ?>" id="<?php echo $id_background_transparent . "_1"; ?>" value="1" <?php if ($instance['background_transparent']) echo 'checked="checked"'; ?> onclick="bwg_change_bg_transparency(event, this)" class="bg_transparent" /><label for="<?php echo $id_background_transparent . "_1"; ?>"><?php _e('Yes', 'bwg_back'); ?></label>
+      <input type="radio" name="<?php echo $name_background_transparent; ?>" id="<?php echo $id_background_transparent . "_0"; ?>" value="0" <?php if (!$instance['background_transparent']) echo 'checked="checked"'; ?> onclick="bwg_change_bg_transparency(event, this)" /><label for="<?php echo $id_background_transparent . "_0"; ?>"><?php _e('No', 'bwg_back'); ?></label>
       <input type="hidden" name="<?php echo $name_background_transparent; ?>" id="<?php echo $id_background_transparent; ?>" value="<?php echo $instance['background_transparent']; ?>" class="bwg_hidden" />
     </p>
     <p id="p_bg_color" style="display:<?php echo (!$instance['background_transparent']) ? "" : "none" ?>;">
-      <label for="<?php echo $id_background_color; ?>"><?php _e("Background Color:", 'bwg_back'); ?></label>
+      <label for="<?php echo $id_background_color; ?>"><?php _e('Background Color:', 'bwg_back'); ?></label>
       <input class="color" style="width:25%;" id="<?php echo $id_background_color; ?>" name="<?php echo $name_background_color; ?>'" type="text" value="<?php echo $instance['background_color']; ?>"/>
     </p> 
     <p>
-      <label for="<?php echo $id_text_color; ?>"><?php _e("Text Color:", 'bwg_back'); ?></label>
+      <label for="<?php echo $id_text_color; ?>"><?php _e('Text Color:', 'bwg_back'); ?></label>
       <input class="color" style="width:25%;" id="<?php echo $id_text_color; ?>" name="<?php echo $name_text_color; ?>'" type="text" value="<?php echo $instance['text_color']; ?>"/>
     </p> 
     <p>
@@ -170,14 +156,4 @@ class BWGViewWidgetTags {
     </script>
     <?php
   }
-  
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
 }

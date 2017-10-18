@@ -256,18 +256,18 @@ class BWGViewAlbum_compact_preview {
       'slideshow_effect_duration' => isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1
     );
     if ($params['watermark_type'] != 'none') {
-      $params_array['watermark_link'] = urlencode($params['watermark_link']);
+      $params_array['watermark_link'] = $params['watermark_link'];
       $params_array['watermark_opacity'] = $params['watermark_opacity'];
       $params_array['watermark_position'] = $params['watermark_position'];
     }
     if ($params['watermark_type'] == 'text') {
-      $params_array['watermark_text'] = urlencode($params['watermark_text']);
+      $params_array['watermark_text'] = $params['watermark_text'];
       $params_array['watermark_font_size'] = $params['watermark_font_size'];
       $params_array['watermark_font'] = $params['watermark_font'];
       $params_array['watermark_color'] = $params['watermark_color'];
     }
     elseif ($params['watermark_type'] == 'image') {
-      $params_array['watermark_url'] = urlencode($params['watermark_url']);
+      $params_array['watermark_url'] = $params['watermark_url'];
       $params_array['watermark_width'] = $params['watermark_width'];
       $params_array['watermark_height'] = $params['watermark_height'];
     }

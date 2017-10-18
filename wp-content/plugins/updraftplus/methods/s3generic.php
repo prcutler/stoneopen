@@ -12,8 +12,15 @@ class UpdraftPlus_BackupModule_s3generic extends UpdraftPlus_BackupModule_s3 {
 	protected function set_region($obj, $region = '', $bucket_name = '') {
 		$config = $this->get_config();
 		$endpoint = ('' != $region && 'n/a' != $region) ? $region : $config['endpoint'];
+		$log_message = "Set endpoint: $endpoint";
+		if (is_string($endpoint) && preg_match('/^(.*):(\d+)$/', $endpoint, $matches)) {
+			$endpoint = $matches[1];
+			$port = $matches[2];
+			$log_message .= ", port=$port";
+			$obj->setPort($port);
+		}
 		global $updraftplus;
-		if ($updraftplus->backup_time) $updraftplus->log("Set endpoint: $endpoint");
+		if ($updraftplus->backup_time) $updraftplus->log($log_message);
 		$obj->setEndpoint($endpoint);
 	}
 
@@ -57,6 +64,7 @@ class UpdraftPlus_BackupModule_s3generic extends UpdraftPlus_BackupModule_s3 {
 	public function config_print() {
 		// 5th parameter = control panel URL
 		// 6th = image HTML
+		// 7th = include endpoint chooser
 		$this->config_print_engine('s3generic', 'S3', __('S3 (Compatible)', 'updraftplus'), 'S3', '', '', true);
 	}
 

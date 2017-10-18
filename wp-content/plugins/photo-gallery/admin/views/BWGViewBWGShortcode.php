@@ -1,27 +1,12 @@
 <?php
-
 class BWGViewBWGShortcode {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
+
   private $model;
-
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
+  
   public function __construct($model) {
     $this->model = $model;
   }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
+ 
   public function display() {
     $gallery_rows = $this->model->get_gallery_rows_data();
     $album_rows = $this->model->get_album_rows_data();
@@ -77,7 +62,7 @@ class BWGViewBWGShortcode {
     ?>
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
-        <title><?php _e("Photo Gallery", 'bwg_back'); ?></title>
+        <title><?php _e('Photo Gallery', 'bwg_back'); ?></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
       <?php
       wp_print_scripts('jquery');
@@ -242,7 +227,7 @@ class BWGViewBWGShortcode {
               </div>
               <hr class="bwg_hr_shortcode" />
               <div class="bwg_short_div type_them" style="border-right: 1px solid #000000;">
-              <div style="display:table;width:100%;">
+              <div style="width:100%;display:table;">
                 <div style="display:table-cell;">
                 <div class="gallery_album_option_left">
                   <table style="display:inline-block;">
@@ -250,8 +235,8 @@ class BWGViewBWGShortcode {
                       <tr id="tr_theme">
                         <td <?php echo (get_option("wd_bwg_theme_version") ? 'title="This option is disabled in free version." class="spider_label spider_free_version_label"' : 'class="spider_label"'); ?>><label for="theme"><?php _e("Theme:", 'bwg_back'); ?> </label></td>
                         <td>
-                          <select name="theme" class="select_icon" id="theme" style="width:150px;" <?php echo (get_option("wd_bwg_theme_version") ? 'disabled="disabled"' : ''); ?>>
-                            <option value="0" selected="selected"><?php _e("Select Theme", 'bwg_back'); ?></option>
+                          <select name="theme" id="theme" class="select_icon" style="width:150px;" <?php echo (get_option("wd_bwg_theme_version") ? 'disabled="disabled"' : ''); ?>>
+                            <option value="0"><?php echo __('Select Theme', 'bwg_back'); ?></option>
                             <?php
                             foreach ($theme_rows as $theme_row) {
                               ?>
@@ -263,10 +248,10 @@ class BWGViewBWGShortcode {
                         </td>
                       </tr>
                       <tr id="tr_gallery">
-                        <td class="spider_label"><label for="gallery"><?php _e("Gallery:", 'bwg_back'); ?> </label></td>
+                        <td class="spider_label"><label for="gallery"><?php _e('Gallery:', 'bwg_back'); ?> </label></td>
                         <td>
-                          <select name="gallery" class="select_icon" id="gallery" style="width:150px;">
-                            <option value="0" selected="selected"><?php _e("All Galleries", 'bwg_back'); ?></option>
+                          <select name="gallery" id="gallery" class="select_icon" style="width:150px;">
+                            <option value="0"><?php _e('All Galleries', 'bwg_back'); ?></option>
                             <?php
                             foreach ($gallery_rows as $gallery_row) {
                               ?>
@@ -278,10 +263,10 @@ class BWGViewBWGShortcode {
                         </td>
                       </tr>
                       <tr id="tr_album">
-                        <td title="<?php _e('The selected album expanded content will be displayed.', 'bwg_back'); ?>" class="spider_label"><label for="album"><?php _e("Album:", 'bwg_back'); ?> </label></td>
+                        <td title="<?php _e('The selected album expanded content will be displayed.', 'bwg_back'); ?>" class="spider_label"><label for="album"><?php echo __('Album:', 'bwg_back'); ?> </label></td>
                         <td>
-                          <select name="album" class="select_icon" id="album" style="width:150px;">
-                            <option value="0" selected="selected"><?php _e("Select Album", 'bwg_back'); ?></option>
+                          <select name="album" id="album" class="select_icon" style="width:150px;">
+                            <option value="0" selected="selected"><?php _e('Select Album', 'bwg_back'); ?></option>
                             <?php
                             foreach ($album_rows as $album_row) {
                               ?>
@@ -293,25 +278,25 @@ class BWGViewBWGShortcode {
                         </td>
                       </tr>
                       <tr id="tr_sort_by">
-                        <td class="spider_label"><label for="sort_by"><?php _e("Sort images by:", 'bwg_back'); ?> </label></td>
+                        <td class="spider_label"><label for="sort_by"><?php _e('Sort images by:', 'bwg_back'); ?> </label></td>
                         <td>
-                          <select name="sort_by" class="select_icon" id="sort_by" style="width:150px;">
-                            <option value="order" selected="selected"><?php _e("Order", 'bwg_back'); ?></option>
-                            <option value="alt"><?php _e("Title", 'bwg_back'); ?></option>
-                            <option value="date"><?php _e("Date", 'bwg_back'); ?></option>
-                            <option value="filename"><?php _e("Filename", 'bwg_back'); ?></option>
-                            <option value="size"><?php _e("Size", 'bwg_back'); ?></option>
-                            <option value="filetype"><?php _e("Type", 'bwg_back'); ?></option>
-                            <option value="resolution"><?php _e("Resolution", 'bwg_back'); ?></option>
-                            <option value="random"><?php _e("Random", 'bwg_back'); ?></option>
+                          <select name="sort_by" id="sort_by" class="select_icon" style="width:150px;">
+                            <option value="order" selected="selected"><?php _e('Order', 'bwg_back'); ?></option>
+                            <option value="alt"><?php _e('Title', 'bwg_back'); ?></option>
+                            <option value="date"><?php _e('Date', 'bwg_back'); ?></option>
+                            <option value="filename"><?php _e('Filename', 'bwg_back'); ?></option>
+                            <option value="size"><?php _e('Size', 'bwg_back'); ?></option>
+                            <option value="filetype"><?php _e('Type', 'bwg_back'); ?></option>
+                            <option value="resolution"><?php _e('Resolution', 'bwg_back'); ?></option>
+                            <option value="random"><?php _e('Random', 'bwg_back'); ?></option>
                           </select>
                         </td>
                       </tr>
                       <tr id="tr_tag">
-                        <td class="spider_label"><label for="gallery"><?php echo __('Tag:', 'bwg_back'); ?> </label></td>
+                        <td class="spider_label"><label for="tag"><?php echo __('Tag:', 'bwg_back'); ?> </label></td>
                         <td>
                           <select name="tag" id="tag" class="select_icon" style="width:150px;">
-                            <option value="0" selected="selected"><?php echo __('All Tags', 'bwg_back'); ?></option>
+                            <option value="0"><?php _e('All Tags', 'bwg_back'); ?></option>
                             <?php
                             foreach ($tag_rows as $tag_row) {
                               ?>
@@ -1195,11 +1180,11 @@ class BWGViewBWGShortcode {
               <input type="button" class="wd-btn wd-btn-primary wd-btn-icon wd-btn-import" id="import" name="import" value="<?php echo __("Import", 'bwg_back'); ?>" onclick="bwg_update_shortcode()" />
               <div>
                 <input type="text" size="55" id="bwg_shortcode" name="bwg_shortcode" value='<?php echo $tagtext; ?>' onclick="bwg_onKeyDown(event)" />
-                <b><?php _e("Shortcode", 'bwg_back'); ?></b>
+                <b><?php _e('Shortcode', 'bwg_back'); ?></b>
               </div>
               <div>
                 <input type="text" size="55" id="bwg_function" name="bwg_function" value="<?php echo $tagfunction; ?>" onclick="spider_select_value(this)" readonly="readonly" />
-                <b><?php _e("PHP function", 'bwg_back'); ?></b>
+                <b><?php _e('PHP function', 'bwg_back'); ?></b>
               </div>
             </span>
             </div>
@@ -1267,7 +1252,22 @@ class BWGViewBWGShortcode {
               jQuery('#insert').attr('onclick', "bwg_insert_shortcode(content)");
               jQuery("select[id=theme] option[value='" + short_code['theme_id'] + "']").attr('selected', 'selected');
               jQuery("select[id=gallery_types_name] option[value='" + short_code['gallery_type'] + "']").attr('selected', 'selected');
-              switch (short_code['gallery_type']) {
+			  if ( short_code['use_option_defaults'] == 1 ) {
+					switch ( short_code['type'] ) {
+						case 'gallery': {
+						   jQuery("select[id=gallery] option[value='" + short_code['gallery_id'] + "']").attr('selected', 'selected');
+						break;
+						}
+						case 'album': {
+						   jQuery("select[id=album] option[value='" + short_code['album_id'] + "']").attr('selected', 'selected');
+						break;
+						}
+					}
+				   jQuery("select[id=tag] option[value='" + short_code['tag'] + "']").attr('selected', 'selected');
+				   bwg_gallery_type(short_code['gallery_type']);
+				   return false;
+			  }
+			  switch (short_code['gallery_type']) {
                 case 'thumbnails': {
                   jQuery("select[id=gallery] option[value='" + short_code['gallery_id'] + "']").attr('selected', 'selected');
                   jQuery("select[id=sort_by] option[value='" + short_code['sort_by'] + "']").attr('selected', 'selected');
@@ -1400,7 +1400,6 @@ class BWGViewBWGShortcode {
                     jQuery("#slideshow_music_no").attr('checked', 'checked');
                   }
                   break;
-
                 }
                 case 'image_browser': {
                   jQuery("select[id=gallery] option[value='" + short_code['gallery_id'] + "']").attr('selected', 'selected');
@@ -1528,7 +1527,6 @@ class BWGViewBWGShortcode {
                   else {
                     jQuery("#show_tag_box_0").attr('checked', 'checked');
                   }
-                  jQuery("#compuct_album_mosaic_total_width").val(short_code['compuct_album_mosaic_total_width']);
                   if (short_code['show_gallery_description'] == 1) {
                     jQuery("#show_gallery_description_1").attr('checked', 'checked');
                   }
@@ -1541,6 +1539,7 @@ class BWGViewBWGShortcode {
                   else {
                     jQuery("#show_album_name_0").attr('checked', 'checked');
                   }
+                  jQuery("#compuct_album_mosaic_total_width").val(short_code['compuct_album_mosaic_total_width']);
                   break;
 
                 }
@@ -1896,6 +1895,8 @@ class BWGViewBWGShortcode {
             var title = "";
             var short_code = '[Best_Wordpress_Gallery';
             var tagtext = ' gallery_type="' + gallery_type + '" theme_id="' + theme + '"';
+			 // TODO need works (this value get dinamic).
+				tagtext += ' use_option_defaults="0"';
             switch (gallery_type) {
               case 'thumbnails': {
                 tagtext += ' gallery_id="' + jQuery("#gallery").val() + '"';
@@ -1986,7 +1987,7 @@ class BWGViewBWGShortcode {
                 tagtext += ' compuct_album_load_more_image_count="' + jQuery("#compuct_album_load_more_image_count").val() + '"';
                 tagtext += ' compuct_albums_per_page_load_more="' + jQuery("#compuct_albums_per_page_load_more").val() + '"';
                 tagtext += ' show_tag_box="' + jQuery("input[name=show_tag_box]:checked").val() + '"';
-								title = ' gal_title="' + jQuery.trim(jQuery('#album option:selected').text().replace("'", "").replace('"', '')) + '"';
+		title = ' gal_title="' + jQuery.trim(jQuery('#album option:selected').text().replace("'", "").replace('"', '')) + '"';
                 tagtext += ' show_gallery_description="' + jQuery("input[name=show_gallery_description]:checked").val() + '"';
                 tagtext += ' show_album_name="' + jQuery("input[name=show_album_name]:checked").val() + '"';
                 break;
@@ -2100,7 +2101,10 @@ class BWGViewBWGShortcode {
               post_data['currrent_id'] = shortcode_id;
               post_data['title'] = title;
               post_data['bwg_insert'] = (content && !bwg_insert) ? 0 : 1;
-              jQuery.post(
+			  // TODO need works (this value get dinamic).
+			  post_data['use_option_defaults'] = 0;			  
+            
+			jQuery.post(
                 url,
                 post_data
               ).success(function (data, textStatus, errorThrown) {
@@ -2113,7 +2117,7 @@ class BWGViewBWGShortcode {
               });
             <?php } ?>
           }
-           jQuery(document).ready(function () {
+          jQuery(document).ready(function () {
             bwg_loadmore();
             bwg_change_tab();
           });
@@ -2131,18 +2135,8 @@ class BWGViewBWGShortcode {
     <?php
     include_once (WD_BWG_DIR .'/includes/bwg_pointers.php');
     new BWG_pointers();
-    if (!$from_menu) {
+    if ( !$from_menu ) {
       die();
     }
   }
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
 }

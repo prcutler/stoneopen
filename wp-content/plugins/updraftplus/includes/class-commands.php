@@ -147,20 +147,17 @@ class UpdraftPlus_Commands {
 	
 	public function deleteset($what) {
 	
-		if (false === ($updraftplus_admin = $this->_load_ud_admin())) return new WP_Error('no_updraftplus');
+		if (false === ($updraftplus_admin = $this->_load_ud_admin()) || false === ($updraftplus = $this->_load_ud())) return new WP_Error('no_updraftplus');
 
 		if (!UpdraftPlus_Options::user_can_manage()) return new WP_Error('updraftplus_permission_denied');
 	
-		 $results = $updraftplus_admin->delete_set($what);
+		$results = $updraftplus_admin->delete_set($what);
 	
 		$get_history_opts = isset($what['get_history_opts']) ? $what['get_history_opts'] : array();
 	
-		$backup_history = UpdraftPlus_Options::get_updraft_option('updraft_backup_history');
-		$backup_history = is_array($backup_history) ? $backup_history : array();
+		$backup_history = UpdraftPlus_Backup_History::get_history();
 	
-		$history = $updraftplus_admin->settings_downloading_and_restoring($backup_history, true, $get_history_opts);
-
-		$results['history'] = $history;
+		$results['history'] = $updraftplus_admin->settings_downloading_and_restoring($backup_history, true, $get_history_opts);
 		
 		$results['count_backups'] = count($backup_history);
 	
@@ -383,12 +380,11 @@ class UpdraftPlus_Commands {
 				break;
 			
 			case 'panel_download_and_restore':
-			$backup_history = UpdraftPlus_Options::get_updraft_option('updraft_backup_history');
+			$backup_history = UpdraftPlus_Backup_History::get_history();
 			if (empty($backup_history)) {
-					$updraftplus->rebuild_backup_history();
-					$backup_history = UpdraftPlus_Options::get_updraft_option('updraft_backup_history');
+				UpdraftPlus_Backup_History::rebuild_backup_history();
+				$backup_history = UpdraftPlus_Backup_History::get_history();
 			}
-			$backup_history = is_array($backup_history) ? $backup_history : array();
 				
 			$output = $updraftplus_admin->settings_downloading_and_restoring($backup_history, true, $data);
 				break;

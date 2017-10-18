@@ -16,8 +16,7 @@ foreach ($default_options as $k => $v) {
 }
 
 // $backup_history is passed in
-if (false === $backup_history) $backup_history = UpdraftPlus_Options::get_updraft_option('updraft_backup_history');
-if (!is_array($backup_history)) $backup_history = array();
+if (false === $backup_history) $backup_history = UpdraftPlus_Backup_History::get_history();
 
 if (!empty($options['include_header'])) echo '<h2>'.__('Existing Backups', 'updraftplus').' ('.count($backup_history).')</h2>';
 

@@ -196,6 +196,15 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'supported_positions' => $this->anywhere,
 				'validity_function' => 'keyy_installed',
 			),
+			'metaslider' => array(
+				'prefix' => '',
+				'title' => 'MetaSlider: The #1 WordPress slider plugin',
+				'text' => __("From the team behind UpdraftPlus.", "updraftplus") . ' ' . $this->url_start(true, 'metaslider.com') . __("Find out more.", 'updraftplus') . $this->url_end(true, 'metaslider.com'),
+				'image' => 'notices/metaslider_logo.png',
+				'dismiss_time' => 'dismiss_notice',
+				'supported_positions' => $this->anywhere,
+				'validity_function' => 'metaslider_installed',
+			),
 			
 			// The sale adverts content starts here
 			'blackfriday' => array(
@@ -307,6 +316,18 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 
 		foreach ($plugins as $key => $value) {
 			if ('keyy' == $value['TextDomain']) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	protected function metaslider_installed($plugin_base_dir = null, $product_name = null) {
+		if (!function_exists('get_plugins')) include_once(ABSPATH.'wp-admin/includes/plugin.php');
+		$plugins = get_plugins();
+
+		foreach ($plugins as $key => $value) {
+			if ('ml-slider' == $value['TextDomain']) {
 				return false;
 			}
 		}

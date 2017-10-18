@@ -53,7 +53,7 @@ class BWGViewAddAlbumsGalleries {
       </a>
       <div class="tablenav top">
         <?php
-        WDWLibrary::search(__("Name", 'bwg_back'), $search_value, 'albums_galleries_form','position_search');
+        WDWLibrary::search(__('Name','bwg_back'), $search_value, 'albums_galleries_form', 'position_search');
         WDWLibrary::html_page_nav($page_nav['total'],$pager++, $page_nav['limit'], 'albums_galleries_form', $per_page);
         ?>
       </div>

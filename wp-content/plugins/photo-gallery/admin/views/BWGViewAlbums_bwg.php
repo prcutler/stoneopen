@@ -1,27 +1,11 @@
 <?php
-
 class BWGViewAlbums_bwg {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
+  
   private $model;
 
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function __construct($model) {
     $this->model = $model;
   }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function display() {
     global $WD_BWG_UPLOAD_DIR;
     $rows_data = $this->model->get_rows_data();
@@ -33,44 +17,42 @@ class BWGViewAlbums_bwg {
     $order_class = 'manage-column column-title sorted ' . $asc_or_desc;
     $ids_string = '';
     $per_page = $this->model->per_page();
-	  $pager = 0;
+    $pager = 0;
     $album_button_array = array(
       'publish_all' => __('Publish', 'bwg_back'),
       'unpublish_all' => __('Unpublish', 'bwg_back'),
       'delete_all' => __('Delete', 'bwg_back')
     );
     ?>
-    <form class="wrap bwg_form" id="albums_form" method="post" action="admin.php?page=albums_bwg" style="float: left; width: 98%;">
-      <?php wp_nonce_field( 'albums_bwg', 'bwg_nonce' ); ?>
+    <form class="wrap bwg_form" id="albums_form" method="post" action="admin.php?page=albums_bwg" style="width: 98%; float: left;">
+    <?php wp_nonce_field( 'albums_bwg', 'bwg_nonce' ); ?>
       <div>
         <span class="album-icon"></span>
         <h2>
-          <?php _e("Albums", 'bwg_back'); ?>
+          <?php _e('Albums', 'bwg_back'); ?>
           <a href="" class="add-new-h2" onclick="spider_set_input_value('task', 'add');
-                                                 spider_form_submit(event, 'albums_form')"><?php _e("Add new", 'bwg_back'); ?></a>
+                                                 spider_form_submit(event, 'albums_form')"><?php _e('Add new', 'bwg_back'); ?></a>
         </h2>
       </div>
-      <div id="draganddrop" class="wd_updated" style="display:none;"><strong><p><?php _e("Changes made in this table should be saved.", 'bwg_back'); ?></p></strong></div>
-      <?php WDWLibrary::search(__('Name','bwg_back'), $search_value, 'albums_form',''); ?>
-     <div class="tablenav top buttons_div buttons_div_left">
+      <div id="draganddrop" class="wd_updated" style="display:none;"><strong><p><?php _e('Changes made in this table should be saved.', 'bwg_back'); ?></p></strong></div>
+      <?php WDWLibrary::search(__('Name', 'bwg_back'), $search_value, 'albums_form',''); ?>
+      <div class="tablenav top buttons_div buttons_div_left">
         <span class="wd-btn wd-btn-primary-gray bwg_check_all non_selectable" onclick="spider_check_all_items()">
           <input type="checkbox" id="check_all_items" name="check_all_items" onclick="spider_check_all_items_checkbox()" style="margin: 0; vertical-align: middle;" />
           <span style="vertical-align: middle;"><?php echo __('Select All', 'bwg_back'); ?></span>
         </span>
         <select class='select_icon bulk_action'>
-         <option value=""><?php echo __("Bulk Actions"); ?></option>
-        <?php 
-        foreach($album_button_array as $key => $value) {
-        ?>
-          <option value="<?php echo $key;?>">
-            <?php echo $value;?>
-          </option>
-        <?php
-        }
-        ?>
+          <option value=""><?php _e('Bulk Actions', 'bwg_back'); ?></option>
+          <?php 
+          foreach ($album_button_array as $key => $value) {
+            ?>
+          <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+            <?php
+          }
+          ?>
         </select>
-        <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-apply" type="button" title="<?php echo __("Apply","bwg_back"); ?>" onclick="if (!bwg_bulk_actions('.bulk_action', 'album_page')) {return false;}" value="<?php echo __("Apply","bwg_back"); ?>" />
-      <?php WDWLibrary::html_page_nav($page_nav['total'],$pager++, $page_nav['limit'], 'albums_form', $per_page); ?>
+        <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-apply" type="button" title="<?php _e("Apply", "bwg_back"); ?>" onclick="if (!bwg_bulk_actions('.bulk_action', 'album_page')) {return false;}" value="<?php _e("Apply", "bwg_back"); ?>" />
+        <?php WDWLibrary::html_page_nav($page_nav['total'], $pager++, $page_nav['limit'], 'albums_form', $per_page); ?>
       </div>
       <table class="wp-list-table widefat fixed pages">
         <thead>
@@ -225,8 +207,8 @@ class BWGViewAlbums_bwg {
           td_drag.setAttribute('title','Drag to re-order');
           
           var div_drag = document.createElement('div');
-          div_drag.setAttribute('class', 'handle');
-          
+          div_drag.setAttribute('class', 'bwg_img_handle handle');
+          div_drag.setAttribute('style','margin-left:10px;');
           td_drag.appendChild(div_drag);
           tr.appendChild(td_drag);          
           
@@ -256,29 +238,29 @@ class BWGViewAlbums_bwg {
         tb_remove();
       }
     </script>
-    <form class="wrap bwg_form" method="post" action="admin.php?page=albums_bwg" style="float: left; width: 98%;">
+    <form class="wrap bwg_form" method="post" action="admin.php?page=albums_bwg" style="width: 98%; float: left;">
       <?php wp_nonce_field( 'albums_bwg', 'bwg_nonce' ); ?>
       <div>
         <span class="album-icon"></span>
         <h2><?php echo $page_title; ?></h2>
       </div>
       <div style="float:right;">
-        <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-save" id='save_albums' type="submit" onclick="if(spider_check_required('name', 'Name')){return false;};spider_set_input_value('task', 'save')" value="<?php _e("Save", 'bwg_back'); ?>" />
-        <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-apply" type="submit" onclick="if(spider_check_required('name', 'Name')){return false;};spider_set_input_value('task', 'apply')" value="<?php _e("Apply", 'bwg_back'); ?>" />
-        <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-cancel" type="submit" onclick="spider_set_input_value('task', 'cancel')" value="<?php _e("Cancel", 'bwg_back'); ?>" />
+        <input id="save_albums" class="wd-btn wd-btn-primary wd-btn-icon wd-btn-save" type="submit" onclick="if(spider_check_required('name', 'Name')){return false;};spider_set_input_value('task', 'save')" value="<?php echo __('Save', 'bwg_back'); ?>" />
+        <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-apply" type="submit" onclick="if(spider_check_required('name', 'Name')){return false;};spider_set_input_value('task', 'apply')" value="<?php echo __('Apply', 'bwg_back'); ?>" />
+        <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-cancel" type="submit" onclick="spider_set_input_value('task', 'cancel')" value="<?php echo __('Cancel', 'bwg_back'); ?>" />
       </div>
       <table style="clear:both;">
         <tbody>
           <tr>
-            <td class="spider_label"><label for="name"><?php _e("Name:", 'bwg_back'); ?> <span style="color:#FF0000;">*</span> </label></td>
+            <td class="spider_label"><label for="name"><?php _e('Name:', 'bwg_back'); ?> <span style="color:#FF0000;">*</span> </label></td>
             <td><input type="text" id="name" name="name" value="<?php echo $row->name; ?>" size="39" class="bwg_requried"/></td>
           </tr>
           <tr>
-            <td class="spider_label"><label for="slug"><?php _e("Slug:", 'bwg_back'); ?> </label></td>
-            <td><input type="text" id="slug" name="slug" value="<?php echo $row->slug; ?>" size="39" /></td>
+            <td class="spider_label"><label for="slug"><?php _e('Slug:', 'bwg_back'); ?> </label></td>
+            <td><input type="text" id="slug" name="slug" value="<?php echo $row->slug; ?>" size="39" /><input type="hidden" id="old_slug" name="old_slug" value="<?php echo $row->slug; ?>" size="39" /></td>
           </tr>
           <tr>
-            <td class="spider_label"><label for="description"><?php _e("Description:", 'bwg_back'); ?> </label></td>
+            <td class="spider_label"><label for="description"><?php _e('Description:', 'bwg_back'); ?> </label></td>
             <td>
               <div style="width:500px;">
               <?php
@@ -297,20 +279,20 @@ class BWGViewAlbums_bwg {
             </td>
           </tr>
           <tr>
-            <td class="spider_label"><label><?php _e("Author:", 'bwg_back'); ?> </label></td>
+            <td class="spider_label"><label><?php _e('Author:', 'bwg_back'); ?> </label></td>
             <td><?php echo get_userdata($row->author)->display_name; ?></td>
           </tr>
           <tr>
-            <td class="spider_label"><label for="published1"><?php _e("Published:", 'bwg_back'); ?> </label></td>
+            <td class="spider_label"><label for="published1"><?php _e('Published:', 'bwg_back'); ?> </label></td>
             <td>
               <input type="radio" class="inputbox" id="published0" name="published" <?php echo (($row->published) ? '' : 'checked="checked"'); ?> value="0" >
-              <label for="published0"><?php _e("No", 'bwg_back'); ?></label>
+              <label for="published0"><?php _e('No', 'bwg_back'); ?></label>
               <input type="radio" class="inputbox" id="published1" name="published" <?php echo (($row->published) ? 'checked="checked"' : ''); ?> value="1" >
-              <label for="published1"><?php _e("Yes", 'bwg_back'); ?></label>
+              <label for="published1"><?php _e('Yes', 'bwg_back'); ?></label>
             </td>
           </tr>
           <tr>
-            <td class="spider_label"><label for="url"><?php _e("Preview image:", 'bwg_back'); ?> </label></td>
+            <td class="spider_label"><label for="url"><?php _e('Preview image:', 'bwg_back'); ?> </label></td>
             <td>
             <?php 
             $query_url =  add_query_arg(array('action' => 'addImages', 'width' => '700', 'height' => '550', 'extensions' => 'jpg,jpeg,png,gif', 'callback' => 'bwg_add_preview_image'), admin_url('admin-ajax.php'));
@@ -336,7 +318,7 @@ class BWGViewAlbums_bwg {
             </td>
           </tr>
           <tr>
-            <td class="spider_label"><label for="content-add_media"><?php _e("Albums And Galleries:", 'bwg_back'); ?> </label></td>
+            <td class="spider_label"><label for="content-add_media"><?php _e('Albums And Galleries:', 'bwg_back'); ?> </label></td>
             <td>
             <?php 
               $query_url = add_query_arg(array('action' => 'addAlbumsGalleries', 'album_id' => $id, 'width' => '700', 'height' => '550', 'bwg_items_per_page'=>$per_page ), admin_url('admin-ajax.php'));
@@ -345,8 +327,8 @@ class BWGViewAlbums_bwg {
 
               
             ?>
-              <a href="<?php echo $query_url; ?>" class="wd-btn wd-btn-primary wd-btn-icon wd-btn-add thickbox thickbox-preview" id="content-add_media" title="Add Images" onclick="return false;">
-                <?php _e("Add Albums/Galleries", 'bwg_back'); ?>
+              <a href="<?php echo $query_url; ?>" class="wd-btn wd-btn-primary wd-btn-icon wd-btn-add thickbox thickbox-preview" id="content-add_media" title="<?php echo __("Add Images", 'bwg_back'); ?>" onclick="return false;">
+                <?php _e('Add Albums/Galleries', 'bwg_back'); ?>
               </a>              
               <?php $albums_galleries = $this->model->get_albums_galleries_rows_data($id) ?>
               <table id="table_albums_galleries" class="widefat spider_table" <?php echo (($albums_galleries) ? '' : 'style="display:none;"'); ?>>          
@@ -358,7 +340,7 @@ class BWGViewAlbums_bwg {
                       if ($alb_gal) {
                         ?>
                         <tr id="tr_<?php echo $alb_gal->id . ":" . $alb_gal->is_album . ":" . $alb_gal->alb_gal_id ?>" style="height:35px;">
-                          <td class="connectedSortable table_small_col" title="<?php _e("Drag to re-order", 'bwg_back'); ?>"><div class="handle"></div></td>
+                          <td class="connectedSortable table_small_col" title="<?php _e('Drag to re-order', 'bwg_back'); ?>"><div class="handle"></div></td>
                           <td style="max-width:420px; min-width:400px;"><?php echo ($alb_gal->is_album ? 'Album: ' : 'Gallery: ') . $alb_gal->name; ?></td>
                           <td class="table_small_col">
                             <span class="spider_delete_img" onclick="spider_remove_row('tbody_albums_galleries', event, this)"/>
@@ -394,13 +376,5 @@ class BWGViewAlbums_bwg {
     </form>
     <?php
   }  
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
+ 
 }

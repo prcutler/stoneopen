@@ -1710,6 +1710,21 @@ div#updraft-wrap a {
 	cursor: pointer !important;
 }
 
+#updraftcentral_keys_table {
+	display: none;
+}
+
+.create_key_container {
+	border: 1px solid;
+	border-radius: 4px;
+	padding: 0 0 6px 6px;
+	margin-bottom: 8px;
+}
+
+#updraftcentral_keycreate_mothership {
+	margin-left: 24px;
+}
+
 @media screen and (min-width: 670px) {
 
 	.expertmode .advanced_settings_container .advanced_settings_menu {

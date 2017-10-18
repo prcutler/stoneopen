@@ -29,7 +29,7 @@ class UpdraftPlus_UpdraftCentral_Main {
 		));
 	
 		// If nothing was sent, then there is no incoming message, so no need to set up a listener (or CORS request, etc.). This avoids a DB SELECT query on the option below in the case where it didn't get autoloaded, which is the case when there are no keys.
-		if (('GET' == $_SERVER['REQUEST_METHOD'] || 'POST' == $_SERVER['REQUEST_METHOD']) && (empty($_REQUEST['action']) || 'updraft_central' !== $_REQUEST['action']) && empty($_REQUEST['udcentral_action']) && empty($_REQUEST['udrpc_message'])) return;
+		if (!empty($_SERVER['REQUEST_METHOD']) && ('GET' == $_SERVER['REQUEST_METHOD'] || 'POST' == $_SERVER['REQUEST_METHOD']) && (empty($_REQUEST['action']) || 'updraft_central' !== $_REQUEST['action']) && empty($_REQUEST['udcentral_action']) && empty($_REQUEST['udrpc_message'])) return;
 		
 		// Remote control keys
 		// These are different from the remote send keys, which are set up in the Migrator add-on
@@ -229,6 +229,14 @@ class UpdraftPlus_UpdraftCentral_Main {
 
 		if (is_array($created)) {
 			$created['keys_table'] = $this->get_keys_table();
+
+			$created['keys_guide'] = '<h2 class="updraftcentral_wizard_success">'. __('UpdraftCentral key created successfully') .'</h2>';
+
+			if ('__updraftpluscom' != $where_send) {
+				$created['keys_guide'] .= '<div class="updraftcentral_wizard_success"><p>'.sprintf(__('You now need to copy the key below and enter it at your %s.', 'updraftplus'), '<a href="'.$where_send.'">UpdraftCentral dashboard</a>').'</p><p>'.sprintf(__('Detailed instructions for this can be found at %s', 'updraftplus'), '<a target="_blank" href="https://updraftplus.com/updraftcentral-how-to-add-a-site/">UpdraftPlus.com</a>').'</p></div>';
+			} else {
+				$created['keys_guide'] .= '<div class="updraftcentral_wizard_success"><p>'. sprintf(__('You can now control this site via your UpdraftCentral dashboard at %s.', 'updraftplus'), '<a target="_blank" href="http://updraftplus.com/my-account/remote-control/">UpdraftPlus.com</a>').'</p></div>';
+			}
 		}
 		
 		return $created;
@@ -307,10 +315,15 @@ class UpdraftPlus_UpdraftCentral_Main {
 				}
 			
 				// This option allows the key to be sent to the other side via a known-secure channel (e.g. http over SSL), rather than potentially allowing it to travel over an unencrypted channel (e.g. http back to the user's browser). As such, if specified, it is compulsory for it to work.
+				
+				$updraftplus->register_wp_http_option_hooks();
+				
 				$sent_key = wp_remote_post(
 					$post_it,
 					$post_options
 				);
+				
+				$updraftplus->register_wp_http_option_hooks(false);
 				
 				if (is_wp_error($sent_key) || empty($sent_key)) {
 					$err_msg = sprintf(__('A key was created, but the attempt to register it with %s was unsuccessful - please try again later.', 'updraftplus'), (string) $post_it_description);
@@ -385,7 +398,7 @@ class UpdraftPlus_UpdraftCentral_Main {
 		if (!is_array($our_keys)) $our_keys = array();
 
 		if (empty($our_keys)) {
-			$ret .= '<tr><td colspan="2"><em>'.__('No keys have yet been created.', 'updraftplus').'</em></td></tr>';
+			$ret .= '<tr><td colspan="2"><em>'.__('There are no UpdraftCentral dashboards that can currently control this site.', 'updraftplus').'</em></td></tr>';
 		}
 		
 		foreach ($our_keys as $i => $key) {
@@ -433,24 +446,25 @@ class UpdraftPlus_UpdraftCentral_Main {
 		
 		ob_start();
 		?>
-		<div id="updraftcentral_keys">
-			<div id="updraftcentral_keys_content">
-				<table>
-					<thead>
-						<tr>
-							<th style="text-align:left;"><?php _e('Key description', 'updraftplus'); ?></th>
-							<th style="text-align:left;"><?php _e('Details', 'updraftplus'); ?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php
-						
-						echo $ret;
-						
-						?>
-					</tbody>
-				</table>
-			</div>
+		<div id="updraftcentral_keys_content">
+			<?php if (!empty($our_keys)) { ?>
+				<a href="#" class="updraftcentral_keys_show hidden-in-updraftcentral"><?php printf(__('Manage existing keys (%d)...', 'updraftplus'), count($our_keys)); ?></a>
+			<?php } ?>
+			<table id="updraftcentral_keys_table">
+				<thead>
+					<tr>
+						<th style="text-align:left;"><?php _e('Key description', 'updraftplus'); ?></th>
+						<th style="text-align:left;"><?php _e('Details', 'updraftplus'); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					
+					echo $ret;
+					
+					?>
+				</tbody>
+			</table>
 		</div>
 		<?php
 		return ob_get_clean();
@@ -460,69 +474,75 @@ class UpdraftPlus_UpdraftCentral_Main {
 		ob_start();
 		?> 
 		<div class="create_key_container"> 
-			<h4> <?php _e('Create new key', 'updraftplus'); ?></h4> 
+			<h4 class="updraftcentral_wizard_stage1"> <?php _e('Connect this site to an UpdraftCentral dashboard found at...', 'updraftplus'); ?></h4> 
 			<table style="width: auto; table-layout:fixed;"> 
 				<thead></thead> 
-				<tbody> 
-					<tr class="updraft_debugrow"> 
-						<th style="width: 20%;"> 
-							<?php _e('Description', 'updraftplus'); ?>: 
-						</th> 
-						<td style="width:80%;"> 
-							<input id="updraftcentral_keycreate_description" type="text" size="20" placeholder="<?php _e('Enter any description', 'updraftplus'); ?>" value="" > 
-						</td> 
-					</tr> 
+				<tbody>
+					<tr class="updraft_debugrow updraftcentral_wizard_stage1">
+						<td>
+							<label>
+								<input checked="checked" type="radio" name="updraftcentral_mothership" id="updraftcentral_mothership_updraftpluscom">
+								UpdraftPlus.Com (<?php printf(__('i.e. if you have %s there', 'updraftplus'), '<a target="_blank" href="https://updraftplus.com/my-account/">'.__('an account', 'updraftplus').'</a>'); ?>)
+							</label>
+							<br>
+							<label>
+								<input type="radio" name="updraftcentral_mothership" id="updraftcentral_mothership_other">
+								<?php echo __('On my own website on which I have installed', 'updraftplus').' <a target="_blank" href="https://wordpress.org/plugins/updraftcentral/">'.__('the UpdraftCentral dashboard plugin', 'updraftplus').'</a>'; ?>
+							</label>
+							<br>
+							<input disabled="disabled" id="updraftcentral_keycreate_mothership" type="text" size="40" placeholder="<?php _e('URL of mothership', 'updraftplus'); ?>" value="">
+							<br>
+							<button style="margin-top: 5px;" type="button" class="button button-primary" id="updraftcentral_stage2_go"><?php _e('Next', 'updraftplus'); ?></button>
+							<p style="font-size: 13px;" id="updraftcentral_wizard_stage1_error"></p>
+						</td>
+					</tr>
 
-					<tr class="updraft_debugrow"> 
-						<th style=""> <?php _e('Dashboard at', 'updraftplus'); ?>:</th> 
-						<td style="width:80%;"> 
-							<label> 
-								<input checked="checked" type="radio" name="updraftcentral_mothership" id="updraftcentral_mothership_updraftpluscom"> 
-								UpdraftPlus.Com (<?php _e('i.e. you have an account there', 'updraftplus'); ?>) 
-							</label> 
-							<br> 
-							<label> 
-								<input type="radio" name="updraftcentral_mothership" id="updraftcentral_mothership_other"> 
-								<?php _e('Other (please specify - i.e. the site where you have installed an UpdraftCentral dashboard)', 'updraftplus'); ?>: 
-							</label> 
-							<br> 
-							<input disabled="disabled" id="updraftcentral_keycreate_mothership" type="text" size="40" placeholder="<?php _e('URL of mothership', 'updraftplus'); ?>" value=""> 
-							<br> 
-							<div id="updraftcentral_keycreate_mothership_firewalled_container"> 
-								<label> 
-									<input id="updraftcentral_keycreate_mothership_firewalled" type="checkbox"> 
-									<?php _e('Use the alternative method for making a connection with the dashboard.', 'updraftplus'); ?> 
+					<tr class="updraft_debugrow updraftcentral_wizard_stage2" style="display: none;">
+						<h4 class="updraftcentral_wizard_stage2" style="display: none;"><?php _e('UpdraftCentral dashboard connection details', 'updraftplus'); ?></h4>
+						<td>
+							<?php _e('Description', 'updraftplus'); ?>:
+							<input id="updraftcentral_keycreate_description" type="text" size="20" placeholder="<?php _e('Enter any description', 'updraftplus'); ?>" value="" >
+						</td>
+					</tr>
+
+					<tr class="updraft_debugrow updraftcentral_wizard_stage2" style="display: none;">
+						<td>
+							<?php _e('Encryption key size:', 'updraftplus'); ?>
+							<select style="" id="updraftcentral_keycreate_keysize">
+								<option value="512"><?php echo sprintf(__('%s bits', 'updraftplus').' - '.__('easy to break, fastest', 'updraftplus'), '512'); ?></option>
+								<option value="1024"><?php echo sprintf(__('%s bits', 'updraftplus').' - '.__('faster (possibility for slow PHP installs)', 'updraftplus'), '1024'); ?></option>
+								<option value="2048" selected="selected"><?php echo sprintf(__('%s bytes', 'updraftplus').' - '.__('recommended', 'updraftplus'), '2048'); ?></option>
+								<option value="4096"><?php echo sprintf(__('%s bits', 'updraftplus').' - '.__('slower, strongest', 'updraftplus'), '4096'); ?></option>
+							</select>
+							<br>
+							<div id="updraftcentral_keycreate_mothership_firewalled_container">
+								<label>
+									<input id="updraftcentral_keycreate_mothership_firewalled" type="checkbox">
+									<?php _e('Use the alternative method for making a connection with the dashboard.', 'updraftplus'); ?>
 									<a href="#" id="updraftcentral_keycreate_altmethod_moreinfo_get"> 
-										<?php _e('More information...', 'updraftplus'); ?> 
-									</a> 
-									<p id="updraftcentral_keycreate_altmethod_moreinfo" style="display:none;"> 
-										<?php _e('This is useful if the dashboard webserver cannot be contacted with incoming traffic by this website (for example, this is the case if this website is hosted on the public Internet, but the UpdraftCentral dashboard is on localhost, or on an Intranet, or if this website has an outgoing firewall), or if the dashboard website does not have a SSL certificate.');?>  
-									</p> 
-								</label> 
-							</div> 
-						</td> 
-					</tr> 
-					<tr class="updraft_debugrow"> 
-						<th style=""></th> 
-						<td style="width:80%;"> 
-							<?php _e('Encryption key size:', 'updraftplus'); ?> 
-							<select style="" id="updraftcentral_keycreate_keysize"> 
-								<option value="512"><?php echo sprintf(__('%s bits', 'updraftplus').' - '.__('easy to break, fastest', 'updraftplus'), '512'); ?></option> 
-								<option value="1024"><?php echo sprintf(__('%s bits', 'updraftplus').' - '.__('faster (possibility for slow PHP installs)', 'updraftplus'), '1024'); ?></option> 
-								<option value="2048" selected="selected"><?php echo sprintf(__('%s bytes', 'updraftplus').' - '.__('recommended', 'updraftplus'), '2048'); ?></option> 
-								<option value="4096"><?php echo sprintf(__('%s bits', 'updraftplus').' - '.__('slower, strongest', 'updraftplus'), '4096'); ?></option> 
-							</select> 
-						</td> 
-					</tr> 
-					<tr class="updraft_debugrow"> 
-						<th style=""></th> 
-						<td style="width:80%;"> 
-							<button type="button" class="button button-primary" id="updraftcentral_keycreate_go"><?php _e('Create', 'updraftplus'); ?></button> 
-						</td> 
-					</tr> 
-				</tbody> 
-			</table> 
-		</div> 
+										<?php _e('More information...', 'updraftplus'); ?>
+									</a>
+									<p id="updraftcentral_keycreate_altmethod_moreinfo" style="display:none; border: 1px dotted; padding: 3px; margin: 2px 10px 2px 24px;">
+										<em><?php _e('This is useful if the dashboard webserver cannot be contacted with incoming traffic by this website (for example, this is the case if this website is hosted on the public Internet, but the UpdraftCentral dashboard is on localhost, or on an Intranet, or if this website has an outgoing firewall), or if the dashboard website does not have a SSL certificate.');?></em>
+									</p>
+								</label>
+							</div>
+						</td>
+					</tr>
+
+					<tr class="updraft_debugrow updraftcentral_wizard_stage2" style="display: none;">
+						<td>
+							<button style="margin-top: 5px;" type="button" class="button button-primary" id="updraftcentral_keycreate_go"><?php _e('Create', 'updraftplus'); ?></button>
+						</td>
+					</tr>
+					<tr class="updraft_debugrow updraftcentral_wizard_stage2" style="display: none;">
+						<td>
+							<a id="updraftcentral_stage1_go"><?php _e('Back...', 'updraftplus'); ?></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		<?php
 		return ob_get_clean();
 	}
@@ -531,9 +551,7 @@ class UpdraftPlus_UpdraftCentral_Main {
 		ob_start();
 		?>
 			<div id="updraftcentral_view_log_container">
-				<h4><?php _e('View recent UpdraftCentral log events', 'updraftplus'); ?> - 
-					<a href="#" id="updraftcentral_view_log"><?php _e('fetch...', 'updraftplus'); ?></a>
-				</h4>
+				<a href="#" id="updraftcentral_view_log"><?php _e('View recent UpdraftCentral log events', 'updraftplus'); ?>...</a><br>
 				<pre id="updraftcentral_view_log_contents" style="padding: 0 4px;">
 				</pre>
 			</div>
@@ -546,11 +564,12 @@ class UpdraftPlus_UpdraftCentral_Main {
 		<div class="advanced_tools updraft_central">
 			<h3><?php _e('UpdraftCentral (Remote Control)', 'updraftplus'); ?></h3>
 			<p>
-				<?php echo __('UpdraftCentral enables control of your WordPress sites (including management of backups and updates) from a central dashboard.', 'updraftplus').' <a href="https://updraftcentral.com">'.__('Read more about it here.', 'updraftplus').'</a>'; ?>
+				<?php echo __('UpdraftCentral enables control of your WordPress sites (including management of backups and updates) from a central dashboard.', 'updraftplus').' <a target="_blank" href="https://updraftcentral.com">'.__('Read more about it here.', 'updraftplus').'</a>'; ?>
 			</p>
-			<div id="updraftcentral_keys">
+			<div style="min-height: 310px;" id="updraftcentral_keys">
+				<?php echo $this->create_key_markup(); ?>
 				<?php echo $this->get_keys_table(); ?>
-				<?php echo $this->create_key_markup(); ?> 
+				<button style="display: none;" type="button" class="button button-primary" id="updraftcentral_wizard_go"><?php _e('Create another key', 'updraftplus'); ?></button>
 				<?php echo $this->create_log_markup(); ?>
 			</div>
 		</div>

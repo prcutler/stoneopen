@@ -1392,6 +1392,12 @@ jQuery(document).ready(function($) {
 		};
 	}
 
+	$('#updraftcentral_keys').on('click', 'a.updraftcentral_keys_show', function(e) {
+		e.preventDefault();
+		$(this).remove();
+		$('#updraftcentral_keys_table').slideDown();
+	});
+	
 	$('#updraftcentral_keycreate_altmethod_moreinfo_get').click(function(e) {
 		e.preventDefault();
 		$(this).remove();
@@ -1554,6 +1560,55 @@ jQuery(document).ready(function($) {
 	});
 	
 	// UpdraftCentral
+	jQuery('#updraftcentral_keys').on('click', '#updraftcentral_wizard_go', function(e) {
+		jQuery('#updraftcentral_wizard_go').hide();
+		jQuery('.updraftcentral_wizard_success').remove();
+		jQuery('.create_key_container').show();
+	});
+	
+	jQuery('#updraftcentral_keys').on('click', '#updraftcentral_stage1_go', function(e) {
+		e.preventDefault();
+		jQuery('.updraftcentral_wizard_stage2').hide();
+		jQuery('.updraftcentral_wizard_stage1').show();
+	});
+
+	jQuery('#updraftcentral_keys').on('click', '#updraftcentral_stage2_go', function(e) {
+		e.preventDefault();
+
+		// Reset the error message before we continue
+		jQuery('#updraftcentral_wizard_stage1_error').text('');
+
+		var host = '';
+
+		if (jQuery('#updraftcentral_mothership_updraftpluscom').is(':checked')) {
+			host = 'updraftplus.com';
+		} else if (jQuery('#updraftcentral_mothership_other').is(':checked')) {
+			var mothership = jQuery('#updraftcentral_keycreate_mothership').val();
+			if ('' == mothership) {
+				jQuery('#updraftcentral_wizard_stage1_error').text(updraftlion.updraftcentral_wizard_empty_url);
+				return;
+			}
+			try {
+				var url = new URL(mothership);
+				host = url.hostname;
+			} catch (e) {
+				// Try and grab the host name a different way if it failed because of no URL object (e.g. IE 11).
+				if ('undefined' === typeof URL) {
+					host = jQuery('<a>').prop('href', mothership).prop('hostname');
+				}
+				if (!host || 'undefined' !== typeof URL) {
+					jQuery('#updraftcentral_wizard_stage1_error').text(updraftlion.updraftcentral_wizard_invalid_url);
+					return;
+				}
+			}
+		}
+
+		jQuery('#updraftcentral_keycreate_description').val(host);
+
+		jQuery('.updraftcentral_wizard_stage1').hide();
+		jQuery('.updraftcentral_wizard_stage2').show();
+	});
+	
 	jQuery('#updraftcentral_keys').on('click', '#updraftcentral_keycreate_go', function(e) {
 		e.preventDefault();
 		
@@ -1579,6 +1634,10 @@ jQuery(document).ready(function($) {
 		
 		data.mothership_firewalled = jQuery('#updraftcentral_keycreate_mothership_firewalled').is(':checked') ? 1 : 0;
 		data.where_send = where_send;
+
+		jQuery('.create_key_container').hide();
+		jQuery('.updraftcentral_wizard_stage1').show();
+		jQuery('.updraftcentral_wizard_stage2').hide();
 		
 		jQuery('#updraftcentral_keys').block({ message: '<div style="margin: 8px; font-size:150%;"><img src="'+updraftlion.ud_url+'/images/udlogo-rotating.gif" height="80" width="80" style="padding-bottom:10px;"><br>'+updraftlion.creating_please_allow+'</div>'});
 
@@ -1593,14 +1652,20 @@ jQuery(document).ready(function($) {
 						return;
 					}
 					alert(resp.r);
-					if (resp.hasOwnProperty('keys_table')) {
-						jQuery('#updraftcentral_keys_content').html(resp.keys_table);
-					}
-					if (resp.hasOwnProperty('bundle')) {
-						jQuery('#updraftcentral_keys_content').append(resp.r+'<br><textarea onclick="this.select();" style="width:620px; height:165px; word-wrap:break-word; border: 1px solid #aaa; border-radius: 3px; padding:4px;">'+resp.bundle+'</textarea>');
+
+					if (resp.hasOwnProperty('bundle') && resp.hasOwnProperty('keys_guide')) {
+						jQuery('#updraftcentral_keys_content').html(resp.keys_guide);
+						jQuery('#updraftcentral_keys_content').append('<div class="updraftcentral_wizard_success">'+resp.r+'<br><textarea onclick="this.select();" style="width:620px; height:165px; word-wrap:break-word; border: 1px solid #aaa; border-radius: 3px; padding:4px;">'+resp.bundle+'</textarea></div>');
 					} else {
 						console.log(resp);
 					}
+
+					if (resp.hasOwnProperty('keys_table')) {
+						jQuery('#updraftcentral_keys_content').append(resp.keys_table);
+					}
+					
+					jQuery('#updraftcentral_wizard_go').show();
+
 				} catch (err) {
 					alert(updraftlion.unexpectedresponse+' '+response);
 					console.log(err);
@@ -2327,7 +2392,7 @@ jQuery('#setting-error-settings_updated').slideUp();}, 5000);
 	
 	jQuery('#updraft-navtab-backups-content .updraft_existing_backups').on('click', '.updraft-delete-link', function(e) {
 		e.preventDefault();
-		var hasremote = jQuery(this).data('hasremote').toString();
+		var hasremote = jQuery(this).data('hasremote');
 		var nonce = jQuery(this).data('nonce').toString();
 		var key = jQuery(this).data('key').toString();
 		if (nonce) {

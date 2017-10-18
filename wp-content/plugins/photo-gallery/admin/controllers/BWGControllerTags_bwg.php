@@ -1,37 +1,20 @@
 <?php
 
 class BWGControllerTags_bwg {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function __construct() {
   }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
+
   public function execute() {
     $task = WDWLibrary::get('task');
     $id = WDWLibrary::get('current_id', 0);
-
-    if($task != ''){
-      if(!WDWLibrary::verify_nonce('tags_bwg')){
+    if ( $task != '' ) {
+      if ( !WDWLibrary::verify_nonce('tags_bwg') ) {
         die('Sorry, your nonce did not verify.');
       }
     }
-
-
     $message = WDWLibrary::get('message');
     echo WDWLibrary::message_id($message);
-    if (method_exists($this, $task)) {
+    if ( method_exists($this, $task) ) {
       $this->$task($id);
     }
     else {
@@ -96,67 +79,76 @@ class BWGControllerTags_bwg {
     }*/
     return $name;
   }
-  
+
   public function save_tag() {
+    $message_id = 15;
     $name = ((isset($_POST['tagname'])) ? esc_html(stripslashes($_POST['tagname'])) : '');
-    $name = $this->bwg_get_unique_name($name, 0);
     $slug = ((isset($_POST['slug']) && (esc_html($_POST['slug']) != '')) ? esc_html(stripslashes($_POST['slug'])) : $name);
     $slug = $this->bwg_get_unique_slug($slug, 0);
-	  $slug = sanitize_title($slug);
-    if ($name) {
+    $slug = sanitize_title($slug);
+    if ( $name ) {
       $save = wp_insert_term($name, 'bwg_tag', array(
-        'description'=> '',
+                                    'description' => '',
+                                    'slug' => $slug,
+								'parent' => 0
+								)
+							);
+      // Create custom post (type is tag).
+      $custom_post_params = array(
+        'id' => $save['term_id'],
+        'title' => $name,
         'slug' => $slug,
-        'parent' => 0
-        )
+        'type' => array(
+          'post_type' => 'tag',
+          'mode' => '',
+        ),
       );
-      if (isset($save->errors)) {
-        return 14;
-      }
-      else {
-        return 1;
+      WDWLibrary::bwg_create_custom_post($custom_post_params);
+      $message_id = 1;
+      if ( isset($save->errors) ) {
+        $message_id = 14;
       }
     }
-    else {
-      return 15;
-    }
+
+    return $message_id;
   }
-  
+
   function edit_tag() {
     global $wpdb;
-    $flag = FALSE; 
+    $flag = FALSE;
     $id = ((isset($_REQUEST['tag_id'])) ? esc_html(stripslashes($_REQUEST['tag_id'])) : '');
     $query = $wpdb->prepare("SELECT count FROM " . $wpdb->prefix . "term_taxonomy WHERE term_id=%d", $id);
     $count = $wpdb->get_var($query);
     $name = ((isset($_REQUEST['tagname'])) ? esc_html(stripslashes($_REQUEST['tagname'])) : '');
     $name = $this->bwg_get_unique_name($name, $id);
-    if ($name) {
+    if ( $name ) {
       $slug = ((isset($_REQUEST['slug']) && (esc_html($_REQUEST['slug']) != '')) ? esc_html(stripslashes($_REQUEST['slug'])) : $name);
       $slug = $this->bwg_get_unique_slug($slug, $id);
       $save = wp_update_term($id, 'bwg_tag', array(
         'name' => $name,
-        'slug' => $slug
+        'slug' => $slug,
       ));
-      
-      /*update data in corresponding posts*/
-      $query2 = "SELECT ID, post_content FROM ".$wpdb->posts." WHERE post_type = 'bwg_tag' ";
-      $posts = $wpdb->get_results($query2, OBJECT);
-      foreach($posts as $post){
-        $post_content = $post->post_content;
-        if( strpos($post_content, ' type="tag" ') && strpos($post_content, ' gallery_id="'.$id.'" ') ){
-          $tag_post = array('ID' => $post->ID, 'post_title' => $name, 'post_name' => $slug);
-          wp_update_post( $tag_post );
-        }
-      }
-      
-      if (isset($save->errors)) {
+	 
+      // Create custom post (type is tag).
+      $custom_post_params = array(
+        'id' => $id,
+        'title' => $name,
+        'slug' => $slug,
+		'old_slug' => !empty($_POST['old_slug']) ? $_POST['old_slug'] : '',
+        'type' => array(
+          'post_type' => 'tag',
+          'mode' => '',
+        ),
+      );
+      WDWLibrary::bwg_create_custom_post($custom_post_params);
+	  if ( isset($save->errors) ) {
         echo 'The slug must be unique.';
       }
       else {
         $flag = TRUE;
       }
     }
-    if ($flag) {
+    if ( $flag ) {
       echo $name . '.' . $slug . '.' . $count;
     }
     die();
@@ -164,91 +156,84 @@ class BWGControllerTags_bwg {
 
   public function edit_tags() {
     global $wpdb;
+	$message_id = '';
     $flag = FALSE;
     $rows = get_terms('bwg_tag', array('orderby' => 'count', 'hide_empty' => 0));
-    $name = ((isset($_POST['tagname'])) ? esc_html(stripslashes($_POST['tagname'])) : '');
-    $name = $this->bwg_get_unique_name($name, 0);
-    $slug = ((isset($_POST['slug']) && (esc_html($_POST['slug']) != '')) ? esc_html(stripslashes($_POST['slug'])) : $name);
-    $slug = $this->bwg_get_unique_slug($slug, 0);
-    if ($name) {
-      $save = wp_insert_term($name, 'bwg_tag', array(
-        'description'=> '',
-        'slug' => $slug,
-        'parent' => 0
-        )
-      );
-      if (isset($save->errors)) {
-        $message = 15;
-      }
-      else {
-        $message = 1;
-      }
-    }
+	$terms = array();
     foreach ($rows as $row) {
       $id = $row->term_id;
       $name = ((isset($_POST['tagname' . $row->term_id])) ? esc_html(stripslashes($_POST['tagname' . $id])) : '');
       $name = $this->bwg_get_unique_name($name,  $id);
       if ($name) {
-        $slug = ((isset($_POST['slug' . $row->term_id]) && (esc_html($_POST['slug' . $id]) != '')) ? esc_html(stripslashes($_POST['slug' . $id])) : $name);
-        $slug = $this->bwg_get_unique_slug($slug, $id);
-        $save = wp_update_term($id, 'bwg_tag', array(
-          'name' => $name,
-          'slug' => $slug
-        ));
+        $old_slug = ((isset($_POST['old_slug' . $row->term_id]) && (esc_html($_POST['old_slug' . $id]) != '')) ? esc_html(stripslashes($_POST['old_slug' . $id])) : '');
+        $slug 	  = ((isset($_POST['slug' . $row->term_id]) && (esc_html($_POST['slug' . $id]) != '')) ? esc_html(stripslashes($_POST['slug' . $id])) : $name);
+		$terms[]  = array('id' => $id, 'name' => $name, 'slug' => $slug, 'old_slug' => $old_slug);
+		$slug = $this->bwg_get_unique_slug($slug, $id);
+        $save = wp_update_term($id, 'bwg_tag', array('name' => $name, 'slug' => $slug));
         if (isset($save->errors)) {
-          $message = 16;
+          $message_id = 16;
         }
         else {
           $flag = TRUE;
         }
-        
-        /*update data in corresponding posts*/
-        $query2 = "SELECT ID, post_content FROM ".$wpdb->posts." WHERE post_type = 'bwg_tag' ";
-        $posts = $wpdb->get_results($query2, OBJECT);
-        foreach($posts as $post){
-          $post_content = $post->post_content;
-          if( strpos($post_content, ' type="tag" ') && strpos($post_content, ' gallery_id="'.$id.'" ') ){
-            $tag_post = array('ID' => $post->ID, 'post_title' => $name, 'post_name' => $slug);
-            wp_update_post( $tag_post );
-          }
-        }
-        
       }
     }
-    if ($flag) {
-      $message = 1;
-    }
-    else {
-      $message = '';
-    }
-    $page = WDWLibrary::get('page');
 
+	$name = ((isset($_POST['tagname'])) ? esc_html(stripslashes($_POST['tagname'])) : '');
+	$name = $this->bwg_get_unique_name($name, 0);
+	$slug = ((isset($_POST['slug']) && (esc_html($_POST['slug']) != '')) ? esc_html(stripslashes($_POST['slug'])) : $name);
+	$slug = $this->bwg_get_unique_slug($slug, 0);
+	if ($name) {
+		$save = wp_insert_term($name, 'bwg_tag', array(
+								'description'=> '',
+								'slug' => $slug,
+								'parent' => 0)
+							);
+		$term = array('id' => $save['term_id'], 'name' => $name, 'old_slug' => '', 'slug' => $slug);
+		$terms[count($terms)] = $term;
+		$message_id = 1;
+		if (isset($save->errors)) {
+			$message_id = 15;
+		}
+    }
+	if ($flag) {
+      $message_id = 1;
+    }
+	// Create custom post (type is tag).
+	if ( !empty($terms) ) {
+		foreach($terms as $term){
+			$custom_post_params = array(
+									'id' => $term['id'],
+									'title' => $term['name'],
+									'slug' => $term['slug'],
+									'old_slug' => $term['old_slug'],
+									'type' => array(
+									  'post_type' => 'tag',
+									  'mode' => '',
+									),
+								);
+			WDWLibrary::bwg_create_custom_post($custom_post_params);
+		}
+	}
+	$page = WDWLibrary::get('page');
     $query_url = wp_nonce_url( admin_url('admin.php'), 'tags_bwg', 'bwg_nonce' );
-    $query_url = add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message), $query_url);
+    $query_url = add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message_id), $query_url);
     WDWLibrary::spider_redirect($query_url);
   }
 
   public function delete($id) {
     global $wpdb;
-    wp_delete_term($id, 'bwg_tag');
-    $query = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_image_tag WHERE tag_id="%d"', $id);
-    $flag = $wpdb->query($query);
-    
-    /* Delete corresponding posts and their meta.*/
-    $query2 = "SELECT ID, post_content FROM " . $wpdb->posts . " WHERE post_type = 'bwg_tag'";
-    $posts = $wpdb->get_results($query2, OBJECT);
-    foreach ($posts as $post) {
-      $post_content = $post->post_content;
-      if (strpos($post_content, ' type="tag" ') && strpos($post_content, ' gallery_id="' . $id . '" ')) {
-        wp_delete_post($post->ID, TRUE);
-      }
-    }
-    if ($flag !== FALSE) {
-      $message = 3;
-    }
-    else {
-      $message = 2;
-    }
+	$message = 2;
+	$row = $wpdb->get_row( $wpdb->prepare('SELECT term_id, slug FROM ' . $wpdb->prefix . 'terms WHERE term_id="%d"', $id) );
+	if ( !empty($row) ) {
+		wp_delete_term($id, 'bwg_tag');
+		$flag = $wpdb->query( $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_image_tag WHERE tag_id="%d"', $id) );		
+		if ($flag !== FALSE) {
+		  // Remove custom post (type by bwg_album).
+		  WDWLibrary::bwg_remove_custom_post( array( 'slug' => $row->slug, 'post_type' => 'bwg_tag') );
+		  $message = 3;
+		}
+	}
     $page = WDWLibrary::get('page');
     $query_url = wp_nonce_url( admin_url('admin.php'), 'tags_bwg', 'bwg_nonce' );
     $query_url = add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message), $query_url);
@@ -256,46 +241,38 @@ class BWGControllerTags_bwg {
   }
   
   public function delete_all() {
-    global $wpdb;
-    $flag = FALSE;
-    $tag_ids_col = $wpdb->get_col("SELECT term_id FROM " . $wpdb->prefix . "terms");
-    foreach ($tag_ids_col as $tag_id) {
-      if (isset($_POST['check_' . $tag_id]) || isset($_POST['check_all_items'])) {
-        wp_delete_term($tag_id, 'bwg_tag');
-        $wpdb->query($wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_image_tag WHERE tag_id="%d"', $tag_id));
-        $flag = TRUE;
-      }
-    }
-    
-    /*delete corresponding posts and their meta*/
-    $query2 = "SELECT ID, post_content FROM ".$wpdb->posts." WHERE post_type = 'bwg_tag' ";
-    $posts = $wpdb->get_results($query2, OBJECT);
-    foreach($posts as $post){
-      $post_content = $post->post_content;
-      if( strpos($post_content, ' type="tag" ') ){
-        wp_delete_post( $post->ID, true ); 
-      }
-    }
-    
-    if ($flag) {
-      $message = 5;
-    }
-    else {
-      $message = 6;
-    }  
+	$message_id = 6;
+	$termids = array();
+	if ( !empty($_POST['ids_string']) ){
+		$ids = explode(',', $_POST['ids_string']);
+		foreach ($ids as $id) {
+			$keypost = 'check_' . $id;
+			if ( !empty($_POST[$keypost]) ) {
+				$termids[] = $id;
+			}
+		}
+	}
+
+	if ( !empty($termids) ){
+		global $wpdb;
+		$terms = $wpdb->get_results('SELECT `term_id` AS `id`, `slug` FROM ' . $wpdb->prefix . 'terms WHERE `term_id` IN (' . implode(',', $termids). ')');
+		if ( !empty($terms) ) {
+			$delete = false;
+			foreach( $terms as $term ) {
+				wp_delete_term($term->id, 'bwg_tag');
+				$wpdb->query( $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_image_tag WHERE tag_id="%d"', $term->id) );
+				// Remove custom post (type by bwg_tag).
+				WDWLibrary::bwg_remove_custom_post( array( 'slug' => $term->slug, 'post_type' => 'bwg_tag') );
+				$delete = true;
+			}
+			if ( $delete ) {
+				$message_id = 5;
+			}
+		}
+	}
     $page = WDWLibrary::get('page');
     $query_url = wp_nonce_url( admin_url('admin.php'), 'tags_bwg', 'bwg_nonce' );
-    $query_url  = add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message), $query_url);
+    $query_url  = add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message_id), $query_url);
     WDWLibrary::spider_redirect($query_url);
   }
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
 }

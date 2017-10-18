@@ -376,5 +376,9 @@ function bwg_update($version) {
     $bwg_options_row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_option WHERE id="%d"', 1));
     add_option('wd_bwg_options', json_encode($bwg_options_row), '', 'no');
 	}
-    return;
+	if (version_compare($version, '1.3.55') == -1) {
+		require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
+		WDWLibrary::before_update_create_custom_posts();
+	}
+  return;
 }

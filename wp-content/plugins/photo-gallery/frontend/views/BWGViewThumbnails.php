@@ -372,8 +372,7 @@ class BWGViewThumbnails {
         <div id="spider_popup_overlay_<?php echo $bwg; ?>" class="spider_popup_overlay" onclick="spider_destroypopup(1000)"></div>
       </div>
     </div>
-    <script>
-      <?php
+	<?php
         $params_array = array(
           'action' => 'GalleryBox',
           'tags' => (isset($params['tag']) ? $params['tag'] : 0),
@@ -409,22 +408,23 @@ class BWGViewThumbnails {
           'slideshow_effect_duration' => isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1
         );
         if ($params['watermark_type'] != 'none') {
-          $params_array['watermark_link'] = urlencode($params['watermark_link']);
+          $params_array['watermark_link'] = $params['watermark_link'];
           $params_array['watermark_opacity'] = $params['watermark_opacity'];
           $params_array['watermark_position'] = $params['watermark_position'];
         }
         if ($params['watermark_type'] == 'text') {
-          $params_array['watermark_text'] = urlencode($params['watermark_text']);
+          $params_array['watermark_text'] = $params['watermark_text'];
           $params_array['watermark_font_size'] = $params['watermark_font_size'];
           $params_array['watermark_font'] = $params['watermark_font'];
           $params_array['watermark_color'] = $params['watermark_color'];
         }
         elseif ($params['watermark_type'] == 'image') {
-          $params_array['watermark_url'] = urlencode($params['watermark_url']);
+          $params_array['watermark_url'] = $params['watermark_url'];
           $params_array['watermark_width'] = $params['watermark_width'];
           $params_array['watermark_height'] = $params['watermark_height'];
         }
       ?>
+    <script>
       function bwg_gallery_box_<?php echo $bwg; ?>(image_id) {
         var filterTags = jQuery("#bwg_tags_id_bwg_standart_thumbnails_<?php echo $bwg; ?>" ).val() ? jQuery("#bwg_tags_id_bwg_standart_thumbnails_<?php echo $bwg; ?>" ).val() : 0;
         var filtersearchname = jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() ? "&filter_search_name_<?php echo $bwg; ?>=" + jQuery("#bwg_search_input_<?php echo $bwg; ?>" ).val() : '';

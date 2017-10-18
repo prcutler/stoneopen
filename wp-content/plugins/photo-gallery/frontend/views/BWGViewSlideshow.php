@@ -481,7 +481,7 @@ class BWGViewSlideshow {
                   if ($watermark_type == 'image') {
                   ?>
                   <a href="<?php echo urldecode($watermark_link); ?>" target="_blank">
-                    <img class="bwg_slideshow_watermark_image_<?php echo $bwg; ?> bwg_slideshow_watermark_<?php echo $bwg; ?>" src="<?php echo $watermark_url; ?>" />
+                    <img class="bwg_slideshow_watermark_image_<?php echo $bwg; ?> bwg_slideshow_watermark_<?php echo $bwg; ?>" src="<?php echo urldecode($watermark_url); ?>" />
                   </a>
                   <?php
                   }
@@ -539,7 +539,6 @@ class BWGViewSlideshow {
       </div>
     </div>
     <script language="javascript" type="text/javascript" src="<?php echo WD_BWG_URL . '/js/bwg_embed.js?ver=' . wd_bwg_version(); ?>"></script>
-    <script>
     <?php
     $params_array = array(
       'action' => 'GalleryBox',
@@ -575,22 +574,23 @@ class BWGViewSlideshow {
       'current_url' => urlencode($current_url),
     );
     if ($params['watermark_type'] != 'none') {
-      $params_array['watermark_link'] = urlencode($params['watermark_link']);
+      $params_array['watermark_link'] = $params['watermark_link'];
       $params_array['watermark_opacity'] = $params['watermark_opacity'];
       $params_array['watermark_position'] = $params['watermark_position'];
     }
     if ($params['watermark_type'] == 'text') {
-      $params_array['watermark_text'] = urlencode($params['watermark_text']);
+      $params_array['watermark_text'] = $params['watermark_text'];
       $params_array['watermark_font_size'] = $params['watermark_font_size'];
       $params_array['watermark_font'] = $params['watermark_font'];
       $params_array['watermark_color'] = $params['watermark_color'];
     }
     elseif ($params['watermark_type'] == 'image') {
-      $params_array['watermark_url'] = urlencode($params['watermark_url']);
+      $params_array['watermark_url'] = $params['watermark_url'];
       $params_array['watermark_width'] = $params['watermark_width'];
       $params_array['watermark_height'] = $params['watermark_height'];
     }
     ?>
+	<script>
       var bwg_trans_in_progress_<?php echo $bwg; ?> = false;
       var bwg_transition_duration_<?php echo $bwg; ?> = <?php echo (($slideshow_interval < 4) && ($slideshow_interval != 0)) ? ($slideshow_interval * 1000) / 4 : ($slideshow_effect_duration * 1000); ?>;
       var bwg_playInterval_<?php echo $bwg; ?>;

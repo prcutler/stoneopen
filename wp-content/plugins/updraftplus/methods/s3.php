@@ -72,6 +72,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 		// Conditional logic, for new AWS SDK (N.B. 3.x branch requires PHP 5.5, so we're on 2.x - requires 5.3.3)
 
 		$opts = $this->get_config();
+		// UpdraftPlus_S3 is used when not accessing Amazon Web Services
 		$class_to_use = 'UpdraftPlus_S3';
 		if (version_compare(PHP_VERSION, '5.3.3', '>=') && !empty($opts['key']) && ('s3' == $opts['key'] || 'updraftvault' == $opts['key']) && (!defined('UPDRAFTPLUS_S3_OLDLIB') || !UPDRAFTPLUS_S3_OLDLIB)) {
 			$class_to_use = 'UpdraftPlus_S3_Compat';
@@ -88,13 +89,13 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 	/**
 	 * Get an S3 object, after setting our options
 	 *
-	 * @param  string  $key 		   S3 Key
-	 * @param  string  $secret 		   S3 secret
-	 * @param  boolean $useservercerts User server certificates
-	 * @param  boolean $disableverify  Check if disableverify is enabled
-	 * @param  boolean $nossl 		   Check if there is SSL or not
-	 * @param  string  $endpoint 	   S3 endpoint
-	 * @param  boolean $sse 		   A flag to use server side encryption
+	 * @param  String	   $key 		   S3 Key
+	 * @param  String	   $secret 		   S3 secret
+	 * @param  Boolean	   $useservercerts User server certificates
+	 * @param  Boolean	   $disableverify  Check if disableverify is enabled
+	 * @param  Boolean	   $nossl 		   Check if there is SSL or not
+	 * @param  Null|String $endpoint 	   S3 endpoint to use
+	 * @param  Boolean	   $sse 		   A flag to use server side encryption
 	 * @return array
 	 */
 	public function getS3($key, $secret, $useservercerts, $disableverify, $nossl, $endpoint = null, $sse = false) {
@@ -104,6 +105,11 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 		if (is_string($key)) $key = trim($key);
 		if (is_string($secret)) $secret = trim($secret);
 
+		// Ignore the 'nossl' setting if the endpoint is DigitalOcean Spaces (https://developers.digitalocean.com/documentation/v2/)
+		if (is_string($endpoint) && preg_match('^/[\.^]digitaloceanspaces\.com$/', $endpoint)) {
+			$nossl = apply_filters('updraftplus_gets3_nossl', false, $endpoint, $nossl);
+		}
+		
 		// Saved in case the object needs recreating for the corner-case where there is no permission to look up the bucket location
 		$this->got_with = array(
 			'key' => $key,
@@ -797,14 +803,15 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			<td><?php echo $img_html; ?><p><em><?php printf(__('%s is a great choice, because UpdraftPlus supports chunked uploads - no matter how big your site is, UpdraftPlus can upload it a little at a time, and not get thwarted by timeouts.', 'updraftplus'), $whoweare_long);?></em></p>
 			<?php
 				if ('s3generic' == $key) {
-				_e('Examples of S3-compatible storage providers:').' ';
-				echo '<a href="https://www.cloudian.com">Cloudian</a>, ';
-				echo '<a href="https://www.mh.connectria.com/rp/order/cloud_storage_index">Connectria</a>, ';
-				echo '<a href="https://www.constant.com/cloud/storage/">Constant</a>, ';
-				echo '<a href="http://www.eucalyptus.com/eucalyptus-cloud/iaas">Eucalyptus</a>, ';
-				echo '<a href="http://cloud.nifty.com/storage/">Nifty</a>, ';
-				echo '<a href="http://www.ntt.com/business/services/cloud/iaas/cloudn.html">Cloudn</a>';
-				echo ''.__('... and many more!', 'updraftplus').'<br>';
+					_e('Examples of S3-compatible storage providers:');
+					echo ' <a href="https://updraftplus.com/use-updraftplus-digital-ocean-spaces/">DigitalOcean Spaces</a>, ';
+					echo '<a href="https://www.cloudian.com">Cloudian</a>, ';
+					echo '<a href="https://www.mh.connectria.com/rp/order/cloud_storage_index">Connectria</a>, ';
+					echo '<a href="https://www.constant.com/cloud/storage/">Constant</a>, ';
+					echo '<a href="http://www.eucalyptus.com/eucalyptus-cloud/iaas">Eucalyptus</a>, ';
+					echo '<a href="http://cloud.nifty.com/storage/">Nifty</a>, ';
+					echo '<a href="http://www.ntt.com/business/services/cloud/iaas/cloudn.html">Cloudn</a>';
+					echo ''.__('... and many more!', 'updraftplus').'<br>';
 				}
 			?>
 			</td>
@@ -907,17 +914,18 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 	/**
 	 * This method contains some repeated code. After getting an S3 object, it's time to see if we can access that bucket - either immediately, or via creating it, etc.
 	 *
-	 * @param  object         $s3       S3 name
-	 * @param  array          $config   array of config details
-	 * @param  string         $bucket   S3 Bucket
-	 * @param  string         $path 	S3 Path
-	 * @param  boolean|string $endpoint S3 end point
-	 * @return array
+	 * @param Object         $s3       S3 name
+	 * @param Array          $config   array of config details
+	 * @param String         $bucket   S3 Bucket
+	 * @param String         $path	   S3 Path
+	 * @param Boolean|String $endpoint S3 endpoint
+	 *
+	 * @return Array
 	 */
 	private function get_bucket_access($s3, $config, $bucket, $path, $endpoint = false) {
 	
 		$bucket_exists = false;
-	
+		
 		if ('s3' == $config['key'] || 'updraftvault' == $config['key'] || 'dreamobjects' == $config['key']) {
 		
 			$s3->setExceptions(true);
@@ -934,11 +942,11 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			$s3->setExceptions(false);
 		} else {
 			$region = 'n/a';
+			if ('s3generic' == $config['key'] && $endpoint) $this->set_region($s3, $endpoint);
 		}
-
+		
 		// See if we can detect the region (which implies the bucket exists and is ours), or if not create it
-		if (false === $region) {
-
+		if (false === $region || 'n/a' === $region) {
 			$s3->setExceptions(true);
 			try {
 				if (@$s3->putBucket($bucket, 'private')) {
@@ -981,9 +989,12 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			$bucket_exists = true;
 		}
 		
+		// For a region-less S3 system, we set this to true so that we can carry on trying anyway, since the behaviour of different S3-compatible systems can vary. e.g. DigitalOcean spaces API keys allow you to create a bucket.
+		if ('n/a' == $region) $bucket_exists = true;
+		
 		if ($bucket_exists) {
 			if ('s3' != $config['key'] && 'updraftvault' != $config['key']) {
-				$this->set_region($s3, $endpoint, $bucket);
+				if (!$endpoint || 's3generic' != $config['key']) $this->set_region($s3, $endpoint, $bucket);
 			} elseif (!empty($region)) {
 				$this->set_region($s3, $region, $bucket);
 			}
@@ -1026,7 +1037,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			return;
 		}
 		$whoweare = $config['whoweare'];
-
+		
 		$s3 = $this->getS3($key, $secret, $useservercerts, $disableverify, $nossl, null, $sse);
 		if (is_wp_error($s3)) {
 			foreach ($s3->get_error_messages() as $msg) {

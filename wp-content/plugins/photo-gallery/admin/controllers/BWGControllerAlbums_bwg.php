@@ -1,34 +1,15 @@
 <?php
-
 class BWGControllerAlbums_bwg {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  public function __construct() {
-  }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
+  public function __construct() {}
+
   public function execute() {
     $task = WDWLibrary::get('task');
     $id = WDWLibrary::get('current_id', 0);
-
-
-    if($task != ''){
-      if(!WDWLibrary::verify_nonce('albums_bwg')){
+    if ( $task != '' ) {
+      if ( !WDWLibrary::verify_nonce('albums_bwg') ) {
         die('Sorry, your nonce did not verify.');
       }
     }
-    
 
     $message = WDWLibrary::get('message');
     echo WDWLibrary::message_id($message);
@@ -152,6 +133,7 @@ class BWGControllerAlbums_bwg {
     $name = $this->bwg_get_unique_name($name, $id);
     $slug = ((isset($_POST['slug']) && esc_html(stripslashes($_POST['slug'])) != '') ? esc_html(stripslashes($_POST['slug'])) : $name);
     $slug = $this->bwg_get_unique_slug($slug, $id);
+    $old_slug = WDWLibrary::get('old_slug');
     $description = (isset($_POST['description']) ? stripslashes($_POST['description']) : '');
     $preview_image = ((isset($_POST['preview_image']) && esc_html(stripslashes($_POST['preview_image'])) != '') ? esc_html(stripslashes($_POST['preview_image'])) : '');
     $author = get_current_user_id();
@@ -164,18 +146,7 @@ class BWGControllerAlbums_bwg {
       'description' => $description,
       'preview_image' => $preview_image,
       'published' => $published), array('id' => $id));
-
-      /* Update data in corresponding posts.*/
-      $query2 = "SELECT ID, post_content FROM " . $wpdb->posts . " WHERE post_type = 'bwg_album'";
-      $posts = $wpdb->get_results($query2, OBJECT);
-      foreach ($posts as $post) {
-        $post_content = $post->post_content;
-        if (strpos($post_content, ' type="album" ') && strpos($post_content, ' album_id="' . $id . '" ')) {
-          $album_post = array('ID' => $post->ID, 'post_title' => $name, 'post_name' => $slug);
-          wp_update_post($album_post);
-        }
-      }
-    }
+	  }
     else {
       $save = $wpdb->insert($wpdb->prefix . 'bwg_album', array(
         'name' => $name,
@@ -197,9 +168,22 @@ class BWGControllerAlbums_bwg {
         '%d'
       ));
       $id = $wpdb->get_var('SELECT MAX(`id`) FROM ' . $wpdb->prefix . 'bwg_album');
-    }
+	}
+    // Create custom post (type is album).
+    $custom_post_params = array(
+      'id' => $id,
+      'title' => $name,
+      'slug' => $slug,
+      'old_slug' => $old_slug,
+      'type' => array(
+        'post_type' => 'album',
+        'mode' => '',
+      ),
+    );
+    WDWLibrary::bwg_create_custom_post($custom_post_params);
+
     $this->save_alb_gal($id, $albums_galleries);
-    // Set random image.
+  	// Set random image.
     $random_preview_image = (($preview_image == '') ? $this->get_image_for_album($id) : '');
     $wpdb->update($wpdb->prefix . 'bwg_album', array('random_preview_image' => $random_preview_image), array('id' => $id));
     if ($save !== FALSE) {
@@ -209,7 +193,7 @@ class BWGControllerAlbums_bwg {
       return 2;
     }
   }
-  
+
   public function save_alb_gal($id, $alb_gal_str) {
     global $wpdb;
     $query = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d"', $id);
@@ -233,56 +217,60 @@ class BWGControllerAlbums_bwg {
     }
   }
 
-  public function delete($id) {
+  public function delete ($id) {
     global $wpdb;
-    $query = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album WHERE id="%d"', $id);
-    $query_gal = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d" OR (is_album AND alb_gal_id="%d")', $id, $id);
-    if ($wpdb->query($query)) {
-      $wpdb->query($query_gal);
-      $message = 3;
-    }
-    else {
-      $message = 2;
-    }
-    /* Delete corresponding posts and their meta.*/
-    $query2 = "SELECT ID, post_content FROM " . $wpdb->posts . " WHERE post_type = 'bwg_album'";
-    $posts = $wpdb->get_results($query2, OBJECT);
-    foreach ($posts as $post) {
-      $post_content = $post->post_content;
-      if (strpos($post_content, ' type="album" ') && strpos($post_content, ' album_id="'.$id.'" ')) {
-        wp_delete_post($post->ID, TRUE);
-      }
-    }
+    	$message = 2;
+	$row = $wpdb->get_row( $wpdb->prepare('SELECT id, slug FROM ' . $wpdb->prefix . 'bwg_album WHERE id="%d"', $id) );	
+	if ( !empty($row) ) {
+		$query = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album WHERE id="%d"', $id);
+		$query_gal = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d" OR (is_album AND alb_gal_id="%d")', $id, $id);
+		if ($wpdb->query($query)) {
+			$wpdb->query($query_gal);
+			// Remove custom post (type by bwg_album).
+			WDWLibrary::bwg_remove_custom_post( array( 'slug' => $row->slug, 'post_type' => 'bwg_album') );
+			$message = 3;
+		}
+	}
     $page = WDWLibrary::get('page');
     $query_url = wp_nonce_url( admin_url('admin.php'), 'albums_bwg', 'bwg_nonce' );
     $query_url = add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message), $query_url);
     WDWLibrary::spider_redirect($query_url);
   }
   
-  public function delete_all() {
-    global $wpdb;
-    $flag = FALSE;
-    $album_ids_col = $wpdb->get_col('SELECT id FROM ' . $wpdb->prefix . 'bwg_album');
-    foreach ($album_ids_col as $album_id) {
-      if (isset($_POST['check_' . $album_id]) || isset($_POST['check_all_items'])) {
-        $flag = TRUE;
-        $query = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album WHERE id="%d"', $album_id);
-        $query_gal = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d" OR (is_album AND alb_gal_id="%d")', $album_id, $album_id);
-        $wpdb->query($query);
-        $wpdb->query($query_gal);
-      }
-    }
-    if ($flag) {
-      $message = 5;
-    }
-    else {
-      $message = 6;
-    }
-    $page = WDWLibrary::get('page');
-    $query_url = wp_nonce_url( admin_url('admin.php'), 'albums_bwg', 'bwg_nonce' );
-    $query_url = add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message), $query_url);
-    WDWLibrary::spider_redirect($query_url);
-  }
+	public function delete_all() {
+		$message_id = 6;
+		$albumids = array();
+		if ( !empty($_POST['ids_string']) ) {
+			$ids = explode(',', $_POST['ids_string']);
+			foreach ($ids as $id) {
+				$keypost = 'check_' . $id;
+				if ( !empty($_POST[$keypost]) ) {
+					$albumids[] = $id;
+				}
+			}
+		}
+		if ( !empty($albumids) ) {
+			global $wpdb;
+			$albums = $wpdb->get_results('SELECT `id`, `slug` FROM ' . $wpdb->prefix . 'bwg_album WHERE `id` IN (' . implode(',', $albumids). ')');
+			if ( !empty($albums) ) {
+				$delete = false;
+				foreach( $albums as $album ) {
+					$wpdb->query( $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album WHERE id="%d"', $album->id) );
+					$wpdb->query( $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d" OR (is_album AND alb_gal_id="%d")', $album->id, $album->id) );
+					// Remove custom post (type by bwg_album).
+					WDWLibrary::bwg_remove_custom_post( array( 'slug' => $album->slug, 'post_type' => 'bwg_album') );
+					$delete = true;
+				}
+				if ( $delete ) {
+					$message_id = 5;
+				}
+			}
+		}
+		$page = WDWLibrary::get('page');
+		$query_url = wp_nonce_url( admin_url('admin.php'), 'albums_bwg', 'bwg_nonce' );
+		$query_url = add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message_id), $query_url);
+		WDWLibrary::spider_redirect($query_url);
+	}
 
   public function publish($id) {
     global $wpdb;

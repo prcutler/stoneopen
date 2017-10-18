@@ -529,7 +529,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			if (empty($opts['token']) || empty($opts['clientid']) || empty($opts['secret'])) {
 				$updraftplus->log('Google Drive: this account is not authorised');
 				$updraftplus->log('Google Drive: '.__('Account is not authorized.', 'updraftplus'), 'error', 'googledrivenotauthed');
-				return new WP_Error('not_authorized', __('Account is not authorized.', 'updraftplus'));
+				return new WP_Error('not_authorized', __('Account is not authorized.', 'updraftplus').' (Google Drive)');
 			}
 
 			if (empty($access_token)) {

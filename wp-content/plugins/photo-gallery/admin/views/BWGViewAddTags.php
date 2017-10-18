@@ -1,27 +1,12 @@
 <?php
-
 class BWGViewAddTags {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
+  
   private $model;
 
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function __construct($model) {
     $this->model = $model;
   }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
+ 
   public function display() {
     $rows_data = $this->model->get_rows_data();
     $page_nav = $this->model->page_nav();
@@ -31,7 +16,7 @@ class BWGViewAddTags {
     $image_id = ((isset($_GET['image_id'])) ? esc_html($_GET['image_id']) : ((isset($_POST['image_id'])) ? esc_html($_POST['image_id']) : '0'));
     $order_class = 'manage-column column-title sorted ' . $asc_or_desc;
     $per_page = $this->model->per_page();
-	$pager = 0;
+	  $pager = 0;
     wp_print_scripts('jquery');
     wp_print_styles('admin-bar');
     wp_print_styles('wp-admin');
@@ -47,18 +32,18 @@ class BWGViewAddTags {
       <?php wp_nonce_field( 'addTags', 'bwg_nonce' ); ?>
       <h2 style="width:200px; float:left;"><?php _e("Tags", 'bwg_back'); ?></h2>
       <a href="" class="thickbox thickbox-preview" id="content-add_media" title="Add Tag" onclick="bwg_get_tags('<?php echo $image_id; ?>', event);" style="float:right; padding: 9px 0px 4px 0">
-        <div class="wd-btn wd-btn-primary wd-btn-icon wd-btn-add" style="border:none;padding-top:8px !important;">ADD </div>
+        <div  class="wd-btn wd-btn-primary wd-btn-icon wd-btn-add" style="border:none;padding-top:8px !important;">ADD </div>
       </a>
       <div class="tablenav top">
         <?php
-        WDWLibrary::search(__('Name', 'bwg_back'), $search_value, 'tags_form','position_search');
+        WDWLibrary::search(__('Name','bwg_back'), $search_value, 'tags_form', 'position_search');
         WDWLibrary::html_page_nav($page_nav['total'], $pager++, $page_nav['limit'], 'tags_form', $per_page);
         ?>
       </div>
       <table class="wp-list-table widefat fixed pages">
         <thead>
-          <th class="manage-column column-cb check-column table_small_col"><input id="check_all" type="checkbox" style="margin:0;" /></th>
-          <th class="sortable table_small_col <?php if ($order_by == 'term_id') {echo $order_class;} ?>" style="padding-left:15px">
+          <th class="sortable manage-column column-cb check-column table_small_col"><input id="check_all" type="checkbox" style="margin:0;" /></th>
+          <th class="sortable table_small_col <?php if ($order_by == 'term_id') {echo $order_class;} ?>" style="padding-left:15px;">
             <a onclick="spider_set_input_value('order_by', 'term_id');
                         spider_set_input_value('asc_or_desc', '<?php echo ((isset($_POST['asc_or_desc']) && isset($_POST['order_by']) && (esc_html(stripslashes($_POST['order_by'])) == 'term_id') && esc_html(stripslashes($_POST['asc_or_desc'])) == 'asc') ? 'desc' : 'asc'); ?>');
                         spider_form_submit(event, 'tags_form')" href="">
@@ -108,16 +93,7 @@ class BWGViewAddTags {
     </form>
     <script src="<?php echo get_admin_url(); ?>load-scripts.php?c=1&load%5B%5D=common,admin-bar" type="text/javascript"></script>
     <?php
+    
     die();
   }
-  
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
 }

@@ -96,7 +96,7 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 		
 	public function restore_alldownloaded($params) {
 
-		$backups = $this->_updraftplus->get_backup_history();
+		$backups = UpdraftPlus_Backup_History::get_history();
 		$updraft_dir = $this->_updraftplus->backups_dir_location();
 
 		$timestamp = (int) $params['timestamp'];
@@ -128,7 +128,7 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 			}
 
 			if (isset($elements['db'])) {
-			
+				
 				// Analyse the header of the database file + display results
 				list ($mess2, $warn2, $err2, $info) = $this->_updraftplus->analyse_db_file($timestamp, $res);
 				$mess = array_merge($mess, $mess2);
@@ -310,7 +310,7 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 		// The purpose of this is to look at the list of indicated downloads, and indicate which are not already fully downloaded. i.e. Which need further action.
 		$send_back = array();
 
-		$backup = $this->_updraftplus->get_backup_history($params['timestamp']);
+		$backup = UpdraftPlus_Backup_History::get_history($params['timestamp']);
 		$updraft_dir = $this->_updraftplus->backups_dir_location();
 		$backupable_entities = $this->_updraftplus->get_backupable_file_entities();
 
@@ -459,7 +459,7 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 		}
 
 		// Retrieve the information from our backup history
-		$backup_history = $updraftplus->get_backup_history();
+		$backup_history = UpdraftPlus_Backup_History::get_history();
 
 		if (!isset($backup_history[$params['timestamp']][$params['type']])) {
 			return array('error' => __('Backup set not found', 'updraftplus'));

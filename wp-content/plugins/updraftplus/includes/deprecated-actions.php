@@ -25,8 +25,7 @@ if (isset($_POST['subaction']) && 'credentials_test' == $_POST['subaction']) {
 
 } elseif ('countbackups' == $_REQUEST['subaction']) {
 
-	$backup_history = UpdraftPlus_Options::get_updraft_option('updraft_backup_history');
-	$backup_history = is_array($backup_history) ? $backup_history : array();
+	$backup_history = UpdraftPlus_Backup_History::get_history();
 	echo __('Existing Backups', 'updraftplus').' ('.count($backup_history).')';
 	
 } elseif ('historystatus' == $subaction) {

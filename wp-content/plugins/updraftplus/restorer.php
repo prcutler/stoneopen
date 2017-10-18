@@ -1514,6 +1514,7 @@ ENDHERE;
 
 		// Find the supported engines - in case the dump had something else (case seen: saved from MariaDB with engine Aria; imported into plain MySQL without)
 		$supported_engines = $wpdb->get_results("SHOW ENGINES", OBJECT_K);
+		$supported_charsets = $wpdb->get_results("SHOW CHARACTER SET", OBJECT_K);
 
 		$this->errors = 0;
 		$this->statements_run = 0;
@@ -1846,7 +1847,6 @@ ENDHERE;
 					if ($restoring_table != $this->new_table_name) $this->restored_table($restoring_table, $import_table_prefix, $this->old_table_prefix);
 
 				}
-
 				$engine = "(?)";
 				$engine_change_message = '';
 				if (preg_match('/ENGINE=([^\s;]+)/', $sql_line, $eng_match)) {
@@ -1865,7 +1865,19 @@ ENDHERE;
 						}
 					}
 				}
-
+				$charset_change_message = '';
+				if (preg_match('/ CHARSET=([^\s;]+)/i', $sql_line, $charset_match)) {
+					$charset = $charset_match[1];
+					if (!isset($supported_charsets[$charset])) {
+						$charset_change_message = sprintf(__('Requested table character set (%s) is not present - changing to %s.', 'updraftplus'), esc_html($charset), esc_html($this->ud_restore_options['updraft_restorer_charset']));
+						$sql_line = $updraftplus->str_lreplace("CHARSET=$charset", "CHARSET=".$this->ud_restore_options['updraft_restorer_charset'], $sql_line);
+						// Allow default COLLLATE to database
+						if (preg_match('/ COLLATE=([^\s;]+)/i', $sql_line, $collate_match)) {
+							$collate = $collate_match[1];
+							$sql_line = $updraftplus->str_lreplace(" COLLATE=$collate", "", $sql_line);
+						}
+					}
+				}
 				$print_line = sprintf(__('Processing table (%s)', 'updraftplus'), $engine).":  ".$this->table_name;
 				$logline = "Processing table ($engine): ".$this->table_name;
 				if ('' != $this->old_table_prefix && $import_table_prefix != $this->old_table_prefix) {
@@ -1880,6 +1892,7 @@ ENDHERE;
 				$updraftplus->log($logline);
 				$updraftplus->log($print_line, 'notice-restore');
 				$restoring_table = $this->new_table_name;
+				if ($charset_change_message) $updraftplus->log($charset_change_message, 'notice-restore');
 				if ($engine_change_message) $updraftplus->log($engine_change_message, 'notice-restore');
 
 			} elseif (preg_match('/^\s*(insert into \`?([^\`]*)\`?\s+(values|\())/i', $sql_line, $matches)) {

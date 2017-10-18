@@ -510,11 +510,12 @@ class BWGControllerGalleries_bwg {
   public function save_db() {
     global $wpdb;
     global $WD_BWG_UPLOAD_DIR;
-    $id = (isset($_POST['current_id']) ? (int) $_POST['current_id'] : 0);
+    $id   = (isset($_POST['current_id']) ? (int) $_POST['current_id'] : 0);
     $name = ((isset($_POST['name']) && esc_html(stripslashes($_POST['name'])) != '') ? esc_html(stripslashes($_POST['name'])) : 'Gallery');
     $name = $this->bwg_get_unique_name($name, $id);
     $slug = ((isset($_POST['slug']) && esc_html(stripslashes($_POST['slug'])) != '') ? esc_html(stripslashes($_POST['slug'])) : $name);
     $slug = $this->bwg_get_unique_slug($slug, $id);
+	$old_slug = WDWLibrary::get('old_slug');
     $description = (isset($_POST['description']) ? stripslashes($_POST['description']) : '');
     $preview_image = (isset($_POST['preview_image']) ? esc_html(stripslashes($_POST['preview_image'])) : '');
     $random_preview_image = '';
@@ -560,16 +561,6 @@ class BWGControllerGalleries_bwg {
         $data['preview_image'] = $preview_image;
       }
       $save = $wpdb->update($wpdb->prefix . 'bwg_gallery', $data, array('id' => $id));
-      /* Update data in corresponding posts.*/
-      $query2 = "SELECT ID, post_content FROM " . $wpdb->posts . " WHERE post_type = 'bwg_gallery'";
-      $posts = $wpdb->get_results($query2, OBJECT);
-      foreach ($posts as $post) {
-        $post_content = $post->post_content;
-        if (strpos($post_content, ' type="gallery" ') && strpos($post_content, ' gallery_id="' . $id . '" ')) {
-          $album_post = array('ID' => $post->ID, 'post_title' => $name, 'post_name' => $slug);
-          wp_update_post($album_post);
-        }
-      }
     }
     else {
       $save = $wpdb->insert($wpdb->prefix . 'bwg_gallery', array(
@@ -601,8 +592,21 @@ class BWGControllerGalleries_bwg {
         '%s',
         '%d',
       ));
+      $id = $wpdb->insert_id;
     }
-    if ($save !== FALSE) {
+    // Create custom post (type is gallery).
+    $custom_post_params = array(
+      'id' => $id,
+      'title' => $name,
+      'slug' => $slug,
+	  'old_slug' => $old_slug,
+      'type' => array(
+        'post_type' => 'gallery',
+        'mode' => '',
+      ),
+    );
+    WDWLibrary::bwg_create_custom_post($custom_post_params);
+    if ( $save !== FALSE ) {
       echo WDWLibrary::message(__('Item Succesfully Saved.', 'bwg_back'), 'wd_updated');
     }
     else {
@@ -636,52 +640,59 @@ class BWGControllerGalleries_bwg {
   }
 
   public function delete($id) {
-    global $wpdb;
-    $query = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_gallery WHERE id="%d"', $id);
-    $query_image = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_image WHERE gallery_id="%d"', $id);
-    $query_album_gallery = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE alb_gal_id="%d" AND is_album="%d"', $id, 0);
-    if ($wpdb->query($query)) {
-      $wpdb->query($query_image);
-      $wpdb->query($query_album_gallery);
-      echo WDWLibrary::message(__('Item Succesfully Deleted.', 'bwg_back'), 'wd_updated');
-    }
-    else {
-      echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'wd_error');
-    }
-    /* Delete corresponding posts and their meta.*/
-    $query2 = "SELECT ID, post_content FROM " . $wpdb->posts . " WHERE post_type = 'bwg_gallery'";
-    $posts = $wpdb->get_results($query2, OBJECT);
-    foreach ($posts as $post) {
-      $post_content = $post->post_content;
-      if (strpos($post_content, ' type="gallery" ') && strpos($post_content, ' gallery_id="'.$id.'" ')) {
-        wp_delete_post($post->ID, TRUE);
-      }
+	global $wpdb;
+	$row = $wpdb->get_row( $wpdb->prepare('SELECT id, slug FROM ' . $wpdb->prefix . 'bwg_gallery WHERE id="%d"', $id) );
+	if ( !empty($row) ) {
+		$query = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_gallery WHERE id="%d"', $id);
+		$query_image = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_image WHERE gallery_id="%d"', $id);
+		$query_album_gallery = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE alb_gal_id="%d" AND is_album="%d"', $id, 0);
+		if ($wpdb->query($query)) {
+		  $wpdb->query($query_image);
+		  $wpdb->query($query_album_gallery);
+		  // Remove custom post (type by bwg_gallery).
+		  WDWLibrary::bwg_remove_custom_post( array( 'slug' => $row->slug, 'post_type' => 'bwg_gallery') );
+		  echo WDWLibrary::message(__('Item Succesfully Deleted.', 'bwg_back'), 'wd_updated');
+		}
+		else {
+		   // TODO change message.
+		  echo WDWLibrary::message(__('Error. Please install plugin again.', 'bwg_back'), 'wd_error');
+		}
     }
     $this->display();
   }
   
   public function delete_all() {
-    global $wpdb;
-    $flag = FALSE;
-    $gal_ids_col = $wpdb->get_col('SELECT id FROM ' . $wpdb->prefix . 'bwg_gallery');
-    foreach ($gal_ids_col as $gal_id) {
-      if (isset($_POST['check_' . $gal_id]) || isset($_POST['check_all_items'])) {
-        $flag = TRUE;
-        $query = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_gallery WHERE id="%d"', $gal_id);
-        $wpdb->query($query);
-        $query_image = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_image WHERE gallery_id="%d"', $gal_id);
-        $wpdb->query($query_image);
-        $query_album_gallery = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE alb_gal_id="%d" AND is_album="%d"', $gal_id, 0);
-        $wpdb->query($query_album_gallery);
-      }
-    }
-    if ($flag) {
-      echo WDWLibrary::message(__('Items Succesfully Deleted.', 'bwg_back'), 'wd_updated');
-    }
-    else {
-      echo WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'wd_error');
-    }
-    $this->display();
+	$message = WDWLibrary::message(__('You must select at least one item.', 'bwg_back'), 'wd_error');
+	$galleryids = array();
+	if ( !empty($_POST['ids_string']) ){
+		$ids = explode(',', $_POST['ids_string']);
+		foreach ($ids as $id) {
+			$keypost = 'check_' . $id;
+			if ( !empty($_POST[$keypost]) ) {
+				$galleryids[] = $id;
+			}
+		}
+	}
+	if ( !empty($galleryids) ) {
+		global $wpdb;
+		$gallerys = $wpdb->get_results('SELECT `id`, `slug` FROM ' . $wpdb->prefix . 'bwg_gallery WHERE `id` IN (' . implode(',', $galleryids). ')');
+			if ( !empty($gallerys) ) {
+				$delete = false;
+				foreach( $gallerys as $gallery ) {
+					$wpdb->query( $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_gallery WHERE id="%d"', $gallery->id) );
+					$wpdb->query( $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_image WHERE gallery_id="%d"', $gallery->id) );
+					$wpdb->query( $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE alb_gal_id="%d" AND is_album="%d"', $gallery->id, 0) );
+					// Remove custom post (type by bwg_gallery).
+					WDWLibrary::bwg_remove_custom_post( array( 'slug' => $gallery->slug, 'post_type' => 'bwg_gallery') );
+					$delete = true;
+				}
+				if ( $delete ) {
+					$message = WDWLibrary::message(__('Items Succesfully Deleted.', 'bwg_back'), 'wd_updated');
+				}
+			}
+	}
+	echo $message;
+	$this->display();
   }
 
   public function publish($id) {

@@ -1,27 +1,12 @@
 <?php
-
 class BWGViewTags_bwg {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
+ 
   private $model;
 
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function __construct($model) {
     $this->model = $model;
   }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
+ 
   public function display() {
     $rows_data = $this->model->get_rows_data();
     $page_nav = $this->model->page_nav();
@@ -36,14 +21,14 @@ class BWGViewTags_bwg {
     $query_url = add_query_arg(array('action' => ''), $query_url);
     ?>
     <script>
-      var ajax_url = "<?php echo $query_url; ?>"
+      var ajax_url = "<?php echo $query_url; ?>";
     </script>
-    <div id="wordpress_message_1" style="width:99%;display:none;"><div id="wordpress_message_2" class="wd_updated"><p><strong><?php echo __('Item Succesfully Saved.', 'bwg_back'); ?></strong></p></div></div>
-    <form class="wrap bwg_form" id="tags_form" method="post" action="admin.php?page=tags_bwg" style="float:left; width: 98%;">
-      <?php wp_nonce_field( 'tags_bwg', 'bwg_nonce' ); ?>
+    <div id="wordpress_message_1" style="width:99%;display:none"><div id="wordpress_message_2" class="wd_updated"><p><strong><?php echo __('Item Succesfully Saved.', 'bwg_back'); ?></strong></p></div></div>
+    <form class="wrap bwg_form" id="tags_form" method="post" action="admin.php?page=tags_bwg" style="width: 98%; float: left;">
+    <?php wp_nonce_field( 'tags_bwg', 'bwg_nonce' ); ?>
       <div>
         <span class="tag_icon"></span>
-        <h2><?php _e("Tags", 'bwg_back'); ?></h2>
+        <h2><?php _e('Tags', 'bwg_back'); ?></h2>
       </div>
       <div class="buttons_div_right">
       <span class="wd-btn wd-btn-primary-gray bwg_check_all  non_selectable " onclick="spider_check_all_items()">
@@ -176,16 +161,8 @@ class BWGViewTags_bwg {
       <input id="ids_string" name="ids_string" type="hidden" value="<?php echo $ids_string; ?>" />
       <input id="asc_or_desc" name="asc_or_desc" type="hidden" value="<?php echo $asc_or_desc; ?>" />
       <input id="order_by" name="order_by" type="hidden" value="<?php echo $order_by; ?>" />
+      <input id="tag_current_id" name="tag_current_id" type="hidden" value="" />
     </form>
     <?php
-  }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
+  }  
 }
