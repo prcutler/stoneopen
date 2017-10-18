@@ -89,28 +89,34 @@ Images
 ---------------------------------------------
 
 == Changelog ==
+Version 1.56
+ * Smooth Scrolling issue on back to top and slider down button fixed
+
+Version 1.55
+ * Menu Scrolling issue fixed - jquery.nav.js updated 
+ 
 Version 1.54
  * Design issue of submenu in responsive fixed
 
-Version 1.5.3
+Version 1.53
  * Updated bxSlider Plugin
  * Update Fontawesome
 
-Version 1.5.2
+Version 1.52
  * Minor Bug Fixes
 
-Version 1.5.1
+Version 1.51
  * Alignment Issue with Center Header fixed
  * Unwanted text removed.
 
-Version 1.5.0
+Version 1.50
  * Minor Bug Fixes
 
-Version 1.4.0
+Version 1.40
  * Added Welcome Page with demo import functionality
  * Some Minor Design fixes
 
-Version 1.3.0
+Version 1.30
  * HTML validation
  * Optmization for Better SEO
 
