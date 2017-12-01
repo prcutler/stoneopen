@@ -1,10 +1,27 @@
 jQuery(document).ready(function($){
+    $('#main-slider .bx-slider').slick({
+        slidesToShow: 1,
+        dots: JSON.parse(ap_params.accesspress_show_pager),
+        speed: ap_params.accesspress_slider_speed,
+        arrows: JSON.parse(ap_params.accesspress_show_controls),
+        autoplaySpeed : ap_params.accesspress_slider_pause,
+        autoplay:  JSON.parse(ap_params.accesspress_auto_transition),
+        fade: JSON.parse(ap_params.accesspress_slider_transition),
+        infinite: true
+    });
+
     var headerHeight = $('#masthead').outerHeight();
     $('#go-top, .next-page').localScroll({
         offset: {
         top: -headerHeight
      }
     });
+
+    $(window).resize(function(){
+        var winHeight = $(window).height();
+        var headerHeight = $('#masthead').outerHeight();
+        $('#main-slider.full-screen-yes .main-slides').height(winHeight-headerHeight);
+    }).resize();
 
     $(window).scroll(function(){
         if($(window).scrollTop() > 200){
@@ -27,56 +44,62 @@ jQuery(document).ready(function($){
     });
 
     $(window).resize(function(){
-    var headerHeight = $('#masthead').outerHeight();
-    $('.parallax-on #content').css('padding-top', headerHeight);
-
-    $('.slider-caption').each(function(){
-    var cap_height = $(this).actual( 'outerHeight' );
-    $(this).css('margin-top',-(cap_height/2));
-    });
-
+        var headerHeight = $('#masthead').outerHeight();
+        $('.parallax-on #content').css('padding-top', headerHeight);
     }).resize();
 
-    $('#main-slider .overlay').prependTo('#main-slider .slides');
+    $('.team-content').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        fade: true,
+        asNavFor: '.team-slider'
+    });
 
-    $('.testimonial-slider').bxSlider({
-        auto:true,
+    $('.team-slider').slick({
+        slidesToShow: 7,
+        slidesToScroll: 1,
+        asNavFor: '.team-content',
+        dots: false,
+        centerMode: true,
+        focusOnSelect: true,
+        centerPadding: 0,
+        infinite: true,
+        prevArrow: '<i class="fa fa-angle-left"></i>',
+        nextArrow: '<i class="fa fa-angle-right"></i>',
+        responsive: [
+            {
+              breakpoint: 1024,
+              settings: {
+                slidesToShow: 5,
+              }
+            },
+            {
+              breakpoint: 768,
+              settings: {
+                slidesToShow: 3,
+              }
+            },
+            {
+              breakpoint: 480,
+              settings: {
+                slidesToShow: 1,
+              }
+            }
+        ]
+    });
+
+    $('.testimonial-slider').slick({
+        autoplay:true,
         speed: 1000,
-        pause: 8000,
-        pager:false,
-        nextText: '<i class="fa fa-angle-right"></i>',
-        prevText: '<i class="fa fa-angle-left"></i>'
-    });
-
-    $('.team-slider').bxSlider({
-        auto:false,
-        pager:false,
-        nextText: '<i class="fa fa-angle-right"></i>',
-        prevText: '<i class="fa fa-angle-left"></i>',
-        moveSlides : 1,
-        minSlides: 2,
-        maxSlides: 7,
-        slideWidth: 140,
-        slideMargin: 15,
-        infiniteLoop: false,
-        hideControlOnEnd: true
-    });
-
-    $('.team-content').each(function(){
-        $(this).find('.team-list:first').show();
-    });
-    
-    $('.team-tab').each(function(){
-        $(this).find('.team-image:first').addClass('active');
-    });
-
-    $('.team-tab .team-image').on('click', function(){
-        $(this).parents('.team-listing').find('.team-image').removeClass('active');
-        $(this).parents('.team-listing').find('.team-list').hide();
-        $(this).addClass('active');
-        var teamid = $(this).attr('id');
-        $('.team-content .'+teamid).fadeIn();
-        return false;
+        autoplaySpeed: 8000,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
+        fade: false,
+        dots: false,
+        prevArrow: '<i class="fa fa-angle-left"></i>',
+        nextArrow: '<i class="fa fa-angle-right"></i>',
     });
 
     $(window).bind('load',function(){

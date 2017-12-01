@@ -173,27 +173,27 @@
             <div class="team-listing clearfix">
                 <div class="team-tab">
                     <div class="team-slider">
-                        <a id="team-277" href="#" class="clearfix team-image wow fadeInLeft" data-wow-delay="0.25s">
+                        <div class="team-image wow fadeInLeft" data-wow-delay="0.25s">
                             <img src="<?php echo get_template_directory_uri(); ?>/images/demo/team1.jpg" alt="Russel Clinton">
-                        </a>
-                        <a id="team-236" href="#" class="clearfix team-image wow fadeInLeft" data-wow-delay="0.5s">
+                        </div>
+                        <div class="team-image wow fadeInLeft" data-wow-delay="0.5s">
                             <img src="<?php echo get_template_directory_uri(); ?>/images/demo/team2.jpg" alt="Bibo Aurther">
-                        </a>
-                        <a id="team-233" href="#" class="clearfix team-image wow fadeInLeft" data-wow-delay="0.75s">
+                        </div>
+                        <div class="team-image wow fadeInLeft" data-wow-delay="0.75s">
                             <img src="<?php echo get_template_directory_uri(); ?>/images/demo/team3.jpg" alt="Rusel Misil">
-                        </a>
-                        <a id="team-118" href="#" class="clearfix team-image wow fadeInLeft" data-wow-delay="1s">
+                        </div>
+                        <div class="team-image wow fadeInLeft" data-wow-delay="1s">
                             <img src="<?php echo get_template_directory_uri(); ?>/images/demo/team4.jpg" alt="Linda Harley">
-                        </a>
-                        <a id="team-116" href="#" class="clearfix team-image wow fadeInLeft" data-wow-delay="1.25s">
+                        </div>
+                        <div class="team-image wow fadeInLeft" data-wow-delay="1.25s">
                             <img src="<?php echo get_template_directory_uri();?>/images/demo/team5.jpg" alt="John Doe">
-                        </a>
-                        <a id="team-114" href="#" class="clearfix team-image wow fadeInLeft" data-wow-delay="1.5s">
+                        </div>
+                        <div class="team-image wow fadeInLeft" data-wow-delay="1.5s">
                             <img src="<?php echo get_template_directory_uri();?>/images/demo/team6.jpg" alt="Jakson Biber">
-                        </a>
-                        <a id="team-111" href="#" class="clearfix team-image wow fadeInLeft" data-wow-delay="1.75s">
+                        </div>
+                        <div class="team-image wow fadeInLeft" data-wow-delay="1.75s">
                             <img src="<?php echo get_template_directory_uri(); ?>/images/demo/team7.jpg" alt="Jack Peterson">
-                        </a>
+                        </div>
                     </div>
                 </div>
                 <div class="team-content wow fadeIn" data-wow-delay="1.5s">

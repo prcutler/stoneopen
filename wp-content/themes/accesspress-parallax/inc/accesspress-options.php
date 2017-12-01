@@ -14,7 +14,6 @@ function optionsframework_options() {
 	$transitions = array(
 		'fade' => __('Fade', 'accesspress-parallax'),
 		'horizontal' => __('Slide Horizontal', 'accesspress-parallax'),
-		'vertical' => __('Slide Vertical', 'accesspress-parallax')
 	);
 
 	$overlay = array(
@@ -114,13 +113,6 @@ function optionsframework_options() {
 		'name' => __('Enable Animation on scroll - Page Elements will show with some animation only in home page.', 'accesspress-parallax'),
 		'desc' => __('Check To enable', 'accesspress-parallax'),
 		'id' => 'enable_animation',
-		'std' => '1',
-		'type' => 'checkbox');
-
-	$options[] = array(
-		'name' => __('Enable Responsive', 'accesspress-parallax'),
-		'desc' => __('Check To enable', 'accesspress-parallax'),
-		'id' => 'enable_responsive',
 		'std' => '1',
 		'type' => 'checkbox');
 
@@ -242,14 +234,14 @@ function optionsframework_options() {
 		'options' => $check);
 
 	$options[] = array(
-		'name' => __('Show Pager', 'accesspress-parallax'),
+		'name' => __('Show Slider Dots', 'accesspress-parallax'),
 		'id' => 'show_pager',
 		'std' => 'yes',
 		'type' => 'radio',
 		'options' => $check);
 
 	$options[] = array(
-		'name' => __('Show Controls', 'accesspress-parallax'),
+		'name' => __('Show Slider Arrows', 'accesspress-parallax'),
 		'id' => 'show_controls',
 		'std' => 'yes',
 		'type' => 'radio',

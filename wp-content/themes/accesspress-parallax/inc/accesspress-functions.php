@@ -67,48 +67,17 @@ function accesspress_parallax_bxslidercb(){
 		$accesspress_slider_category = of_get_option('slider_category');
 		$accesspress_slider_full_window = of_get_option('slider_full_window') ;
 		$accesspress_show_slider = of_get_option('show_slider') ;
-		$accesspress_show_pager = (!of_get_option('show_pager') || of_get_option('show_pager') == "yes") ? "true" : "false";
-		$accesspress_show_controls = (!of_get_option('show_controls') || of_get_option('show_controls') == "yes") ? "true" : "false";
-		$accesspress_auto_transition = (!of_get_option('auto_transition') || of_get_option('auto_transition') == "yes") ? "true" : "false";
-		$accesspress_slider_transition = (!of_get_option('slider_transition')) ? "fade" : of_get_option('slider_transition');
-		$accesspress_slider_speed = (!of_get_option('slider_speed')) ? "5000" : of_get_option('slider_speed');
-		$accesspress_slider_pause = (!of_get_option('slider_pause')) ? "5000" : of_get_option('slider_pause');
 		$accesspress_show_caption = of_get_option('show_caption') ;
 		$accesspress_enable_parallax = of_get_option('enable_parallax');
 		?>
 
 		<?php if( $accesspress_show_slider == "yes" || empty($accesspress_show_slider)) : ?>
 		<section id="main-slider" class="full-screen-<?php echo $accesspress_slider_full_window; ?>">
-		
-		<div class="overlay"></div>
 
 		<?php if(!empty($accesspress_parallax_first_page) && $accesspress_enable_parallax == 1): ?>
 		<div class="next-page"><a href="<?php echo esc_url( home_url( '/' ) ); ?>#section-<?php echo esc_attr($accesspress_parallax_first_page); ?>"></a></div>
-		<?php endif; ?>
-
- 		<script type="text/javascript">
-            jQuery(function($){
-				$('#main-slider .bx-slider').bxSlider({
-					adaptiveHeight: true,
-					pager: <?php echo $accesspress_show_pager; ?>,
-					controls: <?php echo $accesspress_show_controls; ?>,
-					mode: '<?php echo $accesspress_slider_transition; ?>',
-					auto : <?php echo $accesspress_auto_transition; ?>,
-					pause: <?php echo $accesspress_slider_pause; ?>,
-					speed: <?php echo $accesspress_slider_speed; ?>
-				});
-
-				<?php if($accesspress_slider_full_window == "yes" && !empty($accesspress_slider_category)) : ?>
-				$(window).resize(function(){
-					var winHeight = $(window).height();
-					var headerHeight = $('#masthead').outerHeight();
-					$('#main-slider .bx-viewport , #main-slider .slides').height(winHeight-headerHeight);
-				}).resize();
-				<?php endif; ?>
-				
-			});
-        </script>
-        <?php
+		<?php endif;
+		
 		if( !empty($accesspress_slider_category)) :
 
 				$loop = new WP_Query(array(
@@ -126,7 +95,7 @@ function accesspress_parallax_bxslidercb(){
 						$image_url =  "style = 'background-image:url(".esc_url($image[0]).");'";
 				    endif;
 					?>
-					<div class="slides" <?php echo $image_url; ?>>
+					<div class="main-slides" <?php echo $image_url; ?>>
 					
 					<?php if($accesspress_slider_full_window == "no") : ?>		
 						<img src="<?php echo esc_url($image[0]); ?>">
@@ -148,7 +117,7 @@ function accesspress_parallax_bxslidercb(){
 			<?php else: ?>
 
             <div class="bx-slider">
-				<div class="slides">
+				<div class="main-slides">
 					<img src="<?php echo get_template_directory_uri(); ?>/images/demo/slider1.jpg" alt="slider1">
 					<div class="slider-caption">
 						<div class="mid-content">
@@ -161,7 +130,7 @@ function accesspress_parallax_bxslidercb(){
 					</div>
 				</div>
 						
-				<div class="slides">
+				<div class="main-slides">
 					<img src="<?php echo get_template_directory_uri(); ?>/images/demo/slider2.jpg" alt="slider2">
 					<div class="slider-caption">
 						<div class="ak-container">
@@ -216,7 +185,7 @@ function accesspress_header_styles_scripts(){
 	}
 
 	if($slider_overlay == "yes"){
-		$dyamic_style .= "#main-slider .overlay{display:none};";
+		$dyamic_style .= "#main-slider .main-slides:after{display:none};";
 	}
 	echo esc_textarea($dyamic_style);
 	echo esc_textarea($custom_css);

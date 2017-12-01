@@ -89,6 +89,9 @@ Images
 ---------------------------------------------
 
 == Changelog ==
+Version 1.57
+ * All Element using bx slider replaced by slick slider for better performance
+
 Version 1.56
  * Smooth Scrolling issue on back to top and slider down button fixed
 

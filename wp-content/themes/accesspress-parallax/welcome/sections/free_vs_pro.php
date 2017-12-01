@@ -239,7 +239,7 @@
 	<tr>
 		<td>
 			<span><?php esc_html_e('Fully WooCommerce Compatible', 'accesspress-parallax'); ?></span>
-			<p><?php esc_html_e('Yes – Stop your WooCommerce theme search here.', 'accesspress-parallax'); ?></p>
+			<p><?php esc_html_e('Yes - Stop your WooCommerce theme search here.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
 			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">

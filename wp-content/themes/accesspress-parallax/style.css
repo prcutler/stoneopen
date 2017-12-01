@@ -4,7 +4,7 @@ Theme URI: https://accesspressthemes.com/wordpress-themes/accesspress-parallax/
 Author: AccessPress Themes
 Author URI: https://accesspressthemes.com/
 Description: AccessPress Parallax is a beautiful WordPress theme with Parallax design. Parallax design has become popular and is widely implemented these days. This is probably the most beautiful, feature rich and complete free WordPress parallax theme with features like: fully responsive, advance theme option panel, featured slider, advance post settings, services/team/blog/portfolio/testimonial layout, Google map integration, custom logo/fav icon, call to action, CSS animation, SEO friendly, translation ready, RTL support, custom CSS/JS and more! More over the theme is fully translation ready, WooCommerce Compatible, bbPress Compatible and fully support multilanguage via POLYLANG plugin. Demo: http://accesspressthemes.com/theme-demos/?theme=accesspress-parallax Support forum: https://accesspressthemes.com/support/ Pro version: https://accesspressthemes.com/wordpress-themes/accesspress-parallax-pro/ 
-Version: 1.56
+Version: 1.57
 License: GNU General Public License v3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: accesspress-parallax
@@ -1170,12 +1170,23 @@ Main SLider
     min-height: 80vh;
 }
 
-#main-slider .overlay{
+.main-slides{
+	display: none;
+}
+
+#main-slider .main-slides:after{
+	content: "";
 	background:url(images/overlay4.png) repeat rgba(0,0,0,0.3);
 	position: absolute;
 	height: 100%;
 	width: 100%;
 	z-index: 999;
+	left: 0;
+	top: 0;
+}
+
+#main-slider .slick-slide img{
+	margin: 0 auto;
 }
 
 .full-screen-yes .slides{
@@ -1191,6 +1202,9 @@ Main SLider
 	width: 100%;
 	z-index: 99999;
 	text-align: center;
+	transform: translateY(-50%);
+	-ms-transform: translateY(-50%;);
+	-webkit-transform: translateY(-50%;);
 }
 
 .slider-caption .caption-title{
@@ -1263,6 +1277,69 @@ Main SLider
 	width: 100%;
 	-webkit-animation: flow-down 2s linear 3s infinite; /* Chrome, Safari, Opera */
     animation: flow-down 2s linear 3s infinite; /* Standard syntax */
+}
+
+#main-slider .slick-slide{
+	position: relative;
+}
+
+#main-slider.full-screen-yes .slick-slide{
+	height: 100vh;
+  background-size: cover;
+}
+
+#main-slider .slick-arrow{
+	position: absolute;
+    top: 50%;
+    margin-top: -50px;
+    outline: 0;
+    width: 28px;
+    height: 100px;
+    padding: 0;
+    text-indent: -9999px;
+    z-index: 99;
+}
+
+#main-slider .slick-prev.slick-arrow{
+	left: 40px;
+    background: url(images/controls.png) no-repeat;
+}
+
+#main-slider .slick-next.slick-arrow{
+	right: 40px;
+    background: url(images/controls.png) no-repeat right top;
+}
+
+#main-slider .slick-dots{
+	position: absolute;
+    bottom: 30px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+#main-slider .slick-dots li{
+	display: inline-block;
+}
+
+#main-slider .slick-dots li button{
+    border: 2px solid #FFF;
+    text-indent: -9999px;
+    display: block;
+    width: 20px;
+    height: 8px;
+    margin: 0 5px;
+    outline: 0;
+    padding: 0;
+    line-height: 8px;
+    border-radius: 0;
+    background: none;
+}
+
+#main-slider .slick-dots li.slick-active button{
+    background: #E66432;
+    border: 2px solid #E66432;
 }
 
 /* Chrome, Safari, Opera */
@@ -1407,7 +1484,8 @@ Testimonial Section
 .testimonial-list .testimonial-image img{
 	border-radius: 50%;
 }
-.testimonial-listing .bx-wrapper .bx-controls-direction a{
+.testimonial-listing .slick-arrow{
+	position: absolute;
 	margin: 0;
 	top: 100%;
 	left: 50%;
@@ -1422,22 +1500,21 @@ Testimonial Section
 	text-decoration: none;
 	text-align: center;
 	line-height: 38px;
-	position: relative;
 	display: inline-block;
 	-webkit-transition: all 0.3s ease 0s;
 	-moz-transition: all 0.3s ease 0s;
 	transition: all 0.3s ease 0s;
-	font-family: Arial;
+	cursor: pointer;
 }
-.testimonial-listing .bx-wrapper .bx-controls-direction a:hover{
+.testimonial-listing .slick-arrow:hover{
     background: #e66432;
     border: 1px solid #e66432;
     color:#FFF;
 }
-.testimonial-listing .bx-wrapper .bx-controls-direction a.bx-prev{
+.testimonial-listing .fa-angle-left{
 	margin-left:-45px;
 }
-.testimonial-listing .bx-wrapper .bx-controls-direction a.bx-next{
+.testimonial-listing .fa-angle-right{
 	margin-left:5px;
 }
 /*--------------------------------------------------------------
@@ -1533,27 +1610,16 @@ Team Section
 	padding: 0 50px;
 }
 .team-image{
-	width: 140px;
-	height: 140px;
 	border-radius: 50%;
 	border:2px solid #FFF;
 	display: inline-block;
-	margin: 0 0 20px;
+	margin: 0 8px 20px;
 	position: relative;
+	cursor: pointer;
+	display: none;
 }
-/*.team-image.active:after{
-	content: "";
-	position: absolute;
-	top: 100%;
-	left: 50%;
-	border-width: 15px;
-	border-color: #E66432 transparent transparent;
-	border-style: solid;
-	margin-left: -17px;
-	margin-top: -1px;
-	z-index: -1;
-}*/
-.team-image:hover, .team-image.active{
+.team-image:hover, 
+.team-image.slick-current{
 	border: 2px solid #E66432;
 }
 .team-image img{
@@ -1592,10 +1658,8 @@ Team Section
 	margin-bottom: 25px;
     opacity: 0.8;
 }
-.team-tab .bx-wrapper .bx-viewport{
-	border-radius: 66px;
-}
-.team-tab .bx-wrapper .bx-controls-direction a{
+
+.team-tab .slick-arrow{
     position: absolute;
 	text-indent: 0;
 	font-size: 46px;
@@ -1605,13 +1669,14 @@ Team Section
 	margin-top: -30px;
 	color: inherit;
 	font-weight: normal;
-    top: 50%
+    top: 50%;
+    cursor: pointer;
 }
-.team-tab .bx-wrapper .bx-prev{
+.team-tab .fa-angle-left{
 	background: none;
 	left: -40px;
 }
-.team-tab .bx-wrapper .bx-next{
+.team-tab .fa-angle-right{
 	background: none;
 	right: -40px;
 }
