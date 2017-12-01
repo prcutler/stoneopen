@@ -1,228 +1,57 @@
 <?php
 class BWGViewSlideshow {
   public function display($params, $from_shortcode = 0, $bwg = 0) {
+    global $WD_BWG_UPLOAD_DIR;
+    global $wd_bwg_options;
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
     require_once(WD_BWG_DIR . '/framework/WDWLibraryEmbed.php');
     $current_url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-    global $WD_BWG_UPLOAD_DIR;
-    $from = (isset($params['from']) ? esc_html($params['from']) : 0);
-    global $wd_bwg_options;
-    if (!isset($params['order_by'])) {
-      $order_by = 'asc'; 
-    }
-    else {
-      $order_by = $params['order_by'];
-    }
-    if (!isset($params['slideshow_title_full_width'])) {
-      $params['slideshow_title_full_width'] = 0;
-    }
-    if (!isset($params['tag'])) {
-      $params['tag'] = 0;
-    }
-    if (!isset($params['popup_enable_pinterest'])) {
-      $params['popup_enable_pinterest'] = 0;
-    }
-    if (!isset($params['popup_enable_tumblr'])) {
-      $params['popup_enable_tumblr'] = 0;
-    }
-    if (!isset($params['show_search_box'])) {
-      $params['show_search_box'] = 0;
-    }
-    if (!isset($params['search_box_width'])) {
-      $params['search_box_width'] = 180;
-    }
-    if (!isset($params['popup_enable_info'])) {
-      $params['popup_enable_info'] = 1;
-    }
-    if (!isset($params['popup_info_always_show'])) {
-      $params['popup_info_always_show'] = 0;
-    }
-    if (!isset($params['popup_info_full_width'])) {
-      $params['popup_info_full_width'] = 0;
-    }
-    if (!isset($params['popup_enable_rate'])) {
-      $params['popup_enable_rate'] = 0;
-    }
-    if (!isset($params['thumb_click_action']) || $params['thumb_click_action'] == 'undefined') {
-      $params['thumb_click_action'] = 'do_nothing';
-    }
-    if (!isset($params['thumb_link_target'])) {
-      $params['thumb_link_target'] = 1;
-    }
-    if (!isset($params['popup_hit_counter'])) {
-      $params['popup_hit_counter'] = 0;
-    }
-    if (!isset($params['popup_fullscreen'])) {
-      $params['popup_fullscreen'] = $wd_bwg_options->popup_fullscreen;
-    }
-    if (!isset($params['popup_enable_google'])) {
-      $params['popup_enable_google'] = $wd_bwg_options->popup_enable_google;
-    }
-    if(!isset($params['popup_enable_twitter'])) {
-      $params['popup_enable_twitter'] = $wd_bwg_options->popup_enable_twitter;
-    }
-    if (!isset($params['popup_enable_facebook'])) {
-      $params['popup_enable_facebook'] = $wd_bwg_options->popup_enable_facebook;
-    }
-    if (!isset($params['popup_interval'])) {
-      $params['popup_interval'] = $wd_bwg_options->popup_interval;
-    }
-    if (!isset($params['popup_enable_comment'])) {
-      $params['popup_enable_comment'] = $wd_bwg_options->popup_enable_comment;
-    }
-    if (!isset($params['popup_enable_filmstrip'])) {
-      $params['popup_enable_filmstrip'] = $wd_bwg_options->popup_enable_filmstrip;
-    }
-    if (!isset($params['popup_filmstrip_height'])) {
-      $params['popup_filmstrip_height'] = $wd_bwg_options->popup_filmstrip_height;
-    }
-    if (!isset($params['popup_enable_ctrl_btn'])) {
-      $params['popup_enable_ctrl_btn'] = $wd_bwg_options->popup_enable_ctrl_btn;
-    }
-    if (!isset($params['popup_enable_fullscreen'])) {
-      $params['popup_enable_fullscreen'] = $wd_bwg_options->popup_enable_fullscreen;
-    }
-    if (!isset($params['popup_enable_info'])) {
-      $params['popup_enable_info'] = $wd_bwg_options->popup_enable_info;
-    }
-    if (!isset($params['popup_info_always_show'])) {
-      $params['popup_info_always_show'] = $wd_bwg_options->popup_info_always_show;
-    }
-    if (!isset($params['popup_hit_counter'])) {
-      $params['popup_hit_counter'] = $wd_bwg_options->popup_hit_counter;
-    }
-    if (!isset($params['popup_enable_rate'])) {
-      $params['popup_enable_rate'] = $wd_bwg_options->popup_enable_rate;
-    }
-    if (!isset($params['popup_effect'])) {
-      $params['popup_effect'] = $wd_bwg_options->popup_type;
-    }
-    if (!isset($params['popup_width'])) {
-      $params['popup_width'] = $wd_bwg_options->popup_width;
-    }
-    if (!isset($params['popup_height'])) {
-      $params['popup_height'] = $wd_bwg_options->popup_height;
-    }
-    if (!isset($params['popup_autoplay'])) {
-      $params['popup_autoplay'] = $wd_bwg_options->popup_autoplay;
-    }
-    if (!isset($params['watermark_type'])) {
-      $params['watermark_type'] = $wd_bwg_options->watermark_type;
-    }
-    if (!isset($params['watermark_link'])) {
-      $params['watermark_link'] = urlencode($wd_bwg_options->watermark_link);
-    }
-    if (!isset($params['watermark_opacity'])) {
-      $params['watermark_opacity'] = $wd_bwg_options->watermark_opacity;
-    }
-    if (!isset($params['watermark_position'])) {
-      $params['watermark_position'] = $wd_bwg_options->watermark_position;
-    }
-    if (!isset($params['watermark_url'])) {
-      $params['watermark_url'] = urlencode($wd_bwg_options->watermark_url);
-    }
-    if (!isset($params['watermark_width'])) {
-      $params['watermark_width'] = $wd_bwg_options->watermark_width;
-    }
-    if (!isset($params['watermark_height'])) {
-      $params['watermark_height'] = $wd_bwg_options->watermark_height;
-    }
-    if (!isset($params['watermark_text'])) {
-      $params['watermark_text'] = urlencode($wd_bwg_options->watermark_text);
-    }
-    if (!isset($params['watermark_font_size'])) {
-      $params['watermark_font_size'] = $wd_bwg_options->watermark_font_size;
-    }
-    if (!isset($params['watermark_font'])) {
-      $params['watermark_font'] = $wd_bwg_options->watermark_font;
-    }
-    if (!isset($params['watermark_color'])) {
-      $params['watermark_color'] = $wd_bwg_options->watermark_color;
-    }
-    $image_right_click = $wd_bwg_options->image_right_click;
-    if (!$from) {
-      $theme_id = (isset($params['theme_id']) ? esc_html($params['theme_id']) : 1);
-      $theme_row = WDWLibrary::get_theme_row_data($theme_id);
-      if (!$theme_row) {
-        echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
-        return;
-      }
-      $gallery_id = (isset($params['gallery_id']) ? esc_html($params['gallery_id']) : 0);
-      $sort_by = (isset($params['sort_by']) ? esc_html($params['sort_by']) : 'order');
-      $slideshow_effect = (isset($params['slideshow_effect']) ? esc_html($params['slideshow_effect']) : 'fade');
-      $enable_slideshow_autoplay = (isset($params['enable_slideshow_autoplay']) ? esc_html($params['enable_slideshow_autoplay']) : 0);
-      $enable_slideshow_shuffle = (isset($params['enable_slideshow_shuffle']) ? esc_html($params['enable_slideshow_shuffle']) : 0);
-      $enable_slideshow_ctrl = (isset($params['enable_slideshow_ctrl']) ? esc_html($params['enable_slideshow_ctrl']) : 0);
-      $enable_slideshow_filmstrip = FALSE;
-      $slideshow_filmstrip_height = 0;
-      $slideshow_filmstrip_width = 0;
 
-      $enable_image_title = (isset($params['slideshow_enable_title']) ? esc_html($params['slideshow_enable_title']) : 0);
-      $slideshow_title_position = explode('-', (isset($params['slideshow_title_position']) ? esc_html($params['slideshow_title_position']) : 'bottom-right'));
-      $enable_image_description = (isset($params['slideshow_enable_description']) ? esc_html($params['slideshow_enable_description']) : 0);
-      $slideshow_description_position = explode('-', (isset($params['slideshow_description_position']) ? esc_html($params['slideshow_description_position']) : 'bottom-right'));
-      $enable_slideshow_music = (isset($params['enable_slideshow_music']) ? esc_html($params['enable_slideshow_music']) : 0);
-      $slideshow_music_url = (isset($params['slideshow_music_url']) ? esc_html($params['slideshow_music_url']) : '');
+	$theme_id = $params['theme_id'];
+	$gallery_id = $params['gallery_id'];
+	$order_by = $params['order_by'];
+	$sort_by = $params['sort_by'];
+	$slideshow_effect = $params['slideshow_effect'];
+	$enable_slideshow_autoplay = $params['enable_slideshow_autoplay'];
+	$enable_slideshow_shuffle = $params['enable_slideshow_shuffle'];
+	$enable_slideshow_ctrl = $params['enable_slideshow_ctrl'];
+	$enable_slideshow_filmstrip = FALSE;
+	$slideshow_filmstrip_height = 0;
+	$slideshow_filmstrip_width = 0;
 
-      $image_width = (isset($params['slideshow_width']) ? esc_html($params['slideshow_width']) : '800');
-      $image_height = (isset($params['slideshow_height']) ? esc_html($params['slideshow_height']) : '600');
-      $slideshow_interval = (isset($params['slideshow_interval']) ? esc_html($params['slideshow_interval']) : 5);
+	$enable_image_title = $params['slideshow_enable_title'];
+	$slideshow_title_position = explode('-', $params['slideshow_title_position']);
+	$enable_image_description = $params['slideshow_enable_description'];
+	$slideshow_description_position = explode('-', $params['slideshow_description_position']);
+	$enable_slideshow_music = $params['enable_slideshow_music'];
+	$slideshow_music_url = $params['slideshow_music_url'];
 
-      $watermark_type = (isset($params['watermark_type']) ? esc_html($params['watermark_type']) : 'none');
-      $watermark_text = (isset($params['watermark_text']) ? esc_html($params['watermark_text']) : '');
-      $watermark_font_size = (isset($params['watermark_font_size']) ? esc_html($params['watermark_font_size']) : 12);
-      $watermark_font = (isset($params['watermark_font']) ? esc_html($params['watermark_font']) : 'Arial');
-      $watermark_color = (isset($params['watermark_color']) ? esc_html($params['watermark_color']) : 'FFFFFF');
-      $watermark_opacity = (isset($params['watermark_opacity']) ? esc_html($params['watermark_opacity']) : 30);
-      $watermark_position = explode('-', (isset($params['watermark_position']) ? esc_html($params['watermark_position']) : 'bottom-right'));
-      $watermark_link = (isset($params['watermark_link']) ? esc_html($params['watermark_link']) : '');
-      $watermark_url = (isset($params['watermark_url']) ? esc_html($params['watermark_url']) : '');
-      $watermark_width = (isset($params['watermark_width']) ? esc_html($params['watermark_width']) : 90);
-      $watermark_height = (isset($params['watermark_height']) ? esc_html($params['watermark_height']) : 90);
-      $slideshow_effect_duration = (isset($params['slideshow_effect_duration']) ? esc_html($params['slideshow_effect_duration']) : 1);
-    }
-    else {      
-      $theme_id = (isset($params['theme_id']) ? esc_html($params['theme_id']) : 0);
-      $theme_row = WDWLibrary::get_theme_row_data($theme_id);
-      if (!$theme_row) {
-        echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
-        return;
-      }
-      $gallery_id = (isset($params['gallery_id']) ? esc_html($params['gallery_id']) : 0);
-      $sort_by = 'order';
-      $slideshow_effect = (isset($params['effect']) ? esc_html($params['effect']) : 'fade');
-      $enable_slideshow_autoplay = (isset($params['enable_autoplay']) ? esc_html($params['enable_autoplay']) : $wd_bwg_options->slideshow_enable_autoplay);
-      $enable_slideshow_shuffle = (isset($params['shuffle']) ? esc_html($params['shuffle']) : 0);
-      $enable_slideshow_ctrl = (isset($params['enable_ctrl_btn']) ? esc_html($params['enable_ctrl_btn']) : $wd_bwg_options->slideshow_enable_ctrl);
-      $enable_slideshow_filmstrip = FALSE;
-      $slideshow_filmstrip_height = 0;
-      $slideshow_filmstrip_width = 0;
+	$image_width = $params['slideshow_width'];
+	$image_height = $params['slideshow_height'];
+	$slideshow_interval = $params['slideshow_interval'];
 
-      $enable_image_title = $wd_bwg_options->slideshow_enable_title;
-      $slideshow_title_position = explode('-', $wd_bwg_options->slideshow_title_position);
-      $enable_image_description = $wd_bwg_options->slideshow_enable_description;
-      $slideshow_description_position = explode('-', $wd_bwg_options->slideshow_description_position);
-      $enable_slideshow_music = $wd_bwg_options->slideshow_enable_music;
-      $slideshow_music_url = $wd_bwg_options->slideshow_audio_url;
-      $slideshow_effect_duration = isset($wd_bwg_options->slideshow_effect_duration) ? $wd_bwg_options->slideshow_effect_duration : 1;
+	$watermark_type = $params['watermark_type'];
+	$watermark_text = $params['watermark_text'];
+	$watermark_font_size = $params['watermark_font_size'];
+	$watermark_font = $params['watermark_font'];
+	$watermark_color = $params['watermark_color'];
+	$watermark_opacity = $params['watermark_opacity'];
+	$watermark_position = explode('-', $params['watermark_position']);
+	$watermark_link = $params['watermark_link'];
+	$watermark_url = $params['watermark_url'];
+	$watermark_width = $params['watermark_width'];
+	$watermark_height = $params['watermark_height'];
+	$slideshow_effect_duration = $params['slideshow_effect_duration'];
+	
+	$image_right_click = isset($wd_bwg_options->image_right_click) ? $wd_bwg_options->image_right_click : 0;
 
-      $image_width = (isset($params['width']) ? esc_html($params['width']) : '800');
-      $image_height = (isset($params['height']) ? esc_html($params['height']) : '600');
-      $slideshow_interval = (isset($params['interval']) ? esc_html($params['interval']) : 5);
-     
-      $watermark_type = $wd_bwg_options->watermark_type;
-      $watermark_text = $wd_bwg_options->watermark_text;
-      $watermark_font_size = $wd_bwg_options->watermark_font_size;
-      $watermark_font = $wd_bwg_options->watermark_font;
-      $watermark_color = $wd_bwg_options->watermark_color;
-      $watermark_opacity = $wd_bwg_options->watermark_opacity;
-      $watermark_position = explode('-', $wd_bwg_options->watermark_position);
-      $watermark_link = urlencode($wd_bwg_options->watermark_link);
-      $watermark_url = urlencode($wd_bwg_options->watermark_url);
-      $watermark_width = $wd_bwg_options->watermark_width;
-      $watermark_height = $wd_bwg_options->watermark_height;
-    }
-    $gallery_row = WDWLibrary::get_gallery_row_data($gallery_id);
+	$theme_row = WDWLibrary::get_theme_row_data($theme_id);
+	if (!$theme_row) {
+		echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
+		return;
+	}
+
+	$gallery_row = WDWLibrary::get_gallery_row_data($gallery_id);
     if (!$gallery_row && $params["tag"] == 0) {
       echo WDWLibrary::message(__('There is no gallery selected or the gallery was deleted.', 'bwg'), 'wd_error');
       return;
@@ -603,7 +432,7 @@ class BWGViewSlideshow {
             /* For images.*/
             var bwg_current_image_span = jQuery(this).find("img");
             if (bwg_current_image_span.length) {
-              bwg_current_image_span.load(function () {
+              bwg_current_image_span.on('load', function () {
                 var width = bwg_current_image_span.width();
                 var height = bwg_current_image_span.height();
                 bwg_change_each_watermark_container_<?php echo $bwg; ?>(width, height);
@@ -1254,7 +1083,7 @@ class BWGViewSlideshow {
           }
           return false;
         });
-        jQuery(".bwg_slideshow_filmstrip_right_<?php echo $bwg; ?>").click(function () {
+        jQuery(".bwg_slideshow_filmstrip_right_<?php echo $bwg; ?>").on('click', function () {
           jQuery( ".bwg_slideshow_filmstrip_thumbnails_<?php echo $bwg; ?>" ).stop(true, false);
           if (jQuery(".bwg_slideshow_filmstrip_thumbnails_<?php echo $bwg; ?>").position().left >= -(jQuery(".bwg_slideshow_filmstrip_thumbnails_<?php echo $bwg; ?>").width() - jQuery(".bwg_slideshow_filmstrip_<?php echo $bwg; ?>").width())) {
             jQuery(".bwg_slideshow_filmstrip_left_<?php echo $bwg; ?>").css({opacity: 1, filter: "Alpha(opacity=100)"});
@@ -1272,7 +1101,7 @@ class BWGViewSlideshow {
             }
           }, 500);
         });
-        jQuery(".bwg_slideshow_filmstrip_left_<?php echo $bwg; ?>").click(function () {
+        jQuery(".bwg_slideshow_filmstrip_left_<?php echo $bwg; ?>").on('click', function () {
           jQuery( ".bwg_slideshow_filmstrip_thumbnails_<?php echo $bwg; ?>" ).stop(true, false);
           if (jQuery(".bwg_slideshow_filmstrip_thumbnails_<?php echo $bwg; ?>").position().left < 0) {
             jQuery(".bwg_slideshow_filmstrip_right_<?php echo $bwg; ?>").css({opacity: 1, filter: "Alpha(opacity=100)"});
@@ -1293,7 +1122,7 @@ class BWGViewSlideshow {
         /* Set filmstrip initial position.*/
         bwg_set_filmstrip_pos_<?php echo $bwg; ?>(jQuery(".bwg_slideshow_filmstrip_<?php echo $bwg; ?>").width());
         /* Play/pause.*/
-        jQuery("#bwg_slideshow_play_pause_<?php echo $bwg; ?>").click(function () {
+        jQuery("#bwg_slideshow_play_pause_<?php echo $bwg; ?>").on('click', function () {
           if (jQuery(".bwg_ctrl_btn_<?php echo $bwg; ?>").hasClass("fa-play")) {
             bwg_play_<?php echo $bwg; ?>();
             jQuery(".bwg_slideshow_play_pause_<?php echo $bwg; ?>").attr("title", "<?php echo __('Pause', 'bwg'); ?>");

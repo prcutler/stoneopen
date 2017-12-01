@@ -1,68 +1,76 @@
 <?php
-
 class BWGViewWidget {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
+
   private $model;
 
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function __construct($model) {
-    $this->model = $model;
+	$this->model = $model;
   }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
 
   public function display() {
   }
 
   function widget($args, $instance) {
     extract($args);
-    $title = (isset($instance['title']) ? $instance['title'] : "");
-    $type = (isset($instance['type']) ? $instance['type'] : "gallery");
-    $gallery_id = (isset($instance['gallery_id']) ? $instance['gallery_id'] : 0);
-    $album_id = (isset($instance['album_id']) ? $instance['album_id'] : 0);
-    $show = (isset($instance['show']) ? $instance['show'] : "random");
-    $count = (isset($instance['count']) ? $instance['count'] : 4);
-    $width = (isset($instance['width']) ? $instance['width'] : 100);
-    $height = (isset($instance['height']) ? $instance['height'] : 100);
-    $theme_id = (isset($instance['theme_id']) ? $instance['theme_id'] : 0);
-    // Before widget.
+	global $wd_bwg_options;
+    $title = (!empty($instance['title']) ? $instance['title'] : "");
+    $type  = (!empty($instance['type']) ? $instance['type'] : "gallery");
+    $gallery_id = (!empty($instance['gallery_id']) ? $instance['gallery_id'] : 0);
+    $album_id = (!empty($instance['album_id']) ? $instance['album_id'] : 0);
+    $theme_id = (!empty($instance['theme_id']) ? $instance['theme_id'] : 0);
+    $show  = (!empty($instance['show']) ? $instance['show'] : "random");
+	$sort_by = 'order';
+	if ($show == 'random') {
+		$sort_by = 'RAND()';
+	}
+	$order_by = 'ASC';
+	if ($show == 'last') {
+		$order_by = 'DESC';
+	}
+
+	$count  = (!empty($instance['count']) ? $instance['count'] : $wd_bwg_options->image_column_number);
+    $width  = (!empty($instance['width']) ? $instance['width'] : $wd_bwg_options->thumb_width);
+    $height = (!empty($instance['height']) ? $instance['height'] : $wd_bwg_options->thumb_height);
+
+	// Before widget.
     echo $before_widget;
     // Title of widget.
     if ($title) {
       echo $before_title . $title . $after_title;
     }
     // Widget output.
+	$params = array (
+				'from' => 'widget',
+				'theme_id' => $theme_id,
+				'sort_by'  => $sort_by,
+				'order_by' => $order_by
+			);
     if ($type == 'gallery') {
-      require_once(WD_BWG_DIR . '/frontend/controllers/BWGControllerThumbnails.php');
-      $controller_class = 'BWGControllerThumbnails';
+		require_once(WD_BWG_DIR . '/frontend/controllers/BWGControllerThumbnails.php');
+		$controller_class = 'BWGControllerThumbnails';
+		$params['gallery_id'] 	 = $gallery_id;
+		$params['thumb_width'] 	 = $width;
+		$params['thumb_height']  = $height;
+		$params['image_column_number'] = $count;
+		$params['images_per_page'] = $count;
+		$params['gallery_type']  = 'thumbnails';
     }
     else {
       require_once(WD_BWG_DIR . '/frontend/controllers/BWGControllerAlbum_compact_preview.php');
       $controller_class = 'BWGControllerAlbum_compact_preview';
+		$params['album_id'] = $album_id;
+		$params['compuct_albums_per_page'] = $count;
+		$params['compuct_album_thumb_width']   = $width;
+		$params['compuct_album_thumb_height']  = $height;
+		$params['compuct_album_image_thumb_width']   = $width;
+		$params['compuct_album_image_thumb_height']  = $height;
+		$params['compuct_album_view_type']  = 'thumbnail';
+		$params['gallery_type']  = 'album_compact_preview';
     }
     $controller = new $controller_class();
     global $bwg;
-    $params = array (
-      'from' => 'widget',
-      'gallery_type' => $type,
-      'id' => ($type == 'gallery' ? $gallery_id : $album_id),
-      'show' => $show,
-      'count' => $count, 
-      'width' => $width, 
-      'height' => $height,
-      'theme_id' => $theme_id);
-    $controller->execute($params, 1, $bwg);
+	$pairs = WDWLibrary::get_shortcode_option_params( $params );
+    $controller->execute($pairs, 1, $bwg);
     $bwg++;
     // After widget.
     echo $after_widget;

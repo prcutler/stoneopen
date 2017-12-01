@@ -118,55 +118,48 @@ function spider_ajax_save(form_id) {
   jQuery("#loading_div").css('height', jQuery(".bwg_comments").css('height'));
   document.getElementById("opacity_div").style.display = '';
   document.getElementById("loading_div").style.display = 'table-cell';
-  jQuery.post(
-    jQuery('#' + form_id).attr('action'),
-    post_data,
-
-    function (data) {
-      var str = jQuery(data).find('.bwg_comments').html();
-      jQuery('.bwg_comments').html(str);
-    }
-  ).success(function(jqXHR, textStatus, errorThrown) {
-    document.getElementById("opacity_div").style.display = 'none';
-    document.getElementById("loading_div").style.display = 'none';
-    // Update scrollbar.
-    jQuery(".bwg_comments").mCustomScrollbar({scrollInertia: 150});
-    // Bind comment container close function to close button.
-    jQuery(".bwg_comments_close_btn").click(bwg_comment);
-  });
-
-  // if (event.preventDefault) {
-    // event.preventDefault();
-  // }
-  // else {
-    // event.returnValue = false;
-  // }
-  return false;
+	jQuery.ajax({
+        type: "POST",
+        url: jQuery('#' + form_id).attr('action'),
+        data: post_data,
+        success: function (data) {
+			var str = jQuery(data).find('.bwg_comments').html();
+			jQuery('.bwg_comments').html(str);
+        },
+        beforeSend: function(){
+        },
+        complete:function(){
+            document.getElementById("opacity_div").style.display = 'none';
+            document.getElementById("loading_div").style.display = 'none';
+            // Update scrollbar.
+            jQuery(".bwg_comments").mCustomScrollbar({scrollInertia: 150});
+            // Bind comment container close function to close button.
+            jQuery(".bwg_comments_close_btn").on("click", bwg_comment);
+        }
+	});
+	return false;
 }
 
 // Submit rating.
 function spider_rate_ajax_save(form_id) {
   var post_data = {};
-  post_data["image_id"] = jQuery("#" + form_id + " input[name='image_id']").val();
-  post_data["rate"] = jQuery("#" + form_id + " input[name='score']").val();
-  post_data["ajax_task"] = jQuery("#rate_ajax_task").val();
-  jQuery.post(
-    jQuery('#' + form_id).attr('action'),
-    post_data,
-
-    function (data) {
-      var str = jQuery(data).find('#' + form_id).html();
-      jQuery('#' + form_id).html(str);
-    }
-  ).success(function(jqXHR, textStatus, errorThrown) {
-  });
-  // if (event.preventDefault) {
-    // event.preventDefault();
-  // }
-  // else {
-    // event.returnValue = false;
-  // }
-  return false;
+	  post_data["image_id"] = jQuery("#" + form_id + " input[name='image_id']").val();
+	  post_data["rate"] = jQuery("#" + form_id + " input[name='score']").val();
+	  post_data["ajax_task"] = jQuery("#rate_ajax_task").val();
+	jQuery.ajax({
+        type: "POST",
+        url: jQuery('#' + form_id).attr('action'),
+        data: post_data,
+        success: function (data) {
+			var str = jQuery(data).find('#' + form_id).html();
+			jQuery('#' + form_id).html(str);
+        },
+        beforeSend: function(){
+        },
+        complete:function(){
+        }
+	});
+	return false;
 }
 
 // Set value by ID.

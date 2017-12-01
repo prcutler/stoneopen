@@ -34,18 +34,7 @@ class BWGViewBWGShortcode {
       'blindV' => __('Blind Vertical','bwg_back'),
       'random' => __('Random','bwg_back'),
     );
-    $watermark_fonts = array(
-      'arial' => 'Arial',
-      'Lucida grande' => 'Lucida grande',
-      'segoe ui' => 'Segoe ui',
-      'tahoma' => 'Tahoma',
-      'trebuchet ms' => 'Trebuchet ms',
-      'verdana' => 'Verdana',
-      'cursive' =>'Cursive',
-      'fantasy' => 'Fantasy',
-      'monospace' => 'Monospace',
-      'serif' => 'Serif',
-    );
+    $watermark_fonts = WDWLibrary::get_fonts();
     $gallery_types_name = array(
       'thumbnails' => __('Thumbnails', 'bwg_back'),
       'thumbnails_masonry' => __('Masonry', 'bwg_back'),

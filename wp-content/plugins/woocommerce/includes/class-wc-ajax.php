@@ -59,7 +59,7 @@ class WC_AJAX {
 		@header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
 		@header( 'X-Robots-Tag: noindex' );
 		send_nosniff_header();
-		nocache_headers();
+		wc_nocache_headers();
 		status_header( 200 );
 	}
 
@@ -580,14 +580,13 @@ class WC_AJAX {
 	 * Add variation via ajax function.
 	 */
 	public static function add_variation() {
-
 		check_ajax_referer( 'add-variation', 'security' );
 
 		if ( ! current_user_can( 'edit_products' ) ) {
 			wp_die( -1 );
 		}
 
-		global $post; // Set $post global so its available, like within the admin screens
+		global $post; // Set $post global so its available, like within the admin screens.
 
 		$product_id       = intval( $_POST['post_id'] );
 		$post             = get_post( $product_id );
@@ -595,6 +594,7 @@ class WC_AJAX {
 		$product_object   = wc_get_product( $product_id );
 		$variation_object = new WC_Product_Variation();
 		$variation_object->set_parent_id( $product_id );
+		$variation_object->set_attributes( array_fill_keys( array_map( 'sanitize_title', array_keys( $product_object->get_variation_attributes() ) ), '' ) );
 		$variation_id     = $variation_object->save();
 		$variation        = get_post( $variation_id );
 		$variation_data   = array_merge( array_map( 'maybe_unserialize', get_post_custom( $variation_id ) ), wc_get_product_variation_attributes( $variation_id ) ); // kept for BW compatibility.
@@ -773,9 +773,18 @@ class WC_AJAX {
 			$order_id     = absint( $_POST['order_id'] );
 			$order        = wc_get_order( $order_id );
 			$items_to_add = wp_parse_id_list( is_array( $_POST['item_to_add'] ) ? $_POST['item_to_add'] : array( $_POST['item_to_add'] ) );
+			$items        = ( ! empty( $_POST['items'] ) ) ? $_POST['items'] : '';
 
 			if ( ! $order ) {
 				throw new Exception( __( 'Invalid order', 'woocommerce' ) );
+			}
+
+			// If we passed through items it means we need to save first before adding a new one.
+			if ( ! empty( $items ) ) {
+				$save_items = array();
+				parse_str( $items, $save_items );
+				// Save order items.
+				wc_save_order_items( $order->get_id(), $save_items );
 			}
 
 			foreach ( $items_to_add as $item_to_add ) {
@@ -985,9 +994,18 @@ class WC_AJAX {
 		try {
 			$order_id       = absint( $_POST['order_id'] );
 			$order_item_ids = $_POST['order_item_ids'];
+			$items = ( ! empty( $_POST['items'] ) ) ? $_POST['items'] : '';
 
 			if ( ! is_array( $order_item_ids ) && is_numeric( $order_item_ids ) ) {
 				$order_item_ids = array( $order_item_ids );
+			}
+
+			// If we passed through items it means we need to save first before deleting.
+			if ( ! empty( $items ) ) {
+				$save_items = array();
+				parse_str( $items, $save_items );
+				// Save order items
+				wc_save_order_items( $order_id, $save_items );
 			}
 
 			if ( sizeof( $order_item_ids ) > 0 ) {

@@ -190,5 +190,4 @@ class BWGControllerOptions_bwg {
         @ini_restore('memory_limit');
 	  }
   }
-
 }

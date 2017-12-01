@@ -2,157 +2,48 @@
 class BWGViewAlbum_compact_preview {
   public function display($params, $from_shortcode = 0, $bwg = 0) {
     global $WD_BWG_UPLOAD_DIR;
+	  global $wd_bwg_options;
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
 
-    if (!isset($params['compuct_album_image_title'])) {
-      $params['compuct_album_image_title'] = 'none';
-    }
-    if (!isset($params['compuct_album_view_type'])) {
-      $album_view_type = 'thumbnail';
-    }
-    else {
-      $album_view_type = $params['compuct_album_view_type'];
-    }
-    if (!isset($params['popup_fullscreen'])) {
-      $params['popup_fullscreen'] = 0;
-    }
-    if (!isset($params['popup_autoplay'])) {
-      $params['popup_autoplay'] = 0;
-    }
-    if (!isset($params['popup_enable_pinterest'])) {
-      $params['popup_enable_pinterest'] = 0;
-    }
-    if (!isset($params['popup_enable_tumblr'])) {
-      $params['popup_enable_tumblr'] = 0;
-    }
-    if (!isset($params['show_search_box'])) {
-      $params['show_search_box'] = 0;
-    }
-    if (!isset($params['search_box_width'])) {
-      $params['search_box_width'] = 180;
-    }
-    if (!isset($params['popup_enable_info'])) {
-      $params['popup_enable_info'] = 1;
-    }
-    if (!isset($params['popup_info_always_show'])) {
-      $params['popup_info_always_show'] = 0;
-    }
-    if (!isset($params['popup_info_full_width'])) {
-      $params['popup_info_full_width'] = 0;
-    }
-    if (!isset($params['popup_enable_rate'])) {
-      $params['popup_enable_rate'] = 0;
-    }
-    if (!isset($params['thumb_click_action']) || $params['thumb_click_action'] == 'undefined') {
-      $params['thumb_click_action'] = 'open_lightbox';
-    }
-    if (!isset($params['thumb_link_target'])) {
-      $params['thumb_link_target'] = 1;
-    }
-    if (!isset($params['popup_hit_counter'])) {
-      $params['popup_hit_counter'] = 0;
-    }
-    if (!isset($params['order_by'])) {
-      $params['order_by'] = 'ASC';
-    }
-    if (!isset($params['show_sort_images'])) {
-      $params['show_sort_images'] = 0;
-    }
-    if (!isset($params['compuct_album_enable_page'])) {
-      $params['compuct_album_enable_page'] = 1;
-    }
-    if (!isset($params['show_tag_box'])) {
-      $params['show_tag_box'] = 0;
-    }
-    if (!isset($params['show_gallery_description'])) {
-      $params['show_gallery_description'] = 0;
-    }
-    global $wd_bwg_options;
+    $theme_id = $params['theme_id'];
+    $order_by = $params['order_by'];
+    $sort_by = $params['sort_by'];
+    $album_view_type = $params['compuct_album_view_type'];
+    $image_right_click = isset($wd_bwg_options->image_right_click) ? $wd_bwg_options->image_right_click : 0;
     $placeholder = isset($wd_bwg_options->placeholder) ? $wd_bwg_options->placeholder : '';
-    if (!isset($params['show_album_name'])) {
-      $params['show_album_name'] = $wd_bwg_options->show_album_name;
-    }
+    $play_icon = isset($wd_bwg_options->play_icon) ? $wd_bwg_options->play_icon : 0;
+	
     $from = (isset($params['from']) ? esc_html($params['from']) : 0);
     $type = (isset($_REQUEST['type_' . $bwg]) ? esc_html($_REQUEST['type_' . $bwg]) : (isset($params['type']) ? $params['type'] : 'album'));
     $bwg_search = ((isset($_POST['bwg_search_' . $bwg]) && esc_html($_POST['bwg_search_' . $bwg]) != '') ? esc_html($_POST['bwg_search_' . $bwg]) : '');
-    $sort_direction = $params['order_by'];
-    
-    $play_icon = $wd_bwg_options->play_icon;
-    if ($from === "widget") {
-      $params['album_id'] = $params['id'];
-      $params['sort_by'] = $params['show'] == 'random' ? 'RAND()' : 'order';
-      if ($params['show'] == 'last') {
-        $sort_direction = 'DESC';
-      }
-      $params['compuct_albums_per_page'] = $params['count'];
-      $params['compuct_album_column_number'] = $wd_bwg_options->album_column_number;
-      $params['compuct_album_image_column_number'] = $wd_bwg_options->image_column_number;
-      $params['compuct_album_thumb_width'] = $params['width'];
-      $params['compuct_album_thumb_height'] = $params['height'];
-      $params['compuct_album_image_thumb_width'] = $params['width'];
-      $params['compuct_album_image_thumb_height'] = $params['height'];
-      $params['compuct_album_title'] = $wd_bwg_options->album_title_show_hover;
-      $params['compuct_album_enable_page'] = 0;  
-      $params['compuct_album_image_title'] = $wd_bwg_options->image_title_show_hover;
-      $params['popup_width'] = $wd_bwg_options->popup_width;
-      $params['popup_height'] = $wd_bwg_options->popup_height;
-      $params['popup_effect'] = $wd_bwg_options->popup_type;
-      $params['popup_enable_filmstrip'] = $wd_bwg_options->popup_enable_filmstrip;
-      $params['popup_filmstrip_height'] = $wd_bwg_options->popup_filmstrip_height;
-      $params['popup_enable_ctrl_btn'] = $wd_bwg_options->popup_enable_ctrl_btn;
-      $params['popup_enable_fullscreen'] = $wd_bwg_options->popup_enable_fullscreen;
-      $params['popup_enable_info'] = $wd_bwg_options->popup_enable_info;
-      $params['popup_info_always_show'] = $wd_bwg_options->popup_info_always_show;
-      $params['popup_info_full_width'] = $wd_bwg_options->popup_info_full_width;
-      $params['popup_hit_counter'] = $wd_bwg_options->popup_hit_counter;
-      $params['popup_enable_rate'] = $wd_bwg_options->popup_enable_rate;
-      $params['popup_interval'] = $wd_bwg_options->popup_interval;
-      $params['popup_enable_comment'] = $wd_bwg_options->popup_enable_comment;
-      $params['popup_enable_facebook'] = $wd_bwg_options->popup_enable_facebook;
-      $params['popup_enable_twitter'] = $wd_bwg_options->popup_enable_twitter;
-      $params['popup_enable_google'] = $wd_bwg_options->popup_enable_google;
-      $params['popup_enable_pinterest'] = $wd_bwg_options->popup_enable_pinterest;
-      $params['popup_enable_tumblr'] = $wd_bwg_options->popup_enable_tumblr;
-      $params['watermark_type'] = $wd_bwg_options->watermark_type;
-      $params['watermark_link'] = urlencode($wd_bwg_options->watermark_link);
-      $params['watermark_opacity'] = $wd_bwg_options->watermark_opacity;
-      $params['watermark_position'] = $wd_bwg_options->watermark_position;
-      $params['watermark_text'] = $wd_bwg_options->watermark_text;
-      $params['watermark_font_size'] = $wd_bwg_options->watermark_font_size;
-      $params['watermark_font'] = $wd_bwg_options->watermark_font;
-      $params['watermark_color'] = $wd_bwg_options->watermark_color;
-      $params['watermark_url'] = urlencode($wd_bwg_options->watermark_url);
-      $params['watermark_width'] = $wd_bwg_options->watermark_width;
-      $params['watermark_height'] = $wd_bwg_options->watermark_height;
-      $params['popup_effect_duration'] = isset($wd_bwg_options->popup_effect_duration) ? $wd_bwg_options->popup_effect_duration : 1;
-    }
-
-    $theme_row = WDWLibrary::get_theme_row_data($params['theme_id']);
+    $theme_row = WDWLibrary::get_theme_row_data($theme_id);
     if (!$theme_row) {
       echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
       return;
     }
-     if (!isset($theme_row->album_extended_gal_title_font_color)) {
-        $theme_row->album_extended_gal_title_font_color = 'CCCCCC';
-      }
-      if (!isset($theme_row->album_extended_gal_title_font_style)) {
-        $theme_row->album_extended_gal_title_font_style = 'segoe ui';
-      }
-      if (!isset($theme_row->album_extended_gal_title_font_size)) {
-        $theme_row->album_extended_gal_title_font_size = 16;
-      }
-      if (!isset($theme_row->album_extended_gal_title_font_weight)) {
-        $theme_row->album_extended_gal_title_font_weight = 'bold';
-      }
-      if (!isset($theme_row->album_extended_gal_title_margin)) {
-        $theme_row->album_extended_gal_title_margin = '2px';
-      }
-      if (!isset($theme_row->album_extended_gal_title_shadow)) {
-        $theme_row->album_extended_gal_title_shadow = '0px 0px 0px #888888';
-      }
-      if (!isset($theme_row->album_extended_gal_title_align)) {
-        $theme_row->album_extended_gal_title_align = 'center';
-      }
+
+    if (!isset($theme_row->album_extended_gal_title_font_color)) {
+      $theme_row->album_extended_gal_title_font_color = 'CCCCCC';
+    }
+    if (!isset($theme_row->album_extended_gal_title_font_style)) {
+      $theme_row->album_extended_gal_title_font_style = 'segoe ui';
+    }
+    if (!isset($theme_row->album_extended_gal_title_font_size)) {
+      $theme_row->album_extended_gal_title_font_size = 16;
+    }
+    if (!isset($theme_row->album_extended_gal_title_font_weight)) {
+      $theme_row->album_extended_gal_title_font_weight = 'bold';
+    }
+    if (!isset($theme_row->album_extended_gal_title_margin)) {
+      $theme_row->album_extended_gal_title_margin = '2px';
+    }
+    if (!isset($theme_row->album_extended_gal_title_shadow)) {
+      $theme_row->album_extended_gal_title_shadow = '0px 0px 0px #888888';
+    }
+    if (!isset($theme_row->album_extended_gal_title_align)) {
+      $theme_row->album_extended_gal_title_align = 'center';
+    }
+
     $album_gallery_id = (isset($_REQUEST['album_gallery_id_' . $bwg]) ? esc_html($_REQUEST['album_gallery_id_' . $bwg]) : $params['album_id']);
     $album_row = WDWLibrary::get_album_row_data($album_gallery_id, FALSE);
     if (!$album_gallery_id || ($type == 'album' && !$album_row)) {
@@ -160,64 +51,63 @@ class BWGViewAlbum_compact_preview {
       return;
     }
     if ($type == 'gallery') {
-      $items_per_page = $params['compuct_album_images_per_page'];
-      $items_per_page_arr = array('images_per_page' => $params['compuct_album_images_per_page'], 'load_more_image_count' => $params['compuct_album_images_per_page']);
-      $items_col_num = $params['compuct_album_image_column_number'];
-      if (isset($_POST['sortImagesByValue_' . $bwg])) {
-        $sort_by = esc_html($_POST['sortImagesByValue_' . $bwg]);
-        if ($sort_by == 'random') {
-          $params['sort_by'] = 'RAND()';
-        }
-        else if ($sort_by == 'default')  {
-          $params['sort_by'] = $params['sort_by'];
-        }
-        else {
-          $params['sort_by'] = $sort_by;
-        }
-      }
-      $image_rows = WDWLibrary::get_image_rows_data($album_gallery_id, $bwg, 'album_compact', 'bwg_tag_id_bwg_album_compact_' . $bwg, '', $items_per_page, $params['compuct_album_images_per_page'], $params['sort_by'], $sort_direction);
-      
-      $gallery_row = WDWLibrary::get_gallery_row_data($album_gallery_id, ($from === "widget" ? "compact" : ""));
-      $page_nav = $image_rows['page_nav'];
-      $image_rows = $image_rows['images'];
-      $images_count = count($image_rows);
-      if (!$images_count) {
-        echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
-      }
-      $album_gallery_div_id = 'bwg_album_compact_' . $bwg;
-      $album_gallery_div_class = 'bwg_standart_thumbnails_' . $bwg;
+		$items_per_page = $params['compuct_album_images_per_page'];
+		$items_per_page_arr = array('images_per_page' => $params['compuct_album_images_per_page'], 'load_more_image_count' => $params['compuct_album_images_per_page']);
+		$items_col_num = $params['compuct_album_image_column_number'];
+		if (isset($_POST['sortImagesByValue_' . $bwg])) {
+			$sort_by = esc_html($_POST['sortImagesByValue_' . $bwg]);
+			if ($sort_by == 'random') {
+				$params['sort_by'] = 'RAND()';
+			}
+			else if ($sort_by == 'default')  {
+				$params['sort_by'] = $params['sort_by'];
+			}
+			else {
+				$params['sort_by'] = $sort_by;
+			}
+		}
+
+		$image_rows = WDWLibrary::get_image_rows_data($album_gallery_id, $bwg, 'album_compact', 'bwg_tag_id_bwg_album_compact_' . $bwg, '', $items_per_page, $params['compuct_album_images_per_page'], $params['sort_by'], $order_by);
+		$gallery_row = WDWLibrary::get_gallery_row_data($album_gallery_id, ($from === "widget" ? "compact" : ""));
+		$page_nav = $image_rows['page_nav'];
+		$image_rows = $image_rows['images'];
+		$images_count = count($image_rows);
+		if (!$images_count) {
+			echo WDWLibrary::message(__('There are no images in this gallery.', 'bwg'), 'wd_error');
+		}
+		$album_gallery_div_id = 'bwg_album_compact_' . $bwg;
+		$album_gallery_div_class = 'bwg_standart_thumbnails_' . $bwg;
     }
     else {
-      $items_per_page = $params['compuct_albums_per_page'];
-      $items_per_page_arr = array('images_per_page' => $params['compuct_albums_per_page'], 'load_more_image_count' => $params['compuct_albums_per_page']);
-      $items_col_num = $params['compuct_album_column_number'];
-      $sort_by = $from === "widget" && $params['show'] == 'random' ? 'RAND()' : 'order';
-      $album_galleries_row = WDWLibrary::get_alb_gals_row($album_gallery_id, $items_per_page, $sort_by, $bwg, $sort_direction);
-      $page_nav = $album_galleries_row['page_nav'];
-      $album_galleries_row = $album_galleries_row['rows'];
-      if (!$album_galleries_row) {
-        echo WDWLibrary::message(__('There is no album selected or the album was deleted.', 'bwg'), 'wd_error');
-        return;
-      }
-      $album_gallery_div_id = 'bwg_album_compact_' . $bwg;
-      $album_gallery_div_class = 'bwg_album_thumbnails_' . $bwg;
+		$items_per_page = $params['compuct_albums_per_page'];
+		$items_per_page_arr = array('images_per_page' => $params['compuct_albums_per_page'], 'load_more_image_count' => $params['compuct_albums_per_page']);
+		$items_col_num = $params['compuct_album_column_number'];      
+		$album_galleries_row = WDWLibrary::get_alb_gals_row($album_gallery_id, $items_per_page, $sort_by, $bwg, $order_by);
+		$page_nav = $album_galleries_row['page_nav'];
+		$album_galleries_row = $album_galleries_row['rows'];
+		if (!$album_galleries_row) {
+			echo WDWLibrary::message(__('There is no album selected or the album was deleted.', 'bwg'), 'wd_error');
+			return;
+		}
+		$album_gallery_div_id = 'bwg_album_compact_' . $bwg;
+		$album_gallery_div_class = 'bwg_album_thumbnails_' . $bwg;
     }
 	
     if ($type == 'gallery' ) {
-      if($album_view_type == 'masonry') {
-          $form_child_div_style = 'background-color:rgba(0, 0, 0, 0); position:relative; text-align:' . $theme_row->masonry_thumb_align . '; width:100%;';
-          $form_child_div_id = 'bwg_masonry_thumbnails_div_' . $bwg;
-        $album_gallery_div_id = 'bwg_masonry_thumbnails_' . $bwg;
-          $album_gallery_div_class = 'bwg_masonry_thumbnails_' . $bwg;		
-      }
-      else { 
-        $form_child_div_style = 'background-color:rgba(0, 0, 0, 0); position:relative; text-align:' . $theme_row->thumb_align . '; width:100%;';
-      $form_child_div_id = '';
-      }
-    }
+		if($album_view_type == 'masonry') {
+			$form_child_div_style = 'background-color:rgba(0, 0, 0, 0); position:relative; text-align:' . $theme_row->masonry_thumb_align . '; width:100%;';
+			$form_child_div_id = 'bwg_masonry_thumbnails_div_' . $bwg;
+			$album_gallery_div_id = 'bwg_masonry_thumbnails_' . $bwg;
+			$album_gallery_div_class = 'bwg_masonry_thumbnails_' . $bwg;		
+		}
+		else { 
+			$form_child_div_style = 'background-color:rgba(0, 0, 0, 0); position:relative; text-align:' . $theme_row->thumb_align . '; width:100%;';
+			$form_child_div_id = '';
+		}
+	}
     else {
-      $form_child_div_id = '';
-      $form_child_div_style = 'background-color:rgba(0, 0, 0, 0); position:relative; text-align:' . $theme_row->album_compact_thumb_align . '; width:100%;';
+		$form_child_div_id = '';
+		$form_child_div_style = 'background-color:rgba(0, 0, 0, 0); position:relative; text-align:' . $theme_row->album_compact_thumb_align . '; width:100%;';
     }
 
     $bwg_previous_album_id = (isset($_REQUEST['bwg_previous_album_id_' . $bwg]) ? esc_html($_REQUEST['bwg_previous_album_id_' . $bwg]) : $params['album_id']);
@@ -234,8 +124,8 @@ class BWGViewAlbum_compact_preview {
       'image_width' => $params['popup_width'],
       'image_height' => $params['popup_height'],
       'image_effect' => $params['popup_effect'],
-      'wd_sor' => $params['sort_by'],
-      'wd_ord' => $params['order_by'],
+      'wd_sor' => $sort_by,
+      'wd_ord' => $order_by,
       'enable_image_filmstrip' => $params['popup_enable_filmstrip'],
       'image_filmstrip_height' => $params['popup_filmstrip_height'],
       'enable_image_ctrl_btn' => $params['popup_enable_ctrl_btn'],
@@ -253,7 +143,7 @@ class BWGViewAlbum_compact_preview {
       'enable_image_pinterest' => $params['popup_enable_pinterest'],
       'enable_image_tumblr' => $params['popup_enable_tumblr'],
       'watermark_type' => $params['watermark_type'],
-      'slideshow_effect_duration' => isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1
+      'slideshow_effect_duration' => $params['popup_effect_duration']
     );
     if ($params['watermark_type'] != 'none') {
       $params_array['watermark_link'] = $params['watermark_link'];
@@ -273,7 +163,6 @@ class BWGViewAlbum_compact_preview {
     }
     $params_array_hash = $params_array;
     $tags_rows = WDWLibrary::get_tags_rows_data($album_gallery_id);
-    $image_right_click = $wd_bwg_options->image_right_click;
     
     $inline_style = $this->inline_styles($bwg, $theme_row, $params, $album_gallery_div_class, $items_col_num, $album_view_type);
     if ($wd_bwg_options->use_inline_stiles_and_scripts) {

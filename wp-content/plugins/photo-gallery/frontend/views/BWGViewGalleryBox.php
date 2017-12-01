@@ -57,7 +57,7 @@ class BWGViewGalleryBox {
     $watermark_type = (isset($_GET['watermark_type']) ? esc_html($_GET['watermark_type']) : 'none');
     $watermark_text = (isset($_GET['watermark_text']) ? esc_html($_GET['watermark_text']) : '');
     $watermark_font_size = (isset($_GET['watermark_font_size']) ? esc_html($_GET['watermark_font_size']) : 12);
-    $watermark_font = (isset($_GET['watermark_font']) ? esc_html($_GET['watermark_font']) : 'Arial');
+    $watermark_font = (isset($_GET['watermark_font']) ? WDWLibrary::get_fonts(esc_html($_GET['watermark_font'])) : 'Arial');
     $watermark_color = (isset($_GET['watermark_color']) ? esc_html($_GET['watermark_color']) : 'FFFFFF');
     $watermark_opacity = (isset($_GET['watermark_opacity']) ? esc_html($_GET['watermark_opacity']) : 30);
     $watermark_position = explode('-', (isset($_GET['watermark_position']) ? esc_html($_GET['watermark_position']) : 'bottom-right'));

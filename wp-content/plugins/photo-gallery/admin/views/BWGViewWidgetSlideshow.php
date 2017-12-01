@@ -1,48 +1,36 @@
 <?php
-
 class BWGViewWidgetSlideshow {
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Events                                                                             //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constants                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Variables                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
+
   private $model;
 
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Constructor & Destructor                                                           //
-  ////////////////////////////////////////////////////////////////////////////////////////
   public function __construct($model) {
     $this->model = $model;
   }
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Public Methods                                                                     //
-  ////////////////////////////////////////////////////////////////////////////////////////
 
-  public function display() {
-  }
+  public function display() {}
 
   function widget($args, $instance) {
     extract($args);
+	global $wd_bwg_options;
     $title = (isset($instance['title']) ? $instance['title'] : "");
     $gallery_id = (isset($instance['gallery_id']) ? $instance['gallery_id'] : 0);
-    $width = (isset($instance['width']) ? $instance['width'] : 200);
-    $height = (isset($instance['height']) ? $instance['height'] : 200);
-    $effect = (isset($instance['effect']) ? $instance['effect'] : "fade");
-    $interval = (isset($instance['interval']) ? $instance['interval'] : 5);
-    $shuffle = (isset($instance['shuffle']) ? $instance['shuffle'] : 0);
     $theme_id = (isset($instance['theme_id']) ? $instance['theme_id'] : 0);
-    $enable_ctrl_btn = (isset($instance['enable_ctrl_btn']) ? $instance['enable_ctrl_btn'] : 0);
-    $enable_autoplay = (isset($instance['enable_autoplay']) ? $instance['enable_autoplay'] : 0);
-    // Before widget.
+    $width = (!empty($instance['width']) ? $instance['width'] : $wd_bwg_options->slideshow_width);
+    $height = (!empty($instance['height']) ? $instance['height'] : $wd_bwg_options->slideshow_height);
+    $filmstrip_height = (!empty($instance['filmstrip_height']) ? $instance['filmstrip_height'] : $wd_bwg_options->slideshow_filmstrip_height);
+    $slideshow_effect = (!empty($instance['effect']) ? $instance['effect'] : "fade");
+    $slideshow_interval = (!empty($instance['interval']) ? $instance['interval'] : $wd_bwg_options->slideshow_interval);
+    $enable_slideshow_shuffle = (isset($instance['shuffle']) ? $instance['shuffle'] : 0);
+    $enable_slideshow_autoplay = (isset($instance['enable_autoplay']) ? $instance['enable_autoplay'] : 0);
+    $enable_slideshow_ctrl = (isset($instance['enable_ctrl_btn']) ? $instance['enable_ctrl_btn'] : 0);
+
+	// Before widget.
     echo $before_widget;
     // Title of widget.
     if ($title) {
       echo $before_title . $title . $after_title;
     }
+
     // Widget output.
     require_once(WD_BWG_DIR . '/frontend/controllers/BWGControllerSlideshow.php');
     $controller_class = 'BWGControllerSlideshow';
@@ -52,15 +40,18 @@ class BWGViewWidgetSlideshow {
       'from' => 'widget',
       'gallery_type' => 'slideshow',
       'gallery_id' => $gallery_id,
-      'width' => $width, 
-      'height' => $height,
-      'effect' => $effect, 
-      'interval' => $interval, 
-      'shuffle' => $shuffle,
       'theme_id' => $theme_id,
-      'enable_ctrl_btn' => $enable_ctrl_btn,
-      'enable_autoplay' => $enable_autoplay);
-    $controller->execute($params, 1, $bwg);
+      'slideshow_width' => $width,
+      'slideshow_height' => $height,
+      'slideshow_filmstrip_height' => $filmstrip_height,
+      'slideshow_effect' => $slideshow_effect,
+      'slideshow_interval' => $slideshow_interval,
+      'enable_slideshow_shuffle' => $enable_slideshow_shuffle,
+      'enable_slideshow_autoplay' => $enable_slideshow_autoplay,
+      'enable_slideshow_ctrl' => $enable_slideshow_ctrl,
+    );
+	$pairs = WDWLibrary::get_shortcode_option_params( $params );
+    $controller->execute($pairs, 1, $bwg);
     $bwg++;
     // After widget.
     echo $after_widget;
@@ -175,14 +166,4 @@ class BWGViewWidgetSlideshow {
     </p> 
     <?php
   }
-  
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Getters & Setters                                                                  //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Private Methods                                                                    //
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Listeners                                                                          //
-  ////////////////////////////////////////////////////////////////////////////////////////
 }

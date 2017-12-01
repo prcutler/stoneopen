@@ -3,12 +3,12 @@ Contributors: webdorado,wdsupport,photogallerysupport
 Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin, photo albums, gallery slider, gallery lightbox, wordpress photo gallery plugin, fullscreen gallery, watermarking, video gallery
 Requires at least: 3.4
-Tested up to: 4.8 
-Stable tag: 1.3.58    
+Tested up to: 4.9 
+Stable tag: 1.3.64    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Photo Gallery is an advanced plugin with a list of tools and options for adding and editing images for different views. It is fully responsive. 
+Photo Gallery is a powerful gallery plugin with a list of advanced options for creating stunning image galleries. Add the responsive plugin with cool gallery views.
 
 == Description ==
 
@@ -16,12 +16,12 @@ https://www.youtube.com/watch?v=3u0O9ZdVsGc
   
 Gallery is a fully responsive WordPress gallery plugin with advanced functionality.
 Create 100% responsive FREE WordPress photo gallery in minutes. Easy to customize and various views.
-   
+
+[Special Offer for all Premium Plugins](https://web-dorado.com/wordpress-plugins-bundle.html)    
 [WordPress Photo Gallery](https://web-dorado.com/products/wordpress-photo-gallery-plugin.html)  
 [Photo Gallery Demo](http://wpdemo.web-dorado.com/gallery/)  
-[Photo Gallery Demo Admin](http://wpdemo.web-dorado.com/wp-admin/admin.php?page=galleries_bwg)  
 [Photo Gallery User Manual](https://web-dorado.com/wordpress-gallery-guide-step-1.html)  
-[Photo Gallery Support Forum](https://web-dorado.com/forum/photo-gallery.html)  
+[Photo Gallery Support Forum](https://wordpress.org/support/plugin/photo-gallery)  
 
 
 = Photo Gallery Add-ons: =
@@ -67,7 +67,7 @@ Photo Gallery product in addition to the main plugin includes 4 specific widgets
 The responsive WordPress photo gallery is one of the best gallery plugins available. So don’t hesitate to download the free plugin and try it today!
 
 ###IMPORTANT:    
-If you think you found a bug in Photo Gallery or have any problem/question concerning the plugin, please check out [Photo Gallery Support Forum](https://web-dorado.com/forum/photo-gallery.html) in our website. If you do not find a solution here, do not hesitate to [click here to contact us](https://web-dorado.com/support/contact-us.html).
+If you think you found a bug in Photo Gallery or have any problem/question concerning the plugin, please check out [Photo Gallery Support Forum](https://wordpress.org/support/plugin/photo-gallery) in our website. If you do not find a solution here, do not hesitate to [click here to contact us](https://web-dorado.com/support/contact-us.html).
 
 
 ### The list of the features:
@@ -186,6 +186,27 @@ We recommend to use images with the width of 1200px to 1600px. In order to speed
 To enable the feature of adding Media Library images, go to Photo Gallery > Options > Global Options and set Import from Media Library option to Yes. After that you will be able to import photos from Media Library to Photo Gallery.     
 
 == Changelog ==
+
+= 1.3.64 = 
+* Fixed: Minor Bugs  
+
+= 1.3.63 = 
+* Fixed: Minor Bugs  
+
+= 1.3.62 = 
+* Fixed: Options variable problem.   
+* Fixed: Vulnerable GET variable.   
+
+= 1.3.61 = 
+* Added: Support forum and Review links.   
+
+= 1.3.60 = 
+* Added: Integration with image optimizer plugin.    
+
+= 1.3.59 = 
+* Changed: Change instagram thumb with medium image.   
+* Fixed: Notice in Extended album view in free version.  
+* Fixed: Open folder on IOS in filemanager.  
 
 = 1.3.58 = 
 * Fixed: Page scrollbar after closing lightbox.    

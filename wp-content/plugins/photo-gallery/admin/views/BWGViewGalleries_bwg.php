@@ -52,6 +52,14 @@ class BWGViewGalleries_bwg {
         ?>
         </select>
         <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-apply" type="button" title="<?php _e("Apply","bwg_back"); ?>" onclick="if (!bwg_bulk_actions('.bulk_action', 'gallery_page')) {return false;}" value="<?php _e("Apply","bwg_back"); ?>" />
+        <?php
+        if ( is_plugin_active( 'image-optimizer-wd/io-wd.php' ) && !empty($rows_data)) {
+
+          ?>
+          <a href="<?php echo add_query_arg(array( 'page' => 'iowd_settings', 'target' => 'wd_gallery'), admin_url('admin.php'));?>" class="wd-btn wd-btn-primary" target="_blank"><?php _e("Optimize Images", "bwg_back"); ?></a>
+          <?php
+        }
+        ?>
         <?php WDWLibrary::html_page_nav($page_nav['total'], $pager++, $page_nav['limit'], 'galleries_form', $per_page); ?>
       </div>
       <table class="wp-list-table widefat fixed pages">
@@ -719,6 +727,14 @@ class BWGViewGalleries_bwg {
         ?>
       </select>
       <input class="wd-btn wd-btn-primary wd-btn-icon wd-btn-apply" type="button" title="<?php _e("Apply", "bwg_back"); ?>" onclick="if (!bwg_bulk_actions('.bulk_action_img', '')) {return false;}" value="<?php _e("Apply", "bwg_back"); ?>" />
+      <?php
+      if ( is_plugin_active( 'image-optimizer-wd/io-wd.php' ) && !empty($rows_data)) {
+
+        ?>
+        <a href="<?php echo add_query_arg(array( 'page' => 'iowd_settings', 'target' => 'wd_gallery'), admin_url('admin.php'));?>" class="wd-btn wd-btn-primary" target="_blank"><?php _e("Optimize Images", "bwg_back"); ?></a>
+        <?php
+      }
+      ?>
       <?php WDWLibrary::ajax_html_page_nav($page_nav['total'], $page_nav['limit'], 'galleries_form', $per_page, $pager++); ?>
     </div>
     <div class="opacity_resize_image opacity_add_embed opacity_image_desc opacity_bulk_embed bwg_opacity_media" onclick="jQuery('.opacity_add_embed').hide(); jQuery('.opacity_bulk_embed').hide(); jQuery('.opacity_resize_image').hide(); jQuery('.opacity_image_desc').hide();"></div>       

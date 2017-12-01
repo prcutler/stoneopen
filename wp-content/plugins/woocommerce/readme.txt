@@ -2,8 +2,8 @@
 Contributors: automattic, mikejolley, jameskoster, claudiosanches, jshreve, coderkevin, claudiulodro, woothemes, iCaleb
 Tags: ecommerce, e-commerce, store, sales, sell, shop, cart, checkout, downloadable, downloads, paypal, storefront, woo commerce
 Requires at least: 4.4
-Tested up to: 4.8
-Stable tag: 3.2.1
+Tested up to: 4.9
+Stable tag: 3.2.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -160,6 +160,80 @@ Yes you can! Join in on our [GitHub repository](http://github.com/woocommerce/wo
 
 == Changelog ==
 
+= 3.2.5 - 2017-11-22 =
+* Fix - WordPress 4.9 - REST API - Updated schema, sanitization, and validation callbacks to support correct data types.
+* Fix - WordPress 4.9 - Fix an issue saving variation attributes on new products and with attributes containing slashes.
+* Fix - Save fee tax lines to new orders on checkout.
+* Fix - Restore the post global after rendering product shortcodes.
+* Fix - Fix product filtering when searching for a string including quote characters.
+* Fix - Fix layered nav drop-downs containing unicode characters.
+* Fix - Fix an edge case rounding bug with shipping taxes, and another with non-integer quantities.
+* Fix - Set correct defaults when adding a new shipping class in admin.
+
+= 3.2.4 - 2017-11-16 =
+* Fix - Cache IDs in shortcodes rather than query objects.
+* Fix - Fix float rounding issues in cart with currencies like Bitcoin.
+* Fix - Prevent slashes appearing in shipping fields and inside meta keys when using quotes.
+* Fix - Check valid data when filtering `wp_nav_menu_objects` to prevent conflicts.
+* Fix - `get_total_ex_tax` should exclude fee taxes.
+* Fix - Fix orders count in tax reports.
+* Fix - Allow removing coupons from the cart, even if coupons are disabled.
+* Fix - Prevent calculate_totals totals running too often.
+* Fix - Set attributes during variation creation so all options are correctly displayed in cart forms.
+* Fix - Grab description directly to pass through wc_format_content to prevent double sanitization.
+* Fix - Fix db warnings when using the "Add Order Indexes" tool.
+* Fix - Remove unnecessary html formatting in variation dimensions field.
+* Fix - Fix WC_Customer_Download isset method.
+* Fix - Removed class within class in admin meta boxes HTML.
+* Fix - Fixed wrong `flex-control-nav` selector scope in `add-to-cart-variation.js`
+* Fix - Allow variations to be added to cart from query string.
+* Fix - Use `add_filter` for `comment_feed_where` hook. 
+* Fix - Change nocache_headers hook firing in the cache helper.
+* Fix - Coupon min/max spend based on displayed subtotal.
+* Fix - Fix event propagation on click in setup wizard and improve validation.
+* Fix - API - Change how line items are saved in API so calculations are correct.
+* Tweak - Hide downloads from admin emails. 
+* Tweak - Set placeholder for variation lxwxh field to that of the parent.
+* Tweak - Improve the Add Payment Methods display so buttons are not shown when no payment methods support the feature.
+* Localization - Update NJ tax rate.
+* Localization - Add Belarusian ruble BYN.
+
+= 3.2.3 - 2017-11-02 =
+* Fix - Fixed a conflict with some slider plugins due to sanitization of archive/term descriptions. 
+* Fix - Fixed a flexslider bug when there is only 1 image on the product page (no gallery).
+* Fix - Prevent potential notices when someone extends product tabs wrongly.
+* Fix - Fixed display of shipping calculator under some conditions.
+* Fix - Fix discount calculation when customer is not within the base location and prices include tax.
+
+= 3.2.2 - 2017-10-31 =
+* Fix - Properly escape commas when exporting products to CSV.
+* Fix - Fixed email template padding in Outlook.
+* Fix - Flexslider support for RTL languages and fixes for zoom target in Chrome.
+* Fix - Correctly sync prices for grouped products.
+* Fix - Filter and remove invalid tax classes names.
+* Fix - Stop showing "major" update notification for minor or patch releases.
+* Fix - Allow scroll bar in untested plugins list on the bulk plugin updates screen.
+* Fix - Fixed meta data cloning when duplicating products.
+* Fix - Clean "Filter Products by Attribute" widget cache when updating attributes.
+* Fix - Fixed warning messages when reseting passwords with an invalid key.
+* Fix - Cart totals: Don't add shipping costs unless show_shipping is true.
+* Fix - Cart totals: Calculate shipping after discounts so discount amounts are available.
+* Fix - Cart totals: Fixed issue where VAT exempt users where still being charged VAT on the totals.
+* Fix - Cart totals: Fixed the coupons user limit and calculations.
+* Fix - Fixed "relevance" default sorting in search results.
+* Fix - Use item tax class rather than product tax class when recalculating order totals.
+* Tweak - Allow shortcodes and relative URLs for downloads in product CSV importer.
+* Tweak - Save unsaved items first while deleting order items.
+* Tweak - Only change `nocacheheaders` when on a cart/checkout page.
+* Tweak - Setup locale before generating settings placeholders in email templates.
+* Tweak - On checkout, improved the field locale logic to work without clearing default values.
+* Tweak - Change title of customer invoice email for clarity.
+* Tweak - Use custom event instead of blur to trigger validation.
+* Tweak - Various selectWoo usibility improvements and better support for keyboard controls on AJAX multiselect elements.
+* Tweak - Various setup Wizard improvements.
+* Dev - Fixed orders date query when querying by meta data.
+* Dev - In the CSV exporter, added a filter to process meta values before export.
+
 = 3.2.1 - 2017-10-13 =
 * Fix - Made grouped products display in the saved order, vs the menu order.
 * Fix - Made variations with 'same as parent' tax class calculate taxes correctly.
@@ -246,6 +320,7 @@ Yes you can! Join in on our [GitHub repository](http://github.com/woocommerce/wo
 * Dev - Refactored cart to use new WC_Cart_Session/WC_Cart_Totals/WC_Cart_Fees/WC_Discounts classes.
 * Dev - New `WC_Shortcode_Products` class to handle all product based shortcodes.
 * Theming - Display downloads in their own table, universally, using a new template file.
+* Theming - Streamlined email templates content: using the new downloads table, moved billing email with the billing address, order notes into the order totals table, and removed the need for 'downloadable' subjects/headings.
 * Theming - Checkout: Order pay template
 * Localization - Added cantons of Switzerland.
 * Localization - Updated XAF and XOF currency codes.

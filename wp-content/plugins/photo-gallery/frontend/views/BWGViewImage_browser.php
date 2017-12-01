@@ -5,64 +5,19 @@ class BWGViewImage_browser {
     global $wd_bwg_options;
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
     require_once(WD_BWG_DIR . '/framework/WDWLibraryEmbed.php');
-    $theme_row = WDWLibrary::get_theme_row_data($params['theme_id']);
-    if (!isset($params['order_by'])) {
-      $order_by = 'asc';
-    }
-    else {
-      $order_by = $params['order_by'];
-    }
-    if (!isset($params['popup_enable_pinterest'])) {
-      $params['popup_enable_pinterest'] = 0;
-    }
-    if (!isset($params['popup_enable_tumblr'])) {
-      $params['popup_enable_tumblr'] = 0;
-    }
-    if (!isset($params['show_search_box'])) {
-      $params['show_search_box'] = 0;
-    }
-    if (!isset($params['search_box_width'])) {
-      $params['search_box_width'] = 180;
-    }
-    if (!isset($params['popup_enable_info'])) {
-      $params['popup_enable_info'] = 1;
-    }
-    if (!isset($params['popup_info_always_show'])) {
-      $params['popup_info_always_show'] = 0;
-    }
-    if (!isset($params['popup_info_full_width'])) {
-      $params['popup_info_full_width'] = 0;
-    }
-    if (!isset($params['popup_enable_rate'])) {
-      $params['popup_enable_rate'] = 0;
-    }
-    if (!isset($params['thumb_click_action']) || $params['thumb_click_action'] == 'undefined') {
-      $params['thumb_click_action'] = 'open_lightbox';
-    }
-    if (!isset($params['thumb_link_target'])) {
-      $params['thumb_link_target'] = 1;
-    }
-    if (!isset($params['popup_hit_counter'])) {
-      $params['popup_hit_counter'] = 0;
-    }
-    if (!isset($params['tag'])) {
-      $params['tag'] = 0;
-    }
-    if (!isset($params['show_gallery_description'])) {
-      $params['show_gallery_description'] = 0;
-    }
-    if (!isset($params['showthumbs_name'])) {
-      $params['showthumbs_name'] = $wd_bwg_options->showthumbs_name;
-    }
+	
+	$theme_row = WDWLibrary::get_theme_row_data($params['theme_id']);
     if (!$theme_row) {
       echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
       return;
     }
+
     $gallery_row = WDWLibrary::get_gallery_row_data($params['gallery_id']);
     if (!$gallery_row && $params["tag"] == 0) {
       echo WDWLibrary::message(__('There is no gallery selected or the gallery was deleted.', 'bwg'), 'wd_error');
       return;
     }
+
     $image_rows = WDWLibrary::get_image_rows_data($params['gallery_id'], $bwg, 'image_browser', '', $params['tag'], 1, 1, $params['sort_by'], $params['order_by']);
     $page_nav = $image_rows['page_nav'];
     $image_rows = $image_rows['images'];
@@ -78,13 +33,8 @@ class BWGViewImage_browser {
     $image_title = $params['image_browser_title_enable'];
     $enable_image_description = $params['image_browser_description_enable'];
     $placeholder = isset($wd_bwg_options->placeholder) ? $wd_bwg_options->placeholder : '';
-    $image_right_click = $wd_bwg_options->image_right_click;
-    if (!isset($params['popup_fullscreen'])) {
-      $params['popup_fullscreen'] = 0;
-    }
-    if (!isset($params['popup_autoplay'])) {
-      $params['popup_autoplay'] = 0;
-    }
+    $image_right_click =  isset($wd_bwg_options->image_right_click) ? $wd_bwg_options->image_right_click : 0;
+    
     $params_array = array(
       'action' => 'GalleryBox',
       'current_view' => $bwg,
@@ -96,7 +46,7 @@ class BWGViewImage_browser {
       'image_height' => $params['popup_height'],
       'image_effect' => $params['popup_effect'],
       'wd_sor' => $params['sort_by'],
-      'wd_ord' => $order_by,
+      'wd_ord' => $params['order_by'],
       'enable_image_filmstrip' => $params['popup_enable_filmstrip'],
       'image_filmstrip_height' => $params['popup_filmstrip_height'],
       'enable_image_ctrl_btn' => $params['popup_enable_ctrl_btn'],
@@ -129,12 +79,12 @@ class BWGViewImage_browser {
       $show_watermark = FALSE;
     }
     if ($params['watermark_type'] != 'none') {
-      $params_array['watermark_link'] = $params['watermark_link'];
-      $params_array['watermark_opacity'] = $params['watermark_opacity'];
-      $params_array['watermark_position'] =(($params['watermark_position'] != 'undefined') ? $params['watermark_position'] : 'top-center');
-			$position = explode('-', $params_array['watermark_position']);
-			$vertical_align = $position[0];
-			$text_align = $position[1];
+		$params_array['watermark_link'] = $params['watermark_link'];
+		$params_array['watermark_opacity'] = $params['watermark_opacity'];
+		$params_array['watermark_position'] = $params['watermark_position'];
+		$position = explode('-', $params_array['watermark_position']);
+		$vertical_align = $position[0];
+		$text_align = $position[1];
     }
     if ($params['watermark_type'] == 'text') {
       $show_watermark = TRUE;
@@ -157,9 +107,9 @@ class BWGViewImage_browser {
 			$watermark_image_or_text = '<img class="bwg_image_browser_watermark_img_' . $bwg . '" src="' . urldecode($params_array['watermark_url']) . '" />';
 			$watermark_a = '';
 			$watermark_div = 'class="bwg_image_browser_watermark_' . $bwg . '"';
-      $params_array['watermark_font'] = '';
-      $params_array['watermark_color'] = '';
-       $params_array['watermark_font_size'] = ''; 
+		$params_array['watermark_font'] = '';
+		$params_array['watermark_color'] = '';
+		$params_array['watermark_font_size'] = ''; 
     }
     $image_browser_image_title_align = (isset($theme_row->image_browser_image_title_align)) ? $theme_row->image_browser_image_title_align : 'top';
     if (!isset($theme_row->image_browser_gal_title_font_color)) {
@@ -311,7 +261,6 @@ class BWGViewImage_browser {
                             WDWLibraryEmbed::display_embed($image_row->filetype, $image_row->filename, array('id'=>"bwg_embed_frame_".$bwg,'width'=>$params['image_browser_width'], 'height'=>'auto', 'frameborder'=>"0", 'allowfullscreen'=>"allowfullscreen", 'style'=>"position: relative; margin:0;"));          
                           ?>
                           </a>
-
                         <?php
                         } 
                       }
@@ -391,7 +340,7 @@ class BWGViewImage_browser {
       </div>
     </div>
     <script>
-      jQuery(window).load(function () {
+      jQuery(window).on('load', function () {
         <?php
         if ($image_right_click) {
           ?>

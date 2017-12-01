@@ -4,137 +4,24 @@ class BWGViewThumbnails {
     global $WD_BWG_UPLOAD_DIR;
     global $wd_bwg_options;
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
-
-    if (!isset($params['image_title'])) {
-      $params['image_title'] = 'none';
-    }
-    if (!isset($params['popup_fullscreen'])) {
-      $params['popup_fullscreen'] = 0;
-    }
-    if (!isset($params['popup_autoplay'])) {
-      $params['popup_autoplay'] = 0;
-    }
-    if (!isset($params['order_by'])) {
-      $params['order_by'] = 'asc';
-    }
-    if (!isset($params['popup_enable_pinterest'])) {
-      $params['popup_enable_pinterest'] = 0;
-    }
-    if (!isset($params['popup_enable_tumblr'])) {
-      $params['popup_enable_tumblr'] = 0;
-    }
-    if (!isset($params['show_search_box'])) {
-      $params['show_search_box'] = 0;
-    }
-    if (!isset($params['search_box_width'])) {
-      $params['search_box_width'] = 180;
-    }
-    if (!isset($params['popup_enable_info'])) {
-      $params['popup_enable_info'] = 1;
-    }
-    if (!isset($params['popup_info_always_show'])) {
-      $params['popup_info_always_show'] = 0;
-    }
-    if (!isset($params['popup_info_full_width'])) {
-      $params['popup_info_full_width'] = 0;
-    }
-    if (!isset($params['popup_enable_rate'])) {
-      $params['popup_enable_rate'] = 0;
-    }
-    if (!isset($params['thumb_click_action']) || $params['thumb_click_action'] == 'undefined') {
-      $params['thumb_click_action'] = 'open_lightbox';
-    }
-    if (!isset($params['thumb_link_target'])) {
-      $params['thumb_link_target'] = 1;
-    }
-    if (!isset($params['popup_hit_counter'])) {
-      $params['popup_hit_counter'] = 0;
-    }
-    if (!isset($params['show_sort_images'])) {
-      $params['show_sort_images'] = 0;
-    }
-    if (!isset($params['image_enable_page'])) {
-      $params['image_enable_page'] = 1;
-    }
-    if (!isset($params['show_tag_box'])) {
-      $params['show_tag_box'] = 0;
-    }
-    if (!isset($params['tag'])) {
-      $params['tag'] = 0;
-    }
-    if (!isset($params['show_gallery_description'])) {
-      $params['show_gallery_description'] = 0;
-    }
-    if (!isset($params['showthumbs_name'])) {
-      $params['showthumbs_name'] = $wd_bwg_options->showthumbs_name;
-    }
-    $from = (isset($params['from']) ? esc_html($params['from']) : 0);
-    $sort_direction = $params['order_by'];
+    
+    $order_by = $params['order_by'];
+	  $image_right_click = isset($wd_bwg_options->image_right_click) ? $wd_bwg_options->image_right_click : 0;
     $placeholder = isset($wd_bwg_options->placeholder) ? $wd_bwg_options->placeholder : '';
-    $play_icon = $wd_bwg_options->play_icon;
-    if ($from) {
-      $params['gallery_id'] = $params['id'];
-      $params['images_per_page'] = $params['count'];
-      $params['sort_by'] = (($params['show'] == 'random') ? 'RAND()' : 'order');
-      if ($params['show'] == 'last') {
-        $sort_direction = 'DESC';
-      }
-      elseif ($params['show'] == 'first') {
-        $sort_direction = 'ASC';
-      }	  
-      $params['image_enable_page'] = 0;
-      $params['image_title'] = $wd_bwg_options->image_title_show_hover;
-      $params['thumb_height'] = $params['height'];
-      $params['thumb_width'] = $params['width'];
-      $params['image_column_number'] = $params['count'];
-      $params['popup_fullscreen'] = $wd_bwg_options->popup_fullscreen;
-      $params['popup_autoplay'] = $wd_bwg_options->popup_autoplay;
-      $params['popup_width'] = $wd_bwg_options->popup_width;
-      $params['popup_height'] = $wd_bwg_options->popup_height;
-      $params['popup_effect'] = $wd_bwg_options->popup_type;
-      $params['popup_enable_filmstrip'] = $wd_bwg_options->popup_enable_filmstrip;
-      $params['popup_filmstrip_height'] = $wd_bwg_options->popup_filmstrip_height;
-      $params['popup_enable_ctrl_btn'] = $wd_bwg_options->popup_enable_ctrl_btn;
-      $params['popup_enable_fullscreen'] = $wd_bwg_options->popup_enable_fullscreen;
-      $params['popup_enable_info'] = $wd_bwg_options->popup_enable_info;
-      $params['popup_info_always_show'] = $wd_bwg_options->popup_info_always_show;
-      $params['popup_info_full_width'] = $wd_bwg_options->popup_info_full_width;
-      $params['popup_hit_counter'] = $wd_bwg_options->popup_hit_counter;
-      $params['popup_enable_rate'] = $wd_bwg_options->popup_enable_rate;
-      $params['popup_interval'] = $wd_bwg_options->popup_interval;
-      $params['popup_enable_comment'] = $wd_bwg_options->popup_enable_comment;
-      $params['popup_enable_facebook'] = $wd_bwg_options->popup_enable_facebook;
-      $params['popup_enable_twitter'] = $wd_bwg_options->popup_enable_twitter;
-      $params['popup_enable_google'] = $wd_bwg_options->popup_enable_google;
-      $params['popup_enable_pinterest'] = $wd_bwg_options->popup_enable_pinterest;
-      $params['popup_enable_tumblr'] = $wd_bwg_options->popup_enable_tumblr;
-      $params['watermark_type'] = $wd_bwg_options->watermark_type;
-      $params['watermark_link'] = urlencode($wd_bwg_options->watermark_link);
-      $params['watermark_opacity'] = $wd_bwg_options->watermark_opacity;
-      $params['watermark_position'] = $wd_bwg_options->watermark_position;
-      $params['watermark_text'] = $wd_bwg_options->watermark_text;
-      $params['watermark_font_size'] = $wd_bwg_options->watermark_font_size;
-      $params['watermark_font'] = $wd_bwg_options->watermark_font;
-      $params['watermark_color'] = $wd_bwg_options->watermark_color;
-      $params['watermark_url'] = urlencode($wd_bwg_options->watermark_url);
-      $params['watermark_width'] = $wd_bwg_options->watermark_width;
-      $params['watermark_height'] = $wd_bwg_options->watermark_height;
-      $params['thumb_click_action'] = $wd_bwg_options->thumb_click_action;
-      $params['thumb_link_target'] = $wd_bwg_options->thumb_link_target;
-      $params['popup_effect_duration'] = isset($wd_bwg_options->popup_effect_duration) ? $wd_bwg_options->popup_effect_duration : 1;
-    }
+    $play_icon = isset($wd_bwg_options->play_icon) ? $wd_bwg_options->play_icon : 0;
+    
     if (isset($_POST['sortImagesByValue_' . $bwg])) {
-			$sort_by = esc_html($_POST['sortImagesByValue_' . $bwg]);
-			if ($sort_by == 'random') {
-				$params['sort_by'] = 'RAND()';
-			}
-			else if ($sort_by == 'default')  {
-				$params['sort_by'] = $params['sort_by'];
-			}
-			else {
-				$params['sort_by'] = $sort_by;
-			}
-		}
+      $sort_by = esc_html($_POST['sortImagesByValue_' . $bwg]);
+      if ($sort_by == 'random') {
+        $params['sort_by'] = 'RAND()';
+      }
+      else if ($sort_by == 'default')  {
+        $params['sort_by'] = $params['sort_by'];
+      }
+      else {
+        $params['sort_by'] = $sort_by;
+      }
+    }
     $theme_row = WDWLibrary::get_theme_row_data($params['theme_id']);
     if (!$theme_row) {
       echo WDWLibrary::message(__('There is no theme selected or the theme was deleted.', 'bwg'), 'wd_error');
@@ -146,7 +33,7 @@ class BWGViewThumbnails {
     else {
       $type = "";
     }
-   if (!isset($theme_row->thumb_gal_title_font_color)) {
+    if (!isset($theme_row->thumb_gal_title_font_color)) {
       $theme_row->thumb_gal_title_font_color = 'CCCCCC';
     }
     if (!isset($theme_row->thumb_gal_title_font_style)) {
@@ -174,7 +61,7 @@ class BWGViewThumbnails {
     }
     $params['load_more_image_count'] = (isset($params['load_more_image_count']) && ($params['image_enable_page'] == 2)) ? $params['load_more_image_count'] : $params['images_per_page'];
     $items_per_page = array('images_per_page' => $params['images_per_page'], 'load_more_image_count' => $params['load_more_image_count']);
-    $image_rows = WDWLibrary::get_image_rows_data($params['gallery_id'], $bwg, $type, 'bwg_tag_id_bwg_standart_thumbnails_' . $bwg, $params['tag'], $params['images_per_page'], $params['load_more_image_count'], $params['sort_by'], $sort_direction);
+    $image_rows = WDWLibrary::get_image_rows_data($params['gallery_id'], $bwg, $type, 'bwg_tag_id_bwg_standart_thumbnails_' . $bwg, $params['tag'], $params['images_per_page'], $params['load_more_image_count'], $params['sort_by'], $order_by);
     if ($params['image_enable_page'] && $params['images_per_page']) {
       $page_nav = $image_rows['page_nav'];
     }
@@ -189,15 +76,12 @@ class BWGViewThumbnails {
       }
     }
     $tags_rows = WDWLibrary::get_tags_rows_data($params['gallery_id']);
-    $image_right_click = $wd_bwg_options->image_right_click;
-
-    $inline_style = $this->inline_styles($bwg, $theme_row, $params);
+	  $inline_style = $this->inline_styles($bwg, $theme_row, $params);
     if ($wd_bwg_options->use_inline_stiles_and_scripts) {
       wp_enqueue_style('bwg_frontend');
       wp_add_inline_style('bwg_frontend', $inline_style);
       wp_enqueue_style('bwg_font-awesome');
       wp_enqueue_style('bwg_mCustomScrollbar');
-      $google_fonts = WDWLibrary::get_google_fonts();
       wp_enqueue_style('bwg_googlefonts');
       if (isset($params['show_tag_box']) && $params['show_tag_box']) {
         wp_enqueue_style('bwg_sumoselect');
@@ -372,7 +256,7 @@ class BWGViewThumbnails {
         <div id="spider_popup_overlay_<?php echo $bwg; ?>" class="spider_popup_overlay" onclick="spider_destroypopup(1000)"></div>
       </div>
     </div>
-	<?php
+	  <?php
         $params_array = array(
           'action' => 'GalleryBox',
           'tags' => (isset($params['tag']) ? $params['tag'] : 0),
@@ -387,7 +271,7 @@ class BWGViewThumbnails {
           'image_height' => $params['popup_height'],
           'image_effect' => $params['popup_effect'],
           'wd_sor' => (isset($params['type']) ? 'date' : (($params['sort_by'] == 'RAND()') ? 'order' : $params['sort_by'])),
-          'wd_ord' => $sort_direction,
+          'wd_ord' => $order_by,
           'enable_image_filmstrip' => $params['popup_enable_filmstrip'],
           'image_filmstrip_height' => $params['popup_filmstrip_height'],
           'enable_image_ctrl_btn' => $params['popup_enable_ctrl_btn'],

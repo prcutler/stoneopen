@@ -212,6 +212,7 @@ class FilemanagerView {
                         <?php
                         if ($file['is_dir'] == true) {
                           ?>
+                        ontouchend="onFileDblClick(event, this);"
                         ondragover="onFileDragOver(event, this);"
                         ondrop="onFileDrop(event, this);"
                           <?php
