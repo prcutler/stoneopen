@@ -17,7 +17,7 @@
         public $overview_instance;  
         public $subscribe_instance;   
         public $config;
-        private $version = "1.0.2";   
+        private $version = "1.0.13";
 				
         ////////////////////////////////////////////////////////////////////////////////////////
         // Constructor & Destructor                                                           //

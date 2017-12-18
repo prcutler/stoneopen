@@ -7,14 +7,6 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access.');
  * Converted to array options: yes
  * Migration code for "new"-style options removed: Feb 2017 (created: Dec 2013)
  */
-if (version_compare(phpversion(), '5.3.3', '>=') && (!defined('UPDRAFTPLUS_CLOUDFILES_USEOLDSDK') || UPDRAFTPLUS_CLOUDFILES_USEOLDSDK != true)) {
-	include_once(UPDRAFTPLUS_DIR.'/methods/cloudfiles-new.php');
-	class UpdraftPlus_BackupModule_cloudfiles extends UpdraftPlus_BackupModule_cloudfiles_opencloudsdk {
-	}
-} else {
-	class UpdraftPlus_BackupModule_cloudfiles extends UpdraftPlus_BackupModule_cloudfiles_oldsdk {
-	}
-}
 
 if (!class_exists('UpdraftPlus_BackupModule')) require_once(UPDRAFTPLUS_DIR.'/methods/backup-module.php');
 
@@ -568,5 +560,15 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk extends UpdraftPlus_BackupModul
 		echo __('Success', 'updraftplus').": ".__('We accessed the container, and were able to create files within it.', 'updraftplus');
 
 		@$container_object->delete_object($try_file);
+	}
+}
+
+// Moved to the bottom to fix a bug in some version or install of PHP which required UpdraftPlus_BackupModule_cloudfiles_oldsdk to be defined earlier in the file (despite the conditionality) - see HS#19911
+if (version_compare(PHP_VERSION, '5.3.3', '>=') && (!defined('UPDRAFTPLUS_CLOUDFILES_USEOLDSDK') || UPDRAFTPLUS_CLOUDFILES_USEOLDSDK != true)) {
+	include_once(UPDRAFTPLUS_DIR.'/methods/cloudfiles-new.php');
+	class UpdraftPlus_BackupModule_cloudfiles extends UpdraftPlus_BackupModule_cloudfiles_opencloudsdk {
+	}
+} else {
+	class UpdraftPlus_BackupModule_cloudfiles extends UpdraftPlus_BackupModule_cloudfiles_oldsdk {
 	}
 }

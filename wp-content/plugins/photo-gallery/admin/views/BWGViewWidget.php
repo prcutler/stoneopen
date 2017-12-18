@@ -43,7 +43,8 @@ class BWGViewWidget {
 				'from' => 'widget',
 				'theme_id' => $theme_id,
 				'sort_by'  => $sort_by,
-				'order_by' => $order_by
+				'order_by' => $order_by,
+				'image_enable_page' => 0
 			);
     if ($type == 'gallery') {
 		require_once(WD_BWG_DIR . '/frontend/controllers/BWGControllerThumbnails.php');
@@ -66,6 +67,7 @@ class BWGViewWidget {
 		$params['compuct_album_image_thumb_height']  = $height;
 		$params['compuct_album_view_type']  = 'thumbnail';
 		$params['gallery_type']  = 'album_compact_preview';
+		$params['compuct_album_enable_page'] = 0;
     }
     $controller = new $controller_class();
     global $bwg;

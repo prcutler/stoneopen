@@ -264,7 +264,7 @@ function optionsframework_options() {
 	$options[] = array(
 		'name' => __('Slider Transition Speed', 'accesspress-parallax'),
 		'id' => 'slider_speed',
-		'std' => '5000',
+		'std' => '1000',
 		'type' => 'text');
 
 	$options[] = array(

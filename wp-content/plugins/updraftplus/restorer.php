@@ -2284,6 +2284,7 @@ ENDHERE;
 		} elseif (2 == $sql_type) {
 			if (!$this->lock_forbidden) $this->lock_table($this->new_table_name);
 			$this->tables_created++;
+			do_action('updraftplus_creating_table', $this->new_table_name);
 		}
 
 		if ($this->line >0 && ($this->line)%50 == 0) {

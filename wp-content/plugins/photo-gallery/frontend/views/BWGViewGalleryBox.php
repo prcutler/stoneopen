@@ -838,14 +838,14 @@ class BWGViewGalleryBox {
               <?php
               if ($watermark_type == 'image') {
               ?>
-              <a href="<?php echo urldecode($watermark_link); ?>" target="_blank">
+              <a href="<?php echo esc_js(urldecode($watermark_link)); ?>" target="_blank">
                 <img class="bwg_watermark_image bwg_watermark" src="<?php echo $watermark_url; ?>" />
               </a>
               <?php
               }
               elseif ($watermark_type == 'text') {
               ?>
-              <a class="bwg_none_selectable bwg_watermark_text bwg_watermark" target="_blank" href="<?php echo $watermark_link; ?>"><?php echo stripslashes($watermark_text); ?></a>
+              <a class="bwg_none_selectable bwg_watermark_text bwg_watermark" target="_blank" href="<?php echo esc_js(urldecode($watermark_link)); ?>"><?php echo stripslashes($watermark_text); ?></a>
               <?php
               }
               ?>

@@ -432,11 +432,18 @@ class BWGViewSlideshow {
             /* For images.*/
             var bwg_current_image_span = jQuery(this).find("img");
             if (bwg_current_image_span.length) {
-              bwg_current_image_span.on('load', function () {
+              if (bwg_current_image_span.prop('complete')) {
                 var width = bwg_current_image_span.width();
                 var height = bwg_current_image_span.height();
                 bwg_change_each_watermark_container_<?php echo $bwg; ?>(width, height);
-              });
+              }
+              else {
+                bwg_current_image_span.on("load", function () {
+                  var width = bwg_current_image_span.width();
+                  var height = bwg_current_image_span.height();
+                  bwg_change_each_watermark_container_<?php echo $bwg; ?>(width, height);
+                });
+              }
             }
             else {
               /* For embeds and videos.*/

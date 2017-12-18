@@ -2651,8 +2651,8 @@ jQuery(document).ready(function($) {
 	*/
 
 	Handlebars.registerHelper('ifeq', function (a, b, opts) {
-		if ('string' !== typeof a && 'undefined' !== typeof a) a = a.toString();
-		if ('string' !== typeof b && 'undefined' !== typeof b) b = b.toString();
+		if ('string' !== typeof a && 'undefined' !== typeof a && null !== a) a = a.toString();
+		if ('string' !== typeof b && 'undefined' !== typeof b && null !== b) b = b.toString();
 		if (a === b) {
 			return opts.fn(this);
 		} else {

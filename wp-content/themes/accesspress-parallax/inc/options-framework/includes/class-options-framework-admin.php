@@ -174,7 +174,7 @@ class Options_Framework_Admin {
 		</div>
 
 		<div class="ak-socials">
-		<a target='_blank' href="<?php echo esc_url('http://accesspressthemes.com/theme-demos/?theme=accesspress-parallax'); ?>"><?php _e('Demo','accesspress-parallax'); ?></a>
+		<a target='_blank' href="<?php echo esc_url('https://accesspressthemes.com/theme-demos/?theme=accesspress-parallax'); ?>"><?php _e('Demo','accesspress-parallax'); ?></a>
 		<a target='_blank' href="<?php echo esc_url('https://accesspressthemes.com/documentation/theme-instruction-accesspress-parallax/'); ?>"><?php _e('Documentation/Video Tutorial','accesspress-parallax'); ?></a>
 		</div>
 		</div>
@@ -213,7 +213,7 @@ class Options_Framework_Admin {
     			<div class="feature-img">
     			<img src="<?php echo get_template_directory_uri(); ?>/inc/options-framework/images/upgrade-bottom.jpg">
     			<div class="button-link">
-    				<a href="<?php echo esc_url('http://accesspressthemes.com/theme-demos/?theme=accesspress-parallax-pro'); ?>" target="_blank"><img src="<?php echo get_template_directory_uri(); ?>/inc/options-framework/images/demo-btn.png"></a>
+    				<a href="<?php echo esc_url('https://accesspressthemes.com/theme-demos/?theme=accesspress-parallax-pro'); ?>" target="_blank"><img src="<?php echo get_template_directory_uri(); ?>/inc/options-framework/images/demo-btn.png"></a>
     				<a href="<?php echo esc_url('https://accesspressthemes.com/wordpress-themes/accesspress-parallax-pro/'); ?>" target="_blank"><img src="<?php echo get_template_directory_uri(); ?>/inc/options-framework/images/upgrade-btn.png"></a>
     			</div>
     			</div>

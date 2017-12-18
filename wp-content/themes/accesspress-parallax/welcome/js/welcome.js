@@ -6,7 +6,7 @@
 jQuery(document).ready(function ($) {
 	
 	/** Ajax Plugin Installation **/
-	$(".install").on('click', function (e) {
+	$(".plugin-btn-wrapper .install").on('click', function (e) {
 		e.preventDefault();
 		var el = $(this);
 

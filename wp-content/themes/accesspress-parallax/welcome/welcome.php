@@ -299,20 +299,20 @@
 					case 'inactive':
 						return add_query_arg( array(
 							                      'action'        => 'deactivate',
-							                      'plugin'        => rawurlencode( esc_attr($folder_name) . '/' . esc_attr($file_name) . '.php' ),
+							                      'plugin'        => rawurlencode( esc_attr($folder_name) . '/' . esc_attr($file_name) ),
 							                      'plugin_status' => 'all',
 							                      'paged'         => '1',
-							                      '_wpnonce'      => wp_create_nonce( 'deactivate-plugin_' . esc_attr($folder_name) . '/' . esc_attr($file_name) . '.php' ),
+							                      '_wpnonce'      => wp_create_nonce( 'deactivate-plugin_' . esc_attr($folder_name) . '/' . esc_attr($file_name) ),
 						                      ), network_admin_url( 'plugins.php' ) );
 						break;
 
 					case 'active':
 						return add_query_arg( array(
 							                      'action'        => 'activate',
-							                      'plugin'        => rawurlencode( esc_attr($folder_name) . '/' . esc_attr($file_name) . '.php' ),
+							                      'plugin'        => rawurlencode( esc_attr($folder_name) . '/' . esc_attr($file_name) ),
 							                      'plugin_status' => 'all',
 							                      'paged'         => '1',
-							                      '_wpnonce'      => wp_create_nonce( 'activate-plugin_' . esc_attr($folder_name) . '/' . esc_attr($file_name) . '.php' ),
+							                      '_wpnonce'      => wp_create_nonce( 'activate-plugin_' . esc_attr($folder_name) . '/' . esc_attr($file_name) ),
 						                      ), network_admin_url( 'plugins.php' ) );
 						break;
 				}

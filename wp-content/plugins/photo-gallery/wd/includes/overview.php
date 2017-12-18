@@ -58,6 +58,14 @@
         public function display_overview_page(){
             $wd_options =  $this->config; 
             $tabs = $this->tabs;
+            $start_using_url = "";
+            if(!empty($this->config->custom_post)) {
+                if (strpos($this->config->custom_post, 'post_type', 0) !== false) {
+                    $start_using_url = admin_url($this->config->custom_post);
+                } else {
+                    $start_using_url = menu_page_url($this->config->custom_post, false);
+                }
+            }
             require_once( $wd_options->wd_dir_templates . "/display_overview.php" );
         }
         public function wd_overview_welcome(){

@@ -157,7 +157,7 @@ function accesspress_parallax_scripts() {
 		'accesspress_show_controls' => (!of_get_option('show_controls') || of_get_option('show_controls') == "yes") ? "true" : "false",
 		'accesspress_auto_transition' => (!of_get_option('auto_transition') || of_get_option('auto_transition') == "yes") ? "true" : "false",
 		'accesspress_slider_transition' => of_get_option('slider_transition') == "fade" ? "true" : "false",
-		'accesspress_slider_speed' => (!of_get_option('slider_speed')) ? "5000" : of_get_option('slider_speed'),
+		'accesspress_slider_speed' => (!of_get_option('slider_speed')) ? "1000" : of_get_option('slider_speed'),
 		'accesspress_slider_pause' => (!of_get_option('slider_pause')) ? "5000" : of_get_option('slider_pause'),
 	);
 	
@@ -227,6 +227,8 @@ require get_template_directory() . '/inc/options-framework/options-framework.php
  * Load woocommerce function
  * */
 require get_template_directory().'/woocommerce/ap-parallax-woocommerce-function.php';
+
+require get_template_directory().'/inc/class-tgm-plugin-activation.php';
 
 /**
  * Load Welcome Page

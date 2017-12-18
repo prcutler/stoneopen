@@ -2073,13 +2073,15 @@ class UpdraftPlus_Admin {
 		return preg_replace('/-db(.*)\.gz_\.crypt$/', '-db$1.gz.crypt', $filename);
 	}
 
+	/**
+	 * Runs upon the WordPress action plupload_action
+	 */
 	public function plupload_action() {
-		// check ajax nonce
 
 		global $updraftplus;
 		@set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);
 
-		if (!UpdraftPlus_Options::user_can_manage()) exit;
+		if (!UpdraftPlus_Options::user_can_manage()) return;
 		check_ajax_referer('updraft-uploader');
 
 		$updraft_dir = $updraftplus->backups_dir_location();
@@ -2116,21 +2118,52 @@ class UpdraftPlus_Admin {
 
 		// If this was the chunk, then we should instead be concatenating onto the final file
 		if (isset($_POST['chunks']) && isset($_POST['chunk']) && preg_match('/^[0-9]+$/', $_POST['chunk'])) {
+		
 			$final_file = basename($_POST['name']);
+			
 			if (!rename($status['file'], $updraft_dir.'/'.$final_file.'.'.$_POST['chunk'].'.zip.tmp')) {
 				@unlink($status['file']);
 				echo json_encode(array('e' => sprintf(__('Error: %s', 'updraftplus'), __('This file could not be uploaded', 'updraftplus'))));
 				exit;
 			}
+			
 			$status['file'] = $updraft_dir.'/'.$final_file.'.'.$_POST['chunk'].'.zip.tmp';
 
+		}
+
+		$response = array();
+		if (!isset($_POST['chunks']) || (isset($_POST['chunk']) && preg_match('/^[0-9]+$/', $_POST['chunk']) && $_POST['chunk'] == $_POST['chunks']-1) && isset($final_file)) {
+			if (!preg_match('/^log\.[a-f0-9]{12}\.txt/i', $final_file) && !preg_match('/^backup_([\-0-9]{15})_.*_([0-9a-f]{12})-([\-a-z]+)([0-9]+)?(\.(zip|gz|gz\.crypt))?$/i', $final_file, $matches)) {
+				$accept = apply_filters('updraftplus_accept_archivename', array());
+				if (is_array($accept)) {
+					foreach ($accept as $acc) {
+						if (preg_match('/'.$acc['pattern'].'/i', $final_file)) {
+							$response['dm'] = sprintf(__('This backup was created by %s, and can be imported.', 'updraftplus'), $acc['desc']);
+						}
+					}
+				}
+				if (empty($response['dm'])) {
+					if (isset($status['file'])) @unlink($status['file']);
+					echo json_encode(array('e' => sprintf(__('Error: %s', 'updraftplus'), __('Bad filename format - this does not look like a file created by UpdraftPlus', 'updraftplus'))));
+					exit;
+				}
+			} else {
+				$backupable_entities = $updraftplus->get_backupable_file_entities(true);
+				$type = isset($matches[3]) ? $matches[3] : '';
+				if (!preg_match('/^log\.[a-f0-9]{12}\.txt/', $final_file) && 'db' != $type && !isset($backupable_entities[$type])) {
+					if (isset($status['file'])) @unlink($status['file']);
+					echo json_encode(array('e' => sprintf(__('Error: %s', 'updraftplus'), sprintf(__('This looks like a file created by UpdraftPlus, but this install does not know about this type of object: %s. Perhaps you need to install an add-on?', 'updraftplus'), htmlspecialchars($type)))));
+					exit;
+				}
+			}
+			
 			// Final chunk? If so, then stich it all back together
-			if ($_POST['chunk'] == $_POST['chunks']-1) {
+			if (isset($_POST['chunk']) && $_POST['chunk'] == $_POST['chunks']-1 && !empty($final_file)) {
 				if ($wh = fopen($updraft_dir.'/'.$final_file, 'wb')) {
-					for ($i=0; $i<$_POST['chunks']; $i++) {
+					for ($i = 0; $i < $_POST['chunks']; $i++) {
 						$rf = $updraft_dir.'/'.$final_file.'.'.$i.'.zip.tmp';
 						if ($rh = fopen($rf, 'rb')) {
-							while ($line = fread($rh, 32768)) {
+							while ($line = fread($rh, 262144)) {
 								fwrite($wh, $line);
 							}
 							fclose($rh);
@@ -2151,35 +2184,7 @@ class UpdraftPlus_Admin {
 					}
 				}
 			}
-
-		}
-
-		$response = array();
-		if (!isset($_POST['chunks']) || (isset($_POST['chunk']) && $_POST['chunk'] == $_POST['chunks']-1)) {
-			$file = basename($status['file']);
-			if (!preg_match('/^log\.[a-f0-9]{12}\.txt/i', $file) && !preg_match('/^backup_([\-0-9]{15})_.*_([0-9a-f]{12})-([\-a-z]+)([0-9]+)?(\.(zip|gz|gz\.crypt))?$/i', $file, $matches)) {
-				$accept = apply_filters('updraftplus_accept_archivename', array());
-				if (is_array($accept)) {
-					foreach ($accept as $acc) {
-						if (preg_match('/'.$acc['pattern'].'/i', $file)) $accepted = $acc['desc'];
-					}
-				}
-				if (!empty($accepted)) {
-					$response['dm'] = sprintf(__('This backup was created by %s, and can be imported.', 'updraftplus'), $accepted);
-				} else {
-					@unlink($status['file']);
-					echo json_encode(array('e' => sprintf(__('Error: %s', 'updraftplus'), __('Bad filename format - this does not look like a file created by UpdraftPlus', 'updraftplus'))));
-					exit;
-				}
-			} else {
-				$backupable_entities = $updraftplus->get_backupable_file_entities(true);
-				$type = isset($matches[3]) ? $matches[3] : '';
-				if (!preg_match('/^log\.[a-f0-9]{12}\.txt/', $file) && 'db' != $type && !isset($backupable_entities[$type])) {
-					@unlink($status['file']);
-					echo json_encode(array('e' => sprintf(__('Error: %s', 'updraftplus'), sprintf(__('This looks like a file created by UpdraftPlus, but this install does not know about this type of object: %s. Perhaps you need to install an add-on?', 'updraftplus'), htmlspecialchars($type)))));
-					exit;
-				}
-			}
+			
 		}
 
 		// send the uploaded file url in response
@@ -2189,14 +2194,14 @@ class UpdraftPlus_Admin {
 	}
 
 	/**
-	 * Database decrypter
+	 * Database decrypter - runs upon the WP action plupload_action2
 	 */
 	public function plupload_action2() {
 
 		@set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);
 		global $updraftplus;
 
-		if (!UpdraftPlus_Options::user_can_manage()) exit;
+		if (!UpdraftPlus_Options::user_can_manage()) return;
 		check_ajax_referer('updraft-uploader');
 
 		$updraft_dir = $updraftplus->backups_dir_location();
@@ -2226,19 +2231,25 @@ class UpdraftPlus_Admin {
 		remove_filter('upload_dir', array($this, 'upload_dir'));
 		remove_filter('sanitize_file_name', array($this, 'sanitize_file_name'));
 
-		if (isset($status['error'])) {
-			echo 'ERROR:'.$status['error'];
-			exit;
-		}
+		if (isset($status['error'])) die('ERROR: '.$status['error']);
 
 		// If this was the chunk, then we should instead be concatenating onto the final file
 		if (isset($_POST['chunks']) && isset($_POST['chunk']) && preg_match('/^[0-9]+$/', $_POST['chunk'])) {
 			$final_file = basename($_POST['name']);
 			rename($status['file'], $updraft_dir.'/'.$final_file.'.'.$_POST['chunk'].'.zip.tmp');
 			$status['file'] = $updraft_dir.'/'.$final_file.'.'.$_POST['chunk'].'.zip.tmp';
+		}
 
+		if (!isset($_POST['chunks']) || (isset($_POST['chunk']) && $_POST['chunk'] == $_POST['chunks']-1)) {
+			if (!preg_match('/^backup_([\-0-9]{15})_.*_([0-9a-f]{12})-db([0-9]+)?\.(gz\.crypt)$/i', $final_file)) {
+
+				@unlink($status['file']);
+				echo 'ERROR:'.__('Bad filename format - this does not look like an encrypted database file created by UpdraftPlus', 'updraftplus');
+				exit;
+			}
+			
 			// Final chunk? If so, then stich it all back together
-			if ($_POST['chunk'] == $_POST['chunks']-1) {
+			if (isset($_POST['chunk']) && $_POST['chunk'] == $_POST['chunks']-1 && isset($final_file)) {
 				if ($wh = fopen($updraft_dir.'/'.$final_file, 'wb')) {
 					for ($i=0; $i<$_POST['chunks']; $i++) {
 						$rf = $updraft_dir.'/'.$final_file.'.'.$i.'.zip.tmp';
@@ -2251,25 +2262,13 @@ class UpdraftPlus_Admin {
 						}
 					}
 					fclose($wh);
-					$status['file'] = $updraft_dir.'/'.$final_file;
 				}
 			}
-
-		}
-
-		if (!isset($_POST['chunks']) || (isset($_POST['chunk']) && $_POST['chunk'] == $_POST['chunks']-1)) {
-			$file = basename($status['file']);
-			if (!preg_match('/^backup_([\-0-9]{15})_.*_([0-9a-f]{12})-db([0-9]+)?\.(gz\.crypt)$/i', $file)) {
-
-				@unlink($status['file']);
-				echo 'ERROR:'.__('Bad filename format - this does not look like an encrypted database file created by UpdraftPlus', 'updraftplus');
-
-				exit;
-			}
+			
 		}
 
 		// send the uploaded file url in response
-		echo 'OK:'.$file;
+		if (isset($final_file)) echo 'OK:'.$final_file;
 		exit;
 	}
 

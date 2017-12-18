@@ -1,9 +1,9 @@
-=== UpdraftPlus WordPress Backup Plugin ===
+﻿=== UpdraftPlus WordPress Backup Plugin ===
 Contributors: Backup with UpdraftPlus, DavidAnderson, DNutbourne, aporter, snightingale, bcrodua
 Tags: backup, restore, database backup, wordpress backup, cloud backup, s3, dropbox, google drive, onedrive, ftp, backups
 Requires at least: 3.2
 Tested up to: 4.9
-Stable tag: 1.13.15
+Stable tag: 1.13.16
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -150,6 +150,19 @@ Unfortunately not; since this is free software, there’s no warranty and no gua
 The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the best place to learn in more detail about any important changes.
 
 N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.13.15 of the free version correspond to changes made in 2.13.15.x of the paid version.
+
+= 1.13.16 - 07/Dec/2017 =
+
+* TWEAK: Remove Ukranian translation files from wordpress.org zip (translation now complete, will download from wordpress.org separately)
+* TWEAK: Adding V4 Signature properties and methods to old S3 SDK
+* TWEAK: Migrator add-on: keep a log of tables as they are created
+* TWEAK: Tweak wording on the 'Premium/Extensions' tab
+* TWEAK: Change the order of classes in methods/cloudfiles.php to work around a PHP install bug seen in one instance
+* TWEAK: Be less aggressive about logging a usually unnecessary internal message about settings
+* TWEAK: Improve UI of migration notice in free version
+* TWEAK: Resolve PSR4 autoloading conflict with older version of Composer
+* TWEAK: Pruning will now prune backups from multiple storage destinations of the same type (not yet a user-visible feature)
+* TWEAK: Update the 'ifeq' handlebars helper to resolve a conflict with MainWP
 
 = 1.13.15 - 28/Nov/2017 =
 
@@ -651,4 +664,4 @@ We recognise and thank the following for code and/or libraries used and/or modif
 
 
 == Upgrade Notice ==
-* 1.13.15: Various fixes and tweaks - a recommended update for everyone
+* 1.13.16: Various small tweaks and fixes - a recommended update for everyone

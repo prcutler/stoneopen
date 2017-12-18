@@ -459,10 +459,16 @@ class UpdraftPlus {
 				$storage_objects_and_ids = $this->get_storage_objects_and_ids(array($method));
 
 				$instance_id = isset($_GET['updraftplus_instance']) ? $_GET['updraftplus_instance'] : '';
-				
+		
+				if ("POST" == $_SERVER['REQUEST_METHOD'] && isset($_POST['state'])) {
+					$state = urldecode($_POST['state']);
+				} elseif (isset($_GET['state'])) {
+					$state = $_GET['state'];
+				}
+
 				// If we don't have an instance_id but the state is set then we are coming back to finish the auth and should extract the instance_id from the state
-				if ('' == $instance_id && isset($_GET['state']) && false !== strpos($_GET['state'], ':')) {
-					$parts = explode(':', $_GET['state']);
+				if ('' == $instance_id && isset($state) && false !== strpos($state, ':')) {
+					$parts = explode(':', $state);
 					$instance_id = $parts[1];
 				}
 				
@@ -3423,13 +3429,17 @@ class UpdraftPlus {
 					}
 
 					if (empty($settings['settings'])) {
-						// See: https://wordpress.org/support/topic/cannot-setup-connectionauthenticate-with-dropbox/
-						error_log("UpdraftPlus: Warning: settings for $method are empty. A dummy field is usually needed so that something is saved.");
-						
+					
 						// Try to recover by getting a default set of options for display
 						if (is_callable(array($remote_storage, 'get_default_options'))) {
 							$uuid = 's-'.md5(rand().uniqid().microtime(true));
 							$settings['settings'] = array($uuid => $remote_storage->get_default_options());
+						}
+						
+						// See: https://wordpress.org/support/topic/cannot-setup-connectionauthenticate-with-dropbox/
+						if (empty($settings['settings'])) {
+							// This can get sent to the browser, and break the page, if the user has configured that. However, it should now (1.13.6+) be impossible for this condition to occur, now that we only log it after getting some default options.
+							error_log("UpdraftPlus: Warning: settings for $method are empty. A dummy field is usually needed so that something is saved.");
 						}
 						
 					}
@@ -4455,7 +4465,7 @@ class UpdraftPlus {
 								$warn[] = apply_filters('updraftplus_dbscan_urlchange', '<a href="https://updraftplus.com/shop/migrator/">'.__('This backup set is from a different site - this is not a restoration, but a migration. You need the Migrator add-on in order to make this work.', 'updraftplus').'</a>', $old_siteurl, $res);
 							}
 							if (!class_exists('UpdraftPlus_Addons_Migrator')) {
-								$warn[] .= '<p><strong><a href="'.apply_filters('updraftplus_com_link', "https://updraftplus.com/faqs/tell-me-more-about-the-search-and-replace-site-location-in-the-database-option/").'">'.__('You can search and replace your database (for migrating a website to a new location/URL) with the Migrator add-on - follow this link for more information', 'updraftplus').'</a></strong></p>';
+								$warn[] .= '<strong><a href="'.apply_filters('updraftplus_com_link', "https://updraftplus.com/faqs/tell-me-more-about-the-search-and-replace-site-location-in-the-database-option/").'">'.__('You can search and replace your database (for migrating a website to a new location/URL) with the Migrator add-on - follow this link for more information', 'updraftplus').'</a></strong>';
 							}
 						}
 						// Explicitly set it, allowing the consumer to detect when the result was unknown

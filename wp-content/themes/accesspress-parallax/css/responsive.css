@@ -126,6 +126,18 @@ Responsive CSS
 		width: 50%;
 	}
 
+	.team-image img{
+		width: 100%;
+	}
+
+	.portfolio-listing a:nth-child(3n+1){
+		clear: none;
+	}
+
+	.portfolio-listing a:nth-child(2n+1){
+		clear: both;
+	}
+
 	.blog-listing .blog-list{
 		width: 80%;
 		margin: 0 auto 20px;
@@ -221,6 +233,10 @@ Responsive CSS
 	}
 	.service-listing .service-list{
 		text-align: left;
+	}
+	.team-tab{
+		max-width: 250px;
+    	margin: 0 auto;
 	}
 	.team-big-image{
 		display: none;
