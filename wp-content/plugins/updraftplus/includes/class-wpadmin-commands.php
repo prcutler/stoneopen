@@ -426,7 +426,7 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 						);
 					} else {
 						$node_array[] = array(
-'text' => $value,
+							'text' => $value,
 							'children' => false,
 							'id' => $path . DIRECTORY_SEPARATOR . $value,
 							'type' => 'file',
@@ -561,7 +561,7 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 							'icon' => 'jstree-file',
 							'li_attr' => array(
 								'path' => $parent_name . DIRECTORY_SEPARATOR . $si['name'],
-'size' => $updraftplus->convert_numeric_size_to_text($si['size'])
+								'size' => $updraftplus->convert_numeric_size_to_text($si['size'])
 							)
 						);
 					}

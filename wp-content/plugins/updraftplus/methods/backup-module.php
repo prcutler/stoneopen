@@ -102,6 +102,15 @@ abstract class UpdraftPlus_BackupModule {
 	}
 
 	/**
+	 * This method should only be called if the feature 'multi storage' is supported. In that case, it returns a template with information about the remote storage. The code below is a placeholder, and methods supporting the feature should always over-ride it.
+	 *
+	 * @return String - HTML template
+	 */
+	public function get_pre_configuration_template() {
+		return $this->get_id().": called, but not implemented in the child class (coding error)";
+	}
+
+	/**
 	 * This method should only be called if the feature 'config templates' is supported. In that case, it returns a template with appropriate placeholders for specific settings. The code below is a placeholder, and methods supporting the feature should always over-ride it.
 	 *
 	 * @return String - HTML template
@@ -125,7 +134,7 @@ abstract class UpdraftPlus_BackupModule {
 	 * @return Object - the stored remote storage client
 	 */
 	public function get_storage() {
-		return $this->_storage;
+		if (!empty($this->_storage)) return $this->_storage;
 	}
 	
 	/**
@@ -190,11 +199,25 @@ abstract class UpdraftPlus_BackupModule {
 		ob_start();
 		// Allow methods to not use this hidden field, if they do not output any settings (to prevent their saved settings being over-written by just this hidden field)
 		if ($this->print_shared_settings_fields()) {
-			?><input type="hidden" name="updraft_<?php echo $this->get_id();?>[version]" value="1"><?php
+			?><tr class="<?php echo $this->get_css_classes(); ?>"><input type="hidden" name="updraft_<?php echo $this->get_id();?>[version]" value="1"></tr><?php
 		}
 		
 		if ($this->supports_feature('config_templates')) {
+			?>
+			{{#if first_instance}}
+			<?php
+				
+				$this->get_pre_configuration_template();
+				
+				if ($this->supports_feature('multi_storage')) {
+					do_action('updraftplus_config_print_add_multi_storage', $this->get_id(), $this);
+				}
+				
+			?>
+			{{/if}}
+			<?php
 			do_action('updraftplus_config_print_before_storage', $this->get_id(), $this);
+
 			$template = ob_get_clean();
 			$template .= $this->get_configuration_template();
 		} else {
@@ -254,10 +277,13 @@ abstract class UpdraftPlus_BackupModule {
 	/**
 	 * Returns a space-separated list of CSS classes suitable for rows in the configuration section
 	 *
+	 * @param Boolean $include_instance - a boolean value to indicate if we want to include the instance_id in the css class, we may not want to include the instance if it's for a UI element that we don't want to be removed along with other UI elements that do include a instance id.
+	 *
 	 * @returns String - the list of CSS classes
 	 */
-	public function get_css_classes() {
+	public function get_css_classes($include_instance = true) {
 		$classes = 'updraftplusmethod '.$this->get_id();
+		if (!$include_instance) return $classes;
 		if ($this->supports_feature('multi_options')) {
 			if ($this->supports_feature('config_templates')) {
 				$classes .= ' '.$this->get_id().'-{{instance_id}}';

@@ -334,6 +334,20 @@ h3 .thank-you {
 	min-width: 180px;
 }
 
+tr[class*="_updraft_remote_storage_border"] {
+	border-top: 1px solid #CCC;
+}
+
+.updraft_multi_storage_options {
+	float: right;
+	clear: right;
+	margin-bottom: 5px !important;
+}
+
+.updraft_toggle_instance_label {
+	vertical-align: top !important;
+}
+
 .updraft_debugrow th {
 	float: right;
 	text-align: right;

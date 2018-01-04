@@ -82,7 +82,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 
 	public function get_supported_features() {
 		// This options format is handled via only accessing options via $this->get_options()
-		return array('multi_options', 'config_templates');
+		return array('multi_options', 'config_templates', 'multi_storage');
 	}
 
 	public function get_default_options() {
@@ -94,6 +94,74 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		);
 	}
 
+	/**
+	 * Acts as a WordPress options filter
+	 *
+	 * @param  Array $dropbox - An array of Dropbox options
+	 * @return Array - the returned array can either be the set of updated Dropbox settings or a WordPress error array
+	 */
+	public function options_filter($dropbox) {
+
+		global $updraftplus;
+	
+		// Get the current options (and possibly update them to the new format)
+		$opts = $updraftplus->update_remote_storage_options_format('dropbox');
+		
+		if (is_wp_error($opts)) {
+			if ('recursion' !== $opts->get_error_code()) {
+				$msg = "Dropbox (".$opts->get_error_code()."): ".$opts->get_error_message();
+				$updraftplus->log($msg);
+				error_log("UpdraftPlus: $msg");
+			}
+			// The saved options had a problem; so, return the new ones
+			return $dropbox;
+		}
+		
+		// If the input is not as expected, then return the current options
+		if (!is_array($dropbox)) return $opts;
+		
+		// Remove instances that no longer exist
+		foreach ($opts['settings'] as $instance_id => $storage_options) {
+			if (!isset($dropbox['settings'][$instance_id])) unset($opts['settings'][$instance_id]);
+		}
+		
+		// Dropbox has a special case where the settings could be empty so we should check for this before
+		if (!empty($dropbox['settings'])) {
+		
+			foreach ($dropbox['settings'] as $instance_id => $storage_options) {
+				if (!empty($opts['settings'][$instance_id]['tk_access_token'])) {
+				
+					$current_app_key = empty($opts['settings'][$instance_id]['appkey']) ? false : $opts['settings'][$instance_id]['appkey'];
+					$new_app_key = empty($storage_options['appkey']) ? false : $storage_options['appkey'];
+
+					// If a different app key is being used, then wipe the stored token as it cannot belong to the new app
+					if ($current_app_key !== $new_app_key) {
+						unset($opts['settings'][$instance_id]['tk_access_token']);
+						unset($opts['settings'][$instance_id]['ownername']);
+						unset($opts['settings'][$instance_id]['CSRF']);
+					}
+				
+				}
+				
+				// Now loop over the new options, and replace old options with them
+				foreach ($storage_options as $key => $value) {
+					if (null === $value) {
+						unset($opts['settings'][$instance_id][$key]);
+					} else {
+						if (!isset($opts['settings'][$instance_id])) $opts['settings'][$instance_id] = array();
+						$opts['settings'][$instance_id][$key] = $value;
+					}
+				}
+				
+				if (!empty($opts['settings'][$instance_id]['folder']) && preg_match('#^https?://(www.)dropbox\.com/home/Apps/UpdraftPlus(.Com)?([^/]*)/(.*)$#i', $opts['settings'][$instance_id]['folder'], $matches)) $opts['settings'][$instance_id]['folder'] = $matches[3];
+				
+			}
+			
+		}
+		
+		return $opts;
+	}
+	
 	public function backup($backup_array) {
 
 		global $updraftplus;
@@ -460,6 +528,34 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 	}
 
 	/**
+	 * Get the pre configuration template
+	 *
+	 * @return String - the template
+	 */
+	public function get_pre_configuration_template() {
+
+		global $updraftplus_admin;
+
+		$classes = $this->get_css_classes(false);
+		
+		?>
+			<tr class="<?php echo $classes . ' ' . 'dropbox_pre_config_container';?>">
+				<td colspan="2">
+					<img alt="<?php _e(sprintf(__('%s logo', 'updraftplus'), 'Dropbox')); ?>" src="<?php echo UPDRAFTPLUS_URL.'/images/dropbox-logo.png'; ?>">
+					<br>
+					<p>
+						<?php
+							global $updraftplus_admin;
+							$updraftplus_admin->curl_check('Dropbox', false, 'dropbox');
+						?>
+					</p>
+				</td>
+			</tr>
+
+		<?php
+	}
+
+	/**
 	 * Get the configuration template
 	 *
 	 * @return String - the template, ready for substitutions to be carried out
@@ -467,32 +563,14 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 	public function get_configuration_template() {
 		ob_start();
 		$classes = $this->get_css_classes();
-		?>
-			<tr class="<?php echo $classes;?>">
-				<td></td>
-				<td>
-				<img alt="<?php _e(sprintf(__('%s logo', 'updraftplus'), 'Dropbox')); ?>" src="<?php echo UPDRAFTPLUS_URL.'/images/dropbox-logo.png'; ?>">
-				<p><em><?php printf(__('%s is a great choice, because UpdraftPlus supports chunked uploads - no matter how big your site is, UpdraftPlus can upload it a little at a time, and not get thwarted by timeouts.', 'updraftplus'), 'Dropbox');?></em></p>
-				</td>
-			</tr>
 
-			<tr class="<?php echo $classes;?>">
-				<th></th>
-				<td>
-					<?php
-						global $updraftplus_admin;
-						$updraftplus_admin->curl_check('Dropbox', false, 'dropbox');
-					?>
-				</td>
-			</tr>
-			<?php
-				$defmsg = '<tr class="'.$classes.'"><td></td><td><strong>'.__('Need to use sub-folders?', 'updraftplus').'</strong> '.__('Backups are saved in', 'updraftplus').' apps/UpdraftPlus. '.__('If you back up several sites into the same Dropbox and want to organise with sub-folders, then ', 'updraftplus').'<a href="https://updraftplus.com/shop/">'.__("there's an add-on for that.", 'updraftplus').'</a></td></tr>';
+		$defmsg = '<tr class="'.$classes.'"><td></td><td><strong>'.__('Need to use sub-folders?', 'updraftplus').'</strong> '.__('Backups are saved in', 'updraftplus').' apps/UpdraftPlus. '.__('If you back up several sites into the same Dropbox and want to organise with sub-folders, then ', 'updraftplus').'<a href="https://updraftplus.com/shop/">'.__("there's an add-on for that.", 'updraftplus').'</a></td></tr>';
 
-				$defmsg = '<tr class="'.$classes.'"><td></td><td><strong>'.__('Need to use sub-folders?', 'updraftplus').'</strong> '.__('Backups are saved in', 'updraftplus').' apps/UpdraftPlus. '.__('If you back up several sites into the same Dropbox and want to organise with sub-folders, then ', 'updraftplus').'<a href="'.apply_filters("updraftplus_com_link", "https://updraftplus.com/shop/").'">'.__("there's an add-on for that.", 'updraftplus').'</a></td></tr>';
+		$defmsg = '<tr class="'.$classes.'"><td></td><td><strong>'.__('Need to use sub-folders?', 'updraftplus').'</strong> '.__('Backups are saved in', 'updraftplus').' apps/UpdraftPlus. '.__('If you back up several sites into the same Dropbox and want to organise with sub-folders, then ', 'updraftplus').'<a href="'.apply_filters("updraftplus_com_link", "https://updraftplus.com/shop/").'">'.__("there's an add-on for that.", 'updraftplus').'</a></td></tr>';
 				
-				$extra_config = apply_filters('updraftplus_dropbox_extra_config_template', $defmsg, $this);
-				echo $extra_config;
-				?>
+		$extra_config = apply_filters('updraftplus_dropbox_extra_config_template', $defmsg, $this);
+		echo $extra_config;
+		?>
 			<tr class="<?php echo $classes;?>">
 				<th><?php echo sprintf(__('Authenticate with %s', 'updraftplus'), __('Dropbox', 'updraftplus'));?>:</th>
 				<td><p>
@@ -578,11 +656,11 @@ echo '</a></p>';
 	 */
 	public function filter_frontend_settings_keys() {
 		return array(
-					'CSRF',
-					'code',
-					'ownername',
-					'tk_access_token',
-				);
+			'CSRF',
+			'code',
+			'ownername',
+			'tk_access_token',
+		);
 	}
 
 	/**

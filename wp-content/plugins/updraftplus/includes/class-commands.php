@@ -381,10 +381,10 @@ class UpdraftPlus_Commands {
 					$error = true;
 					$output = 'cloudfiles_addon_not_found';
 			} else {
-								$output = array(
+				$output = array(
 					'accounts' => $updraftplus_addon_cloudfilesenhanced->account_options(),
 					'regions' => $updraftplus_addon_cloudfilesenhanced->region_options(),
-								);
+				);
 			}
 				break;
 				
@@ -446,11 +446,8 @@ class UpdraftPlus_Commands {
 		if (isset($response_decode->e)) {
 		  return new WP_Error('error', '', htmlspecialchars($response_decode->e));
 		}
-	
-			 return array(
-			'status' => $response_decode->code,
-			'response' => $response_decode->html_response
-		);
+
+		return array('status' => $response_decode->code, 'response' => $response_decode->html_response);
 	}
 
 	/**

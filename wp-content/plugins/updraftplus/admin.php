@@ -773,6 +773,8 @@ class UpdraftPlus_Admin {
 			// For remote storage handlebarsjs template
 			'remote_storage_options' => $remote_storage_options_and_templates['options'],
 			'remote_storage_templates' => $remote_storage_options_and_templates['templates'],
+			'instance_enabled' => __('Currently enabled', 'updraftplus'),
+			'instance_disabled' => __('Currently disabled', 'updraftplus'),
 		));
 	}
 	
@@ -1192,9 +1194,9 @@ class UpdraftPlus_Admin {
 			$msg = array(
 				'result' => 'needs_download',
 				'request' => array(
-						'type' => $type,
-						'timestamp' => $timestamp,
-						'findex' => $findex
+					'type' => $type,
+					'timestamp' => $timestamp,
+					'findex' => $findex
 				)
 			);
 		
