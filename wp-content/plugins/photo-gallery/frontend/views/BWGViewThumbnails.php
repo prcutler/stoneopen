@@ -6,7 +6,7 @@ class BWGViewThumbnails {
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
     
     $order_by = $params['order_by'];
-	  $image_right_click = isset($wd_bwg_options->image_right_click) ? $wd_bwg_options->image_right_click : 0;
+	$image_right_click = isset($wd_bwg_options->image_right_click) ? $wd_bwg_options->image_right_click : 0;
     $placeholder = isset($wd_bwg_options->placeholder) ? $wd_bwg_options->placeholder : '';
     $play_icon = isset($wd_bwg_options->play_icon) ? $wd_bwg_options->play_icon : 0;
     

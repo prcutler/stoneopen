@@ -187,7 +187,7 @@ class bwg_UploadHandler {
     protected function get_upload_path($file_name = null, $version = null) {
       $file_name = $file_name ? $file_name : '';
       $version_path = empty($version) ? '' : $version.'/';
-      $media_library_folder = (isset($_GET['import']) && $_GET['import'] == 1) ? $this->options['media_library_folder'] : '';
+      $media_library_folder = (isset($_REQUEST['import']) && $_REQUEST['import'] == 1) ? $this->options['media_library_folder'] : '';
 
       return $this->options['upload_dir'] . $media_library_folder . $this->get_user_path() . $version_path . $file_name;
     }
@@ -934,6 +934,17 @@ class bwg_UploadHandler {
     }
 
     public function post($print_response = true) {
+		if ( isset($_REQUEST['import']) && $_REQUEST['import'] == 1 ) {
+        $file_names = explode('**@**', (isset($_REQUEST['file_namesML']) ? stripslashes($_REQUEST['file_namesML']) : ''));
+
+        $files = array();
+        foreach ($file_names as $index => $value) {
+          $file_name_array = explode('/', $value);
+          $files[] = $this->handle_file_import($value, end($file_name_array));
+        }
+        echo json_encode($files);
+        return;
+      }
       if (isset($_REQUEST['_method']) && $_REQUEST['_method'] === 'DELETE') {
         return $this->delete($print_response);
       }

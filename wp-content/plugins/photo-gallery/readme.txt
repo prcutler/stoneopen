@@ -1,10 +1,9 @@
-=== Photo Gallery by WD - Responsive Photo Gallery for WordPress ===
+=== Photo Gallery by WD - Responsive Photo Gallery ===
 Contributors: webdorado,wdsupport,photogallerysupport
-Donate link: https://web-dorado.com/products/wordpress-photo-gallery-plugin.html
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin, photo albums, gallery slider, gallery lightbox, wordpress photo gallery plugin, fullscreen gallery, watermarking, video gallery
 Requires at least: 3.4
 Tested up to: 4.9 
-Stable tag: 1.3.67    
+Stable tag: 1.3.68    
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -186,6 +185,9 @@ We recommend to use images with the width of 1200px to 1600px. In order to speed
 To enable the feature of adding Media Library images, go to Photo Gallery > Options > Global Options and set Import from Media Library option to Yes. After that you will be able to import photos from Media Library to Photo Gallery.     
 
 == Changelog ==
+
+= 1.3.68 =
+* Fixed: Import from media library for large amount images.   
 
 = 1.3.67 =
 * Fixed: Security issue   

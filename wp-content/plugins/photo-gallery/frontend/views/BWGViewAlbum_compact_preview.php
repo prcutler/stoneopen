@@ -2,7 +2,7 @@
 class BWGViewAlbum_compact_preview {
   public function display($params, $from_shortcode = 0, $bwg = 0) {
     global $WD_BWG_UPLOAD_DIR;
-	  global $wd_bwg_options;
+	global $wd_bwg_options;
     require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
 
     $theme_id = $params['theme_id'];

@@ -1321,7 +1321,7 @@ function spider_media_uploader(e, multiple) {
 
     jQuery.ajax({
       url: bwg_objectL10B.ajax_url,
-      method: "GET",
+      method: "POST",
       data: {
         action : "bwg_UploadHandler",
         file_namesML : fileNamesML,
