@@ -197,13 +197,13 @@ class UpdraftPlus_BackupModule_openstack extends UpdraftPlus_BackupModule_openst
 		}
 
 		$opts = array(
-			'user' => stripslashes($posted_settings['user']),
-			'password' => stripslashes($posted_settings['password']),
-			'authurl' => stripslashes($posted_settings['authurl']),
-			'tenant' => stripslashes($posted_settings['tenant']),
-			'region' => (!empty($posted_settings['region'])) ? $posted_settings['region'] : '',
+			'user' => $posted_settings['user'],
+			'password' => $posted_settings['password'],
+			'authurl' => $posted_settings['authurl'],
+			'tenant' => $posted_settings['tenant'],
+			'region' => empty($posted_settings['region']) ? '' : $posted_settings['region'],
 		);
 
-		$this->credentials_test_go($opts, stripslashes($posted_settings['path']), $posted_settings['useservercerts'], $posted_settings['disableverify']);
+		$this->credentials_test_go($opts, $posted_settings['path'], $posted_settings['useservercerts'], $posted_settings['disableverify']);
 	}
 }

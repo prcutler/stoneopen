@@ -490,7 +490,37 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 			return false;
 		}
 		if (false === $dropbox) return false;
+		
+		$remote_files = $this->listfiles($file);
+		
+		foreach ($remote_files as $file_info) {
+			if ($file_info['name'] == $file) {
+				return $updraftplus->chunked_download($file, $this, $file_info['size'], true, null, 2*1048576);
+			}
+		}
 
+		$updraftplus->log("Dropbox: $file: file not found in listing of remote directory");
+		
+		return false;
+	}
+
+	/**
+	 * Callback used by by chunked downloading API
+	 *
+	 * @param String   $file	- the file (basename) to be downloaded
+	 * @param Array	   $headers - supplied headers
+	 * @param Mixed	   $data    - pass-back from our call to the API (which we don't use)
+	 * @param resource $fh      - the local file handle
+	 *
+	 * @return String - the data downloaded
+	 */
+	public function chunked_download($file, $headers, $data, $fh) {
+	
+		global $updraftplus;
+
+		$opts = $this->get_options();
+		$storage = $this->get_storage();
+		
 		$updraft_dir = $updraftplus->backups_dir_location();
 		$microtime = microtime(true);
 
@@ -498,8 +528,10 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 
 		$ufile = apply_filters('updraftplus_dropbox_modpath', $file, $this);
 
+		if (!empty($headers)) $options['headers'] = $headers;
+
 		try {
-			$get = $dropbox->getFile($ufile, $updraft_dir.'/'.$file, null, true);
+			$get = $storage->download($ufile, $fh, $options);
 		} catch (Exception $e) {
 			// TODO: Remove this October 2013 (we stored in the wrong place for a while...)
 			$try_the_other_one = true;
@@ -512,7 +544,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		if ($try_the_other_one) {
 			$dropbox_folder = trailingslashit($opts['folder']);
 			try {
-				$get = $dropbox->getFile($dropbox_folder.'/'.$file, $updraft_dir.'/'.$file, null, true);
+				$get = $storage->download($dropbox_folder.'/'.$file, $fh, $options);
 				if (isset($get['response']['body'])) {
 					$updraftplus->log("Dropbox: downloaded ".round(strlen($get['response']['body'])/1024, 1).' KB');
 				}
@@ -522,9 +554,8 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 				$get = false;
 			}
 		}
-
+		
 		return $get;
-
 	}
 
 	/**
@@ -573,29 +604,23 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		?>
 			<tr class="<?php echo $classes;?>">
 				<th><?php echo sprintf(__('Authenticate with %s', 'updraftplus'), __('Dropbox', 'updraftplus'));?>:</th>
-				<td><p>
+				<td>
 					{{#if is_authenticated}}
 					<?php
 						echo "<p><strong>".__('(You appear to be already authenticated).', 'updraftplus')."</strong>";
-						echo ' <a class="updraft_deauthlink" href="';
-echo UpdraftPlus_Options::admin_page_url();
-echo '?page=updraftplus&action=updraftmethod-dropbox-auth&updraftplus_dropboxauth=deauth&updraftplus_instance={{instance_id}}&nonce='.wp_create_nonce('dropbox_deauth_nonce').'">';
-echo sprintf(__('Follow this link to  deauthenticate with %s.', 'updraftplus'), __('Dropbox', 'updraftplus'));
-echo '</a></p>';
-						?>
+						$this->get_deauthentication_link();
+						echo '</p>';
+					?>
 					{{/if}}
 					{{#if ownername_sentence}}
 						<br/>
 						{{ownername_sentence}}
 					{{/if}}
 					<?php
-						echo '<p><a class="updraft_authlink" href="';
-echo UpdraftPlus_Options::admin_page_url();
-echo '?page=updraftplus&action=updraftmethod-dropbox-auth&updraftplus_dropboxauth=doit&updraftplus_instance={{instance_id}}">';
-echo sprintf(__('<strong>After</strong> you have saved your settings (by clicking \'Save Changes\' below), then come back here once and click this link to complete authentication with %s.', 'updraftplus'), __('Dropbox', 'updraftplus'));
-echo '</a></p>';
-					?>
-				</p>				
+						echo '<p>';
+						$this->get_authentication_link();
+						echo '</p>';
+					?>			
 				</td>
 			</tr>
 			{{!-- Legacy: only show this next setting to old users who had a setting stored --}}
@@ -664,34 +689,31 @@ echo '</a></p>';
 	}
 
 	/**
+	 * Over-rides the parent to allow this method to output extra information about using the correct account for OAuth authentication
+	 *
+	 * @return [boolean] - return false so that no extra information is output
+	 */
+	public function output_account_warning() {
+		return true;
+	}
+
+	/**
 	 * Handles various URL actions, as indicated by the updraftplus_dropboxauth URL parameter
 	 *
 	 * @return null
 	 */
 	public function action_auth() {
 		if (isset($_GET['updraftplus_dropboxauth'])) {
-			// Clear out the existing credentials
 			if ('doit' == $_GET['updraftplus_dropboxauth']) {
-				$opts = $this->get_options();
-				$opts['tk_access_token'] = '';
-				unset($opts['tk_request_token']);
-				$opts['ownername'] = '';
-				$this->set_options($opts, true);
-			} elseif ('deauth' == $_GET['updraftplus_dropboxauth'] && isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'dropbox_deauth_nonce')) {
-					
-				try {
-					$this->bootstrap(true);
-				} catch (Exception $e) {
-					global $updraftplus;
-					$updraftplus->log(sprintf(__("%s error: %s", 'updraftplus'), sprintf(__("%s de-authentication", 'updraftplus'), 'Dropbox'), $e->getMessage()), 'error');
-				}
-				
+				$this->action_authenticate_storage();
 				return;
-				
+			} elseif ('deauth' == $_GET['updraftplus_dropboxauth']) {
+				$this->action_deauthenticate_storage();
+				return;
 			}
 		} elseif (isset($_REQUEST['state'])) {
 
-			if ("POST" == $_SERVER['REQUEST_METHOD']) {
+			if ('POST' == $_SERVER['REQUEST_METHOD']) {
 				$raw_state = urldecode($_POST['state']);
 				if (isset($_POST['code'])) $raw_code = urldecode($_POST['code']);
 			} else {
@@ -724,6 +746,43 @@ echo '</a></p>';
 		} catch (Exception $e) {
 			global $updraftplus;
 			$updraftplus->log(sprintf(__("%s error: %s", 'updraftplus'), sprintf(__("%s authentication", 'updraftplus'), 'Dropbox'), $e->getMessage()), 'error');
+		}
+	}
+
+	/**
+	 * This method will reset any saved options and start the bootstrap process for an authentication
+	 *
+	 * @param  String $instance_id - the instance id of the settings we want to authenticate
+	 */
+	public function do_authenticate_storage($instance_id) {
+		try {
+			// Clear out the existing credentials
+			$opts = $this->get_options();
+			$opts['tk_access_token'] = '';
+			unset($opts['tk_request_token']);
+			$opts['ownername'] = '';
+			$this->set_options($opts, true);
+
+			$this->set_instance_id($instance_id);
+			$this->bootstrap(false);
+		} catch (Exception $e) {
+			global $updraftplus;
+			$updraftplus->log(sprintf(__("%s error: %s", 'updraftplus'), sprintf(__("%s authentication", 'updraftplus'), 'Dropbox'), $e->getMessage()), 'error');
+		}
+	}
+	
+	/**
+	 * This method will start the bootstrap process for a de-authentication
+	 *
+	 * @param  String $instance_id - the instance id of the settings we want to de-authenticate
+	 */
+	public function do_deauthenticate_storage($instance_id) {
+		try {
+			$this->set_instance_id($instance_id);
+			$this->bootstrap(true);
+		} catch (Exception $e) {
+			global $updraftplus;
+			$updraftplus->log(sprintf(__("%s error: %s", 'updraftplus'), sprintf(__("%s de-authentication", 'updraftplus'), 'Dropbox'), $e->getMessage()), 'error');
 		}
 	}
 
@@ -847,9 +906,8 @@ echo '</a></p>';
 		// Set the callback URL
 		$callbackhome = UpdraftPlus_Options::admin_page_url().'?page=updraftplus&action=updraftmethod-dropbox-auth';
 		$callback = defined('UPDRAFTPLUS_DROPBOX_AUTH_RETURN_URL') ? UPDRAFTPLUS_DROPBOX_AUTH_RETURN_URL : 'https://auth.updraftplus.com/auth/dropbox/';
-
-		$instance_id = isset($_GET['updraftplus_instance']) ? $_GET['updraftplus_instance'] : '';
 		
+		$instance_id = $this->get_instance_id();
 		// Instantiate the Encrypter and storage objects
 		$encrypter = new Dropbox_Encrypter('ThisOneDoesNotMatterBeyondLength');
 

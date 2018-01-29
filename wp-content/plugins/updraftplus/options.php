@@ -24,6 +24,15 @@ class UpdraftPlus_Options {
 		return 'options-general.php';
 	}
 
+	/**
+	 * Extracts the last logged message from updraftplus last process
+	 *
+	 * @return Mixed - Value set for the option or the default message
+	 */
+	public static function get_updraft_lastmessage() {
+		return UpdraftPlus_Options::get_updraft_option('updraft_lastmessage', __('(Nothing has been logged yet)', 'updraftplus'));
+	}
+
 	public static function get_updraft_option($option, $default = null) {
 		$ret = get_option($option, $default);
 		return apply_filters('updraftplus_get_option', $ret, $option, $default);

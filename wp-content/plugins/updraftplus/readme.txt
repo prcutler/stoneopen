@@ -3,7 +3,7 @@ Contributors: Backup with UpdraftPlus, DavidAnderson, DNutbourne, aporter, snigh
 Tags: backup, restore, database backup, wordpress backup, cloud backup, s3, dropbox, google drive, onedrive, ftp, backups
 Requires at least: 3.2
 Tested up to: 4.9
-Stable tag: 1.14.2
+Stable tag: 1.14.3
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -149,7 +149,26 @@ Unfortunately not; since this is free software, there’s no warranty and no gua
 
 The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the best place to learn in more detail about any important changes.
 
-N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.13.15 of the free version correspond to changes made in 2.13.15.x of the paid version.
+N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.14.3 of the free version correspond to changes made in 2.14.3.x of the paid version.
+
+= 1.14.3 - 24/Jan/2018 =
+
+* FEATURE: OneDrive and Google Cloud deauthorise link provided after authentication
+* FEATURE: Added the ability to label remote storage instances (Premium)
+* TWEAK: Handle a combined error/timing condition seen on DigitalOcean Spaces that could lead to UD thinking that an upload that actually succeeded, did not
+* TWEAK: Add functions to pull backup status and log for UpdraftCentral
+* TWEAK: Add command multiplexer function for UpdraftCentral
+* TWEAK: Audit and regularise use of slash-handling code in AJAX layer
+* TWEAK: A couple of remote storage error paths were not returning the error information to the upper level correctly
+* TWEAK: Prevent phpseclib from throwing a fatal upon autoload if mbstring.func_overload is set (see: https://github.com/phpseclib/phpseclib/issues/762); instead, log, or handle in some other way appropriate to the context
+* TWEAK: Some minor code-styling and linting ignore tweaks
+* TWEAK: (Regression) After filling the UpdraftVault connect form, pressing Enter was no longer triggering submission
+* TWEAK: If counting up the total "More files" data when none are configured to be backed up, show "None configured" instead of "Error"
+* TWEAK: Improve UI of notice when claiming an add-on
+* TWEAK: Standardise the way OAuth remote storage methods authorise/deauthorise settings
+* TWEAK: "Wipe Settings" button click event was not asking for confirmation
+* TWEAK: Add Server Side Encryption (SSE) support to old S3 SDK
+* TWEAK: Dropbox now uses the internal chunked download API
 
 = 1.14.2 - 22/Dec/2017 =
 
@@ -184,6 +203,7 @@ N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which i
 * TWEAK: Resolve PSR4 autoloading conflict with older version of Composer
 * TWEAK: Pruning will now prune backups from multiple storage destinations of the same type (not yet a user-visible feature)
 * TWEAK: Update the 'ifeq' handlebars helper to resolve a conflict with MainWP
+
 
 = 1.13.15 - 28/Nov/2017 =
 
@@ -685,4 +705,4 @@ We recognise and thank the following for code and/or libraries used and/or modif
 
 
 == Upgrade Notice ==
-* 1.14.2: Fix email delivery issue (recent regression), and various other small tweaks and fixes. Recommended update for all.
+* 1.14.3: Various tweaks and small improvements - recommended update for all

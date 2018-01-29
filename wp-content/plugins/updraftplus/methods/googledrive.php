@@ -45,12 +45,11 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			} elseif ('revoke' == $state) {
 				$this->gdrive_auth_revoke();
 			}
-		} elseif (isset($_GET['updraftplus_googleauth'])) {
-			if ('doit' == $_GET['updraftplus_googleauth']) {
-				$this->gdrive_auth_request();
-			} elseif ('deauth' == $_GET['updraftplus_googleauth'] && !empty($_GET['nonce']) && !empty($_GET['updraftplus_instance']) && wp_verify_nonce($_GET['nonce'], 'googledrive_deauth_nonce')) {
-				$opts = $this->get_default_options();
-				$this->set_options($opts, true, $_GET['updraftplus_instance']);
+		} elseif (isset($_GET['updraftplus_googledriveauth'])) {
+			if ('doit' == $_GET['updraftplus_googledriveauth']) {
+				$this->action_authenticate_storage();
+			} elseif ('deauth' == $_GET['updraftplus_googledriveauth']) {
+				$this->action_deauthenticate_storage();
 			}
 		}
 	}
@@ -280,8 +279,10 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 
 	/**
 	 * Acquire single-use authorization code from Google via OAuth 2.0
+	 *
+	 * @param  String $instance_id - the instance id of the settings we want to authenticate
 	 */
-	public function gdrive_auth_request() {
+	public function do_authenticate_storage($instance_id) {
 		$opts = $this->get_options();
 
 		$use_master = $this->use_master($opts);
@@ -289,7 +290,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		// First, revoke any existing token, since Google doesn't appear to like issuing new ones
 		if (!empty($opts['token']) && !$use_master) $this->gdrive_auth_revoke();
 
-		$prefixed_instance_id = isset($_GET['updraftplus_instance']) ? ':'.$_GET['updraftplus_instance'] : '';
+		$prefixed_instance_id = ':' . $instance_id;
 		
 		// We use 'force' here for the approval_prompt, not 'auto', as that deals better with messy situations where the user authenticated, then changed settings
 
@@ -336,7 +337,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 	}
 
 	/**
-	 * Get a Google account refresh token using the code received from gdrive_auth_request
+	 * Get a Google account refresh token using the code received from do_authenticate_storage
 	 */
 	public function gdrive_auth_token() {
 		$opts = $this->get_options();
@@ -1230,30 +1231,28 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			<tr class="<?php echo $classes;?>">
 				<th><?php _e('Authenticate with Google', 'updraftplus');?>:</th>
 				<td>
-					<p>
-						{{#if is_authenticate_with_google}}
+					{{#if is_authenticate_with_google}}
 						<?php
+							echo '<p>';
 							echo __("<strong>(You appear to be already authenticated,</strong> though you can authenticate again to refresh your access if you've had a problem).", 'updraftplus');
-							echo ' <a class="updraft_deauthlink" href="'.UpdraftPlus_Options::admin_page_url().'?action=updraftmethod-googledrive-auth&page=updraftplus&updraftplus_googleauth=deauth&nonce='.wp_create_nonce('googledrive_deauth_nonce').'&updraftplus_instance={{instance_id}}">'.sprintf(__("Follow this link to remove this site's settings for %s.", 'updraftplus'), __('Google Drive', 'updraftplus')).'</a>';
-								?>
-							{{#if use_master}}
-								<p><a target="_blank" href="https://myaccount.google.com/permissions"><?php _e('To de-authorize UpdraftPlus (all sites) from accessing your Google Drive, follow this link to your Google account settings.', 'updraftplus');?></a></p>
-							{{/if}}
+							$this->get_deauthentication_link();
+							echo '</p>';
+						?>
+						{{#if use_master}}
+							<p><a target="_blank" href="https://myaccount.google.com/permissions"><?php _e('To de-authorize UpdraftPlus (all sites) from accessing your Google Drive, follow this link to your Google account settings.', 'updraftplus');?></a></p>
 						{{/if}}
-						{{#if is_ownername_display}}
-							<br>
-							<?php
-								echo sprintf(__("Account holder's name: %s.", 'updraftplus'), '{{ownername}}').' ';
-							?>
-						{{/if}}
-					</p>
-					<p>
+					{{/if}}
+					{{#if is_ownername_display}}
+						<br>
+						<?php
+							echo sprintf(__("Account holder's name: %s.", 'updraftplus'), '{{ownername}}').' ';
+						?>
+					{{/if}}
 					<?php
-						echo '<a class="updraft_authlink" href="'.UpdraftPlus_Options::admin_page_url().'?action=updraftmethod-googledrive-auth&page=updraftplus&updraftplus_googleauth=doit&updraftplus_instance={{instance_id}}">';
-						print __('<strong>After</strong> you have saved your settings (by clicking \'Save Changes\' below), then come back here once and click this link to complete authentication with Google.', 'updraftplus');
-						echo '</a>';
+						echo '<p>';
+						$this->get_authentication_link();
+						echo '</p>';
 					?>
-					</p>
 				</td>
 			</tr>
 		<?php

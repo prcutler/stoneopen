@@ -173,6 +173,11 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 		return $opts;
 	}
 
+	/**
+	 * Perform a test of user-supplied credentials, and echo the result
+	 *
+	 * @param Array $posted_settings - settings to test
+	 */
 	public function credentials_test($posted_settings) {
 
 		if (empty($posted_settings['apikey'])) {
@@ -187,7 +192,7 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 
 		$opts = array(
 			'user' => $posted_settings['user'],
-			'apikey' => stripslashes($posted_settings['apikey']),
+			'apikey' => $posted_settings['apikey'],
 			'authurl' => $posted_settings['authurl'],
 			'region' => (empty($posted_settings['region'])) ? null : $posted_settings['region']
 		);

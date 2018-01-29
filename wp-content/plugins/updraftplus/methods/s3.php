@@ -198,7 +198,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			if (empty($port)) $port = 8080;
 			$storage->setProxy($proxy->host(), $user, $pass, CURLPROXY_HTTP, $port);
 		}
-
+		
 		if (method_exists($storage, 'setServerSideEncryption') && ($this->use_sse() || $sse)) $storage->setServerSideEncryption('AES256');
 
 		$this->set_storage($storage);
@@ -896,17 +896,20 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 		ob_start();
 		$classes = $this->get_css_classes();
 		$template_str = '';
+		
+		if ('s3' == $key && version_compare(PHP_VERSION, '5.3.3', '>=') && class_exists('UpdraftPlus_Addon_S3_Enhanced')) {
+		?>
+			<tr class="<?php echo $classes;?>">
+				<td colspan="2">
+				<?php
+					echo apply_filters('updraft_s3_apikeysetting', '<a href="'.apply_filters("updraftplus_com_link", "https://updraftplus.com/shop/s3-enhanced/").'"><em>'.__('To create a new IAM sub-user and access key that has access only to this bucket, use this add-on.', 'updraftplus').'</em></a>');
+				?>
+				</td>
+			</tr>
+		<?php
+		}
 		?>
 
-		<tr class="<?php echo $classes;?>">
-			<td colspan="2">
-			<?php
-				if ('s3' == $key && version_compare(PHP_VERSION, '5.3.3', '>=') && class_exists('UpdraftPlus_Addon_S3_Enhanced')) {
-					echo apply_filters('updraft_s3_apikeysetting', '<a href="'.apply_filters("updraftplus_com_link", "https://updraftplus.com/shop/s3-enhanced/").'"><em>'.__('To create a new IAM sub-user and access key that has access only to this bucket, use this add-on.', 'updraftplus').'</em></a>');
-				}
-			?>
-			</td>
-		</tr>
 		<tr class="<?php echo $classes;?>">
 			<th><?php echo sprintf(__('%s access key', 'updraftplus'), $whoweare_short);?>:</th>
 			<td><input data-updraft_settings_test="apikey" type="text" autocomplete="off" style="width: 360px" <?php $this->output_settings_field_name_and_id('accesskey');?> value="{{accesskey}}" /></td>
@@ -1074,13 +1077,13 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 		}
 
 		$key = $posted_settings['apikey'];
-		$secret = stripslashes($posted_settings['apisecret']);
+		$secret = $posted_settings['apisecret'];
 		$path = $posted_settings['path'];
 		$useservercerts = isset($posted_settings['useservercerts']) ? absint($posted_settings['useservercerts']) : 0;
 		$disableverify = isset($posted_settings['disableverify']) ? absint($posted_settings['disableverify']) : 0;
 		$nossl = isset($posted_settings['nossl']) ? absint($posted_settings['nossl']) : 0;
 		$endpoint = isset($posted_settings['endpoint']) ? $posted_settings['endpoint'] : '';
-		$sse = empty($posted_settings['sse']) ? false : true;
+		$sse = empty($posted_settings['server_side_encryption']) ? false : true;
 
 		if (preg_match("#^/*([^/]+)/(.*)$#", $path, $bmatches)) {
 			$bucket = $bmatches[1];

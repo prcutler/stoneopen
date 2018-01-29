@@ -387,11 +387,16 @@ class UpdraftPlus_BackupModule_ftp extends UpdraftPlus_BackupModule {
 		
 	}
 
+	/**
+	 * Perform a test of user-supplied credentials, and echo the result
+	 *
+	 * @param Array $posted_settings - settings to test
+	 */
 	public function credentials_test($posted_settings) {
 
 		$server = $posted_settings['server'];
-		$login = stripslashes($posted_settings['login']);
-		$pass = stripslashes($posted_settings['pass']);
+		$login = $posted_settings['login'];
+		$pass = $posted_settings['pass'];
 		$path = $posted_settings['path'];
 		$nossl = $posted_settings['nossl'];
 		$passive = empty($posted_settings['passive']) ? false : true;
@@ -400,15 +405,15 @@ class UpdraftPlus_BackupModule_ftp extends UpdraftPlus_BackupModule {
 		$use_server_certs = $posted_settings['useservercerts'];
 
 		if (empty($server)) {
-			_e("Failure: No server details were given.", 'updraftplus');
+			_e('Failure: No server details were given.', 'updraftplus');
 			return;
 		}
 		if (empty($login)) {
-			printf(__("Failure: No %s was given.", 'updraftplus'), __('login', 'updraftplus'));
+			printf(__('Failure: No %s was given.', 'updraftplus'), __('login', 'updraftplus'));
 			return;
 		}
 		if (empty($pass)) {
-			printf(__("Failure: No %s was given.", 'updraftplus'), __('password', 'updraftplus'));
+			printf(__('Failure: No %s was given.', 'updraftplus'), __('password', 'updraftplus'));
 			return;
 		}
 

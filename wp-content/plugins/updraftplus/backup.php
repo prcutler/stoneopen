@@ -476,9 +476,9 @@ class UpdraftPlus_Backup {
 		foreach ($backup_array as $bind => $file) {
 			if ($updraftplus->is_uploaded($file, $service, $instance_id)) {
 				if ('' == $instance_id) {
-					$updraftplus->log("Already uploaded to $service: $file");
+					$updraftplus->log("Already uploaded to $service: $file", 'notice', false, true);
 				} else {
-					$updraftplus->log("Already uploaded to $service / $instance_id: $file");
+					$updraftplus->log("Already uploaded to $service / $instance_id: $file", 'notice', false, true);
 				}
 			} else {
 				$sarray[$bind] = $file;

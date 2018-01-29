@@ -174,20 +174,41 @@ class UpdraftPlus {
 		return $ud_rpc;
 	}
 
-	public function ensure_phpseclib($classes = false, $class_paths = false) {
+	/**
+	 * Ensure that the indicated phpseclib classes are available
+	 *
+	 * @param String|Array $classes		- a class, or list of classes
+	 * @param String|Array $class_paths - paths to include
+	 *
+	 * @return Boolean|WP_Error
+	 */
+	public function ensure_phpseclib($classes = array(), $class_paths = array()) {
 
 		$this->no_deprecation_warnings_on_php7();
 
-		if ($classes) {
+		if (!empty($classes)) {
 			$any_missing = false;
 			if (is_string($classes)) $classes = array($classes);
 			foreach ($classes as $cl) {
 				if (!class_exists($cl)) $any_missing = true;
 			}
-			if (!$any_missing) return;
+			if (!$any_missing) return true;
 		}
 
-		if ($class_paths) {
+		$ret = true;
+		
+		// From phpseclib/phpseclib/phpseclib/bootstrap.php - we nullify it there, but log here instead
+		if (extension_loaded('mbstring')) {
+			// 2 - MB_OVERLOAD_STRING
+			// @codingStandardsIgnoreLine
+			if (ini_get('mbstring.func_overload') & 2) {
+				// We go on to try anyway, in case the caller wasn't using an affected part of phpseclib
+				// @codingStandardsIgnoreLine
+				$ret = new WP_Error('mbstring_func_overload', 'Overloading of string functions using mbstring.func_overload is not supported by phpseclib.');
+			}
+		}
+		
+		if (!empty($class_paths)) {
 			$phpseclib_dir = UPDRAFTPLUS_DIR.'/vendor/phpseclib/phpseclib/phpseclib';
 			if (false === strpos(get_include_path(), $phpseclib_dir)) set_include_path(get_include_path().PATH_SEPARATOR.$phpseclib_dir);
 			if (is_string($class_paths)) $class_paths = array($class_paths);
@@ -195,6 +216,8 @@ class UpdraftPlus {
 				include_once($phpseclib_dir.'/'.$cp.'.php');
 			}
 		}
+		
+		return $ret;
 	}
 
 	/**
@@ -203,8 +226,10 @@ class UpdraftPlus {
 	private function no_deprecation_warnings_on_php7() {
 		// PHP_MAJOR_VERSION is defined in PHP 5.2.7+
 		// We don't test for PHP > 7 because the specific deprecated element will be removed in PHP 8 - and so no warning should come anyway (and we shouldn't suppress other stuff until we know we need to).
+		// @codingStandardsIgnoreLine
 		if (defined('PHP_MAJOR_VERSION') && PHP_MAJOR_VERSION == 7) {
 			$old_level = error_reporting();
+			// @codingStandardsIgnoreLine
 			$new_level = $old_level & ~E_DEPRECATED;
 			if ($old_level != $new_level) error_reporting($new_level);
 			$this->no_deprecation_warnings = true;
@@ -276,7 +301,7 @@ class UpdraftPlus {
 		if ($updated) {
 			return $new_setting;
 		} else {
-			return WP_Error('save_failed', 'Saving the options in the new format failed', array('method' => $method, 'current_setting' => $new_setting));
+			return new WP_Error('save_failed', 'Saving the options in the new format failed', array('method' => $method, 'current_setting' => $new_setting));
 		}
 	
 	}
@@ -742,6 +767,18 @@ class UpdraftPlus {
 		return $got_wp_version;
 	}
 
+	/**
+	 * Remove slashes from a string or array of strings.
+	 *
+	 * The function wp_unslash() is WP 3.6+, so therefore we have a compatibility method here
+	 *
+	 * @param String|Array $value String or array of strings to unslash.
+	 * @return String|Array Unslashed $value
+	 */
+	public function wp_unslash($value) {
+		return function_exists('wp_unslash') ? wp_unslash($value) : stripslashes_deep($value);
+	}
+	
 	/**
 	 * Opens the log file, writes a standardised header, and stores the resulting name and handle in the class variables logfile_name/logfile_handle/opened_log_time (and possibly backup_is_already_complete)
 	 *
@@ -1324,15 +1361,23 @@ class UpdraftPlus {
 	}
 
 	/**
-	 * This will decrypt an encryped db file
+	 * This will decrypt an encrypted db file
 	 *
-	 * @param  string  $fullpath          This is the full path to the encrypted file location
-	 * @param  string  $key               This is the key (satling) to be used when decrypting
-	 * @param  boolean $to_temporary_file Use if the resulting file is not intended to be kept
-	 * @return array               This bring back an array of full decrypted path
+	 * @param String  $fullpath          This is the full filesystem path to the encrypted file location
+	 * @param String  $key               This is the key to be used when decrypting
+	 * @param Boolean $to_temporary_file Use if the resulting file is not intended to be kept
+	 *
+	 * @return Boolean|Array -An array with info on the decryption; or false for failure
 	 */
 	public function decrypt($fullpath, $key, $to_temporary_file = false) {
-		$this->ensure_phpseclib('Crypt_Rijndael', 'Crypt/Rijndael');
+	
+		$ensure_phpseclib = $this->ensure_phpseclib('Crypt_Rijndael', 'Crypt/Rijndael');
+		if (is_wp_error($ensure_phpseclib)) {
+			$this->log("Failed to load phpseclib classes (".$ensure_phpseclib->get_error_code()."): ".$ensure_phpseclib->get_error_message());
+			$this->log("Failed to load phpseclib classes (".$ensure_phpseclib->get_error_code()."): ".$ensure_phpseclib->get_error_message(), 'error');
+			return false;
+		}
+		
 		if (defined('UPDRAFTPLUS_DECRYPTION_ENGINE')) {
 			if ('openssl' == UPDRAFTPLUS_DECRYPTION_ENGINE) {
 				$rijndael->setPreferredEngine(CRYPT_ENGINE_OPENSSL);
@@ -3430,7 +3475,7 @@ class UpdraftPlus {
 		
 		if (!class_exists($method_class)) include_once UPDRAFTPLUS_DIR.'/methods/'.$method.'.php';
 		
-		if (!class_exists($method_class)) return WP_Error('no_such_storage_class', "The specified storage method ($method) was not found");
+		if (!class_exists($method_class)) return new WP_Error('no_such_storage_class', "The specified storage method ($method) was not found");
 		
 		$objects[$method] = new $method_class;
 		
