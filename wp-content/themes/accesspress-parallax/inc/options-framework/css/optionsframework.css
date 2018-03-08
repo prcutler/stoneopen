@@ -304,6 +304,10 @@
 #optionsframework #section-parallax_section .screenshot{
 	margin-left: 152px;
 }
+#optionsframework #section-parallax_section .controls .wp-picker-container{
+	display: inline-block;
+}
+
 #optionsframework #section-parallax_section h3{
 	padding: 0 0 0 10px;
 	line-height: 40px;

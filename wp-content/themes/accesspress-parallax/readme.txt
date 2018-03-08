@@ -87,6 +87,10 @@ Images
     http://www.pexels.com/photo/3521/
 
 ---------------------------------------------
+== Changelog ==
+Version 1.60
+ * Theme Option Panel error on PHP7 fixed
+ * Styling Issue fixed
 
 == Changelog ==
 Version 1.59

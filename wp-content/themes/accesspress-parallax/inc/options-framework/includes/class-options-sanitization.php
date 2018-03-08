@@ -219,7 +219,6 @@ function of_sanitize_background( $input ) {
 	$output['overlay'] = apply_filters( 'of_background_overlay', $input['overlay'] );
 
 	return $output;
-	var_dump($output); die();
 }
 add_filter( 'of_sanitize_background', 'of_sanitize_background' );
 
@@ -229,6 +228,7 @@ add_filter( 'of_sanitize_background', 'of_sanitize_background' );
  * @returns array $output
  */
 function of_sanitize_parallaxsection( $input ) {
+$output = array();
 if ( is_array( $input ) ) {
 	foreach( $input as $key => $value ) {
 		$output[$key] = wp_parse_args( $input[$key], array(

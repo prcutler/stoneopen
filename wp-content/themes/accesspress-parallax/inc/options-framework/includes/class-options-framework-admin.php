@@ -123,7 +123,7 @@ class Options_Framework_Admin {
 
 		if ( $this->options_screen != $hook )
 	        return;
-	    wp_enqueue_style( 'accesspress-parallax-font-awesome', get_template_directory_uri() . '/css/font-awesome.min.css' );
+	    wp_enqueue_style( 'accesspress-parallax-font-awesome', get_template_directory_uri() . '/css/fontawesome/css/font-awesome.min.css' );
 		wp_enqueue_style( 'optionsframework', OPTIONS_FRAMEWORK_DIRECTORY . 'css/optionsframework.css', array(),  Options_Framework::VERSION );
 		wp_enqueue_style( 'wp-color-picker' );
 	}
@@ -272,6 +272,11 @@ class Options_Framework_Admin {
 			// Set checkbox to false if it wasn't sent in the $_POST
 			if ( 'checkbox' == $option['type'] && ! isset( $input[$id] ) ) {
 				$input[$id] = false;
+			}
+
+			// Set parallax to '' if it wasn't sent in the $_POST
+			if ( 'parallaxsection' == $option['type'] && ! isset( $input[$id] ) ) {
+				$input[$id] = '';
 			}
 
 			// Set each item in the multicheck to false if it wasn't sent in the $_POST

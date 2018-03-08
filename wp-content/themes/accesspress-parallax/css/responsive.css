@@ -214,11 +214,24 @@ Responsive CSS
         background-attachment: scroll !important;
         background-repeat: repeat !important;
     }
+    .parallax-section.blank_template{
+    	height: 40vh;
+    	min-height: none;
+    }
     body.parallax-on #masthead{
         position: relative;
     }
     #content{
         padding-top: 0 !important;
+    }
+    #main-slider .slick-arrow{
+    	display: none !important;
+    }
+    .slider-caption{
+    	padding: 0;
+    }
+    .logo-top .main-navigation ul ul li{
+    	text-align: center;
     }
 }
 @media screen and (max-width: 480px){
