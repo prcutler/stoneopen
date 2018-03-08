@@ -67,6 +67,13 @@ class Jetpack_Core_Json_Api_Endpoints {
 		$site_endpoint = new Jetpack_Core_API_Site_Endpoint();
 		$widget_endpoint = new Jetpack_Core_API_Widget_Endpoint();
 
+		register_rest_route( 'jetpack/v4', 'plans', array(
+			'methods'             => WP_REST_Server::READABLE,
+			'callback'            => __CLASS__ . '::get_plans',
+			'permission_callback' => __CLASS__ . '::connect_url_permission_callback',
+
+		) );
+
 		register_rest_route( 'jetpack/v4', '/jitm', array(
 			'methods'  => WP_REST_Server::READABLE,
 			'callback' => __CLASS__ . '::get_jitm_message',
@@ -347,6 +354,45 @@ class Jetpack_Core_Json_Api_Endpoints {
 			'callback' => array( $widget_endpoint, 'process' ),
 			'permission_callback' => array( $widget_endpoint, 'can_request' ),
 		) );
+	}
+
+	public static function get_plans( $request ) {
+		/**
+		 * Filter to turn off caching of Jetpack plans
+		 *
+		 * @since 5.9.0
+		 *
+		 * @param bool true Whether to cache Jetpack plans locally
+		 */
+		$use_cache = apply_filters( 'jetpack_cache_plans', true );
+
+		$data = $use_cache ? get_transient( 'jetpack_plans' ) : false;
+
+		if ( false === $data ) {
+			$path = '/plans';
+			// passing along from client to help geolocate currency
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR']; // if we already have an list of forwarded ips, then just use that
+			if ( empty( $ip ) ) {
+				$ip = $_SERVER['HTTP_CLIENT_IP']; // another popular one for proxy servers
+			}
+			if ( empty( $ip ) ) {
+				$ip = $_SERVER['REMOTE_ADDR']; // if we don't have an ip by now, take the closest node's ip (likely directly connected client)
+			}
+			$request = Jetpack_Client::wpcom_json_api_request_as_blog( $path, '2', array( 'headers' => array( 'X-Forwarded-For' => $ip ) ), null, 'wpcom' );
+			$body = wp_remote_retrieve_body( $request );
+			if ( 200 === wp_remote_retrieve_response_code( $request ) ) {
+				$data = $body;
+			} else {
+				// something went wrong so we'll just return the response without caching
+				return $body;
+			}
+
+			if ( true === $use_cache ) {
+				set_transient( 'jetpack_plans', $data, DAY_IN_SECONDS );
+			}
+		}
+
+		return $data;
 	}
 
 	/**
@@ -667,7 +713,7 @@ class Jetpack_Core_Json_Api_Endpoints {
 		}
 
 		$body = wp_remote_retrieve_body( $response );
-		
+
 		return json_decode( $body );
 	}
 
@@ -1731,7 +1777,7 @@ class Jetpack_Core_Json_Api_Endpoints {
 			'enable_header_ad' => array(
 				'description'        => esc_html__( 'Display an ad unit at the top of each page.', 'jetpack' ),
 				'type'               => 'boolean',
-				'default'            => 0,
+				'default'            => 1,
 				'validate_callback'  => __CLASS__ . '::validate_boolean',
 				'jp_group'           => 'wordads',
 			),
@@ -1889,25 +1935,30 @@ class Jetpack_Core_Json_Api_Endpoints {
 				'jp_group'          => 'settings',
 			),
 
+			'lang_id' => array(
+				'description' => esc_html__( 'Primary language for the site.', 'jetpack' ),
+				'type' => 'string',
+				'default' => 'en_US',
+				'jp_group' => 'settings',
+			),
+
 			'onboarding' => array(
 				'description'       => '',
 				'type'              => 'object',
 				'default'           => array(
-					'token'            => '',
-					'siteTitle'        => '',
-					'siteDescription'  => '',
-					'genre'            => 'blog',
-					'businessPersonal' => 'personal',
-					'businessInfo'     => array(
-						'businessName'     => '',
-						'businessAddress'  => '',
-						'businessCity'     => '',
-						'businessState'    => '',
-						'businessZipCode'  => '',
+					'siteTitle'          => '',
+					'siteDescription'    => '',
+					'siteType'           => 'personal',
+					'homepageFormat'     => 'posts',
+					'addContactForm'     => 0,
+					'businessAddress'    => array(
+						'name'   => '',
+						'street' => '',
+						'city'   => '',
+						'state'  => '',
+						'zip'    => '',
 					),
-					'homepageFormat'   => 'news',
-					'addContactForm'   => false,
-					'end'              => false,
+					'installWooCommerce' => false,
 				),
 				'validate_callback' => __CLASS__ . '::validate_onboarding',
 				'jp_group'          => 'settings',

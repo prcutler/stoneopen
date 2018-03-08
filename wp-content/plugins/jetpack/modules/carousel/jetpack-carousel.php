@@ -374,7 +374,8 @@ class Jetpack_Carousel {
 		$attachments = get_posts( array(
 			'include' => array_keys( $selected_images ),
 			'post_type' => 'any',
-			'post_status' => 'any'
+			'post_status' => 'any',
+			'suppress_filters' => false,
 		) );
 
 		foreach ( $attachments as $attachment ) {
@@ -441,7 +442,7 @@ class Jetpack_Carousel {
 			unset( $img_meta['keywords'] );
 		}
 
-		$img_meta = json_encode( array_map( 'strval', $img_meta ) );
+		$img_meta = json_encode( array_map( 'strval', array_filter( $img_meta, 'is_scalar' ) ) );
 
 		$attr['data-attachment-id']     = $attachment_id;
 		$attr['data-permalink']         = esc_attr( get_permalink( $attachment->ID ) );

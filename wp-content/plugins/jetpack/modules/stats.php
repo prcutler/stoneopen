@@ -164,7 +164,7 @@ function stats_template_redirect() {
 	$data_stats_array = stats_array( $data );
 
 	$stats_footer = <<<END
-<script type='text/javascript' src='{$script}' async defer></script>
+<script type='text/javascript' src='{$script}' async='async' defer='defer'></script>
 <script type='text/javascript'>
 	_stq = window._stq || [];
 	_stq.push([ 'view', {{$data_stats_array}} ]);
@@ -702,6 +702,7 @@ function stats_convert_post_titles( $html ) {
 			'post_type' => 'any',
 			'post_status' => 'any',
 			'numberposts' => -1,
+			'suppress_filters' => false,
 		)
 	);
 	foreach ( $posts as $post ) {
