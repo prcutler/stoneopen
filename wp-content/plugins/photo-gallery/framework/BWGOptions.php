@@ -11,8 +11,8 @@ class WD_BWG_Options {
   public $mosaic_total_width = 100;
   public $image_column_number = 5;
   public $images_per_page = 30;
-  public $thumb_width = 180;
-  public $thumb_height = 90;
+  public $thumb_width = 250;
+  public $thumb_height = 140;
   public $upload_thumb_width = 500;
   public $upload_thumb_height = 500;
   public $image_enable_page = 1;
@@ -23,10 +23,10 @@ class WD_BWG_Options {
   public $album_column_number = 5;
   public $albums_per_page = 30;
   public $album_title_show_hover = 'hover';
-  public $album_thumb_width = 120;
-  public $album_thumb_height = 90;
+  public $album_thumb_width = 250;
+  public $album_thumb_height = 140;
   public $album_enable_page = 1;
-  public $extended_album_height = 150;
+  public $extended_album_height = 200;
   public $extended_album_description_enable = 1;
 
   public $image_browser_width = 800;
@@ -46,7 +46,7 @@ class WD_BWG_Options {
   public $slideshow_enable_autoplay = 0;
   public $slideshow_enable_shuffle = 0;
   public $slideshow_enable_ctrl = 1;
-  public $slideshow_enable_filmstrip = 0;
+  public $slideshow_enable_filmstrip = 1;
   public $slideshow_filmstrip_height = 90;
   public $slideshow_enable_title = 0;
   public $slideshow_title_position = 'top-right';
@@ -59,8 +59,8 @@ class WD_BWG_Options {
   public $popup_width = 800;
   public $popup_height = 500;
   public $popup_type = 'fade';
-  public $popup_interval = 5;
-  public $popup_enable_filmstrip = 0;
+  public $popup_interval = 2.5;
+  public $popup_enable_filmstrip = 1;
   public $popup_filmstrip_height = 70;
   public $popup_enable_ctrl_btn = 1;
   public $popup_enable_fullscreen = 1;
@@ -73,7 +73,7 @@ class WD_BWG_Options {
   public $popup_enable_twitter = 1;
   public $popup_enable_google = 1;
   public $popup_enable_ecommerce = 1;
-  public $popup_effect_duration = 1;
+  public $popup_effect_duration = 0.1;
 
   public $watermark_type = 'none';
   public $watermark_position = 'bottom-left';
@@ -98,7 +98,7 @@ class WD_BWG_Options {
   public $built_in_watermark_opacity = 30;
 
   public $image_right_click = 0;
-  public $popup_fullscreen = 0;
+  public $popup_fullscreen = 1;
   public $gallery_role = 0;
   public $album_role = 0;
   public $image_role = 0;
@@ -131,7 +131,7 @@ class WD_BWG_Options {
   public $instagram_access_token = '';
   public $description_tb = 0;
   public $enable_seo = 1;
-  public $autohide_lightbox_navigation = 1;
+  public $autohide_lightbox_navigation = 0;
   public $autohide_slideshow_navigation = 1;
   public $read_metadata = 1;
   public $enable_loop = 1;
