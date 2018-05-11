@@ -228,7 +228,6 @@ require get_template_directory() . '/inc/options-framework/options-framework.php
  * */
 require get_template_directory().'/woocommerce/ap-parallax-woocommerce-function.php';
 
-require get_template_directory().'/inc/class-tgm-plugin-activation.php';
 
 /**
  * Load Welcome Page

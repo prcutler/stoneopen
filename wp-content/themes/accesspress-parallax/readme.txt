@@ -88,6 +88,9 @@ Images
 
 ---------------------------------------------
 == Changelog ==
+Version 1.61
+ * Multicheck field warking on PHP7 fixed
+
 Version 1.60
  * Theme Option Panel error on PHP7 fixed
  * Styling Issue fixed
