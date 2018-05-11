@@ -1,0 +1,29 @@
+.tw-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999999;
+    background: rgba(0,0,0,0.7);
+}
+
+.tw-container .tw-container-wrap {
+    height: 90%;
+    background: #fff;
+    width: 90%;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+}
+
+.tw-container .tw-container-wrap  .media-modal-close{
+    line-height: 34px;
+    text-align: center;
+    height: 40px;
+}
+
+.tw-container .tw-container-wrap iframe {
+    height: 100%;
+    width: 100%;
+}

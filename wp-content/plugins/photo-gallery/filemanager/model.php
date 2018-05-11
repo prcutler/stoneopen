@@ -57,8 +57,8 @@ class FilemanagerModel {
 
     $components = array();
     $component = array();
-    global $WD_BWG_UPLOAD_DIR;
-    $component['name'] = $WD_BWG_UPLOAD_DIR;
+    
+    $component['name'] = BWG()->upload_dir;
     $component['path'] = $path;
     $components[] = $component;
     for ($i = 0; $i < count($dir_names); $i++) {
@@ -76,8 +76,8 @@ class FilemanagerModel {
   }
 
   function get_files($sort_by, $sort_order) {
-    $icons_dir_path = WD_BWG_DIR . '/filemanager/images/file_icons';
-    $icons_dir_url = WD_BWG_URL . '/filemanager/images/file_icons';
+    $icons_dir_path = BWG()->plugin_dir . '/filemanager/images/file_icons';
+    $icons_dir_url = BWG()->plugin_url . '/filemanager/images/file_icons';
     $valid_types = explode(',', isset($_REQUEST['extensions']) ? strtolower(esc_html($_REQUEST['extensions'])) : '*');
     $dir = (isset($_REQUEST['dir']) ? '/' . htmlspecialchars_decode(stripslashes(esc_html(str_replace('../', '', $_REQUEST['dir']))), ENT_COMPAT | ENT_QUOTES) : '');
     $parent_dir = $this->controller->get_uploads_dir() . $dir;

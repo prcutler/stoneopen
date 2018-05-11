@@ -1,9 +1,5 @@
 <?php
 class BWGControllerGalleryBox {
-
-  public function __construct() {
-  }
-
   public function execute() {
     $ajax_task = (isset($_POST['ajax_task']) ? esc_html($_POST['ajax_task']) : '');
     if (method_exists($this, $ajax_task)) {
@@ -15,27 +11,27 @@ class BWGControllerGalleryBox {
   }
 
   public function display() {
-    require_once WD_BWG_DIR . "/frontend/models/BWGModelGalleryBox.php";
+    require_once BWG()->plugin_dir . "/frontend/models/BWGModelGalleryBox.php";
     $model = new BWGModelGalleryBox();
 
-    require_once WD_BWG_DIR . "/frontend/views/BWGViewGalleryBox.php";
+    require_once BWG()->plugin_dir . "/frontend/views/BWGViewGalleryBox.php";
     $view = new BWGViewGalleryBox($model);
 
     $view->display();
   }
 
   public function save() {
-    require_once WD_BWG_DIR . "/frontend/models/BWGModelGalleryBox.php";
+    require_once BWG()->plugin_dir . "/frontend/models/BWGModelGalleryBox.php";
     $model = new BWGModelGalleryBox();
-    global $wd_bwg_options;
-    if ($wd_bwg_options->popup_enable_email) {
+    
+    if (BWG()->options->popup_enable_email) {
       // Email validation.
       $email = (isset($_POST['bwg_email']) ? is_email(stripslashes($_POST['bwg_email'])) : FALSE);
     }
     else {
       $email = TRUE;
     }
-    if ($wd_bwg_options->popup_enable_captcha) {
+    if (BWG()->options->popup_enable_captcha) {
       $bwg_captcha_input = (isset($_POST['bwg_captcha_input']) ? esc_html(stripslashes($_POST['bwg_captcha_input'])) : '');
       @session_start();
       $bwg_captcha_code = (isset($_SESSION['bwg_captcha_code']) ? esc_html(stripslashes($_SESSION['bwg_captcha_code'])) : '');
@@ -56,7 +52,7 @@ class BWGControllerGalleryBox {
       $name = (isset($_POST['bwg_name']) ? esc_html(stripslashes($_POST['bwg_name'])) : '');
       $bwg_comment = (isset($_POST['bwg_comment']) ? esc_html(stripslashes($_POST['bwg_comment'])) : '');
       $bwg_email = (isset($_POST['bwg_email']) ? esc_html(stripslashes($_POST['bwg_email'])) : '');
-      $published = (current_user_can('manage_options') || !$wd_bwg_options->comment_moderation) ? 1 : 0;
+      $published = (current_user_can('manage_options') || !BWG()->options->comment_moderation) ? 1 : 0;
       $save = $wpdb->insert($wpdb->prefix . 'bwg_image_comment', array(
         'image_id' => $image_id,
         'name' => $name,

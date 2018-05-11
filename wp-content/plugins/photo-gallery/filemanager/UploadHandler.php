@@ -11,8 +11,8 @@
  */
  
 if (function_exists('current_user_can')) {
-  global $wd_bwg_options;
-  if (!current_user_can($wd_bwg_options->permissions)) {
+  
+  if (!current_user_can(BWG()->options->permissions)) {
     die('Access Denied');
   }
 }
@@ -20,7 +20,7 @@ else {
   die('Access Denied');
 }
 
-require_once(WD_BWG_DIR . '/filemanager/controller.php');
+require_once(BWG()->plugin_dir . '/filemanager/controller.php');
 $controller = new FilemanagerController();
 
 $upload_handler = new bwg_UploadHandler(array(
@@ -53,7 +53,7 @@ class bwg_UploadHandler {
     );
 
     function __construct($options = null, $initialize = true, $error_messages = null) {
-      global $wd_bwg_options;
+      
       $this->options = array(
         'media_library_folder' => 'imported_from_media_libray' . '/',
         'script_url' => $this->get_full_url() . '/',
@@ -94,8 +94,8 @@ class bwg_UploadHandler {
         // The maximum number of files for the upload directory:
         'max_number_of_files' => null,
         // Image resolution restrictions:
-        'max_width' => (isset($_POST['upload_img_width']) ? (int) $_POST['upload_img_width'] : $wd_bwg_options->upload_img_width),
-        'max_height' => (isset($_POST['upload_img_height']) ? (int) $_POST['upload_img_height'] : $wd_bwg_options->upload_img_height),
+        'max_width' => (isset($_POST['upload_img_width']) ? (int) $_POST['upload_img_width'] : BWG()->options->upload_img_width),
+        'max_height' => (isset($_POST['upload_img_height']) ? (int) $_POST['upload_img_height'] : BWG()->options->upload_img_height),
         'min_width' => 1,
         'min_height' => 1,
         // Set the following option to false to enable resumable uploads:
@@ -112,17 +112,17 @@ class bwg_UploadHandler {
           '.original' => array(
             'max_width' => NULL,
             'max_height' => NULL,
-            'jpeg_quality' => $wd_bwg_options->jpeg_quality
+            'jpeg_quality' => BWG()->options->jpeg_quality
           ),
           '' => array(
             'max_width' => $this->options['max_width'],
             'max_height' => $this->options['max_height'],
-            'jpeg_quality' => $wd_bwg_options->jpeg_quality
+            'jpeg_quality' => BWG()->options->jpeg_quality
           ),
           'thumb' => array(
-            'max_width' => ((isset($_POST['upload_thumb_width']) && (int) $_POST['upload_thumb_width']) ? (int) $_POST['upload_thumb_width'] : $wd_bwg_options->upload_thumb_width),
-            'max_height' => ((isset($_POST['upload_thumb_height']) && (int) $_POST['upload_thumb_height']) ? (int) $_POST['upload_thumb_height'] : $wd_bwg_options->upload_thumb_height),
-            'jpeg_quality' => $wd_bwg_options->jpeg_quality
+            'max_width' => ((isset($_POST['upload_thumb_width']) && (int) $_POST['upload_thumb_width']) ? (int) $_POST['upload_thumb_width'] : BWG()->options->upload_thumb_width),
+            'max_height' => ((isset($_POST['upload_thumb_height']) && (int) $_POST['upload_thumb_height']) ? (int) $_POST['upload_thumb_height'] : BWG()->options->upload_thumb_height),
+            'jpeg_quality' => BWG()->options->jpeg_quality
           ),
         )
       );
@@ -289,7 +289,6 @@ class bwg_UploadHandler {
     }
 
     protected function create_scaled_image($file_name, $version, $options) {
-      global $wd_bwg_options;
       $file_path = $this->get_upload_path($file_name);
       if (!empty($version) && ($version != 'main')) {
         $version_dir = $this->get_upload_path(null, $version);
@@ -300,90 +299,36 @@ class bwg_UploadHandler {
       } else {
         $new_file_path = $file_path;
       }
-      if (!function_exists('getimagesize')) {
-        error_log('Function not found: getimagesize');
-        return false;
-      }
-      list($img_width, $img_height, $type) = @getimagesize(htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES));
-      if (!$img_width || !$img_height) {
-        return false;
-      }
-      $max_width = $options['max_width'];
-      $max_height = $options['max_height'];
-      $scale = min(
-        $max_width / $img_width,
-        $max_height / $img_height
-      );
-      @ini_set('memory_limit', '-1');
-      if (($scale >= 1) || (($max_width == NULL) && ($max_height == NULL))) {
-        if ($file_path !== $new_file_path) {
-          return copy($file_path, $new_file_path);
+      $image = wp_get_image_editor( $file_path );
+      $success = false;
+      if ( ! is_wp_error( $image ) ) {
+        $image_size = $image->get_size();
+        $img_width = $image_size['width'];
+        $img_height = $image_size['height'];
+        if (!$img_width || !$img_height) {
+          return false;
         }
-        return true;
-      }
-      if (!function_exists('imagecreatetruecolor')) {
-        error_log('Function not found: imagecreatetruecolor');
-        return false;
-      }
-      
-      if (empty($options['crop'])) {
+        $max_width = $options['max_width'];
+        $max_height = $options['max_height'];
+        $scale = min(
+          $max_width / $img_width,
+          $max_height / $img_height
+        );
+        if (($scale >= 1) || (($max_width == NULL) && ($max_height == NULL))) {
+          if ($file_path !== $new_file_path) {
+            return copy($file_path, $new_file_path);
+          }
+          return true;
+        }
+
         $new_width = $img_width * $scale;
         $new_height = $img_height * $scale;
-        $dst_x = 0;
-        $dst_y = 0;
-        $new_img = @imagecreatetruecolor($new_width, $new_height);
-      } else {
-        if (($img_width / $img_height) >= ($max_width / $max_height)) {
-          $new_width = $img_width / ($img_height / $max_height);
-          $new_height = $max_height;
-        } else {
-          $new_width = $max_width;
-          $new_height = $img_height / ($img_width / $max_width);
-        }
-        $dst_x = 0 - ($new_width - $max_width) / 2;
-        $dst_y = 0 - ($new_height - $max_height) / 2;
-        $new_img = @imagecreatetruecolor($max_width, $max_height);
+        $image->set_quality(BWG()->options->image_quality);
+        $image->resize($new_width, $new_height, false);
+        $success = $image->save($new_file_path);
+        $success = !is_wp_error($success);
       }
-      // switch (strtolower(substr(strrchr($file_name, '.'), 1))) {
-      switch ($type) {
-        case 2:
-          $src_img = @imagecreatefromjpeg($file_path);
-          $write_image = 'imagejpeg';
-          $image_quality = $wd_bwg_options->jpeg_quality;
-            break;
-        case 1:
-          @imagecolortransparent($new_img, @imagecolorallocate($new_img, 0, 0, 0));
-          $src_img = @imagecreatefromgif($file_path);
-          $write_image = 'imagegif';
-          $image_quality = null;
-          break;
-        case 3:
-          @imagecolortransparent($new_img, @imagecolorallocate($new_img, 0, 0, 0));
-          @imagealphablending($new_img, false);
-          @imagesavealpha($new_img, true);
-          $src_img = @imagecreatefrompng($file_path);
-          $write_image = 'imagepng';
-          $image_quality = $wd_bwg_options->png_quality;
-          break;
-        default:
-          $src_img = null;
-      }
-      $success = $src_img && @imagecopyresampled(
-        $new_img,
-        $src_img,
-        $dst_x,
-        $dst_y,
-        0,
-        0,
-        $new_width,
-        $new_height,
-        $img_width,
-        $img_height
-      ) && $write_image($new_img, $new_file_path, $image_quality);
-      // Free up memory (imagedestroy does not delete files):
-      @imagedestroy($src_img);
-      @imagedestroy($new_img);
-      @ini_restore('memory_limit');
+
       return $success;
     }
 
@@ -509,7 +454,7 @@ class bwg_UploadHandler {
       // Add missing file extension for known image types:
       if (strpos($name, '.') === false &&
         preg_match('/^image\/(gif|jpe?g|png)/', $type, $matches)) {
-        $name .= '.'.$matches[1];
+        $name .= '.' . $matches[1];
       }
       return $name;
     }
@@ -641,6 +586,8 @@ class bwg_UploadHandler {
             if (is_file($ex_file)) {
               $type = filetype($ex_file);
               $name = basename($ex_file);
+              $extension = end(explode(".", $name));
+              $name = str_replace('.' . $extension, strtolower('.' . $extension), $name);
               $index = null;
               $content_range = null;
               $size = $this->get_file_size($ex_file);
@@ -683,7 +630,8 @@ class bwg_UploadHandler {
         mkdir($upload_dir, $this->options['mkdir_mode'], true);
       }
       $file_path = $this->get_upload_path($file->name);
-      copy($basedir . '/' . $uploaded_file, $file_path);
+	    copy($basedir . '/' . $uploaded_file, $file_path);
+	  
       if ( $this->options['max_width'] && $this->options['max_height'] ) {
         // Media library Upload.
         $this->create_scaled_image($file->name, 'main', $this->options);
@@ -710,8 +658,8 @@ class bwg_UploadHandler {
       $image_info = getimagesize(htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES));
       $file->resolution = $image_info[0]  . ' x ' . $image_info[1] . ' px';
 
-      global $wd_bwg_options;
-      if ( $wd_bwg_options->read_metadata ) {
+      
+      if ( BWG()->options->read_metadata ) {
         $exif = WDWLibrary::read_image_metadata($upload_dir . '.original/' . $file->name);
         $file->credit = $exif['credit'];
         $file->aperture = $exif['aperture'];
@@ -911,7 +859,6 @@ class bwg_UploadHandler {
           $file_name_array = explode('/', $value);
           $files[] = $this->handle_file_import($value, end($file_name_array));
         }
-
         echo json_encode($files);
         return;
       }
@@ -934,7 +881,7 @@ class bwg_UploadHandler {
     }
 
     public function post($print_response = true) {
-		if ( isset($_REQUEST['import']) && $_REQUEST['import'] == 1 ) {
+      if ( isset($_REQUEST['import']) && $_REQUEST['import'] == 1 ) {
         $file_names = explode('**@**', (isset($_REQUEST['file_namesML']) ? stripslashes($_REQUEST['file_namesML']) : ''));
 
         $files = array();
@@ -964,9 +911,12 @@ class bwg_UploadHandler {
         // param_name is an array identifier like "files[]",
         // $_FILES is a multi-dimensional array:
         foreach ($upload['tmp_name'] as $index => $value) {
+          $filename = $file_name ? $file_name : $upload['name'][$index];
+          $extension = end(explode(".", $filename));
+          $filename = str_replace('.' . $extension, strtolower('.' . $extension), $filename);
             $files[] = $this->handle_file_upload(
                 $upload['tmp_name'][$index],
-                $file_name ? $file_name : $upload['name'][$index],
+                $filename,
                 $size ? $size : $upload['size'][$index],
                 $upload['type'][$index],
                 $upload['error'][$index],
@@ -976,12 +926,14 @@ class bwg_UploadHandler {
         }
       }
       else {
+        $filename = $file_name ? $file_name : (isset($upload['name']) ? $upload['name'] : null);
+        $extension = end(explode(".", $filename));
+        $filename = str_replace('.' . $extension, strtolower('.' . $extension), $filename);
         // param_name is a single object identifier like "file",
         // $_FILES is a one-dimensional array:
         $files[] = $this->handle_file_upload(
             isset($upload['tmp_name']) ? $upload['tmp_name'] : null,
-            $file_name ? $file_name : (isset($upload['name']) ?
-                    $upload['name'] : null),
+            $filename,
             $size ? $size : (isset($upload['size']) ?
                     $upload['size'] : $_SERVER['CONTENT_LENGTH']),
             isset($upload['type']) ?

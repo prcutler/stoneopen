@@ -5,18 +5,17 @@
  * Time: 10:57 AM
  */
 
-
 class FilemanagerController {
   public $uploads_dir;
   public $uploads_url;
 
   public function __construct() {
-    global $wd_bwg_options;
-    $this->uploads_dir = (($wd_bwg_options->images_directory . '/photo-gallery') ? ABSPATH . $wd_bwg_options->images_directory . '/photo-gallery' : WD_BWG_DIR . '/filemanager/uploads');
+
+    $this->uploads_dir = ((BWG()->options->images_directory . '/photo-gallery') ? ABSPATH . BWG()->options->images_directory . '/photo-gallery' : BWG()->plugin_dir . '/filemanager/uploads');
     if (file_exists($this->uploads_dir) == FALSE) {
       mkdir($this->uploads_dir);
     }
-    $this->uploads_url = (($wd_bwg_options->images_directory . '/photo-gallery') ? site_url() . '/' . $wd_bwg_options->images_directory . '/photo-gallery' : WD_BWG_URL . '/filemanager/uploads');
+    $this->uploads_url = ((BWG()->options->images_directory . '/photo-gallery') ? site_url() . '/' . BWG()->options->images_directory . '/photo-gallery' : BWG()->plugin_url . '/filemanager/uploads');
   }
 
   public function execute() {
@@ -38,9 +37,9 @@ class FilemanagerController {
   }
 
   public function display() {
-    require_once WD_BWG_DIR . '/filemanager/model.php';
+    require_once BWG()->plugin_dir . '/filemanager/model.php';
     $model = new FilemanagerModel($this);
-    require_once WD_BWG_DIR . '/filemanager/view.php';
+    require_once BWG()->plugin_dir . '/filemanager/view.php';
     $view = new FilemanagerView($this, $model);
     $view->display();
   }
@@ -63,7 +62,7 @@ class FilemanagerController {
     $new_dir_path = $this->esc_dir($new_dir_path);
 
     if (file_exists($new_dir_path) == true) {
-      $msg = __("Directory already exists.", 'bwg');
+      $msg = __("Directory already exists.", BWG()->prefix);
     }
     else {
       $msg = '';
@@ -72,8 +71,8 @@ class FilemanagerController {
     $args = array(
       'action' => 'addImages',
       'filemanager_msg' => $msg,
-      'width' => '650',
-      'height' => '500',
+      'width' => '850',
+      'height' => '550',
       'task' => 'display',
       'extensions' => esc_html($_REQUEST['extensions']),
       'callback' => esc_html($_REQUEST['callback']),
@@ -110,11 +109,11 @@ class FilemanagerController {
     global $wpdb;
 
     if (file_exists($file_path) == false) {
-      $msg = __("File doesn't exist.", 'bwg');
+      $msg = __("File doesn't exist.", BWG()->prefix);
     }
     elseif (is_dir($file_path) == true) {
       if (rename($file_path, $cur_dir_path . '/' . sanitize_file_name($file_new_name)) == false) {
-        $msg = __("Can't rename the file.", 'bwg');
+        $msg = __("Can't rename the file.", BWG()->prefix);
       }
       else {
         $wpdb->query('UPDATE ' . $wpdb->prefix . 'bwg_image SET
@@ -127,7 +126,7 @@ class FilemanagerController {
     elseif ((strrpos($file_name, '.') !== false)) {
       $file_extension = substr($file_name, strrpos($file_name, '.') + 1);
       if (rename($file_path, $cur_dir_path . '/' . $file_new_name . '.' . $file_extension) == false) {
-        $msg = __("Can't rename the file.", 'bwg');
+        $msg = __("Can't rename the file.", BWG()->prefix);
       }
       else {
         $wpdb->update($wpdb->prefix . 'bwg_image', array(
@@ -147,14 +146,14 @@ class FilemanagerController {
       }
     }
     else {
-      $msg = __("Can't rename the file.", 'bwg');
+      $msg = __("Can't rename the file.", BWG()->prefix);
     }
     $_REQUEST['file_names'] = '';
     $args = array(
       'action' => 'addImages',
       'filemanager_msg' => $msg,
-      'width' => '650',
-      'height' => '500',
+      'width' => '850',
+      'height' => '550',
       'task' => 'display',
       'extensions' => esc_html($_REQUEST['extensions']),
       'callback' => esc_html($_REQUEST['callback']),
@@ -184,7 +183,7 @@ class FilemanagerController {
       $thumb_file_path = $cur_dir_path . '/thumb/' . $file_name;
       $original_file_path = $cur_dir_path . '/.original/' . $file_name;
       if (file_exists($file_path) == false) {
-        $msg = __("Some of the files couldn't be removed.", 'bwg');
+        $msg = __("Some of the files couldn't be removed.", BWG()->prefix);
       }
       else {
         $this->remove_file_dir($file_path, $input_dir, $file_name);
@@ -200,8 +199,8 @@ class FilemanagerController {
     $args = array(
       'action' => 'addImages',
       'filemanager_msg' => $msg,
-      'width' => '650',
-      'height' => '500',
+      'width' => '850',
+      'height' => '550',
       'task' => 'show_file_manager',
       'extensions' => esc_html($_REQUEST['extensions']),
       'callback' => esc_html($_REQUEST['callback']),
@@ -271,7 +270,7 @@ class FilemanagerController {
           }
 
           if (!$this->copy_file_dir($src, $dest)) {
-            $msg = __("Failed to copy some of the files.", 'bwg');
+            $msg = __("Failed to copy some of the files.", BWG()->prefix);
           }
           if (!is_dir($src_dir . '/' . $file_name)) {
             $this->copy_file_dir($thumb_src, $thumb_dest);
@@ -293,7 +292,7 @@ class FilemanagerController {
               $flag = rename($src, $dest);
             }
             if ( !$flag ) {
-              $msg = __("Failed to move some of the files.", 'bwg');
+              $msg = __("Failed to move some of the files.", BWG()->prefix);
             }
             else {
               global $wpdb;
@@ -339,8 +338,8 @@ class FilemanagerController {
     $args = array(
       'action' => 'addImages',
       'filemanager_msg' => $msg,
-      'width' => '650',
-      'height' => '500',
+      'width' => '850',
+      'height' => '550',
       'task' => 'show_file_manager',
       'extensions' => esc_html($_REQUEST['extensions']),
       'callback' => esc_html($_REQUEST['callback']),
@@ -374,7 +373,6 @@ class FilemanagerController {
 
   private function remove_file_dir($del_file_dir, $input_dir = FALSE, $file_name = FALSE) {
     $del_file_dir = $this->esc_dir($del_file_dir);
-
     if (is_dir($del_file_dir) == true) {
       $files_to_remove = scandir($del_file_dir);
       foreach ($files_to_remove as $file) {
@@ -388,11 +386,40 @@ class FilemanagerController {
       unlink($del_file_dir);
       if ( $input_dir !== FALSE && $file_name !== FALSE ) {
         global $wpdb;
-        $wpdb->delete($wpdb->prefix . 'bwg_image', array(
-         'thumb_url' => $input_dir . '/thumb/' . $file_name ));
-        $wpdb->update($wpdb->prefix . 'bwg_gallery', array(
-          'preview_image' => '',
-        ), array( 'preview_image' => $input_dir . '/thumb/' . $file_name ));
+        $deleted_image_dir = $input_dir . '/thumb/' . $file_name;
+        // delete image by preview_image.
+        $wpdb->delete($wpdb->prefix . 'bwg_image', array( 'thumb_url' => $deleted_image_dir ));
+        // Get gallery by preview_image or random_preview_image.
+        $galleries = $wpdb->get_results('SELECT `id` FROM `' . $wpdb->prefix . 'bwg_gallery` WHERE `preview_image` = "' . $deleted_image_dir . '" OR `random_preview_image` = "' . $deleted_image_dir . '"');
+        // Update random preview image on bwg_gallery.
+        if ( !empty($galleries) ) {
+          $gallerIds = array();
+          foreach ( $galleries as $item ) {
+            $gallerIds[$item->id] = $item->id;
+          }
+          // Get thumb images by gallery id.
+          $thumbIds = array();
+          $thumbs = $wpdb->get_results('SELECT `gallery_id`, `thumb_url` FROM `' . $wpdb->prefix . 'bwg_image` WHERE `gallery_id` IN (' . implode(',', $gallerIds) . ')');
+          if ( !empty($thumbs) ) {
+            foreach ( $thumbs as $item ) {
+              $thumbIds[$item->gallery_id][] = $item->thumb_url;
+            }
+          }
+          foreach ( $gallerIds as $gid ) {
+            $random_preview_image = '';
+            if ( !empty($thumbIds[$gid]) ) {
+              $rand_keys = array_rand($thumbIds[$gid], 1);
+              $random_preview_image = $thumbIds[$gid][$rand_keys];
+              if ( !preg_match('/^(http|https):\\/\\/[a-z0-9_]+([\\-\\.]{1}[a-z_0-9]+)*\\.[_a-z]{2,5}' . '((:[0-9]{1,5})?\\/.*)?$/i', $random_preview_image) ) {
+                $random_preview_image = wp_normalize_path($thumbIds[$gid][$rand_keys]);
+              }
+            }
+            $wpdb->update($wpdb->prefix . 'bwg_gallery', array(
+              'preview_image' => '',
+              'random_preview_image' => $random_preview_image,
+            ), array( 'id' => $gid ));
+          }
+        }
       }
     }
   }

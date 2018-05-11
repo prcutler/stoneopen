@@ -9,10 +9,10 @@ class BWGControllerSlideshow {
   }
 
   public function display($params, $from_shortcode = 0, $bwg = 0) {
-    require_once WD_BWG_DIR . "/frontend/models/BWGModelSlideshow.php";
+    require_once BWG()->plugin_dir . "/frontend/models/BWGModelSlideshow.php";
     $model = new BWGModelSlideshow();
 
-    require_once WD_BWG_DIR . "/frontend/views/BWGViewSlideshow.php";
+    require_once BWG()->plugin_dir . "/frontend/views/BWGViewSlideshow.php";
     $view = new BWGViewSlideshow($model);
     $view->display($params, $from_shortcode, $bwg);
   }

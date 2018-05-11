@@ -11,10 +11,10 @@ class BWGControllerWidgetFrontEnd {
   }
 
   public function view_tags($params) {
-    require_once WD_BWG_DIR . "/frontend/models/BWGModelWidget.php";
+    require_once BWG()->plugin_dir . "/frontend/models/BWGModelWidget.php";
     $model = new BWGModelWidgetFrontEnd();
 
-    require_once WD_BWG_DIR . "/frontend/views/BWGViewWidget.php";
+    require_once BWG()->plugin_dir . "/frontend/views/BWGViewWidget.php";
     $view = new BWGViewWidgetFrontEnd($model);
     
     $view->view_tags($params);

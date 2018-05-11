@@ -3,34 +3,32 @@ jQuery(window).load(function(){
   if (window.bwgTinymceRendered) {
     jQuery(document).trigger("onUploadImg");
   }
-    jQuery('.add_short_gall').css({'marginLeft': -50});
-    
-    jQuery('.mce-container').css({'maxWidth':'100%'});
 });
 
-(function () {
+jQuery(document).ready(function() {
+  bwg_shortcode_ready();
+});
+jQuery(window).resize(function() {
+  bwg_shortcode_ready();
+});
+
+function bwg_shortcode_ready() {
+  var width_window;
+  var height_window;
   tinymce.create('tinymce.plugins.bwg_mce', {
     init:function (ed, url) {
       var c = this;
       c.url = url;
       c.editor = ed;
-      var width_window;
-      var height_window;
-      var width = 1144;
-      var height = 520;
-      if(jQuery(window).width() < width) {
-        width_window = jQuery(window).width();
-        height_window = jQuery(window).height();
-      }
-      else {
-        width_window = width;
-        height_window = height;
-      }
+      width_window = jQuery(window).width() + 17;
+      height_window = jQuery(window).height();
       ed.addCommand('mcebwg_mce', function () {
-          ed.windowManager.open({
+        jQuery('.bwg-shortcode-btn').trigger('click');
+		return;
+          /*ed.windowManager.open({
             file:bwg_admin_ajax,
-            width: width_window + ed.getLang('bwg_mce.delta_width', 0),
-            height: height_window + ed.getLang('bwg_mce.delta_height', 0),
+            width: width_window,
+            height: height_window,
             inline: 1,
             title: 'Photo Gallery'
           }, {
@@ -57,7 +55,7 @@ jQuery(window).load(function(){
         if (e.nodeName != "IMG" || ed.dom.getAttrib(e, "class").indexOf("bwg_shortcode") == -1) {
           return
         }
-        f = d.edit("[" + ed.dom.getAttrib(e, "title") + "]");
+        f = d.edit("[" + ed.dom.getAttrib(e, "title") + "]");*/
       });
       ed.addButton('bwg_mce', {
         id:'mceu_bwg_shorcode',
@@ -108,4 +106,5 @@ jQuery(window).load(function(){
     }
   });
   tinymce.PluginManager.add('bwg_mce', tinymce.plugins.bwg_mce);
-})();
+  bwg_set_shortcode_popup_dimensions();
+}

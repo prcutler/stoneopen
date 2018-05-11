@@ -106,15 +106,15 @@ div[id^="bwg_container"] div[id^="bwg_container"] .bwg_img_clear {
   -webkit-animation: spin 2.5s infinite linear;*/
 }
 
-img[class^="bwg_filmstrip_thumbnail_img"],
 .bwg_filmstrip_thumbnail_img {
-  max-width: none;
+  max-width: none !important;
 }
 .bwg_spider_ajax_loading {
   border: none !important;
   margin-top: 200px;
   width: 30px;
-  /*animation: spin 2.5s infinite linear;
+ /* border: none !important;
+  animation: spin 2.5s infinite linear;
   -moz-animation: spin 2.5s infinite linear;
   -o-animation: spin 2.5s infinite linear;
   -webkit-animation: spin 2.5s infinite linear;*/
@@ -364,4 +364,23 @@ div[id^="bwg_search_container_1_"] div[id^="bwg_search_container_2_"] .bwg_searc
 
 .spider_popup_wrap .wd_error {
   color: #CCCCCC;
+}
+
+div[id^="bwg_container"] .bwg_download_gallery {
+  text-align: right;
+  margin-top: 10px;
+}
+
+div[id^="bwg_container"] .bwg_download_gallery a {
+  color: #4A4A4A;
+  font-size: 25px;
+  text-decoration: none;
+}
+
+div[id^="bwg_container"] .bwg_download_gallery a:hover {
+  color: #7D7D7D;
+}
+.bwg_inst_play_btn_cont,
+.bwg_inst_play_btn_cont .bwg_inst_play {
+	display:block;
 }

@@ -9,10 +9,10 @@ class BWGControllerThumbnails {
   }
 
   public function display($params, $from_shortcode = 0, $bwg = 0) {
-    require_once WD_BWG_DIR . "/frontend/models/BWGModelThumbnails.php";
+    require_once BWG()->plugin_dir . "/frontend/models/BWGModelThumbnails.php";
     $model = new BWGModelThumbnails();
 
-    require_once WD_BWG_DIR . "/frontend/views/BWGViewThumbnails.php";
+    require_once BWG()->plugin_dir . "/frontend/views/BWGViewThumbnails.php";
     $view = new BWGViewThumbnails($model);
     $view->display($params, $from_shortcode, $bwg);
   }

@@ -79,9 +79,8 @@ jQuery(document).ready(function () {
     }
   });
 });
-
+// TODO. remove this not used
 function loaded() {
-  jQuery("#opacity_div").hide();
   jQuery("#loading_div").hide();
 }
 
@@ -138,7 +137,6 @@ function submit(task, sortBy, sortOrder, itemsView, destDir, fileNewName, newDir
     default:
       task = "";
       break;
-
   }
 
   jQuery("form[name=adminForm]").find("input[name=task]").val(task);
@@ -562,6 +560,7 @@ function onBtnOpenClick(event, obj) {
   else {
     submitFiles();
   }
+  window.parent.bwg_remove_loading_block();
 }
 
 function onBtnCancelClick(event, obj) {

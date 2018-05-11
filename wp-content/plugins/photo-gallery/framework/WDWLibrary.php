@@ -1,146 +1,274 @@
 <?php
 
 class WDWLibrary {
-  public static function get($key, $default_value = '') {
+  /**
+   * Get request value.
+   *
+   * @param string $key
+   * @param string $default_value
+   * @param bool $esc_html
+   *
+   * @return string|array
+   */
+  public static function get($key, $default_value = '', $esc_html = true) {
     if (isset($_GET[$key])) {
       $value = $_GET[$key];
     }
     elseif (isset($_POST[$key])) {
       $value = $_POST[$key];
     }
-    else {
-      $value = '';
+    elseif (isset($_REQUEST[$key])) {
+      $value = $_REQUEST[$key];
     }
-    if (!$value) {
+    else {
       $value = $default_value;
     }
-    return esc_html($value);
+    if (is_array($value)) {
+      array_walk_recursive($value, array('self', 'validate_data'), $esc_html);
+    }
+    else {
+      self::validate_data($value, $esc_html);
+    }
+    return $value;
   }
 
-  public static function message_id($message_id) {
+  /**
+   * Validate data.
+   *
+   * @param $value
+   * @param $esc_html
+   */
+  private static function validate_data(&$value, $esc_html) {
+    $value = stripslashes($value);
+    if ($esc_html) {
+      $value = esc_html($value);
+    }
+  }
+
+  /**
+   * Generate message container  by message id or directly by message.
+   *
+   * @param int $message_id
+   * @param string $message If message_id is 0
+   * @param string $type
+   *
+   * @return mixed|string|void
+   */
+  public static function message_id($message_id, $message = '', $type = 'updated') {
     if ($message_id) {
       switch($message_id) {
         case 1: {
-          $message = __('Item Succesfully Saved.', 'bwg_back');
-          $type = 'wd_updated';
+          $message = __('Item successfully saved.', BWG()->prefix);
+          $type = 'updated';
           break;
 
         }
         case 2: {
-          $message = __('Error. Please install plugin again.', 'bwg_back');
-          $type = 'wd_error';
+          $message = __('Failed.', BWG()->prefix);
+          $type = 'error';
           break;
 
         }
         case 3: {
-          $message = __('Item Succesfully Deleted.', 'bwg_back');
-          $type = 'wd_updated';
+          $message = __('Item successfully deleted.', BWG()->prefix);
+          $type = 'updated';
           break;
 
         }
         case 4: {
-          $message = __("You can't delete default theme", 'bwg_back');
-          $type = 'wd_error';
+          $message = __("You can't delete default theme.", BWG()->prefix);
+          $type = 'error';
           break;
 
         }
         case 5: {
-          $message = __('Items Succesfully Deleted.', 'bwg_back');
-          $type = 'wd_updated';
+          $message = __('Items Successfully Deleted.', BWG()->prefix);
+          $type = 'updated';
           break;
 
         }
         case 6: {
-          $message = __('You must select at least one item.', 'bwg_back');
+          $message = __('You must set watermark type from Options page.', BWG()->prefix);
           $type = 'wd_error';
           break;
 
         }
         case 7: {
-          $message = __('The item is successfully set as default.', 'bwg_back');
-          $type = 'wd_updated';
+          $message = __('The item is successfully set as default.', BWG()->prefix);
+          $type = 'updated';
           break;
 
         }
         case 8: {
-          $message = __('Options Succesfully Saved.', 'bwg_back');
-          $type = 'wd_updated';
+          $message = __('Options successfully saved.', BWG()->prefix);
+          $type = 'updated';
           break;
 
         }
         case 9: {
-          $message = __('Item Succesfully Published.', 'bwg_back');
-          $type = 'wd_updated';
+          $message = __('Item successfully published.', BWG()->prefix);
+          $type = 'updated';
           break;
 
         }
         case 10: {
-          $message = __('Items Succesfully Published.', 'bwg_back');
-          $type = 'wd_updated';
+          $message = __('Item successfully unpublished.', BWG()->prefix);
+          $type = 'updated';
           break;
 
         }
         case 11: {
-          $message = __('Item Succesfully Unpublished.', 'bwg_back');
-          $type = 'wd_updated';
+          $message = __('Item successfully duplicated.', BWG()->prefix);
+          $type = 'updated';
           break;
 
         }
         case 12: {
-          $message = __('Items Succesfully Unpublished.', 'bwg_back');
-          $type = 'wd_updated';
+          // ToDO: delete
+          $message = __('Items Succesfully Unpublished.', BWG()->prefix);
+          $type = 'updated';
           break;
 
         }
         case 13: {
-          $message = __('Ordering Succesfully Saved.', 'bwg_back');
-          $type = 'wd_updated';
+          $message = __('Ordering Succesfully Saved.', BWG()->prefix);
+          $type = 'updated';
           break;
 
         }
         case 14: {
-          $message = __('A term with the name provided already exists.', 'bwg_back');
-          $type = 'wd_error';
+          $message = __('A term with the name provided already exists.', BWG()->prefix);
+          $type = 'error';
           break;
 
         }
         case 15: {
-          $message = __('Name field is required.', 'bwg_back');
-          $type = 'wd_error';
+          $message = __('Name field is required.', BWG()->prefix);
+          $type = 'error';
           break;
 
         }
         case 16: {
-          $message = __('The slug must be unique.', 'bwg_back');
-          $type = 'wd_error';
+          $message = __('The slug must be unique.', BWG()->prefix);
+          $type = 'error';
           break;
 
         }
         case 17: {
-          $message = __('Changes must be saved.', 'bwg_back');
-          $type = 'wd_error';
+          $message = __('Changes must be saved.', BWG()->prefix);
+          $type = 'error';
           break;
 
         }
          case 18: {
-          $message = __('Theme successfully copied.', 'bwg_back');
+          $message = __('Theme successfully copied.', BWG()->prefix);
           $type = 'updated';
           break;
 
         }
         case 19: {
-          $message = __('Failed.', 'bwg_back');
+          $message = __('Failed.', BWG()->prefix);
           $type = 'error';
           break;
-
+        }
+        case 20: {
+          $message = __('Items successfully reset.', BWG()->prefix);
+          $type = 'updated';
+          break;
+        }
+        case 21: {
+          $message = __('Watermark successfully set.', BWG()->prefix);
+          $type = 'updated';
+          break;
+        }
+        case 22: {
+          $message = __('Items successfully rotated.', BWG()->prefix);
+          $type = 'updated';
+          break;
+        }
+        case 23: {
+          $message = __('Items successfully recreated.', BWG()->prefix);
+          $type = 'updated';
+          break;
+        }
+        case 24: {
+          $message = __('Items successfully resized.', BWG()->prefix);
+          $type = 'updated';
+          break;
+        }
+        case 25: {
+          $message = __('Items successfully edited.', BWG()->prefix);
+          $type = 'updated';
+          break;
+        }
+        default: {
+          $message = '';
+          break;
         }
       }
-      return '<div style="width:99%"><div class="' . $type . '"><p><strong>' . $message . '</strong></p></div></div>';
     }
+    if ($message) {
+      ob_start();
+      ?><div class="<?php echo $type; ?> inline">
+      <p>
+        <strong><?php echo $message; ?></strong>
+      </p>
+      </div><?php
+      $message = ob_get_clean();
+    }
+
+    return $message;
   }
 
   public static function message($message, $type) {
     return '<div style="width:99%"><div class="' . $type . '"><p><strong>' . $message . '</strong></p></div></div>';
+  }
+
+  /**
+   * Ordering.
+   *
+   * @param        $id
+   * @param        $orderby
+   * @param        $order
+   * @param        $text
+   * @param        $page_url
+   * @param string $additional_class
+   *
+   * @return string
+   */
+  public static function ordering($id, $orderby, $order, $text, $page_url, $additional_class = '') {
+    $class = array(
+      ($orderby == $id ? 'sorted': 'sortable'),
+      $order,
+      $additional_class,
+      'col_' . $id,
+    );
+    $order = (($orderby == $id) && ($order == 'asc')) ? 'desc' : 'asc';
+    ob_start();
+    ?>
+    <th id="order-<?php echo $id; ?>" class="<?php echo implode(' ', $class); ?>">
+      <a href="<?php echo add_query_arg( array('orderby' => $id, 'order' => $order), $page_url ); ?>"
+         title="<?php _e('Click to sort by this item', BWG()->prefix); ?>">
+        <span><?php echo $text; ?></span><span class="sorting-indicator"></span>
+      </a>
+    </th>
+    <?php
+    return ob_get_clean();
+  }
+
+  /**
+   * Redirect.
+   *
+   * @param $url
+   */
+  public static function redirect($url) {
+    $url = html_entity_decode(wp_nonce_url($url, BWG()->nonce, BWG()->nonce));
+    ?>
+    <script>
+      window.location = "<?php echo $url; ?>";
+    </script>
+    <?php
+    exit();
   }
 
   public static function search($search_by, $search_value, $form_id, $position_search) {
@@ -183,8 +311,8 @@ class WDWLibrary {
         <input type="text" id="search_value" name="search_value" class="spider_search_value" onkeypress="return check_search_key(event, this);" value="<?php echo esc_html($search_value); ?>" style="width: 150px;margin-right:<?php echo $margin_right; ?>px; padding-top:10px; <?php echo (get_bloginfo('version') > '3.7') ? ' height: 33px;' : ''; ?>" />
       </div>
       <div class="alignleft actions">
-        <input type="button" value="" title="<?php _e('Search','bwg_back'); ?>" onclick="spider_search()" class="wd-search-btn action">
-        <input type="button" value="" title="<?php _e('Reset','bwg_back'); ?>" onclick="spider_reset()" class="wd-reset-btn action">
+        <input type="button" value="" title="<?php _e('Search',BWG()->prefix); ?>" onclick="spider_search()" class="wd-search-btn action">
+        <input type="button" value="" title="<?php _e('Reset',BWG()->prefix); ?>" onclick="spider_reset()" class="wd-reset-btn action">
       </div>
     </div>
     <?php
@@ -192,7 +320,6 @@ class WDWLibrary {
 
   public static function search_select($search_by, $search_select_id = 'search_select_value', $search_select_value, $playlists, $form_id) {
     ?>
-    <div class="alignleft actions" style="clear:both;">
       <script>
         function spider_search_select() {
           document.getElementById("page_number").value = "1";
@@ -201,8 +328,7 @@ class WDWLibrary {
         }
       </script>
       <div class="alignleft actions" >
-        <label for="<?php echo $search_select_id; ?>" style="font-size:14px; width:50px; display:inline-block;"><?php echo $search_by; ?>:</label>
-        <select id="<?php echo $search_select_id; ?>" name="<?php echo $search_select_id; ?>" onchange="spider_search_select();" style="float: none; width: 150px;">
+        <select id="<?php echo $search_select_id; ?>" name="<?php echo $search_select_id; ?>" class="select_icon" onchange="spider_search_select();" style="width:150px; margin-left:5px;">        
         <?php
           foreach ($playlists as $id => $playlist) {
             ?>
@@ -212,7 +338,7 @@ class WDWLibrary {
         ?>
         </select>
       </div>
-    </div>
+    
     <?php
   }
   
@@ -228,6 +354,12 @@ class WDWLibrary {
     }
     else {
       $items_county = 1;
+    }
+    if ($count_items > $items_per_page) {
+      $margin_top = 0;
+    }
+    else {
+      $margin_top = 12;
     }
     if (!$pager) {
     ?>
@@ -281,7 +413,7 @@ class WDWLibrary {
       <span class="displaying-num">
         <?php
         if ($count_items != 0) {
-          echo $count_items; ?> <?php echo __('item', 'bwg_back'); ?><?php echo (($count_items == 1) ? '' : 's');
+          echo $count_items; ?> <?php echo __('item', BWG()->prefix); ?><?php echo (($count_items == 1) ? '' : 's');
         }
         ?>
       </span>
@@ -310,7 +442,7 @@ class WDWLibrary {
         <span class="paging-input">
           <span class="total-pages">
           <input class="current_page" id="current_page" name="current_page" value="<?php echo $page_number; ?>" onkeypress="return check_enter_key(event, this)" title="Go to the page" type="text" size="1" />
-        </span> <?php echo __('of', 'bwg_back'); ?> 
+        </span> <?php echo __('of', BWG()->prefix); ?>
         <span class="total-pages">
             <?php echo $items_county; ?>
           </span>
@@ -334,7 +466,7 @@ class WDWLibrary {
       <script>
         function spider_search() {
           document.getElementById("page_number").value = "1";
-          document.getElementById("search_or_not").value = "search";
+          /*document.getElementById("search_or_not").value = "search";*/
           spider_ajax_save('<?php echo $form_id; ?>');
         }
         function spider_reset() {
@@ -357,8 +489,8 @@ class WDWLibrary {
         <input type="text" id="search_value" name="search_value" class="spider_search_value" onkeypress="return check_search_key(event, this);" value="<?php echo esc_html($search_value); ?>" style="width: 150px;margin-right:5px;<?php echo (get_bloginfo('version') > '3.7') ? ' height: 33px;' : ''; ?>" />
       </div>
       <div class="alignleft actions">
-        <input type="button" value="" title="<?php echo __('Search','bwg_back'); ?>" onclick="spider_search()" class="wd-search-btn action">
-        <input type="button" value="" title="<?php echo __('Reset','bwg_back'); ?>" onclick="spider_reset()" class="wd-reset-btn action">
+        <input type="button" value="" title="<?php echo __('Search',BWG()->prefix); ?>" onclick="spider_search()" class="wd-search-btn action">
+        <input type="button" value="" title="<?php echo __('Reset',BWG()->prefix); ?>" onclick="spider_reset()" class="wd-reset-btn action">
       </div>
     </div>
     <?php
@@ -430,7 +562,7 @@ class WDWLibrary {
       <span class="displaying-num">
         <?php
         if ($count_items != 0) {
-          echo $count_items; ?> <?php echo __('item', 'bwg_back'); ?><?php echo (($count_items == 1) ? '' : 's');
+          echo $count_items; ?> <?php echo __('item', BWG()->prefix); ?><?php echo (($count_items == 1) ? '' : 's');
         }
         ?>
       </span>
@@ -459,7 +591,7 @@ class WDWLibrary {
         <span class="paging-input">
           <span class="total-pages">
           <input class="current_page" id="current_page" name="current_page" value="<?php echo $page_number; ?>" onkeypress="return check_enter_key(event, this)" title="Go to the page" type="text" size="1" />
-        </span> <?php echo __('of', 'bwg_back'); ?> 
+        </span> <?php echo __('of', BWG()->prefix); ?>
         <span class="total-pages">
             <?php echo $items_county; ?>
           </span>
@@ -513,15 +645,15 @@ class WDWLibrary {
       <?php
       if ($theme_row->page_nav_number) {
       ?>
-      <span class="displaying-num_<?php echo $current_view; ?>"><?php echo $count_items . ' ' . __(' item(s)', 'bwg'); ?></span>
+      <span class="displaying-num_<?php echo $current_view; ?>"><?php echo $count_items . ' ' . __(' item(s)', BWG()->prefix); ?></span>
       <?php
       }
       if ($count_items > $limit) {
         if ($theme_row->page_nav_button_text) {
-          $first_button = __('First', 'bwg');
-          $previous_button = __('Previous', 'bwg');
-          $next_button = __('Next', 'bwg');
-          $last_button = __('Last', 'bwg');
+          $first_button = __('First', BWG()->prefix);
+          $previous_button = __('Previous', BWG()->prefix);
+          $next_button = __('Next', BWG()->prefix);
+          $last_button = __('Last', BWG()->prefix);
         }
         else {
           $first_button = '«';
@@ -539,15 +671,15 @@ class WDWLibrary {
         }
       ?>
       <span class="pagination-links_<?php echo $current_view; ?>">
-        <a class="<?php echo $first_page; ?>" title="<?php echo __('Go to the first page', 'bwg'); ?>"><?php echo $first_button; ?></a>
-        <a class="<?php echo $prev_page; ?>" title="<?php echo __('Go to the previous page', 'bwg'); ?>" <?php echo  $page_number > 1 && $enable_seo ? 'href="' . esc_url(add_query_arg(array("page_number_" . $current_view => $page_number - 1), $_SERVER['REQUEST_URI'])) . '"' : ""; ?>><?php echo $previous_button; ?></a>
+        <a class="<?php echo $first_page; ?>" title="<?php echo __('Go to the first page', BWG()->prefix); ?>"><?php echo $first_button; ?></a>
+        <a class="<?php echo $prev_page; ?>" title="<?php echo __('Go to the previous page', BWG()->prefix); ?>" <?php echo  $page_number > 1 && $enable_seo ? 'href="' . esc_url(add_query_arg(array("page_number_" . $current_view => $page_number - 1), $_SERVER['REQUEST_URI'])) . '"' : ""; ?>><?php echo $previous_button; ?></a>
         <span class="paging-input_<?php echo $current_view; ?>">
-          <span class="total-pages_<?php echo $current_view; ?>"><?php echo $page_number; ?></span> <?php echo __('of', 'bwg'); ?> <span class="total-pages_<?php echo $current_view; ?>">
+          <span class="total-pages_<?php echo $current_view; ?>"><?php echo $page_number; ?></span> <?php echo __('of', BWG()->prefix); ?> <span class="total-pages_<?php echo $current_view; ?>">
             <?php echo $items_county; ?>
           </span>
         </span>
-        <a class="<?php echo $next_page ?>" title="<?php echo __('Go to the next page', 'bwg'); ?>" <?php echo  $page_number + 1 <= $items_county && $enable_seo ? 'href="' . esc_url(add_query_arg(array("page_number_" . $current_view => $page_number + 1), $_SERVER['REQUEST_URI'])) . '"' : ""; ?>><?php echo $next_button; ?></a>
-        <a class="<?php echo $last_page ?>" title="<?php echo __('Go to the last page', 'bwg'); ?>"><?php echo $last_button; ?></a>
+        <a class="<?php echo $next_page ?>" title="<?php echo __('Go to the next page', BWG()->prefix); ?>" <?php echo  $page_number + 1 <= $items_county && $enable_seo ? 'href="' . esc_url(add_query_arg(array("page_number_" . $current_view => $page_number + 1), $_SERVER['REQUEST_URI'])) . '"' : ""; ?>><?php echo $next_button; ?></a>
+        <a class="<?php echo $last_page ?>" title="<?php echo __('Go to the last page', BWG()->prefix); ?>"><?php echo $last_button; ?></a>
       </span>
       <?php
       }
@@ -559,7 +691,7 @@ class WDWLibrary {
       if ($count_items > ($limit * ($page_number - 1)) + $items_per_page['images_per_page']) {
         ?>
 		<div id="bwg_load_<?php echo $current_view; ?>" class="tablenav-pages_<?php echo $current_view; ?>">
-			<a class="bwg_load_btn_<?php echo $current_view; ?> bwg_load_btn" href="javascript:void(0);"><?php echo __('Load More...', 'bwg'); ?></a>
+			<a class="bwg_load_btn_<?php echo $current_view; ?> bwg_load_btn" href="javascript:void(0);"><?php echo __('Load More...', BWG()->prefix); ?></a>
 			<input type="hidden" id="bwg_load_more_<?php echo $current_view; ?>" name="bwg_load_more_<?php echo $current_view; ?>" value="on" />
 		</div>
     <?php
@@ -642,19 +774,19 @@ class WDWLibrary {
     <?php
   }
 
-  public static function ajax_html_frontend_search_box($form_id, $current_view, $cur_gal_id, $images_count, $search_box_width = 180, $placeholder = '') {
-    $bwg_search = ((isset($_POST['bwg_search_' . $current_view]) && esc_html($_POST['bwg_search_' . $current_view]) != '') ? esc_html($_POST['bwg_search_' . $current_view]) : '');
-    $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : 'album');
-    $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : 0);
+ public static function ajax_html_frontend_search_box($form_id, $current_view, $cur_gal_id, $images_count, $search_box_width = 180, $placeholder = '', $album_gallery_id = 0) {
+   $bwg_search = ((isset($_POST['bwg_search_' . $current_view]) && esc_html($_POST['bwg_search_' . $current_view]) != '') ? esc_html($_POST['bwg_search_' . $current_view]) : '');
+   $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : ($album_gallery_id ? 'gallery' : 'album'));
+   $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : ( $album_gallery_id ? $album_gallery_id : 0));
    ob_start();
     ?>
     #bwg_search_container_2_<?php echo $current_view; ?> {
       width: <?php echo $search_box_width; ?>px;
     }
     <?php
-    global $wd_bwg_options;
+
     $inline_style = ob_get_clean();
-    if ($wd_bwg_options->use_inline_stiles_and_scripts) {
+    if (BWG()->options->use_inline_stiles_and_scripts) {
       wp_add_inline_style('bwg_frontend', $inline_style);
     }
     else {
@@ -677,10 +809,10 @@ class WDWLibrary {
     <div class="bwg_search_container_1" id="bwg_search_container_1_<?php echo $current_view; ?>">
       <div class="bwg_search_container_2" id="bwg_search_container_2_<?php echo $current_view; ?>">
         <span class="bwg_search_reset_container" >
-          <i title="<?php echo __('Reset', 'bwg'); ?>" class="bwg_reset fa fa-times" onclick="clear_input_<?php echo $current_view; ?>('<?php echo $current_view; ?>'),spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1)"></i>
+          <i title="<?php echo __('Reset', BWG()->prefix); ?>" class="bwg_reset fa fa-times" onclick="clear_input_<?php echo $current_view; ?>('<?php echo $current_view; ?>'),spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1)"></i>
         </span>
         <span class="bwg_search_loupe_container" >
-          <i title="<?php echo __('Search', 'bwg'); ?>" class="bwg_search fa fa-search" onclick="spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1)"></i>
+          <i title="<?php echo __('Search', BWG()->prefix); ?>" class="bwg_search fa fa-search" onclick="spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1)"></i>
         </span>
         <span class="bwg_search_input_container">
           <input id="bwg_search_input_<?php echo $current_view; ?>" class="bwg_search_input" type="text" onkeypress="return check_enter_key_<?php echo $current_view; ?>(event)" name="bwg_search_<?php echo $current_view; ?>" value="<?php echo $bwg_search; ?>" placeholder="<?php echo $placeholder; ?>" />
@@ -709,10 +841,10 @@ class WDWLibrary {
           ?>
         </select>
         <span class="bwg_search_loupe_container" >
-          <i title="<?php _e('Search', 'bwg'); ?>" class="bwg_search fa fa-search" onclick="bwg_select_tag('<?php echo $current_view; ?>' ,'<?php echo $form_id; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '<?php echo $type; ?>', false);"></i>
+          <i title="<?php _e('Search', BWG()->prefix); ?>" class="bwg_search fa fa-search" onclick="bwg_select_tag('<?php echo $current_view; ?>' ,'<?php echo $form_id; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '<?php echo $type; ?>', false);"></i>
         </span>
         <span class="bwg_search_reset_container" >
-          <i title="<?php _e('Reset', 'bwg'); ?>" class="bwg_reset fa fa-times" onclick="bwg_select_tag('<?php echo $current_view; ?>' ,'<?php echo $form_id; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '<?php echo $type; ?>', '<?php echo $cur_gal_id; ?>');"></i>
+          <i title="<?php _e('Reset', BWG()->prefix); ?>" class="bwg_reset fa fa-times" onclick="bwg_select_tag('<?php echo $current_view; ?>' ,'<?php echo $form_id; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '<?php echo $type; ?>', '<?php echo $cur_gal_id; ?>');"></i>
         </span>
         <input type="hidden" id="bwg_tags_id_<?php echo $cur_gal_id;  ?>" value="" />
       </div>
@@ -740,8 +872,8 @@ class WDWLibrary {
     }
     <?php
     $inline_style = ob_get_clean();
-    global $wd_bwg_options;
-    if ($wd_bwg_options->use_inline_stiles_and_scripts) {
+
+    if (BWG()->options->use_inline_stiles_and_scripts) {
       wp_add_inline_style('bwg_frontend', $inline_style);
     }
     else {
@@ -749,12 +881,12 @@ class WDWLibrary {
     }
     ?>
     <div class="bwg_order_cont">
-      <span class="bwg_order_label"><?php echo __('Order by: ', 'bwg'); ?></span>
+      <span class="bwg_order_label"><?php echo __('Order by: ', BWG()->prefix); ?></span>
       <select id="bwg_order_<?php echo $current_view; ?>" class="bwg_order" onchange="spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1, '', this.value)">
-        <option <?php if ($sort_by == 'default') echo 'selected'; ?> value="default"><?php echo __('Default', 'bwg'); ?></option>
-        <option <?php if ($sort_by == 'filename') echo 'selected'; ?> value="filename"><?php echo __('Filename', 'bwg'); ?></option>								
-        <option <?php if ($sort_by == 'size') echo 'selected'; ?> value="size"><?php echo __('Size', 'bwg'); ?></option>
-        <option <?php if ($sort_by == 'random' || $sort_by == 'RAND()') echo 'selected'; ?> value="random"><?php echo __('Random', 'bwg'); ?></option>
+        <option <?php if ($sort_by == 'default') echo 'selected'; ?> value="default"><?php echo __('Default', BWG()->prefix); ?></option>
+        <option <?php if ($sort_by == 'filename') echo 'selected'; ?> value="filename"><?php echo __('Filename', BWG()->prefix); ?></option>
+        <option <?php if ($sort_by == 'size') echo 'selected'; ?> value="size"><?php echo __('Size', BWG()->prefix); ?></option>
+        <option <?php if ($sort_by == 'random' || $sort_by == 'RAND()') echo 'selected'; ?> value="random"><?php echo __('Random', BWG()->prefix); ?></option>
       </select>
     </div>
     <?php
@@ -827,6 +959,22 @@ class WDWLibrary {
     )%xs', '', $string);    
   }
 
+  public static function get_share_page() {
+    $share_page = get_posts(array('post_type' => 'bwg_share'));
+    if ($share_page) {
+      return get_permalink(current($share_page));
+    }
+    else {
+      $bwg_post_args = array(
+        'post_title' => 'Image',
+        'post_status' => 'publish',
+        'post_type' => 'bwg_share'
+      );
+      $share_page = wp_insert_post($bwg_post_args);
+      return get_permalink($share_page);
+    }
+  }
+
   public static function esc_script($method = '', $index = '', $default = '', $type = 'string') {
     if ($method == 'post') {
       $escaped_value = ((isset($_POST[$index]) && preg_match("/^[A-Za-z0-9_]+$/", $_POST[$index])) ? esc_js($_POST[$index]) : $default);
@@ -850,7 +998,7 @@ class WDWLibrary {
 
   public static function get_used_google_fonts($theme = null, $shortcode = null) {
     global $wpdb;
-    global $wd_bwg_options;
+
     $google_array = array();
     $google_fonts = self::get_google_fonts();
     if (null === $theme) {
@@ -890,8 +1038,8 @@ class WDWLibrary {
         }
       }
     }
-    if (true == in_array($wd_bwg_options->watermark_font, $google_fonts)) {
-      $google_array[$wd_bwg_options->watermark_font] = $wd_bwg_options->watermark_font;
+    if (true == in_array(BWG()->options->watermark_font, $google_fonts)) {
+      $google_array[BWG()->options->watermark_font] = BWG()->options->watermark_font;
     }
     return $google_array; 
   }
@@ -915,12 +1063,18 @@ class WDWLibrary {
     $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_gallery WHERE published=1 AND id="%d"', $id));
     if ($row) {
         $row->permalink = '';
-		if ($from != '') {
-			$row->permalink = self::get_custom_post_permalink( array( 'slug' => $row->slug, 'post_type' => 'gallery' ) );
-		}
-    }
-    else {
-      $row_count = $wpdb->get_var('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_gallery');
+      if ($from != '') {
+        $row->permalink = self::get_custom_post_permalink( array( 'slug' => $row->slug, 'post_type' => 'gallery' ) );
+      }
+      if ( !empty($row->preview_image) ) {
+        $row->preview_image = $row->preview_image . '?bwg=' . $row->modified_date;
+      }
+      if ( !empty($row->random_preview_image) ) {
+        $row->random_preview_image = $row->random_preview_image . '?bwg=' . $row->modified_date;
+      }
+	  }
+    else if ( $id == 0 ) {
+      $row_count = $wpdb->get_var('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_gallery WHERE published=1');
       if (!$row_count) {
         return false;
       }
@@ -946,16 +1100,15 @@ class WDWLibrary {
    * @return object  $post
    */
   public static function bwg_create_custom_post( $params ) {
-    $id 	= $params['id'];
     $title  = $params['title'];
-	$slug   = $params['slug'];
+  	$slug   = $params['slug'];
     $type   = $params['type'];
-    $post_type = 'bwg_' . $type['post_type'];
+    $post_type = BWG()->prefix . '_' . $type['post_type'];
 
     // Get post by slug.
-	$slugcheck = !empty( $params['old_slug'] ) ? $params['old_slug'] : $slug;
+    $slugcheck = !empty($params['old_slug']) ? $params['old_slug'] : $slug;
     $post = get_page_by_path($slugcheck, OBJECT, $post_type);
-    if ( !$post ) {
+    if (!$post) {
       // Insert shortcode data.
       $shortecode_id = self::create_shortcode($params);
       $custom_post_shortecode = '[Best_Wordpress_Gallery id="' . $shortecode_id . '" gal_title="' . $title . '"]';
@@ -968,7 +1121,14 @@ class WDWLibrary {
         'post_author' => 1,
         'post_type' => $post_type,
       );
-      wp_insert_post($post);
+      $post_id = wp_insert_post($post);
+      if ( $post_id !== 0 || !is_wp_error($post_id) ) {
+        $post = get_post($post_id);
+        if ( !is_null($post) && $post->post_name != $slug ) {
+          global $wpdb;
+          $wpdb->update($wpdb->prefix . 'bwg_gallery', array('slug' => $post->post_name), array('id' => $params['id']));
+        }
+      }
     }
     else {
       $post->post_name = $slug;
@@ -976,6 +1136,7 @@ class WDWLibrary {
       wp_update_post($post);
     }
     $post = get_page_by_path($slug, OBJECT, $post_type);
+
     return $post;
   }
   
@@ -987,14 +1148,14 @@ class WDWLibrary {
    * @return object $post
    */
   public static function bwg_remove_custom_post( $params ) {
-	$slug 		= $params['slug'];
-	$post_type  = $params['post_type'];
-	$post = get_page_by_path($slug, OBJECT, $post_type);
-	$delete = new stdClass();
-	if ( !empty($post) ) {
-		$delete = wp_delete_post($post->ID, TRUE);
-	}
-	return $delete;
+    $slug = $params['slug'];
+    $post_type = $params['post_type'];
+    $post = get_page_by_path($slug, OBJECT, $post_type);
+    $delete = new stdClass();
+    if (!empty($post)) {
+      $delete = wp_delete_post($post->ID, TRUE);
+    }
+    return $delete;
   }
 
   /**
@@ -1006,14 +1167,14 @@ class WDWLibrary {
    */
   private static function create_shortcode( $params ) {
     global $wpdb;
-    $id   = $params['id'];
+    $id = $params['id'];
     $type = $params['type'];
-	$theme_row = self::get_theme_row_data(0);
-	$theme_id = $theme_row->id;
+    $theme_row = self::get_theme_row_data(0);
+    $theme_id = $theme_row->id;
     $shortcode_id = 0;
-    if ( !empty($type['post_type']) ) {
+    if (!empty($type['post_type'])) {
       $shortcode = ' use_option_defaults="1" type="' . $type['post_type'] . '" theme_id="' . $theme_id . '" ';
-      switch ( $type['post_type'] ) {
+      switch ($type['post_type']) {
         case 'gallery':
           $shortcode .= 'gallery_id="' . $id . '" tag="0" gallery_type="thumbnails"';
           break;
@@ -1028,9 +1189,9 @@ class WDWLibrary {
       }
       $shortcode_id = self::get_shortcode_max_id();
       $wpdb->insert($wpdb->prefix . 'bwg_shortcode',
-						array('id' => $shortcode_id, 'tagtext' => $shortcode),
-						array('%d','%s')
-					);
+        array('id' => $shortcode_id, 'tagtext' => $shortcode),
+        array('%d', '%s')
+      );
     }
 
     return $shortcode_id;
@@ -1038,8 +1199,6 @@ class WDWLibrary {
 
   /**
    * Create custom posts before update.
-   *
-   * @param  array $params
    *
    * @return bool
    */
@@ -1087,14 +1246,37 @@ class WDWLibrary {
   public static function get_custom_post_permalink( $params ) {
     $slug = $params['slug'];
     $post_type = $params['post_type'];
-    $post_type = 'bwg_' . $post_type;
+    $post_type = BWG()->prefix . '_' . $post_type;
     // Get post by slug.
     $post = get_page_by_path($slug, OBJECT, $post_type);
     if ( $post ) {
       return get_permalink($post->ID);
     }
-
     return '';
+  }
+
+  /**
+   * Get shortcode id from custom post.
+   *
+   * @param $params
+   *
+   * @return int
+   */
+  public static function get_shortcode_id( $params ) {
+    $shortcode_id = 0;
+
+    // Get post by slug.
+    $post = get_page_by_path($params['slug'], OBJECT, BWG()->prefix . '_' . $params['post_type']);
+    if ( $post ) {
+      if ( isset($post->post_content) ) {
+        $exploded_shortcode = explode('[Best_Wordpress_Gallery id="', $post->post_content);
+        if ( isset($exploded_shortcode[1]) ) {
+          $shortcode_id = (int) substr($exploded_shortcode[1], 0, strpos($exploded_shortcode[1], '"'));
+        }
+      }
+    }
+
+    return $shortcode_id;
   }
 
   /**
@@ -1154,23 +1336,47 @@ class WDWLibrary {
       $join .= ' LEFT JOIN (SELECT GROUP_CONCAT(tag_id SEPARATOR ",") AS tags_combined, image_id FROM  ' . $wpdb->prefix . 'bwg_image_tag' . ($gallery_id ? ' WHERE gallery_id="' . $gallery_id . '"' : '') . ' GROUP BY image_id) AS tags ON image.id=tags.image_id';
       $where .= ' AND CONCAT(",", tags.tags_combined, ",") REGEXP ",(' . implode("|", $_REQUEST[$tag_input_name]) . ')," ';
     }
-    $row = $wpdb->get_results('SELECT image.* FROM ' . $wpdb->prefix . 'bwg_image as image ' . $join . ' WHERE image.published=1 ' . $where . ' ORDER BY ' . str_replace('RAND()', 'RAND(' . $bwg_random_seed . ')', $sort_by) . ' ' . $sort_direction . ' ' . $limit_str);
+    $join .= ' LEFT JOIN '. $wpdb->prefix .'bwg_gallery as gallery ON gallery.id = image.gallery_id';
+    $where .= ' AND gallery.published = 1 ';
+
+    $rows = $wpdb->get_results('SELECT image.* FROM ' . $wpdb->prefix . 'bwg_image as image ' . $join . ' WHERE image.published=1 ' . $where . ' ORDER BY ' . str_replace('RAND()', 'RAND(' . $bwg_random_seed . ')', $sort_by) . ' ' . $sort_direction . ' ' . $limit_str);
     $total = $wpdb->get_var('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_image as image ' . $join . ' WHERE image.published=1 ' . $where);
     $page_nav['total'] = $total;
     $page_nav['limit'] = 1;
     if ( isset($_REQUEST['page_number_' . $bwg]) && $_REQUEST['page_number_' . $bwg] ) {
       $page_nav['limit'] = (int) $_REQUEST['page_number_' . $bwg];
     }
-
-    return array( 'images' => $row, 'page_nav' => $page_nav );
+    $images = array();
+    if ( !empty($rows) ) {
+      foreach ( $rows as $row ) {
+        if ( strpos($row->filetype, 'EMBED') === FALSE ) {
+          $row->image_url = $row->image_url . '?bwg=' . $row->modified_date;
+          $row->thumb_url = $row->thumb_url . '?bwg=' . $row->modified_date;
+        }
+        $images[] = $row;
+      }
+    }
+    return array( 'images' => $images, 'page_nav' => $page_nav );
   }
 
   public static function get_album_row_data( $id, $from ) {
     global $wpdb;
-    $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_album WHERE published=1 AND id="%d"', $id));
+    if( $id == 0 ) {
+        $row = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'bwg_gallery WHERE published=1');
+    } else {
+        $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_album WHERE published=1 AND id="%d"', $id));
+    }
+
     if ( $row ) {
       if ( $from ) {
+          //var_dump($row[0]);
         $row->permalink = WDWLibrary::get_custom_post_permalink(array( 'slug' => $row->slug, 'post_type' => 'album' ));
+      }
+      if ( !empty($row->preview_image) ) {
+        $row->preview_image = $row->preview_image . '?bwg=' . $row->modified_date;
+      }
+      if ( !empty($row->random_preview_image) ) {
+        $row->random_preview_image = $row->random_preview_image . '?bwg=' . $row->modified_date;
       }
     }
     return $row;
@@ -1186,54 +1392,62 @@ class WDWLibrary {
     if ( $albums_per_page ) {
       $limit_str = 'LIMIT ' . $limit . ',' . $albums_per_page;
     }
-    $row = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d" ORDER BY `order` ' . $sort_direction . ' ' . $limit_str, $id));
-    $total = $wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d"', $id));
+    // Select all galleries
+    if( $id == 0) {
+        $row = $wpdb->get_results('SELECT * FROM ' . $wpdb->prefix . 'bwg_gallery WHERE `published`=1 ' . $limit_str);
+        $total = $wpdb->get_var('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_gallery');
+
+    } else {
+        $row = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d" ORDER BY `order` ' . $sort_direction . ' ' . $limit_str, $id));
+        $total = $wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d"', $id));
+
+    }
     $page_nav['total'] = $total;
     $page_nav['limit'] = 1;
     if ( isset($_REQUEST['page_number_' . $bwg]) && $_REQUEST['page_number_' . $bwg] ) {
       $page_nav['limit'] = (int) $_REQUEST['page_number_' . $bwg];
     }
-
     return array( 'rows' => $row, 'page_nav' => $page_nav );
   }
 
-  public static function bwg_image_set_watermark( $gallery_id ) {
+  public static function bwg_image_set_watermark( $gallery_id, $image_id = 0 ) {
     global $wpdb;
-    global $WD_BWG_UPLOAD_DIR;
-    global $wd_bwg_options;
-    if ( $gallery_id != 0 ) {
-      $images = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_image WHERE gallery_id="%d"', $gallery_id));
+    $options = new WD_BWG_Options();
+
+    if ( $options->built_in_watermark_type == 'none' ) {
+      return 6;
     }
-    else {
-      $images = $wpdb->get_results('SELECT * FROM ' . $wpdb->prefix . 'bwg_image');
-    }
-    switch ( $wd_bwg_options->built_in_watermark_type ) {
-      case 'text':
-        foreach ( $images as $image ) {
-          if ( isset($_POST['check_' . $image->id]) || isset($_POST['check_all_items']) ) {
-            self::set_text_watermark(ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, html_entity_decode($wd_bwg_options->built_in_watermark_text), $wd_bwg_options->built_in_watermark_font, $wd_bwg_options->built_in_watermark_font_size, '#' . $wd_bwg_options->built_in_watermark_color, $wd_bwg_options->built_in_watermark_opacity, $wd_bwg_options->built_in_watermark_position);
-          }
-          if ( $gallery_id == 0 ) {
-            self::set_text_watermark(ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, html_entity_decode($wd_bwg_options->built_in_watermark_text), $wd_bwg_options->built_in_watermark_font, $wd_bwg_options->built_in_watermark_font_size, '#' . $wd_bwg_options->built_in_watermark_color, $wd_bwg_options->built_in_watermark_opacity, $wd_bwg_options->built_in_watermark_position);
-          }
+
+    $where = ( ($gallery_id) ? ' `gallery_id`=' . $gallery_id . ($image_id ? ' AND `id`=' . $image_id : '' ) : 1 );
+    $images = $wpdb->get_results('SELECT * FROM `' . $wpdb->prefix . 'bwg_image` WHERE '. $where);
+    if ( !empty($images) ) {
+        switch ( $options->built_in_watermark_type ) {
+          case 'text':
+            foreach ( $images as $image ) {
+              if ( preg_match('/EMBED/', $image->filetype) == 1 ) {
+                continue;
+              }
+              self::set_text_watermark(ABSPATH . BWG()->upload_dir . $image->image_url, ABSPATH . BWG()->upload_dir . $image->image_url, html_entity_decode($options->built_in_watermark_text), $options->built_in_watermark_font, $options->built_in_watermark_font_size, '#' . $options->built_in_watermark_color, $options->built_in_watermark_opacity, $options->built_in_watermark_position);
+            }
+            break;
+          case 'image':
+            $watermark_path = str_replace(site_url() . '/', ABSPATH, $options->built_in_watermark_url);
+            foreach ( $images as $image ) {
+              if ( preg_match('/EMBED/', $image->filetype) == 1 ) {
+                continue;
+              }
+              self::set_image_watermark(ABSPATH . BWG()->upload_dir . $image->image_url, ABSPATH . BWG()->upload_dir . $image->image_url, $watermark_path, $options->built_in_watermark_size, $options->built_in_watermark_size, $options->built_in_watermark_position);
+            }
+            break;
         }
-        break;
-      case 'image':
-        $watermark_path = str_replace(site_url() . '/', ABSPATH, $wd_bwg_options->built_in_watermark_url);
-        foreach ( $images as $image ) {
-          if ( isset($_POST['check_' . $image->id]) || isset($_POST['check_all_items']) ) {
-            self::set_image_watermark(ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, $watermark_path, $wd_bwg_options->built_in_watermark_size, $wd_bwg_options->built_in_watermark_size, $wd_bwg_options->built_in_watermark_position);
-          }
-          if ( $gallery_id == 0 ) {
-            self::set_image_watermark(ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, ABSPATH . $WD_BWG_UPLOAD_DIR . $image->image_url, $watermark_path, $wd_bwg_options->built_in_watermark_size, $wd_bwg_options->built_in_watermark_size, $wd_bwg_options->built_in_watermark_position);
-          }
-        }
-        break;
+		  self::update_image_modified_date( $where );
+
+      return 21;
     }
   }
 
   public static function set_text_watermark($original_filename, $dest_filename, $watermark_text, $watermark_font, $watermark_font_size, $watermark_color, $watermark_transparency, $watermark_position) {
-    global $wd_bwg_options;
+
     $original_filename = htmlspecialchars_decode($original_filename, ENT_COMPAT | ENT_QUOTES);
     $dest_filename = htmlspecialchars_decode($dest_filename, ENT_COMPAT | ENT_QUOTES);
 
@@ -1243,8 +1457,8 @@ class WDWLibrary {
 
     $watermark_color = self::bwg_hex2rgb($watermark_color);
     $watermark_color = imagecolorallocatealpha($watermark_image, $watermark_color[0], $watermark_color[1], $watermark_color[2], $watermark_transparency);
-    $watermark_font = WD_BWG_DIR . '/fonts/' . $watermark_font;
-    $watermark_font_size = (($height > $width ? $width : $height) * $watermark_font_size / 500) . 'px';
+    $watermark_font = BWG()->plugin_dir . '/fonts/' . $watermark_font;
+    $watermark_font_size = (($height > $width ? $width : $height) * $watermark_font_size / 500);
     $watermark_position = explode('-', $watermark_position);
     $watermark_sizes = self::bwg_imagettfbboxdimensions($watermark_font_size, 0, $watermark_font, $watermark_text);
 
@@ -1270,8 +1484,8 @@ class WDWLibrary {
     if ($type == 2) {
       $image = imagecreatefromjpeg($original_filename);
       imagettftext($image, $watermark_font_size, 0, $left, $top, $watermark_color, $watermark_font, $watermark_text);
-      imagejpeg ($image, $dest_filename, $wd_bwg_options->jpeg_quality);
-      imagedestroy($image);  
+      imagejpeg ($image, $dest_filename, BWG()->options->jpeg_quality);
+      imagedestroy($image);
     }
     elseif ($type == 3) {
       $image = imagecreatefrompng($original_filename);
@@ -1279,7 +1493,7 @@ class WDWLibrary {
       imageColorAllocateAlpha($image, 0, 0, 0, 127);
       imagealphablending($image, FALSE);
       imagesavealpha($image, TRUE);
-      imagepng($image, $dest_filename, $wd_bwg_options->png_quality);
+      imagepng($image, $dest_filename, BWG()->options->png_quality);
       imagedestroy($image);
     }
     elseif ($type == 1) {
@@ -1297,171 +1511,143 @@ class WDWLibrary {
   }
 
   public static function set_image_watermark($original_filename, $dest_filename, $watermark_url, $watermark_height, $watermark_width, $watermark_position) {
-    global $wd_bwg_options;
-    $original_filename = htmlspecialchars_decode($original_filename, ENT_COMPAT | ENT_QUOTES);
-    $dest_filename = htmlspecialchars_decode($dest_filename, ENT_COMPAT | ENT_QUOTES);
-    $watermark_url = htmlspecialchars_decode($watermark_url, ENT_COMPAT | ENT_QUOTES);
+	if ( !empty($watermark_url) ) {
+		$original_filename = htmlspecialchars_decode($original_filename, ENT_COMPAT | ENT_QUOTES);
+		$dest_filename = htmlspecialchars_decode($dest_filename, ENT_COMPAT | ENT_QUOTES);
+		$watermark_url = htmlspecialchars_decode($watermark_url, ENT_COMPAT | ENT_QUOTES);
 
-    list($width, $height, $type) = getimagesize($original_filename);
-    list($width_watermark, $height_watermark, $type_watermark) = getimagesize($watermark_url);
+		list($width, $height, $type) = getimagesize($original_filename);
+		list($width_watermark, $height_watermark, $type_watermark) = getimagesize($watermark_url);
 
-    $watermark_width = $width * $watermark_width / 100;
-    $watermark_height = $height_watermark * $watermark_width / $width_watermark;
-        
-    $watermark_position = explode('-', $watermark_position);
-    $top = $height - $watermark_height - 5;
-    $left = $width - $watermark_width - 5;
-    switch ($watermark_position[0]) {
-      case 'top':
-        $top = 5;
-        break;
-      case 'middle':
-        $top = ($height - $watermark_height) / 2;
-        break;
-    }
-    switch ($watermark_position[1]) {
-      case 'left':
-        $left = 5;
-        break;
-      case 'center':
-        $left = ($width - $watermark_width) / 2;
-        break;
-    }
-    @ini_set('memory_limit', '-1');
-    if ($type_watermark == 2) {
-      $watermark_image = imagecreatefromjpeg($watermark_url);        
-    }
-    elseif ($type_watermark == 3) {
-      $watermark_image = imagecreatefrompng($watermark_url);
-    }
-    elseif ($type_watermark == 1) {
-      $watermark_image = imagecreatefromgif($watermark_url);      
-    }
-    else {
-      return false;
-    }
+		$watermark_width = $width * $watermark_width / 100;
+		$watermark_height = $height_watermark * $watermark_width / $width_watermark;
 
-    $watermark_image_resized = imagecreatetruecolor($watermark_width, $watermark_height);
-    imagecolorallocatealpha($watermark_image_resized, 255, 255, 255, 127);
-    imagealphablending($watermark_image_resized, FALSE);
-    imagesavealpha($watermark_image_resized, TRUE);
-    imagecopyresampled ($watermark_image_resized, $watermark_image, 0, 0, 0, 0, $watermark_width, $watermark_height, $width_watermark, $height_watermark);
-        
-    if ($type == 2) {
-      $image = imagecreatefromjpeg($original_filename);
-      imagecopy($image, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
-      if ($dest_filename <> '') {
-        imagejpeg ($image, $dest_filename, $wd_bwg_options->jpeg_quality);
-      } else {
-        header('Content-Type: image/jpeg');
-        imagejpeg($image, null, $wd_bwg_options->jpeg_quality);
-      };
-      imagedestroy($image);  
-    }
-    elseif ($type == 3) {
-      $image = imagecreatefrompng($original_filename);
-      imagecopy($image, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
-      imagealphablending($image, FALSE);
-      imagesavealpha($image, TRUE);
-      imagepng($image, $dest_filename, $wd_bwg_options->png_quality);
-      imagedestroy($image);
-    }
-    elseif ($type == 1) {
-      $image = imagecreatefromgif($original_filename);
-      $tempimage = imagecreatetruecolor($width, $height);
-      imagecopy($tempimage, $image, 0, 0, 0, 0, $width, $height);
-      imagecopy($tempimage, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
-      imagegif($tempimage, $dest_filename);
-      imagedestroy($image);
-      imagedestroy($tempimage);
-    }
-    imagedestroy($watermark_image);
-    @ini_restore('memory_limit');
+		$watermark_position = explode('-', $watermark_position);
+		$top = $height - $watermark_height - 5;
+		$left = $width - $watermark_width - 5;
+		switch ($watermark_position[0]) {
+		  case 'top':
+			$top = 5;
+			break;
+		  case 'middle':
+			$top = ($height - $watermark_height) / 2;
+			break;
+		}
+		switch ($watermark_position[1]) {
+		  case 'left':
+			$left = 5;
+			break;
+		  case 'center':
+			$left = ($width - $watermark_width) / 2;
+			break;
+		}
+		@ini_set('memory_limit', '-1');
+		if ($type_watermark == 2) {
+		  $watermark_image = imagecreatefromjpeg($watermark_url);
+		}
+		elseif ($type_watermark == 3) {
+		  $watermark_image = imagecreatefrompng($watermark_url);
+		}
+		elseif ($type_watermark == 1) {
+		  $watermark_image = imagecreatefromgif($watermark_url);
+		}
+		else {
+		  return false;
+		}
+
+		$watermark_image_resized = imagecreatetruecolor($watermark_width, $watermark_height);
+		imagecolorallocatealpha($watermark_image_resized, 255, 255, 255, 127);
+		imagealphablending($watermark_image_resized, FALSE);
+		imagesavealpha($watermark_image_resized, TRUE);
+		imagecopyresampled ($watermark_image_resized, $watermark_image, 0, 0, 0, 0, $watermark_width, $watermark_height, $width_watermark, $height_watermark);
+
+		if ($type == 2) {
+		  $image = imagecreatefromjpeg($original_filename);
+		  imagecopy($image, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
+		  if ($dest_filename <> '') {
+			imagejpeg ($image, $dest_filename, BWG()->options->jpeg_quality);
+		  } else {
+			header('Content-Type: image/jpeg');
+			imagejpeg($image, null, BWG()->options->jpeg_quality);
+		  };
+		  imagedestroy($image);
+		}
+		elseif ($type == 3) {
+		  $image = imagecreatefrompng($original_filename);
+		  imagecopy($image, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
+		  imagealphablending($image, FALSE);
+		  imagesavealpha($image, TRUE);
+		  imagepng($image, $dest_filename, BWG()->options->png_quality);
+		  imagedestroy($image);
+		}
+		elseif ($type == 1) {
+		  $image = imagecreatefromgif($original_filename);
+		  $tempimage = imagecreatetruecolor($width, $height);
+		  imagecopy($tempimage, $image, 0, 0, 0, 0, $width, $height);
+		  imagecopy($tempimage, $watermark_image_resized, $left, $top, 0, 0, $watermark_width, $watermark_height);
+		  imagegif($tempimage, $dest_filename);
+		  imagedestroy($image);
+		  imagedestroy($tempimage);
+		}
+		imagedestroy($watermark_image);
+		@ini_restore('memory_limit');
+	}
   }
 
   public static function bwg_image_recover_all($gallery_id) {
+    $thumb_width = BWG()->options->upload_thumb_width;
+    $width = BWG()->options->upload_img_width;
     global $wpdb;
-    global $wd_bwg_options;
-    $thumb_width = $wd_bwg_options->upload_thumb_width;
-    $width = $wd_bwg_options->upload_img_width;
-    if($gallery_id == 0) {
-     $image_ids_col = $wpdb->get_col('SELECT id FROM ' . $wpdb->prefix . 'bwg_image'); 
-    }
-    else{    
-      $image_ids_col = $wpdb->get_col($wpdb->prepare('SELECT id FROM ' . $wpdb->prefix . 'bwg_image WHERE gallery_id="%d"', $gallery_id));
-    }
-    foreach ($image_ids_col as $image_id) {
-      if (isset($_POST['check_' . $image_id]) || isset($_POST['check_all_items'])) {
-        self::recover_image($image_id, $thumb_width, $width, 'gallery_page');
-      }
-      if($gallery_id == 0) {
-        self::recover_image($image_id, $thumb_width, $width, 'option_page');
-      }
-    }
+    $where = ($gallery_id) ? ' `gallery_id` = ' . $gallery_id : 1;
+	$images = $wpdb->get_results('SELECT * FROM `' . $wpdb->prefix . 'bwg_image` WHERE ' . $where);
+    if( !empty($images) ) {
+		foreach ( $images as $image ) {
+		  if ( preg_match('/EMBED/', $image->filetype) == 1 ) {
+			continue;
+		  }
+		  self::recover_image($image, $thumb_width, $width, ($gallery_id == 0 ? 'option_page' : 'gallery_page'));
+		}
+	}
+	self::update_image_modified_date( $where );
   }
 
-  public static function recover_image($id, $thumb_width, $width, $page) {
-    global $WD_BWG_UPLOAD_DIR;
-    global $wpdb;
-    $image_data = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_image WHERE id="%d"', $id));
-    $filename = htmlspecialchars_decode(ABSPATH . $WD_BWG_UPLOAD_DIR . $image_data->image_url, ENT_COMPAT | ENT_QUOTES);
-    $thumb_filename = htmlspecialchars_decode(ABSPATH . $WD_BWG_UPLOAD_DIR . $image_data->thumb_url, ENT_COMPAT | ENT_QUOTES);
-    $original_filename = str_replace('/thumb/', '/.original/', $thumb_filename);
-    if (file_exists($filename) && file_exists($thumb_filename) && file_exists($original_filename)) {
-      list($width_orig, $height_orig, $type_orig) = getimagesize($original_filename);
-      self::recover_image_size($width_orig, $height_orig, $width, $original_filename, $filename, $type_orig);
-      self::recover_image_size($width_orig, $height_orig, $thumb_width, $original_filename, $thumb_filename, $type_orig);
+  public static function recover_image($image, $thumb_width, $width, $page) {
+    if ( preg_match('/EMBED/', $image->filetype) == 1 ) {
+      return;
     }
-    @ini_restore('memory_limit');
+    $filename = htmlspecialchars_decode(ABSPATH . BWG()->upload_dir . $image->image_url, ENT_COMPAT | ENT_QUOTES);
+    $thumb_filename = htmlspecialchars_decode(ABSPATH . BWG()->upload_dir . $image->thumb_url, ENT_COMPAT | ENT_QUOTES);
+    $original_filename = str_replace('/thumb/', '/.original/', $thumb_filename);
+    if (file_exists($original_filename) || file_exists($filename)) {
+      if (!file_exists($original_filename)) {
+        copy($filename, $original_filename);
+      }
+      $original_image = wp_get_image_editor( $original_filename );
+      if ( ! is_wp_error( $original_image ) ) {
+        $get_size = $original_image->get_size();
+        $width_orig = $get_size['width'];
+        $height_orig = $get_size['height'];
+        $original_image->set_quality(BWG()->options->image_quality);
+        self::recover_image_size($width_orig, $height_orig, $width, $original_image, $filename);
+        self::recover_image_size($width_orig, $height_orig, $thumb_width, $original_image, $thumb_filename);
+      }
+    }
     if ($page == 'gallery_page') {
       ?>
       <script language="javascript">
-        var image_src = window.parent.document.getElementById("image_thumb_<?php echo $id; ?>").src;
-        document.getElementById("image_thumb_<?php echo $id; ?>").src = image_src + "?date=<?php echo date('Y-m-y H:i:s'); ?>";
+        var image_src = window.parent.document.getElementById("image_thumb_<?php echo $image->id; ?>").src;
+        document.getElementById("image_thumb_<?php echo $image->id; ?>").src = image_src + "?date=<?php echo date('Y-m-y H:i:s'); ?>";
       </script>
       <?php
     }
   }
 
-  public static function recover_image_size($width_orig, $height_orig, $width, $original_filename, $filename, $type_orig) {
-      global $wd_bwg_options;
-      $percent = $width_orig / $width;
-      $height = $height_orig / $percent;
-      @ini_set('memory_limit', '-1');
-       if ($type_orig == 2) {
-        $img_r = imagecreatefromjpeg($original_filename);
-        $dst_r = ImageCreateTrueColor($width, $height);
-        imagecopyresampled($dst_r, $img_r, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-        imagejpeg($dst_r, $filename, $wd_bwg_options->jpeg_quality);
-        imagedestroy($img_r);
-        imagedestroy($dst_r);
-      }
-      elseif ($type_orig == 3) {
-        $img_r = imagecreatefrompng($original_filename);
-        $dst_r = ImageCreateTrueColor($width, $height);
-        imageColorAllocateAlpha($dst_r, 0, 0, 0, 127);
-        imagealphablending($dst_r, FALSE);
-        imagesavealpha($dst_r, TRUE);
-        imagecopyresampled($dst_r, $img_r, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-        imagealphablending($dst_r, FALSE);
-        imagesavealpha($dst_r, TRUE);
-        imagepng($dst_r, $filename, $wd_bwg_options->png_quality);
-        imagedestroy($img_r);
-        imagedestroy($dst_r);
-      }
-      elseif ($type_orig == 1) {
-        $img_r = imagecreatefromgif($original_filename);
-        $dst_r = ImageCreateTrueColor($width, $height);
-        imageColorAllocateAlpha($dst_r, 0, 0, 0, 127);
-        imagealphablending($dst_r, FALSE);
-        imagesavealpha($dst_r, TRUE);
-        imagecopyresampled($dst_r, $img_r, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-        imagealphablending($dst_r, FALSE);
-        imagesavealpha($dst_r, TRUE);
-        imagegif($dst_r, $filename);
-        imagedestroy($img_r);
-        imagedestroy($dst_r);
-      }
+  public static function recover_image_size($width_orig, $height_orig, $width, $original_image, $filename) {
+    $percent = $width_orig / $width;
+    $height = $height_orig / $percent;
+
+    $original_image->resize($width, $height, false);
+    $original_image->save($filename);
   }
 
   public static function bwg_hex2rgb($hex) {
@@ -1638,10 +1824,9 @@ class WDWLibrary {
    * @return array   $defauls
    */
   public static function get_shortcode_option_params( $params ) {
-    global $wd_bwg_options;
     $theme = self::get_theme_row_data(0);
     $use_option_defaults = (isset($params['use_option_defaults']) && $params['use_option_defaults'] == 1) ? TRUE : FALSE;
-    $from = (isset($params['from']) && $params['from'] == 'widget') ? TRUE : FALSE;
+    $from = (isset($params['from']) && $params['from'] == 'widget' ) ? TRUE : FALSE;
     $defaults = array(
       'gallery_type' => $params['gallery_type'],
       'gallery_id' => isset($params['gallery_id']) ? $params['gallery_id'] : 0,
@@ -1649,146 +1834,282 @@ class WDWLibrary {
       'album_id' => isset($params['album_id']) ? $params['album_id'] : 0,
       'tag' => isset($params['tag']) ? $params['tag'] : 0,
       'theme_id' => (!$use_option_defaults && isset($params['theme_id'])) ? $params['theme_id'] : $theme->id,
-      'sort_by' => (isset($params['sort_by'])) ? $params['sort_by'] : 'order',
-      'order_by' => (isset($params['order_by'])) ? $params['order_by'] : 'asc',
-      'thumb_click_action' => ($from || $use_option_defaults ? $wd_bwg_options->thumb_click_action : (isset($params['thumb_click_action']) && $params['thumb_click_action'] != 'undefined' ? $params['thumb_click_action'] : 'open_lightbox')),
-      'thumb_link_target' => ($from || $use_option_defaults ? $wd_bwg_options->thumb_link_target : (isset($params['thumb_link_target']) ? $params['thumb_link_target'] : 1)),
-      'image_title' => ($from || $use_option_defaults ? $wd_bwg_options->image_title_show_hover : (isset($params['image_title']) ? $params['image_title'] : 'none')),
-      'show_search_box' => ($use_option_defaults ? $wd_bwg_options->show_search_box : (isset($params['show_search_box']) ? $params['show_search_box'] : 0)),
-      'search_box_width' => ($use_option_defaults ? $wd_bwg_options->search_box_width : (isset($params['search_box_width']) ? $params['search_box_width'] : 180)),
-      'show_sort_images' => ($use_option_defaults ? $wd_bwg_options->show_sort_images : (isset($params['show_sort_images']) ? $params['show_sort_images'] : 0)),
-      'image_enable_page' => ($use_option_defaults ? $wd_bwg_options->image_enable_page : (isset($params['image_enable_page']) ? $params['image_enable_page'] : 1)),
-      'show_tag_box' => ($use_option_defaults ? $wd_bwg_options->show_tag_box : (isset($params['show_tag_box']) ? $params['show_tag_box'] : 0)),
-      'show_gallery_description' => ($use_option_defaults ? $wd_bwg_options->show_gallery_description : (isset($params['show_gallery_description']) ? $params['show_gallery_description'] : 0)),
-      'showthumbs_name' => ($use_option_defaults ? $wd_bwg_options->showthumbs_name : (isset($params['showthumbs_name']) ? $params['showthumbs_name'] : $wd_bwg_options->showthumbs_name)),
-      'thumb_width' => ($use_option_defaults ? $wd_bwg_options->thumb_width : (isset($params['thumb_width']) ? $params['thumb_width'] : 120)),
-      'thumb_height' => ($use_option_defaults ? $wd_bwg_options->thumb_height : (isset($params['thumb_height']) ? $params['thumb_height'] : 90)),
-      'ecommerce_icon' => ($use_option_defaults ? $wd_bwg_options->ecommerce_icon_show_hover : (isset($params['ecommerce_icon']) ? $params['ecommerce_icon'] : 0)),
-      'load_more_image_count' => ($use_option_defaults ? $wd_bwg_options->images_per_page : (isset($params['load_more_image_count']) ? $params['load_more_image_count'] : 30)),
-      'image_column_number' => ($use_option_defaults ? $wd_bwg_options->image_column_number : (isset($params['image_column_number']) ? $params['image_column_number'] : 5)),
-      'images_per_page' => ($use_option_defaults ? $wd_bwg_options->images_per_page : (isset($params['images_per_page']) ? $params['images_per_page'] : 30)),
-      'masonry_hor_ver' => ($use_option_defaults ? $wd_bwg_options->masonry : (isset($params['masonry_hor_ver']) ? $params['masonry_hor_ver'] : 'vertical')),
-      'mosaic_hor_ver' => ($use_option_defaults ? $wd_bwg_options->mosaic : (isset($params['mosaic_hor_ver']) ? $params['mosaic_hor_ver'] : 'vertical')),
-      'resizable_mosaic' => ($use_option_defaults ? $wd_bwg_options->image_enable_page : (isset($params['resizable_mosaic']) ? $params['resizable_mosaic'] : 0)),
-      'mosaic_total_width' => ($use_option_defaults ? $wd_bwg_options->mosaic_total_width : (isset($params['mosaic_total_width']) ? $params['mosaic_total_width'] : 100)),
-      'image_browser_width' => ($use_option_defaults ? $wd_bwg_options->image_browser_width : (isset($params['image_browser_width']) ? $params['image_browser_width'] : 800)),
-      'image_browser_title_enable' => ($use_option_defaults ? $wd_bwg_options->image_browser_title_enable : (isset($params['image_browser_title_enable']) ? $params['image_browser_title_enable'] : 1)),
-      'image_browser_description_enable' => ($use_option_defaults ? $wd_bwg_options->image_browser_description_enable : (isset($params['image_browser_description_enable']) ? $params['image_browser_description_enable'] : 1)),
-      'popup_autoplay' => ($from || $use_option_defaults ? $wd_bwg_options->popup_autoplay : (isset($params['popup_autoplay']) ? $params['popup_autoplay'] : 0)),
-      'popup_enable_pinterest' => ($use_option_defaults ? $wd_bwg_options->popup_enable_pinterest : (isset($params['popup_enable_pinterest']) ? $params['popup_enable_pinterest'] : 0)),
-      'popup_enable_tumblr' => ($use_option_defaults ? $wd_bwg_options->popup_enable_tumblr : (isset($params['popup_enable_tumblr']) ? $params['popup_enable_tumblr'] : 0)),
-      'popup_enable_info' => ($from || $use_option_defaults ? $wd_bwg_options->popup_enable_info : (isset($params['popup_enable_info']) ? $params['popup_enable_info'] : 1)),
-      'popup_info_always_show' => ($from || $use_option_defaults ? $wd_bwg_options->popup_info_always_show : (isset($params['popup_info_always_show']) ? $params['popup_info_always_show'] : 0)),
-      'popup_info_full_width' => ($from || $use_option_defaults ? $wd_bwg_options->popup_info_full_width : (isset($params['popup_info_full_width']) ? $params['popup_info_full_width'] : 0)),
-      'popup_enable_rate' => ($from || $use_option_defaults ? $wd_bwg_options->popup_enable_rate : (isset($params['popup_enable_rate']) ? $params['popup_enable_rate'] : 0)),
-      'popup_width' => ($from || $use_option_defaults ? $wd_bwg_options->popup_width : (isset($params['popup_width']) ? $params['popup_width'] : 800)),
-      'popup_height' => ($from || $use_option_defaults ? $wd_bwg_options->popup_height : (isset($params['popup_height']) ? $params['popup_height'] : 500)),
-      'popup_effect' => ($from || $use_option_defaults ? $wd_bwg_options->popup_type : (isset($params['popup_effect']) ? $params['popup_effect'] : 'none')),
-      'popup_interval' => ($from || $use_option_defaults ? $wd_bwg_options->popup_interval : (isset($params['popup_interval']) ? $params['popup_interval'] : 5)),
-      'popup_enable_filmstrip' => ($from || $use_option_defaults ? $wd_bwg_options->popup_enable_filmstrip : (isset($params['popup_enable_filmstrip']) ? $params['popup_enable_filmstrip'] : 0)),
-      'popup_filmstrip_height' => ($from || $use_option_defaults ? $wd_bwg_options->popup_filmstrip_height : (isset($params['popup_filmstrip_height']) ? $params['popup_filmstrip_height'] : 50)),
-      'popup_enable_ctrl_btn' => ($from || $use_option_defaults ? $wd_bwg_options->popup_enable_ctrl_btn : (isset($params['popup_enable_ctrl_btn']) ? $params['popup_enable_ctrl_btn'] : 1)),
-      'popup_enable_fullscreen' => ($from || $use_option_defaults ? $wd_bwg_options->popup_enable_fullscreen : (isset($params['popup_enable_fullscreen']) ? $params['popup_enable_fullscreen'] : 0)),
-      'popup_fullscreen' => ($from || $use_option_defaults ? $wd_bwg_options->popup_fullscreen : (isset($params['popup_fullscreen']) ? $params['popup_fullscreen'] : 0)),
-      'popup_enable_comment' => ($from || $use_option_defaults ? $wd_bwg_options->popup_enable_comment : (isset($params['popup_enable_comment']) ? $params['popup_enable_comment'] : 0)),
-      'popup_enable_facebook' => ($from || $use_option_defaults ? $wd_bwg_options->popup_enable_facebook : (isset($params['popup_enable_facebook']) ? $params['popup_enable_facebook'] : 0)),
-      'popup_enable_twitter' => ($from || $use_option_defaults ? $wd_bwg_options->popup_enable_twitter : (isset($params['popup_enable_twitter']) ? $params['popup_enable_twitter'] : 0)),
-      'popup_enable_google' => ($from || $use_option_defaults ? $wd_bwg_options->popup_enable_google : (isset($params['popup_enable_google']) ? $params['popup_enable_google'] : 0)),
-      'popup_enable_ecommerce' => ($use_option_defaults ? $wd_bwg_options->popup_enable_ecommerce : (isset($params['popup_enable_ecommerce']) ? $params['popup_enable_ecommerce'] : 0)),
-      'popup_hit_counter' => ($from || $use_option_defaults ? $wd_bwg_options->popup_hit_counter : (isset($params['popup_hit_counter']) ? $params['popup_hit_counter'] : 0)),
-      'popup_effect_duration' => ($from || $use_option_defaults ? $wd_bwg_options->popup_effect_duration : (isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1)),
-      'enable_slideshow_music' => ($from || $use_option_defaults ? $wd_bwg_options->slideshow_enable_music : (isset($params['enable_slideshow_music']) ? $params['enable_slideshow_music'] : 0)),
-      'slideshow_title_full_width' => ($from || $use_option_defaults ? $wd_bwg_options->slideshow_title_full_width : (isset($params['slideshow_title_full_width']) ? $params['slideshow_title_full_width'] : 0)),
-      'slideshow_music_url' => ($from || $use_option_defaults ? $wd_bwg_options->slideshow_audio_url : (isset($params['slideshow_music_url']) ? $params['slideshow_music_url'] : '')),
-      'slideshow_effect_duration' => ($use_option_defaults ? $wd_bwg_options->slideshow_effect_duration : (isset($params['slideshow_effect_duration']) ? $params['slideshow_effect_duration'] : 1)),
-      'slideshow_effect' => ($use_option_defaults ? $wd_bwg_options->slideshow_type : (isset($params['slideshow_effect']) ? $params['slideshow_effect'] : 'fade')),
-      'slideshow_interval' => ($use_option_defaults ? $wd_bwg_options->slideshow_interval : (isset($params['slideshow_interval']) ? $params['slideshow_interval'] : 5)),
-      'slideshow_width' => ($use_option_defaults ? $wd_bwg_options->slideshow_width : (isset($params['slideshow_width']) ? $params['slideshow_width'] : 800)),
-      'slideshow_height' => ($use_option_defaults ? $wd_bwg_options->slideshow_height : (isset($params['slideshow_height']) ? $params['slideshow_height'] : 600)),
-      'enable_slideshow_autoplay' => ($use_option_defaults ? $wd_bwg_options->slideshow_enable_autoplay : (isset($params['enable_slideshow_autoplay']) ? $params['enable_slideshow_autoplay'] : $wd_bwg_options->slideshow_enable_autoplay)),
-      'enable_slideshow_shuffle' => ($use_option_defaults ? $wd_bwg_options->slideshow_enable_shuffle : (isset($params['enable_slideshow_shuffle']) ? $params['enable_slideshow_shuffle'] : 0)),
-      'enable_slideshow_ctrl' => ($use_option_defaults ? $wd_bwg_options->slideshow_enable_ctrl : (isset($params['enable_slideshow_ctrl']) ? $params['enable_slideshow_ctrl'] : $wd_bwg_options->slideshow_enable_ctrl)),
-      'enable_slideshow_filmstrip' => ($from || $use_option_defaults ? $wd_bwg_options->slideshow_enable_filmstrip : (isset($params['enable_slideshow_filmstrip']) ? $params['enable_slideshow_filmstrip'] : 0)),
-      'slideshow_filmstrip_height' => ($use_option_defaults ? $wd_bwg_options->slideshow_filmstrip_height : (isset($params['slideshow_filmstrip_height']) ? $params['slideshow_filmstrip_height'] : 50)),
-      'slideshow_enable_title' => ($from || $use_option_defaults ? $wd_bwg_options->slideshow_enable_title : (isset($params['slideshow_enable_title']) ? $params['slideshow_enable_title'] : 0)),
-      'slideshow_title_position' => ($from || $use_option_defaults ? $wd_bwg_options->slideshow_title_position : (isset($params['slideshow_title_position']) ? $params['slideshow_title_position'] : 'bottom-right')),
-      'slideshow_enable_description' => ($from || $use_option_defaults ? $wd_bwg_options->slideshow_enable_description : (isset($params['slideshow_enable_description']) ? $params['slideshow_enable_description'] : 0)),
-      'slideshow_description_position' => ($from || $use_option_defaults ? $wd_bwg_options->slideshow_description_position : (isset($params['slideshow_description_position']) ? $params['slideshow_description_position'] : 'bottom-right')),
-      'watermark_type' => ($from || $use_option_defaults ? $wd_bwg_options->watermark_type : (isset($params['watermark_type']) ? $params['watermark_type'] : 'none')),
-      'watermark_text' => ($from || $use_option_defaults ? urlencode($wd_bwg_options->watermark_text) : (isset($params['watermark_text']) ? urlencode($params['watermark_text']) : '')),
-      'watermark_font_size' => ($from || $use_option_defaults ? $wd_bwg_options->watermark_font_size : (isset($params['watermark_font_size']) ? $params['watermark_font_size'] : 12)),
-      'watermark_font' => ($from || $use_option_defaults ? $wd_bwg_options->watermark_font : (isset($params['watermark_font']) ? $params['watermark_font'] : 'Arial')),
-      'watermark_color' => ($from || $use_option_defaults ? $wd_bwg_options->watermark_color : (isset($params['watermark_color']) ? $params['watermark_color'] : 'FFFFFF')),
-      'watermark_link' => ($from || $use_option_defaults ? urlencode($wd_bwg_options->watermark_link) : (isset($params['watermark_link']) ? urlencode($params['watermark_link']) : '')),
-      'watermark_url' => ($from || $use_option_defaults ? urlencode($wd_bwg_options->watermark_url) : (isset($params['watermark_url']) ? urlencode($params['watermark_url']) : '')),
-      'watermark_width' => ($from || $use_option_defaults ? $wd_bwg_options->watermark_width : (isset($params['watermark_width']) ? $params['watermark_width'] : 90)),
-      'watermark_height' => ($from || $use_option_defaults ? $wd_bwg_options->watermark_height : (isset($params['watermark_height']) ? $params['watermark_height'] : 90)),
-      'watermark_opacity' => ($from || $use_option_defaults ? $wd_bwg_options->watermark_opacity : (isset($params['watermark_opacity']) ? $params['watermark_opacity'] : 30)),
-      'watermark_position' => ($from || $use_option_defaults ? $wd_bwg_options->watermark_position : (isset($params['watermark_position']) ? $params['watermark_position'] : 'bottom-right')),
-      'blog_style_width' => ($use_option_defaults ? $wd_bwg_options->image_browser_width : (isset($params['blog_style_width']) ? $params['blog_style_width'] : 800)),
-      'blog_style_title_enable' => ($use_option_defaults ? $wd_bwg_options->blog_style_title_enable : (isset($params['blog_style_title_enable']) ? $params['blog_style_title_enable'] : 1)),
-      'blog_style_images_per_page' => ($use_option_defaults ? $wd_bwg_options->blog_style_images_per_page : (isset($params['blog_style_images_per_page']) ? $params['blog_style_images_per_page'] : 5)),
-      'blog_style_enable_page' => ($use_option_defaults ? $wd_bwg_options->blog_style_enable_page : (isset($params['blog_style_enable_page']) ? $params['blog_style_enable_page'] : 1)),
-      'blog_style_load_more_image_count' => ($use_option_defaults ? $wd_bwg_options->images_per_page : (isset($params['blog_style_load_more_image_count']) ? $params['blog_style_load_more_image_count'] : 5)),
-      'blog_style_description_enable' => ($use_option_defaults ? $wd_bwg_options->blog_style_description_enable : (isset($params['blog_style_description_enable']) ? $params['blog_style_description_enable'] : 0)),
-      'carousel_interval' => ($use_option_defaults ? $wd_bwg_options->carousel_interval : (isset($params['carousel_interval']) ? $params['carousel_interval'] : 5)),
-      'carousel_width' => ($use_option_defaults ? $wd_bwg_options->carousel_width : (isset($params['carousel_width']) ? $params['carousel_width'] : 300)),
-      'carousel_height' => ($use_option_defaults ? $wd_bwg_options->carousel_height : (isset($params['carousel_height']) ? $params['carousel_height'] : 300)),
-      'carousel_image_column_number' => ($use_option_defaults ? $wd_bwg_options->carousel_image_column_number : (isset($params['carousel_image_column_number']) ? $params['carousel_image_column_number'] : 5)),
-      'carousel_image_par' => ($use_option_defaults ? $wd_bwg_options->carousel_image_par : (isset($params['carousel_image_par']) ? $params['carousel_image_par'] : '0.75')),
-      'carousel_enable_title' => ($use_option_defaults ? $wd_bwg_options->carousel_enable_title : (isset($params['carousel_enable_title']) ? $params['carousel_enable_title'] : 0)),
-      'carousel_enable_autoplay' => ($use_option_defaults ? $wd_bwg_options->carousel_enable_autoplay : (isset($params['carousel_enable_autoplay']) ? $params['carousel_enable_autoplay'] : 0)),
-      'carousel_r_width' => ($use_option_defaults ? $wd_bwg_options->carousel_r_width : (isset($params['carousel_r_width']) ? $params['carousel_r_width'] : 800)),
-      'carousel_fit_containerWidth' => ($use_option_defaults ? $wd_bwg_options->carousel_fit_containerWidth : (isset($params['carousel_fit_containerWidth']) ? $params['carousel_fit_containerWidth'] : 1)),
-      'carousel_prev_next_butt' => ($use_option_defaults ? $wd_bwg_options->carousel_prev_next_butt : (isset($params['carousel_prev_next_butt']) ? $params['carousel_prev_next_butt'] : 1)),
-      'carousel_play_pause_butt' => ($use_option_defaults ? $wd_bwg_options->carousel_play_pause_butt : (isset($params['carousel_play_pause_butt']) ? $params['carousel_play_pause_butt'] : 1)),
-      'compuct_album_column_number' => ($from || $use_option_defaults ? $wd_bwg_options->album_column_number : (isset($params['compuct_album_column_number']) ? $params['compuct_album_column_number'] : 5)),
-      'compuct_albums_per_page' => ($use_option_defaults ? $wd_bwg_options->albums_per_page : (isset($params['compuct_albums_per_page']) ? $params['compuct_albums_per_page'] : 30)),
-      'compuct_album_title' => ($use_option_defaults ? $wd_bwg_options->album_title_show_hover : (isset($params['compuct_album_title']) ? $params['compuct_album_title'] : 'show')),
-      'compuct_album_view_type' => ($use_option_defaults ? $wd_bwg_options->album_view_type : (isset($params['compuct_album_view_type']) ? $params['compuct_album_view_type'] : 'thumbnail')),
-      'compuct_album_thumb_width' => ($from || $use_option_defaults ? $wd_bwg_options->album_thumb_width : (isset($params['compuct_album_thumb_width']) ? $params['compuct_album_thumb_width'] : 120)),
-      'compuct_album_thumb_height' => ($from || $use_option_defaults ? $wd_bwg_options->album_thumb_height : (isset($params['compuct_album_thumb_height']) ? $params['compuct_album_thumb_height'] : 90)),
-      'compuct_album_image_column_number' => ($from || $use_option_defaults ? $wd_bwg_options->image_column_number : (isset($params['compuct_album_image_column_number']) ? $params['compuct_album_image_column_number'] : 5)),
-      'compuct_album_images_per_page' => ($use_option_defaults ? $wd_bwg_options->images_per_page : (isset($params['compuct_album_images_per_page']) ? $params['compuct_album_images_per_page'] : 30)),
-      'compuct_album_image_title' => ($use_option_defaults ? $wd_bwg_options->image_title_show_hover : (isset($params['compuct_album_image_title']) ? $params['compuct_album_image_title'] : 'show')),
-      'compuct_album_image_thumb_width' => ($from || $use_option_defaults ? $wd_bwg_options->thumb_width : (isset($params['compuct_album_image_thumb_width']) ? $params['compuct_album_image_thumb_width'] : 120)),
-      'compuct_album_image_thumb_height' => ($from || $use_option_defaults ? $wd_bwg_options->thumb_height : (isset($params['compuct_album_image_thumb_height']) ? $params['compuct_album_image_thumb_height'] : 90)),
-      'compuct_album_enable_page' => ($use_option_defaults ? $wd_bwg_options->album_enable_page : (isset($params['compuct_album_enable_page']) ? $params['compuct_album_enable_page'] : 1)),
-      'compuct_album_load_more_image_count' => ($use_option_defaults ? $wd_bwg_options->images_per_page : (isset($params['compuct_album_load_more_image_count']) ? $params['compuct_album_load_more_image_count'] : 30)),
-      'compuct_albums_per_page_load_more' => ($use_option_defaults ? $wd_bwg_options->albums_per_page : (isset($params['compuct_albums_per_page_load_more']) ? $params['compuct_albums_per_page_load_more'] : 30)),
-      'compuct_album_mosaic_hor_ver' => ($use_option_defaults ? $wd_bwg_options->mosaic : (isset($params['compuct_album_mosaic_hor_ver']) ? $params['compuct_album_mosaic_hor_ver'] : 'vertical')),
-      'compuct_album_resizable_mosaic' => ($use_option_defaults ? $wd_bwg_options->resizable_mosaic : (isset($params['compuct_album_resizable_mosaic']) ? $params['compuct_album_resizable_mosaic'] : 0)),
-      'compuct_album_mosaic_total_width' => ($use_option_defaults ? $wd_bwg_options->mosaic_total_width : (isset($params['compuct_album_mosaic_total_width']) ? $params['compuct_album_mosaic_total_width'] : 100)),
-      'show_album_name' => ($use_option_defaults ? $wd_bwg_options->show_album_name : (isset($params['show_album_name']) ? $params['show_album_name'] : 0)),
-      'masonry_album_column_number' => ($use_option_defaults ? $wd_bwg_options->album_column_number : (isset($params['masonry_album_column_number']) ? $params['masonry_album_column_number'] : 5)),
-      'masonry_albums_per_page' => ($use_option_defaults ? $wd_bwg_options->albums_per_page : (isset($params['masonry_albums_per_page']) ? $params['masonry_albums_per_page'] : 30)),
-      'masonry_album_title' => ($use_option_defaults ? $wd_bwg_options->album_title_show_hover : (isset($params['masonry_album_title']) ? $params['masonry_album_title'] : 'show')),
-      'masonry_album_thumb_width' => ($use_option_defaults ? $wd_bwg_options->album_thumb_width : (isset($params['masonry_album_thumb_width']) ? $params['masonry_album_thumb_width'] : 120)),
-      'masonry_album_thumb_height' => ($use_option_defaults ? $wd_bwg_options->album_thumb_height : (isset($params['masonry_album_thumb_height']) ? $params['masonry_album_thumb_height'] : 90)),
-      'masonry_album_image_column_number' => ($use_option_defaults ? $wd_bwg_options->image_column_number : (isset($params['masonry_album_image_column_number']) ? $params['masonry_album_image_column_number'] : 5)),
-      'masonry_album_images_per_page' => ($use_option_defaults ? $wd_bwg_options->images_per_page : (isset($params['masonry_album_images_per_page']) ? $params['masonry_album_images_per_page'] : 30)),
-      'masonry_album_image_title' => ($use_option_defaults ? $wd_bwg_options->image_title_show_hover : (isset($params['masonry_album_image_title']) ? $params['masonry_album_image_title'] : 'show')),
-      'masonry_album_image_thumb_width' => ($use_option_defaults ? $wd_bwg_options->thumb_width : (isset($params['masonry_album_image_thumb_width']) ? $params['masonry_album_image_thumb_width'] : 120)),
-      'masonry_album_image_thumb_height' => ($use_option_defaults ? $wd_bwg_options->thumb_height : (isset($params['masonry_album_image_thumb_height']) ? $params['masonry_album_image_thumb_height'] : 90)),
-      'masonry_album_enable_page' => ($use_option_defaults ? $wd_bwg_options->show_album_name : (isset($params['masonry_album_enable_page']) ? $params['masonry_album_enable_page'] : 0)),
-      'masonry_album_load_more_image_count' => ($use_option_defaults ? $wd_bwg_options->images_per_page : (isset($params['masonry_album_load_more_image_count']) ? $params['masonry_album_load_more_image_count'] : 30)),
-      'masonry_albums_per_page_load_more' => ($use_option_defaults ? $wd_bwg_options->albums_per_page : (isset($params['masonry_albums_per_page_load_more']) ? $params['masonry_albums_per_page_load_more'] : 30)),
-      'extended_album_image_column_number' => ($use_option_defaults ? $wd_bwg_options->album_column_number : (isset($params['extended_album_image_column_number']) ? $params['extended_album_image_column_number'] : 5)),
-      'extended_album_images_per_page' => ($use_option_defaults ? $wd_bwg_options->images_per_page : (isset($params['extended_album_images_per_page']) ? $params['extended_album_images_per_page'] : 30)),
-      'extended_albums_per_page' => ($use_option_defaults ? $wd_bwg_options->albums_per_page : (isset($params['extended_albums_per_page']) ? $params['extended_albums_per_page'] : 30)),
-      'extended_album_height' => ($use_option_defaults ? $wd_bwg_options->extended_album_height : (isset($params['extended_album_height']) ? $params['extended_album_height'] : 150)),
-      'extended_album_description_enable' => ($use_option_defaults ? $wd_bwg_options->extended_album_description_enable : (isset($params['extended_album_description_enable']) ? $params['extended_album_description_enable'] : 1)),
-      'extended_album_view_type' => ($use_option_defaults ? $wd_bwg_options->album_view_type : (isset($params['extended_album_view_type']) ? $params['extended_album_view_type'] : 'thumbnail')),
-      'extended_album_thumb_width' => ($use_option_defaults ? $wd_bwg_options->album_thumb_width : (isset($params['extended_album_thumb_width']) ? $params['extended_album_thumb_width'] : 120)),
-      'extended_album_thumb_height' => ($use_option_defaults ? $wd_bwg_options->album_thumb_height : (isset($params['extended_album_thumb_height']) ? $params['extended_album_thumb_height'] : 90)),
-      'extended_album_image_title' => ($use_option_defaults ? $wd_bwg_options->image_title_show_hover : (isset($params['extended_album_image_title']) ? $params['extended_album_image_title'] : 'show')),
-      'extended_album_image_thumb_width' => ($use_option_defaults ? $wd_bwg_options->thumb_width : (isset($params['extended_album_image_thumb_width']) ? $params['extended_album_image_thumb_width'] : 120)),
-      'extended_album_image_thumb_height' => ($use_option_defaults ? $wd_bwg_options->thumb_height : (isset($params['extended_album_image_thumb_height']) ? $params['extended_album_image_thumb_height'] : 90)),
-      'extended_album_enable_page' => ($use_option_defaults ? $wd_bwg_options->show_album_name : (isset($params['extended_album_enable_page']) ? $params['extended_album_enable_page'] : 0)),
-      'extended_album_load_more_image_count' => ($use_option_defaults ? $wd_bwg_options->images_per_page : (isset($params['extended_album_load_more_image_count']) ? $params['extended_album_load_more_image_count'] : 30)),
-      'extended_albums_per_page_load_more' => ($use_option_defaults ? $wd_bwg_options->albums_per_page : (isset($params['extended_albums_per_page_load_more']) ? $params['extended_albums_per_page_load_more'] : 30)),
+
+      'thumb_click_action' => (($from) ? BWG()->options->thumb_click_action : ($use_option_defaults ? BWG()->options->thumb_click_action : (isset($params['thumb_click_action']) && $params['thumb_click_action'] != 'undefined' ? $params['thumb_click_action'] : 'open_lightbox'))),
+      'thumb_link_target' => (($from) ? BWG()->options->thumb_link_target : ($use_option_defaults ? BWG()->options->thumb_link_target : (isset($params['thumb_link_target']) ? $params['thumb_link_target'] : 1))),
+      'popup_autoplay' => (($from) ? BWG()->options->popup_autoplay : ($use_option_defaults ? BWG()->options->popup_autoplay : (isset($params['popup_autoplay']) ? $params['popup_autoplay'] : 0))),
+      'popup_enable_pinterest' => ($use_option_defaults ? BWG()->options->popup_enable_pinterest : (isset($params['popup_enable_pinterest']) ? $params['popup_enable_pinterest'] : 0)),
+      'popup_enable_tumblr' => ($use_option_defaults ? BWG()->options->popup_enable_tumblr : (isset($params['popup_enable_tumblr']) ? $params['popup_enable_tumblr'] : 0)),
+      'popup_enable_info' => (($from) ? BWG()->options->popup_enable_info : ($use_option_defaults ? BWG()->options->popup_enable_info : (isset($params['popup_enable_info']) ? $params['popup_enable_info'] : 1))),
+      'popup_info_always_show' => (($from) ? BWG()->options->popup_info_always_show : ($use_option_defaults ? BWG()->options->popup_info_always_show : (isset($params['popup_info_always_show']) ? $params['popup_info_always_show'] : 0))),
+      'popup_info_full_width' => (($from) ? BWG()->options->popup_info_full_width : ($use_option_defaults ? BWG()->options->popup_info_full_width : (isset($params['popup_info_full_width']) ? $params['popup_info_full_width'] : 0))),
+      'popup_enable_rate' => (($from) ? BWG()->options->popup_enable_rate : ($use_option_defaults ? BWG()->options->popup_enable_rate : (isset($params['popup_enable_rate']) ? $params['popup_enable_rate'] : 0))),
+      'popup_width' => (($from) ? BWG()->options->popup_width : ($use_option_defaults ? BWG()->options->popup_width : (isset($params['popup_width']) ? $params['popup_width'] : 800))),
+      'popup_height' => (($from) ? BWG()->options->popup_height : ($use_option_defaults ? BWG()->options->popup_height : (isset($params['popup_height']) ? $params['popup_height'] : 500))),
+      'popup_effect' => (($from) ? BWG()->options->popup_type : ($use_option_defaults ? BWG()->options->popup_type : (isset($params['popup_effect']) ? $params['popup_effect'] : 'none'))),
+      'popup_interval' => (($from) ? BWG()->options->popup_interval : ($use_option_defaults ? BWG()->options->popup_interval : (isset($params['popup_interval']) ? $params['popup_interval'] : 5))),
+      'popup_enable_filmstrip' => (($from) ? BWG()->options->popup_enable_filmstrip : ($use_option_defaults ? BWG()->options->popup_enable_filmstrip : (isset($params['popup_enable_filmstrip']) ? $params['popup_enable_filmstrip'] : 0))),
+      'popup_filmstrip_height' => (($from) ? BWG()->options->popup_filmstrip_height : ($use_option_defaults ? BWG()->options->popup_filmstrip_height : (isset($params['popup_filmstrip_height']) ? $params['popup_filmstrip_height'] : 50))),
+      'popup_enable_ctrl_btn' => (($from) ? BWG()->options->popup_enable_ctrl_btn : ($use_option_defaults ? BWG()->options->popup_enable_ctrl_btn : (isset($params['popup_enable_ctrl_btn']) ? $params['popup_enable_ctrl_btn'] : 1))),
+      'popup_enable_fullscreen' => (($from) ? BWG()->options->popup_enable_fullscreen : ($use_option_defaults ? BWG()->options->popup_enable_fullscreen : (isset($params['popup_enable_fullscreen']) ? $params['popup_enable_fullscreen'] : 0))),
+	    'popup_fullscreen' => (($from) ? BWG()->options->popup_fullscreen : ($use_option_defaults ? BWG()->options->popup_fullscreen : (isset($params['popup_fullscreen']) ? $params['popup_fullscreen'] : 0))),
+      'popup_enable_comment' => (($from) ? BWG()->options->popup_enable_comment : ($use_option_defaults ? BWG()->options->popup_enable_comment : (isset($params['popup_enable_comment']) ? $params['popup_enable_comment'] : 0))),
+      'popup_enable_facebook' => (($from) ? BWG()->options->popup_enable_facebook : ($use_option_defaults ? BWG()->options->popup_enable_facebook : (isset($params['popup_enable_facebook']) ? $params['popup_enable_facebook'] : 0))),
+      'popup_enable_twitter' => (($from) ? BWG()->options->popup_enable_twitter : ($use_option_defaults ? BWG()->options->popup_enable_twitter : (isset($params['popup_enable_twitter']) ? $params['popup_enable_twitter'] : 0))),
+      'popup_enable_google' => (($from) ? BWG()->options->popup_enable_google : ($use_option_defaults ? BWG()->options->popup_enable_google : (isset($params['popup_enable_google']) ? $params['popup_enable_google'] : 0))),
+      'popup_enable_ecommerce' => ($use_option_defaults ? BWG()->options->popup_enable_ecommerce : (isset($params['popup_enable_ecommerce']) ? $params['popup_enable_ecommerce'] : 0)),
+      'popup_hit_counter' => (($from) ? BWG()->options->popup_hit_counter : ($use_option_defaults ? BWG()->options->popup_hit_counter : (isset($params['popup_hit_counter']) ? $params['popup_hit_counter'] : 0))),
+      'popup_effect_duration' => (($from) ? BWG()->options->popup_effect_duration : ($use_option_defaults ? BWG()->options->popup_effect_duration : (isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1))),
+
+      'watermark_type' => (($from) ? BWG()->options->watermark_type : ($use_option_defaults ? BWG()->options->watermark_type : (isset($params['watermark_type']) ? $params['watermark_type'] : 'none'))),
+      'watermark_text' => (($from) ? urlencode(BWG()->options->watermark_text) : ($use_option_defaults ? urlencode(BWG()->options->watermark_text) : (isset($params['watermark_text']) ? urlencode($params['watermark_text']) : ''))),
+      'watermark_font_size' => (($from) ? BWG()->options->watermark_font_size : ($use_option_defaults ? BWG()->options->watermark_font_size : (isset($params['watermark_font_size']) ? $params['watermark_font_size'] : 12))),
+      'watermark_font' => (($from) ? BWG()->options->watermark_font : ($use_option_defaults ? BWG()->options->watermark_font : (isset($params['watermark_font']) ? $params['watermark_font'] : 'Arial'))),
+      'watermark_color' => (($from) ? BWG()->options->watermark_color : ($use_option_defaults ? BWG()->options->watermark_color : (isset($params['watermark_color']) ? $params['watermark_color'] : 'FFFFFF'))),
+      'watermark_link' => (($from) ? urlencode(BWG()->options->watermark_link) : ($use_option_defaults ? urlencode(BWG()->options->watermark_link) : (isset($params['watermark_link']) ? urlencode($params['watermark_link']) : ''))),
+      'watermark_url' => (($from) ? urlencode(BWG()->options->watermark_url) : ($use_option_defaults ? urlencode(BWG()->options->watermark_url) : (isset($params['watermark_url']) ? urlencode($params['watermark_url']) : ''))),
+      'watermark_width' => (($from) ? BWG()->options->watermark_width: ($use_option_defaults ? BWG()->options->watermark_width : (isset($params['watermark_width']) ? $params['watermark_width'] : 90))),
+      'watermark_height' => (($from) ? BWG()->options->watermark_height : ($use_option_defaults ? BWG()->options->watermark_height : (isset($params['watermark_height']) ? $params['watermark_height'] : 90))),
+      'watermark_opacity' => (($from) ? BWG()->options->watermark_opacity : ($use_option_defaults ? BWG()->options->watermark_opacity : (isset($params['watermark_opacity']) ? $params['watermark_opacity'] : 30))),
+      'watermark_position' => (($from) ? BWG()->options->watermark_position : ($use_option_defaults ? BWG()->options->watermark_position : (isset($params['watermark_position']) ? $params['watermark_position'] : 'bottom-right'))),
     );
+    switch ($params['gallery_type']) {
+      case 'thumbnails':
+        $defaults['thumb_width'] = self::get_option_value('thumb_width', 'thumb_width', 'thumb_width', $use_option_defaults, $params);
+        $defaults['thumb_height'] = self::get_option_value('thumb_height', 'thumb_height', 'thumb_height', $use_option_defaults, $params);
+        $defaults['image_column_number'] = self::get_option_value('image_column_number', 'image_column_number', 'image_column_number', $use_option_defaults, $params);
+        $defaults['image_enable_page'] = self::get_option_value('image_enable_page', 'image_enable_page', 'image_enable_page', $use_option_defaults, $params);
+        $defaults['images_per_page'] = self::get_option_value('images_per_page', 'images_per_page', 'images_per_page', $use_option_defaults, $params);
+        $defaults['load_more_image_count'] = self::get_option_value('load_more_image_count', 'load_more_image_count', 'load_more_image_count', $use_option_defaults, $params);
+        $defaults['sort_by'] = self::get_option_value('sort_by', 'sort_by', 'sort_by', $use_option_defaults, $params);
+        $defaults['order_by'] = self::get_option_value('order_by', 'order_by', 'order_by', $use_option_defaults, $params);
+        $defaults['show_search_box'] = self::get_option_value('show_search_box', 'show_search_box', 'show_search_box', $use_option_defaults, $params);
+        $defaults['placeholder'] = self::get_option_value('placeholder', 'placeholder', 'placeholder', $use_option_defaults, $params);
+        $defaults['search_box_width'] = self::get_option_value('search_box_width', 'search_box_width', 'search_box_width', $use_option_defaults, $params);
+        $defaults['show_sort_images'] = self::get_option_value('show_sort_images', 'show_sort_images', 'show_sort_images', $use_option_defaults, $params);
+        $defaults['show_tag_box'] = self::get_option_value('show_tag_box', 'show_tag_box', 'show_tag_box', $use_option_defaults, $params);
+        $defaults['showthumbs_name'] = self::get_option_value('showthumbs_name', 'showthumbs_name', 'showthumbs_name', $use_option_defaults, $params);
+        $defaults['show_gallery_description'] = self::get_option_value('show_gallery_description', 'show_gallery_description', 'show_gallery_description', $use_option_defaults, $params);
+        $defaults['image_title'] = self::get_option_value('image_title', 'image_title', 'image_title_show_hover', $from || $use_option_defaults, $params);
+        $defaults['play_icon'] = self::get_option_value('play_icon', 'play_icon', 'play_icon', $use_option_defaults, $params);
+        $defaults['gallery_download'] = self::get_option_value('gallery_download', 'gallery_download', 'gallery_download', $use_option_defaults, $params);
+        $defaults['ecommerce_icon'] = self::get_option_value('ecommerce_icon_show_hover', 'ecommerce_icon', 'ecommerce_icon_show_hover', $use_option_defaults, $params);
+        break;
+      case 'thumbnails_masonry':
+        $defaults['masonry_hor_ver'] = self::get_option_value('masonry_hor_ver', 'masonry_hor_ver', 'masonry', $use_option_defaults, $params);
+        $defaults['show_masonry_thumb_description'] = self::get_option_value('show_masonry_thumb_description', 'show_masonry_thumb_description', 'show_masonry_thumb_description', $use_option_defaults, $params);
+        $defaults['thumb_width'] = self::get_option_value('masonry_thumb_size', 'thumb_width', 'masonry_thumb_size', $use_option_defaults, $params);
+        $defaults['thumb_height'] = self::get_option_value('masonry_thumb_size', 'thumb_height', 'masonry_thumb_size', $use_option_defaults, $params);
+        $defaults['image_column_number'] = self::get_option_value('masonry_image_column_number', 'image_column_number', 'masonry_image_column_number', $use_option_defaults, $params);
+        $defaults['image_enable_page'] = self::get_option_value('masonry_image_enable_page', 'image_enable_page', 'masonry_image_enable_page', $use_option_defaults, $params);
+        $defaults['images_per_page'] = self::get_option_value('masonry_images_per_page', 'images_per_page', 'masonry_images_per_page', $use_option_defaults, $params);
+        $defaults['load_more_image_count'] = self::get_option_value('masonry_load_more_image_count', 'load_more_image_count', 'masonry_load_more_image_count', $use_option_defaults, $params);
+        $defaults['sort_by'] = self::get_option_value('masonry_sort_by', 'sort_by', 'masonry_sort_by', $use_option_defaults, $params);
+        $defaults['order_by'] = self::get_option_value('masonry_order_by', 'order_by', 'masonry_order_by', $use_option_defaults, $params);
+        $defaults['show_search_box'] = self::get_option_value('masonry_show_search_box', 'show_search_box', 'masonry_show_search_box', $use_option_defaults, $params);
+        $defaults['placeholder'] = self::get_option_value('masonry_placeholder', 'placeholder', 'masonry_placeholder', $use_option_defaults, $params);
+        $defaults['search_box_width'] = self::get_option_value('masonry_search_box_width', 'search_box_width', 'masonry_search_box_width', $use_option_defaults, $params);
+        $defaults['show_sort_images'] = self::get_option_value('masonry_show_sort_images', 'show_sort_images', 'masonry_show_sort_images', $use_option_defaults, $params);
+        $defaults['show_tag_box'] = self::get_option_value('masonry_show_tag_box', 'show_tag_box', 'masonry_show_tag_box', $use_option_defaults, $params);
+        $defaults['showthumbs_name'] = self::get_option_value('masonry_show_gallery_title', 'showthumbs_name', 'masonry_show_gallery_title', $use_option_defaults, $params);
+        $defaults['show_gallery_description'] = self::get_option_value('masonry_show_gallery_description', 'show_gallery_description', 'masonry_show_gallery_description', $use_option_defaults, $params);
+        $defaults['play_icon'] = self::get_option_value('masonry_play_icon', 'play_icon', 'masonry_play_icon', $use_option_defaults, $params);
+        $defaults['gallery_download'] = self::get_option_value('masonry_gallery_download', 'gallery_download', 'masonry_gallery_download', $use_option_defaults, $params);
+        $defaults['ecommerce_icon'] = self::get_option_value('masonry_ecommerce_icon_show_hover', 'ecommerce_icon', 'masonry_ecommerce_icon_show_hover', $use_option_defaults, $params);
+        break;
+      case 'thumbnails_mosaic':
+        $defaults['mosaic_hor_ver'] = self::get_option_value('mosaic_hor_ver', 'mosaic_hor_ver', 'mosaic', $use_option_defaults, $params);
+        $defaults['resizable_mosaic'] = self::get_option_value('resizable_mosaic', 'resizable_mosaic', 'resizable_mosaic', $use_option_defaults, $params);
+        $defaults['mosaic_total_width'] = self::get_option_value('mosaic_total_width', 'mosaic_total_width', 'mosaic_total_width', $use_option_defaults, $params);
+        $defaults['thumb_width'] = self::get_option_value('mosaic_thumb_size', 'thumb_width', 'mosaic_thumb_size', $use_option_defaults, $params);
+        $defaults['thumb_height'] = self::get_option_value('mosaic_thumb_size', 'thumb_height', 'mosaic_thumb_size', $use_option_defaults, $params);
+        $defaults['image_enable_page'] = self::get_option_value('mosaic_image_enable_page', 'image_enable_page', 'mosaic_image_enable_page', $use_option_defaults, $params);
+        $defaults['images_per_page'] = self::get_option_value('mosaic_images_per_page', 'images_per_page', 'mosaic_images_per_page', $use_option_defaults, $params);
+        $defaults['load_more_image_count'] = self::get_option_value('mosaic_load_more_image_count', 'load_more_image_count', 'mosaic_load_more_image_count', $use_option_defaults, $params);
+        $defaults['sort_by'] = self::get_option_value('mosaic_sort_by', 'sort_by', 'mosaic_sort_by', $use_option_defaults, $params);
+        $defaults['order_by'] = self::get_option_value('mosaic_order_by', 'order_by', 'mosaic_order_by', $use_option_defaults, $params);
+        $defaults['show_search_box'] = self::get_option_value('mosaic_show_search_box', 'show_search_box', 'mosaic_show_search_box', $use_option_defaults, $params);
+        $defaults['placeholder'] = self::get_option_value('mosaic_placeholder', 'placeholder', 'mosaic_placeholder', $use_option_defaults, $params);
+        $defaults['search_box_width'] = self::get_option_value('mosaic_search_box_width', 'search_box_width', 'mosaic_search_box_width', $use_option_defaults, $params);
+        $defaults['show_sort_images'] = self::get_option_value('mosaic_show_sort_images', 'show_sort_images', 'mosaic_show_sort_images', $use_option_defaults, $params);
+        $defaults['show_tag_box'] = self::get_option_value('mosaic_show_tag_box', 'show_tag_box', 'mosaic_show_tag_box', $use_option_defaults, $params);
+        $defaults['showthumbs_name'] = self::get_option_value('mosaic_show_gallery_title', 'showthumbs_name', 'mosaic_show_gallery_title', $use_option_defaults, $params);
+        $defaults['show_gallery_description'] = self::get_option_value('mosaic_show_gallery_description', 'show_gallery_description', 'mosaic_show_gallery_description', $use_option_defaults, $params);
+        $defaults['image_title'] = self::get_option_value('mosaic_image_title', 'image_title', 'mosaic_image_title_show_hover', $from || $use_option_defaults, $params);
+        $defaults['play_icon'] = self::get_option_value('mosaic_play_icon', 'play_icon', 'mosaic_play_icon', $use_option_defaults, $params);
+        $defaults['gallery_download'] = self::get_option_value('mosaic_gallery_download', 'gallery_download', 'mosaic_gallery_download', $use_option_defaults, $params);
+        $defaults['ecommerce_icon'] = self::get_option_value('mosaic_ecommerce_icon_show_hover', 'ecommerce_icon', 'mosaic_ecommerce_icon_show_hover', $use_option_defaults, $params);
+        break;
+      case 'slideshow':
+        $defaults['slideshow_effect'] = self::get_option_value('slideshow_effect', 'slideshow_effect', 'slideshow_type', $use_option_defaults, $params);
+        $defaults['slideshow_interval'] = self::get_option_value('slideshow_interval', 'slideshow_interval', 'slideshow_interval', $use_option_defaults, $params);
+        $defaults['slideshow_width'] = self::get_option_value('slideshow_width', 'slideshow_width', 'slideshow_width', $use_option_defaults, $params);
+        $defaults['slideshow_height'] = self::get_option_value('slideshow_height', 'slideshow_height', 'slideshow_height', $use_option_defaults, $params);
+        $defaults['sort_by'] = self::get_option_value('slideshow_sort_by', 'sort_by', 'slideshow_sort_by', $use_option_defaults, $params);
+        $defaults['order_by'] = self::get_option_value('slideshow_order_by', 'order_by', 'slideshow_order_by', $use_option_defaults, $params);
+        $defaults['enable_slideshow_autoplay'] = self::get_option_value('enable_slideshow_autoplay', 'enable_slideshow_autoplay', 'slideshow_enable_autoplay', $use_option_defaults, $params);
+        $defaults['enable_slideshow_shuffle'] = self::get_option_value('enable_slideshow_shuffle', 'enable_slideshow_shuffle', 'slideshow_enable_shuffle', $use_option_defaults, $params);
+        $defaults['enable_slideshow_ctrl'] = self::get_option_value('enable_slideshow_ctrl', 'enable_slideshow_ctrl', 'slideshow_enable_ctrl', $use_option_defaults, $params);
+        $defaults['autohide_slideshow_navigation'] = self::get_option_value('autohide_slideshow_navigation', 'autohide_slideshow_navigation', 'autohide_slideshow_navigation', $use_option_defaults, $params);
+        $defaults['enable_slideshow_filmstrip'] = self::get_option_value('enable_slideshow_filmstrip', 'enable_slideshow_filmstrip', 'slideshow_enable_filmstrip', $use_option_defaults, $params);
+        $defaults['slideshow_filmstrip_height'] = self::get_option_value('slideshow_filmstrip_height', 'slideshow_filmstrip_height', 'slideshow_filmstrip_height', $use_option_defaults, $params);
+        $defaults['slideshow_enable_title'] = self::get_option_value('slideshow_enable_title', 'slideshow_enable_title', 'slideshow_enable_title', $from || $use_option_defaults, $params);
+        $defaults['slideshow_title_position'] = self::get_option_value('slideshow_title_position', 'slideshow_title_position', 'slideshow_title_position', $from || $use_option_defaults, $params);
+        $defaults['slideshow_title_full_width'] = self::get_option_value('slideshow_title_full_width', 'slideshow_title_full_width', 'slideshow_title_full_width', $from || $use_option_defaults, $params);
+        $defaults['slideshow_enable_description'] = self::get_option_value('slideshow_enable_description', 'slideshow_enable_description', 'slideshow_enable_description', $from || $use_option_defaults, $params);
+        $defaults['slideshow_description_position'] = self::get_option_value('slideshow_description_position', 'slideshow_description_position', 'slideshow_description_position', $from || $use_option_defaults, $params);
+        $defaults['enable_slideshow_music'] = self::get_option_value('enable_slideshow_music', 'enable_slideshow_music', 'slideshow_enable_music', $from || $use_option_defaults, $params);
+        $defaults['slideshow_music_url'] = self::get_option_value('slideshow_music_url', 'slideshow_music_url', 'slideshow_audio_url', $from || $use_option_defaults, $params);
+        $defaults['slideshow_effect_duration'] = self::get_option_value('slideshow_effect_duration', 'slideshow_effect_duration', 'slideshow_effect_duration', $use_option_defaults, $params);
+        $defaults['slideshow_interval'] = self::get_option_value('slideshow_interval', 'slideshow_interval', 'slideshow_interval', $use_option_defaults, $params);
+        $defaults['gallery_download'] = self::get_option_value('slideshow_gallery_download', 'gallery_download', 'slideshow_gallery_download', $use_option_defaults, $params);
+        break;
+      case 'image_browser':
+        $defaults['image_browser_width'] = self::get_option_value('image_browser_width', 'image_browser_width', 'image_browser_width', $use_option_defaults, $params);
+        $defaults['image_browser_title_enable'] = self::get_option_value('image_browser_title_enable', 'image_browser_title_enable', 'image_browser_title_enable', $use_option_defaults, $params);
+        $defaults['image_browser_description_enable'] = self::get_option_value('image_browser_description_enable', 'image_browser_description_enable', 'image_browser_description_enable', $use_option_defaults, $params);
+        $defaults['sort_by'] = self::get_option_value('image_browser_sort_by', 'sort_by', 'image_browser_sort_by', $use_option_defaults, $params);
+        $defaults['order_by'] = self::get_option_value('image_browser_order_by', 'order_by', 'image_browser_order_by', $use_option_defaults, $params);
+        $defaults['showthumbs_name'] = self::get_option_value('image_browser_show_gallery_title', 'showthumbs_name', 'image_browser_show_gallery_title', $use_option_defaults, $params);
+        $defaults['show_gallery_description'] = self::get_option_value('image_browser_show_gallery_description', 'show_gallery_description', 'image_browser_show_gallery_description', $use_option_defaults, $params);
+        $defaults['show_search_box'] = self::get_option_value('image_browser_show_search_box', 'show_search_box', 'image_browser_show_search_box', $use_option_defaults, $params);
+        $defaults['placeholder'] = self::get_option_value('image_browser_placeholder', 'placeholder', 'image_browser_placeholder', $use_option_defaults, $params);
+        $defaults['search_box_width'] = self::get_option_value('image_browser_search_box_width', 'search_box_width', 'image_browser_search_box_width', $use_option_defaults, $params);
+        $defaults['gallery_download'] = self::get_option_value('image_browser_gallery_download', 'gallery_download', 'image_browser_gallery_download', $use_option_defaults, $params);
+        break;
+      case 'blog_style':
+        $defaults['blog_style_width'] = self::get_option_value('blog_style_width', 'blog_style_width', 'blog_style_width', $use_option_defaults, $params);
+        $defaults['blog_style_title_enable'] = self::get_option_value('blog_style_title_enable', 'blog_style_title_enable', 'blog_style_title_enable', $use_option_defaults, $params);
+        $defaults['blog_style_images_per_page'] = self::get_option_value('blog_style_images_per_page', 'blog_style_images_per_page', 'blog_style_images_per_page', $use_option_defaults, $params);
+        $defaults['blog_style_load_more_image_count'] = self::get_option_value('blog_style_load_more_image_count', 'blog_style_load_more_image_count', 'blog_style_load_more_image_count', $use_option_defaults, $params);
+        $defaults['blog_style_enable_page'] = self::get_option_value('blog_style_enable_page', 'blog_style_enable_page', 'blog_style_enable_page', $use_option_defaults, $params);
+        $defaults['blog_style_description_enable'] = self::get_option_value('blog_style_description_enable', 'blog_style_description_enable', 'blog_style_description_enable', $use_option_defaults, $params);
+        $defaults['sort_by'] = self::get_option_value('blog_style_sort_by', 'sort_by', 'blog_style_sort_by', $use_option_defaults, $params);
+        $defaults['order_by'] = self::get_option_value('blog_style_rder_by', 'order_by', 'blog_style_order_by', $use_option_defaults, $params);
+        $defaults['showthumbs_name'] = self::get_option_value('blog_style_show_gallery_title', 'showthumbs_name', 'blog_style_show_gallery_title', $use_option_defaults, $params);
+        $defaults['show_gallery_description'] = self::get_option_value('blog_style_show_gallery_description', 'show_gallery_description', 'blog_style_show_gallery_description', $use_option_defaults, $params);
+        $defaults['show_search_box'] = self::get_option_value('blog_style_show_search_box', 'show_search_box', 'blog_style_show_search_box', $use_option_defaults, $params);
+        $defaults['placeholder'] = self::get_option_value('blog_style_placeholder', 'placeholder', 'blog_style_placeholder', $use_option_defaults, $params);
+        $defaults['search_box_width'] = self::get_option_value('blog_style_search_box_width', 'search_box_width', 'blog_style_search_box_width', $use_option_defaults, $params);
+        $defaults['show_sort_images'] = self::get_option_value('blog_style_show_sort_images', 'show_sort_images', 'blog_style_show_sort_images', $use_option_defaults, $params);
+        $defaults['show_tag_box'] = self::get_option_value('blog_style_show_tag_box', 'show_tag_box', 'blog_style_show_tag_box', $use_option_defaults, $params);
+        $defaults['gallery_download'] = self::get_option_value('blog_style_gallery_download', 'gallery_download', 'blog_style_gallery_download', $use_option_defaults, $params);
+        break;
+      case 'carousel':
+        $defaults['carousel_interval'] = self::get_option_value('carousel_interval', 'carousel_interval', 'carousel_interval', $use_option_defaults, $params);
+        $defaults['carousel_width'] = self::get_option_value('carousel_width', 'carousel_width', 'carousel_width', $use_option_defaults, $params);
+        $defaults['carousel_height'] = self::get_option_value('carousel_height', 'carousel_height', 'carousel_height', $use_option_defaults, $params);
+        $defaults['carousel_image_column_number'] = self::get_option_value('carousel_image_column_number', 'carousel_image_column_number', 'carousel_image_column_number', $use_option_defaults, $params);
+        $defaults['carousel_image_par'] = self::get_option_value('carousel_image_par', 'carousel_image_par', 'carousel_image_par', $use_option_defaults, $params);
+        $defaults['enable_carousel_title'] = self::get_option_value('carousel_enable_title', 'carousel_enable_title', 'carousel_enable_title', $use_option_defaults, $params);
+        $defaults['carousel_enable_autoplay'] = self::get_option_value('carousel_enable_autoplay', 'carousel_enable_autoplay', 'carousel_enable_autoplay', $use_option_defaults, $params);
+        $defaults['carousel_r_width'] = self::get_option_value('carousel_r_width', 'carousel_r_width', 'carousel_r_width', $use_option_defaults, $params);
+        $defaults['carousel_fit_containerWidth'] = self::get_option_value('carousel_fit_containerWidth', 'carousel_fit_containerWidth', 'carousel_fit_containerWidth', $use_option_defaults, $params);
+        $defaults['carousel_prev_next_butt'] = self::get_option_value('carousel_prev_next_butt', 'carousel_prev_next_butt', 'carousel_prev_next_butt', $use_option_defaults, $params);
+        $defaults['carousel_play_pause_butt'] = self::get_option_value('carousel_play_pause_butt', 'carousel_play_pause_butt', 'carousel_play_pause_butt', $use_option_defaults, $params);
+        $defaults['sort_by'] = self::get_option_value('carousel_sort_by', 'sort_by', 'carousel_sort_by', $use_option_defaults, $params);
+        $defaults['order_by'] = self::get_option_value('carousel_order_by', 'order_by', 'carousel_order_by', $use_option_defaults, $params);
+        $defaults['gallery_download'] = self::get_option_value('carousel_gallery_download', 'gallery_download', 'carousel_gallery_download', $use_option_defaults, $params);
+        break;
+      case 'album_compact_preview':
+        $defaults['compuct_album_column_number'] = self::get_option_value('compuct_album_column_number', 'compuct_album_column_number', 'album_column_number', $use_option_defaults, $params);
+        $defaults['compuct_album_thumb_width'] = self::get_option_value('compuct_album_thumb_width', 'compuct_album_thumb_width', 'album_thumb_width', $use_option_defaults, $params);
+        $defaults['compuct_album_thumb_height'] = self::get_option_value('compuct_album_thumb_height', 'compuct_album_thumb_height', 'album_thumb_height', $use_option_defaults, $params);
+        $defaults['compuct_album_image_column_number'] = self::get_option_value('compuct_album_image_column_number', 'compuct_album_image_column_number', 'album_image_column_number', $use_option_defaults, $params);
+        $defaults['compuct_album_image_thumb_width'] = self::get_option_value('compuct_album_image_thumb_width', 'compuct_album_image_thumb_width', 'album_image_thumb_width', $use_option_defaults, $params);
+        $defaults['compuct_album_image_thumb_height'] = self::get_option_value('compuct_album_image_thumb_height', 'compuct_album_image_thumb_height', 'album_image_thumb_height', $use_option_defaults, $params);
+        $defaults['compuct_album_enable_page'] = self::get_option_value('compuct_album_enable_page', 'compuct_album_enable_page', 'album_enable_page', $use_option_defaults, $params);
+        $defaults['compuct_albums_per_page'] = self::get_option_value('compuct_albums_per_page', 'compuct_albums_per_page', 'albums_per_page', $use_option_defaults, $params);
+        $defaults['compuct_album_images_per_page'] = self::get_option_value('compuct_album_images_per_page', 'compuct_album_images_per_page', 'album_images_per_page', $use_option_defaults, $params);
+        $defaults['sort_by'] = self::get_option_value('album_sort_by', 'sort_by', 'album_sort_by', $use_option_defaults, $params);
+        $defaults['order_by'] = self::get_option_value('album_order_by', 'order_by', 'album_order_by', $use_option_defaults, $params);
+        $defaults['show_search_box'] = self::get_option_value('album_show_search_box', 'show_search_box', 'album_show_search_box', $use_option_defaults, $params);
+        $defaults['placeholder'] = self::get_option_value('album_placeholder', 'placeholder', 'album_placeholder', $use_option_defaults, $params);
+        $defaults['search_box_width'] = self::get_option_value('album_search_box_width', 'search_box_width', 'album_search_box_width', $use_option_defaults, $params);
+        $defaults['show_sort_images'] = self::get_option_value('album_show_sort_images', 'show_sort_images', 'album_show_sort_images', $use_option_defaults, $params);
+        $defaults['show_tag_box'] = self::get_option_value('album_show_tag_box', 'show_tag_box', 'album_show_tag_box', $use_option_defaults, $params);
+        $defaults['show_album_name'] = self::get_option_value('show_album_name', 'show_album_name', 'show_album_name', $use_option_defaults, $params);
+        $defaults['show_gallery_description'] = self::get_option_value('album_show_gallery_description', 'show_gallery_description', 'album_show_gallery_description', $use_option_defaults, $params);
+        $defaults['compuct_album_title'] = self::get_option_value('compuct_album_title', 'compuct_album_title', 'album_title_show_hover', $use_option_defaults, $params);
+        $defaults['compuct_album_view_type'] = self::get_option_value('compuct_album_view_type', 'compuct_album_view_type', 'album_view_type', $use_option_defaults, $params);
+        $defaults['compuct_album_image_title'] = self::get_option_value('compuct_album_image_title', 'compuct_album_image_title', 'album_image_title_show_hover', $use_option_defaults, $params);
+        $defaults['compuct_album_mosaic_hor_ver'] = self::get_option_value('compuct_album_mosaic_hor_ver', 'compuct_album_mosaic_hor_ver', 'album_mosaic', $use_option_defaults, $params);
+        $defaults['compuct_album_resizable_mosaic'] = self::get_option_value('compuct_album_resizable_mosaic', 'compuct_album_resizable_mosaic', 'album_resizable_mosaic', $use_option_defaults, $params);
+        $defaults['compuct_album_mosaic_total_width'] = self::get_option_value('compuct_album_mosaic_total_width', 'compuct_album_mosaic_total_width', 'album_mosaic_total_width', $use_option_defaults, $params);
+        $defaults['play_icon'] = self::get_option_value('album_play_icon', 'play_icon', 'album_play_icon', $use_option_defaults, $params);
+        $defaults['gallery_download'] = self::get_option_value('album_gallery_download', 'gallery_download', 'album_gallery_download', $use_option_defaults, $params);
+        $defaults['ecommerce_icon'] = self::get_option_value('album_ecommerce_icon_show_hover', 'ecommerce_icon', 'album_ecommerce_icon_show_hover', $use_option_defaults, $params);
+        break;
+      case 'album_masonry_preview':
+        $defaults['masonry_album_column_number'] = self::get_option_value('masonry_album_column_number', 'masonry_album_column_number', 'album_masonry_column_number', $use_option_defaults, $params);
+        $defaults['masonry_album_thumb_width'] = self::get_option_value('masonry_album_thumb_width', 'masonry_album_thumb_width', 'album_masonry_thumb_width', $use_option_defaults, $params);
+        $defaults['masonry_album_image_column_number'] = self::get_option_value('masonry_album_image_column_number', 'masonry_album_image_column_number', 'album_masonry_image_column_number', $use_option_defaults, $params);
+        $defaults['masonry_album_image_thumb_width'] = self::get_option_value('masonry_album_image_thumb_width', 'masonry_album_image_thumb_width', 'album_masonry_image_thumb_width', $use_option_defaults, $params);
+        $defaults['masonry_album_enable_page'] = self::get_option_value('masonry_album_enable_page', 'masonry_album_enable_page', 'album_masonry_enable_page', $use_option_defaults, $params);
+        $defaults['masonry_albums_per_page'] = self::get_option_value('masonry_albums_per_page', 'masonry_albums_per_page', 'albums_masonry_per_page', $use_option_defaults, $params);
+        $defaults['masonry_album_images_per_page'] = self::get_option_value('masonry_album_images_per_page', 'masonry_album_images_per_page', 'album_masonry_images_per_page', $use_option_defaults, $params);
+        $defaults['sort_by'] = self::get_option_value('album_masonry_sort_by', 'sort_by', 'album_masonry_sort_by', $use_option_defaults, $params);
+        $defaults['order_by'] = self::get_option_value('album_masonry_order_by', 'order_by', 'album_masonry_order_by', $use_option_defaults, $params);
+        $defaults['show_search_box'] = self::get_option_value('album_masonry_show_search_box', 'show_search_box', 'album_masonry_show_search_box', $use_option_defaults, $params);
+        $defaults['placeholder'] = self::get_option_value('album_masonry_placeholder', 'placeholder', 'album_masonry_placeholder', $use_option_defaults, $params);
+        $defaults['search_box_width'] = self::get_option_value('album_masonry_search_box_width', 'search_box_width', 'album_masonry_search_box_width', $use_option_defaults, $params);
+        $defaults['show_sort_images'] = self::get_option_value('album_masonry_show_sort_images', 'show_sort_images', 'album_masonry_show_sort_images', $use_option_defaults, $params);
+        $defaults['show_tag_box'] = self::get_option_value('album_masonry_show_tag_box', 'show_tag_box', 'album_masonry_show_tag_box', $use_option_defaults, $params);
+        $defaults['show_album_masonry_name'] = self::get_option_value('show_album_masonry_name', 'show_album_masonry_name', 'show_album_masonry_name', $use_option_defaults, $params);
+        $defaults['show_gallery_description'] = self::get_option_value('album_masonry_show_gallery_description', 'show_gallery_description', 'album_masonry_show_gallery_description', $use_option_defaults, $params);
+        $defaults['gallery_download'] = self::get_option_value('album_masonry_gallery_download', 'gallery_download', 'album_masonry_gallery_download', $use_option_defaults, $params);
+        $defaults['ecommerce_icon'] = self::get_option_value('album_masonry_ecommerce_icon_show_hover', 'ecommerce_icon', 'album_masonry_ecommerce_icon_show_hover', $use_option_defaults, $params);
+        break;
+      case 'album_extended_preview':
+        $defaults['extended_album_height'] = self::get_option_value('extended_album_height', 'extended_album_height', 'extended_album_height', $use_option_defaults, $params);
+        $defaults['extended_album_thumb_width'] = self::get_option_value('extended_album_thumb_width', 'extended_album_thumb_width', 'album_extended_thumb_width', $use_option_defaults, $params);
+        $defaults['extended_album_thumb_height'] = self::get_option_value('extended_album_thumb_height', 'extended_album_thumb_height', 'album_extended_thumb_height', $use_option_defaults, $params);
+        $defaults['extended_album_image_column_number'] = self::get_option_value('extended_album_image_column_number', 'extended_album_image_column_number', 'album_extended_image_column_number', $use_option_defaults, $params);
+        $defaults['extended_album_image_thumb_width'] = self::get_option_value('extended_album_image_thumb_width', 'extended_album_image_thumb_width', 'album_extended_image_thumb_width', $use_option_defaults, $params);
+        $defaults['extended_album_image_thumb_height'] = self::get_option_value('extended_album_image_thumb_height', 'extended_album_image_thumb_height', 'album_extended_image_thumb_height', $use_option_defaults, $params);
+        $defaults['extended_album_enable_page'] = self::get_option_value('extended_album_enable_page', 'extended_album_enable_page', 'album_extended_enable_page', $use_option_defaults, $params);
+        $defaults['extended_albums_per_page'] = self::get_option_value('extended_albums_per_page', 'extended_albums_per_page', 'albums_extended_per_page', $use_option_defaults, $params);
+        $defaults['extended_album_images_per_page'] = self::get_option_value('extended_album_images_per_page', 'extended_album_images_per_page', 'album_extended_images_per_page', $use_option_defaults, $params);
+        $defaults['sort_by'] = self::get_option_value('album_extended_sort_by', 'sort_by', 'album_extended_sort_by', $use_option_defaults, $params);
+        $defaults['order_by'] = self::get_option_value('album_extended_order_by', 'order_by', 'album_extended_order_by', $use_option_defaults, $params);
+        $defaults['show_search_box'] = self::get_option_value('album_extended_show_search_box', 'show_search_box', 'album_extended_show_search_box', $use_option_defaults, $params);
+        $defaults['placeholder'] = self::get_option_value('album_extended_placeholder', 'placeholder', 'album_extended_placeholder', $use_option_defaults, $params);
+        $defaults['search_box_width'] = self::get_option_value('album_extended_search_box_width', 'search_box_width', 'album_extended_search_box_width', $use_option_defaults, $params);
+        $defaults['show_sort_images'] = self::get_option_value('album_extended_show_sort_images', 'show_sort_images', 'album_extended_show_sort_images', $use_option_defaults, $params);
+        $defaults['show_tag_box'] = self::get_option_value('album_extended_show_tag_box', 'show_tag_box', 'album_extended_show_tag_box', $use_option_defaults, $params);
+        $defaults['show_album_extended_name'] = self::get_option_value('show_album_extended_name', 'show_album_extended_name', 'show_album_extended_name', $use_option_defaults, $params);
+        $defaults['extended_album_description_enable'] = self::get_option_value('extended_album_description_enable', 'extended_album_description_enable', 'extended_album_description_enable', $use_option_defaults, $params);
+        $defaults['show_gallery_description'] = self::get_option_value('album_extended_show_gallery_description', 'show_gallery_description', 'album_extended_show_gallery_description', $use_option_defaults, $params);
+        $defaults['extended_album_view_type'] = self::get_option_value('extended_album_view_type', 'extended_album_view_type', 'album_extended_view_type', $use_option_defaults, $params);
+        $defaults['extended_album_image_title'] = self::get_option_value('extended_album_image_title', 'extended_album_image_title', 'album_extended_image_title_show_hover', $use_option_defaults, $params);
+        $defaults['play_icon'] = self::get_option_value('album_extended_play_icon', 'play_icon', 'album_extended_play_icon', $use_option_defaults, $params);
+        $defaults['gallery_download'] = self::get_option_value('album_extended_gallery_download', 'gallery_download', 'album_extended_gallery_download', $use_option_defaults, $params);
+        $defaults['ecommerce_icon'] = self::get_option_value('album_extended_ecommerce_icon_show_hover', 'ecommerce_icon', 'album_extended_ecommerce_icon_show_hover', $use_option_defaults, $params);
+        break;
+    }
+
     return array_merge($params, $defaults);
+  }
+
+  /**
+   * @param string $name - name in shortcode params
+   * @param string $inherit_from - name of param to get value if $name does ot exist
+   * @param string $option_name
+   * @param $use_option_defaults
+   * @param $params
+   * @return mixed
+   */
+  public static function get_option_value($name, $inherit_from, $option_name, $use_option_defaults, $params) {
+    if (!$use_option_defaults) {
+      if(isset($params[$name])) {
+        return $params[$name];
+      }
+      else if(isset($params[$inherit_from])) {
+        return $params[$inherit_from];
+      }
+    }
+
+    return BWG()->options->$option_name;
   }
 
   /**
@@ -1824,6 +2145,180 @@ class WDWLibrary {
       }
     }
   }
+
+  /**
+   * No items.
+   *
+   * @param $title
+   * @param $number
+   *
+   * @return string
+   */
+  public static function no_items($title, $colspan_count = 0) {
+    $title = ($title != '') ? strtolower($title) : 'items';
+    ob_start();
+    ?><tr class="no-items">
+    <td class="colspanchange" <?php echo $colspan_count ? 'colspan="' . $colspan_count . '"' : ''?>><?php echo sprintf(__('No %s found.', BWG()->prefix), $title); ?></td>
+    </tr><?php
+    return ob_get_clean();
+  }
+
+	/**
+	* Clean page prefix.
+	*
+	* @param  string $str
+	* @return string $str
+	*/
+	public static function clean_page_prefix($str = '') {
+		$str = str_replace('_' . BWG()->prefix, '', $str);
+		$str = ucfirst($str);
+
+		return $str;
+	}
+
+  /**
+   * Register custom taxonomies to use in plugin.
+   */
+	public static function register_custom_taxonomies() {
+	  // Register bwg_tag taxonomy.
+    self::create_bwg_tag();
+    // Set Photo Gallery menu as parent for bwg_tag.
+    add_action('parent_file', array('WDWLibrary', 'menu_highlight'));
+    // Save/update bwg_tag.
+    add_action('edited_bwg_tag', array('WDWLibrary', 'update_bwg_tag'), 10, 2);
+    add_action('create_bwg_tag', array('WDWLibrary', 'update_bwg_tag'), 10, 2);
+    // Delete bwg_tag.
+    add_action('delete_bwg_tag', array('WDWLibrary', 'delete_bwg_tag'), 10, 3);
+  }
+
+  public static function create_bwg_tag() {
+    register_taxonomy('bwg_tag', null, array(
+      'public' => TRUE,
+      'show_ui' => TRUE,
+      'show_in_nav_menus' => FALSE,
+      'show_tagcloud' => TRUE,
+      'hierarchical' => FALSE,
+      'label' => __('Gallery Tags', BWG()->prefix),
+      'query_var' => TRUE,
+      'rewrite' => TRUE));
+  }
+
+  public static function update_bwg_tag($term_id) {
+    // Create custom post (type is tag).
+    $term = get_term($term_id, 'bwg_tag');
+    $custom_post_params = array(
+      'id' => $term_id,
+      'title' => $term->name,
+      'slug' => $term->slug,
+      'type' => array(
+        'post_type' => 'tag',
+        'mode' => '',
+      ),
+    );
+    WDWLibrary::bwg_create_custom_post($custom_post_params);
+  }
+
+  public static function delete_bwg_tag($term_id, $tt_id, $deleted_term) {
+	  global $wpdb;
+      $wpdb->query( $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_image_tag WHERE tag_id="%d"', $term_id) );
+      WDWLibrary::bwg_remove_custom_post( array( 'slug' => $deleted_term->slug, 'post_type' => 'bwg_tag') );
+  }
+
+  public static function menu_highlight( $parent_file ) {
+    global $current_screen;
+    $taxonomy = $current_screen->taxonomy;
+    if ('bwg_tag' == $taxonomy) {
+      $parent_file = 'galleries_bwg';
+    }
+    return $parent_file;
+  }
+
+  /**
+   * Sort array by array.
+   *
+   * @param array $array
+   * @param array $orderArray
+   *
+   * @return array
+   */
+  public static function sortArrayByArray( array $array, array $orderArray ) {
+    $ordered = array();
+    foreach ( $orderArray as $key ) {
+      if ( array_key_exists($key, $array) ) {
+        $ordered[$key] = $array[$key];
+        unset($array[$key]);
+      }
+    }
+
+    return $ordered + $array;
+  }
+
+	/**
+	* Get all addons.
+	*
+	* @return array $addons
+	*/
+	public static function get_all_addons_path() {
+		$addons = array(
+					'photo-gallery-facebook/photo-gallery-facebook.php',
+				);
+		return $addons;
+	}
+
+	/**
+   * Deactivate all addons.
+   *
+   * @return bool $addon
+   */
+	public static function deactivate_all_addons() {
+		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		$addons = WDWLibrary::get_all_addons_path();
+		foreach ( $addons as $addon ) {
+			if( is_plugin_active( $addon ) ) {
+				deactivate_plugins( $addon );
+			}
+		}
+	}
+
+	/**
+	* Check external link.
+	*
+	* @param  string $link
+	* @return bool
+	*/
+	public static function check_external_link( $link ) {
+		if ( is_string($link) && preg_match('/^(http|https):\\/\\/[a-z0-9_]+([\\-\\.]{1}[a-z_0-9]+)*\\.[_a-z]{2,5}'.'((:[0-9]{1,5})?\\/.*)?$/i', $link) ) {
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	/**
+	* Check external link.
+	*
+	* @param  string $table
+	* @param  string $where
+	* @return bool
+	*/
+	public static function update_image_modified_date( $where = '' ) {
+	  if ( strpos($where, 'pr_' ) !== FALSE ) {
+	    // Newly added image.
+	    return;
+    }
+		global $wpdb;
+		$update = $wpdb->query( $wpdb->prepare( 'UPDATE `' . $wpdb->prefix  . 'bwg_image` SET `modified_date` = "%d" WHERE ' . $where, time() ) );
+		$items = $wpdb->get_results( 'SELECT `gallery_id`, `thumb_url` FROM `' . $wpdb->prefix . 'bwg_image` WHERE ' . $where );
+        if ( !empty($items) ) {
+			$thumbs_str = '';
+			foreach ( $items as $item ) {
+				$thumbs_str = "'" . $item->thumb_url . "',";
+			}
+			$thumbs_str = rtrim($thumbs_str,',');
+			$wpdb->query('UPDATE `' . $wpdb->prefix . 'bwg_gallery` SET `modified_date` = "' . time() . '" WHERE `preview_image` IN (' . $thumbs_str . ') OR `random_preview_image` IN (' . $thumbs_str . ')');
+			$wpdb->query('UPDATE `' . $wpdb->prefix . 'bwg_album` SET `modified_date` = "' . time() . '" WHERE `preview_image` IN (' . $thumbs_str . ') OR `random_preview_image` IN (' . $thumbs_str . ')');
+		}
+		return $update;
+	}
 }
 
 /**

@@ -454,7 +454,7 @@ html, body, div, span, th, td, a {
 
 #uploaded_files ul {
   margin: 0;
-  padding: 5px !important;
+  padding: 0px !important;
 }
 
 .uploaded_item {
@@ -627,7 +627,7 @@ a.wd-btn-primary:link {
 	background-position: 10% 50%;
 }
 
-@media screen and (max-width: 780px) {
+@media screen and (max-width: 640px) {
   .btn_view_thumbs, .btn_view_list {
     display: none;
   }
@@ -649,10 +649,9 @@ a.wd-btn-primary:link {
   }
 }
 
-@media screen and (max-width: 757px) {
+@media screen and (max-width: 640px) {
   .ctrls_bar .ctrls_right_img {
     float: left;
-    margin: 5px 0 !important;
   }
 
   #drag_message {
@@ -698,6 +697,7 @@ a.wd-btn-primary:link {
   #uploaded_files {
     bottom: 40px !important;
     height: 40px !important;
+    padding: 3px;
   }
 }
 
@@ -784,4 +784,8 @@ a.wd-btn-primary:link {
   float: left;
   margin: 5px;
   width: 90px;
+}
+
+.ctrls_bar .upload_thumb_dim {
+  padding: 5px 5px;
 }

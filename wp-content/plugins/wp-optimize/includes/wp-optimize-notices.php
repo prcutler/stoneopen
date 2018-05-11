@@ -101,8 +101,8 @@ class WP_Optimize_Notices extends Updraft_Notices_1_0 {
 			),
 			'wpo-premium-multisite' => array(
 				'prefix' => '',
-				'title' => __("Manage a multi-site installation? Need extra control?", "wp-optimize"),
-				'text' => __("WP-Optimize Premium's multi-site feature includes a locking system that restricts optimization commands to users with the right permissions.", "wp-optimize"),
+				'title' => __("Manage a multisite installation? Need extra control?", "wp-optimize"),
+				'text' => __("WP-Optimize Premium's multisite feature includes a locking system that restricts optimization commands to users with the right permissions.", "wp-optimize"),
 				'image' => 'notices/wp_optimize_logo.png',
 				'button_link' => 'https://getwpo.com',
 				'button_meta' => 'wpo-premium',
@@ -112,7 +112,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_0 {
 			),
 			'wpo-premium2' => array(
 				'prefix' => '',
-				'title' => __("WP-Optimize Premium offers unparallelled choice and flexibility", "wp-optimize"),
+				'title' => __("WP-Optimize Premium offers unparalleled choice and flexibility", "wp-optimize"),
 				'text' => __("Upgrade today to combine over a dozen optimization options.", "wp-optimize"),
 				'image' => 'notices/wp_optimize_logo.png',
 				'button_link' => 'https://getwpo.com',
@@ -186,7 +186,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_0 {
 			),
 			'spring' => array(
 				'prefix' => '',
-				'title' => __('Spring sale - 20% off WP-Optimize Premium until April 31st', 'wpo-premium'),
+				'title' => __('Spring sale - 20% off WP-Optimize Premium until April 30th', 'wpo-premium'),
 				'text' => __('To benefit, use this discount code:', 'wpo-premium').' ',
 				'image' => 'notices/spring.png',
 				'button_link' => 'https://getwpo.com',
@@ -332,7 +332,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_0 {
 	 * This method checks to see if the notices dismiss_time parameter has been dismissed
 	 *
 	 * @param  String $dismiss_time a string containing the dimiss time ID
-	 * @return Boolaen              returns true if the notice has been dismissed and shouldn't be shown otherwise display it
+	 * @return Boolean returns true if the notice has been dismissed and shouldn't be shown otherwise display it
 	 */
 	protected function check_notice_dismissed($dismiss_time) {
 
@@ -340,13 +340,9 @@ class WP_Optimize_Notices extends Updraft_Notices_1_0 {
 	
 		$options = WP_Optimize()->get_options();
 
-		$notice_dismiss = ($time_now < $options->get_option('dismiss_page_notice_until', 0));
+		$notice_dismiss = ($time_now < $options->get_option($dismiss_time, 0));
 
-		$dismiss = false;
-
-		if ('dismiss_page_notice_until' == $dismiss_time) $dismiss = $notice_dismiss;
-
-		return $dismiss;
+		return $notice_dismiss;
 	}
 
 	/**

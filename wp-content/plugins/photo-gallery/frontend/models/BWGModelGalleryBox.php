@@ -31,13 +31,38 @@ class BWGModelGalleryBox {
     $where .= ($gallery_id ? ' AND image.gallery_id = "' . $gallery_id . '" ' : '') . ($tag ? ' AND tag.tag_id = "' . $tag . '" ' : '');
     $join = $tag ? 'LEFT JOIN ' . $wpdb->prefix . 'bwg_image_tag as tag ON image.id=tag.image_id' : '';
 
+    $join .= ' LEFT JOIN '. $wpdb->prefix .'bwg_gallery as gallery ON gallery.id = image.gallery_id';
+    $where .= ' AND gallery.published = 1 ';
+
     if ($filter_tags){
       $join .= ' LEFT JOIN (SELECT GROUP_CONCAT(tag_id SEPARATOR ",") AS tags_combined, image_id FROM  ' . $wpdb->prefix . 'bwg_image_tag' . ($gallery_id ? ' WHERE gallery_id="' . $gallery_id . '"' : '') . ' GROUP BY image_id) AS tags ON image.id=tags.image_id';
       $where .= ' AND CONCAT(",", tags.tags_combined, ",") REGEXP ",(' . implode("|", $filter_tags) . ')," ';
     }
 
-    $row = $wpdb->get_results('SELECT image.*, rates.rate FROM ' . $wpdb->prefix . 'bwg_image as image LEFT JOIN (SELECT rate, image_id FROM ' . $wpdb->prefix . 'bwg_image_rate WHERE ip="%s") as rates ON image.id=rates.image_id ' . $join . ' WHERE image.published=1 ' . $where . ' ORDER BY ' . str_replace('RAND()', 'RAND(' . $bwg_random_seed . ')', $sort_by) . ' ' . $order_by);
+    $rows = $wpdb->get_results('SELECT image.*, rates.rate FROM ' . $wpdb->prefix . 'bwg_image as image LEFT JOIN (SELECT rate, image_id FROM ' . $wpdb->prefix . 'bwg_image_rate WHERE ip="%s") as rates ON image.id=rates.image_id ' . $join . ' WHERE image.published=1 ' . $where . ' ORDER BY ' . str_replace('RAND()', 'RAND(' . $bwg_random_seed . ')', $sort_by) . ' ' . $order_by);
 
-    return $row;
+	$images = array();
+	if ( !empty($rows) ) {
+		foreach ( $rows as $row ) {
+		  $row->pure_image_url = $row->image_url;
+		  $row->pure_thumb_url = $row->thumb_url;
+      if ( strpos($row->filetype, 'EMBED') === FALSE ) {
+        $row->image_url = $row->image_url . '?bwg=' . $row->modified_date;
+        $row->thumb_url = $row->thumb_url . '?bwg=' . $row->modified_date;
+      }
+			$images[] = $row;
+		}
+	}
+	return $images;
+  }
+  
+  public function get_image_pricelists($pricelist_id) {
+    $pricelist_data = array();
+
+    return $pricelist_data;
+  }
+
+  public function get_image_pricelist($image_id) {
+    return FALSE;
   }
 }
