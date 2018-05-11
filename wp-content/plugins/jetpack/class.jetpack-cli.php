@@ -362,8 +362,11 @@ class Jetpack_CLI extends WP_CLI_Command {
 			case 'activate':
 				$module = Jetpack::get_module( $module_slug );
 				Jetpack::log( 'activate', $module_slug );
-				Jetpack::activate_module( $module_slug, false, false );
-				WP_CLI::success( sprintf( __( '%s has been activated.', 'jetpack' ), $module['name'] ) );
+				if ( Jetpack::activate_module( $module_slug, false, false ) ) {
+					WP_CLI::success( sprintf( __( '%s has been activated.', 'jetpack' ), $module['name'] ) );
+				} else {
+					WP_CLI::error( sprintf( __( '%s could not be activated.', 'jetpack' ), $module['name'] ) );
+				}
 				break;
 			case 'activate_all':
 				$modules = Jetpack::get_available_modules();
@@ -983,6 +986,52 @@ class Jetpack_CLI extends WP_CLI_Command {
 
 		$sitemap_builder = new Jetpack_Sitemap_Builder();
 		$sitemap_builder->update_sitemap();
+	}
+
+	/**
+	 * Allows authorizing a user via the command line and will activate
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp jetpack authorize_user --token=123456789abcdef
+	 *
+	 * @synopsis --token=<value>
+	 */
+	public function authorize_user( $args, $named_args ) {
+		if ( ! is_user_logged_in() ) {
+			WP_CLI::error( __( 'Please select a user to authorize via the --user global argument.', 'jetpack' ) );
+		}
+
+		if ( empty( $named_args['token'] ) ) {
+			WP_CLI::error( __( 'A non-empty token argument must be passed.', 'jetpack' ) );
+		}
+
+		$token = sanitize_text_field( $named_args['token'] );
+
+		$is_master_user  = ! Jetpack::is_active();
+		$current_user_id = get_current_user_id();
+
+		Jetpack::update_user_token( $current_user_id, sprintf( '%s.%d', $token, $current_user_id ), $is_master_user );
+
+		WP_CLI::log( wp_json_encode( $named_args ) );
+
+		if ( $is_master_user ) {
+			/**
+			 * Auto-enable SSO module for new Jetpack Start connections
+			*
+			* @since 5.0.0
+			*
+			* @param bool $enable_sso Whether to enable the SSO module. Default to true.
+			*/
+			$enable_sso = apply_filters( 'jetpack_start_enable_sso', true );
+			Jetpack::handle_post_authorization_actions( $enable_sso, false );
+
+			/* translators: %d is a user ID */
+			WP_CLI::success( sprintf( __( 'Authorized %d and activated default modules.', 'jetpack' ), $current_user_id ) );
+		} else {
+			/* translators: %d is a user ID */
+			WP_CLI::success( sprintf( __( 'Authorized %d.', 'jetpack' ), $current_user_id ) );
+		}
 	}
 
 	private function get_api_host() {

@@ -272,7 +272,6 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 			'currentVersion' => JETPACK__VERSION,
 			'getModules' => $modules,
 			'showJumpstart' => jetpack_show_jumpstart(),
-			'showHolidaySnow' => function_exists( 'jetpack_show_holiday_snow_option' ) ? jetpack_show_holiday_snow_option() : false,
 			'rawUrl' => Jetpack::build_raw_urls( get_home_url() ),
 			'adminUrl' => esc_url( admin_url() ),
 			'stats' => array(
@@ -286,9 +285,6 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 				'roles' => $stats_roles,
 			),
 			'settings' => $this->get_flattened_settings( $modules ),
-			'settingNames' => array(
-				'jetpack_holiday_snow_enabled' => function_exists( 'jetpack_holiday_snow_option_name' ) ? jetpack_holiday_snow_option_name() : false,
-			),
 			'userData' => array(
 //				'othersLinked' => Jetpack::get_other_linked_admins(),
 				'currentUser'  => jetpack_current_user_data(),
@@ -307,6 +303,7 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 				 */
 				'showPromotions' => apply_filters( 'jetpack_show_promotions', true ),
 				'isAtomicSite' => jetpack_is_atomic_site(),
+				'plan' => Jetpack::get_active_plan(),
 			),
 			'themeData' => array(
 				'name'      => $current_theme->get( 'Name' ),
