@@ -164,7 +164,7 @@
 				$section_inline_style = '';
 				?>
 				<div class="wrap about-wrap access-wrap">
-					<h1><?php printf( esc_html__( 'Welcome to %s - Version %s', 'accesspress-parallax' ), $this->theme_name, $this->theme_version ); ?></h1>
+					<h1><?php printf( esc_html__( 'Welcome to %1$s - Version %2$s', 'accesspress-parallax' ), $this->theme_name, $this->theme_version ); ?></h1>
 					<div class="about-text"><?php printf( esc_html__( '%s is a beautiful WordPress theme with Parallax design. Parallax design has become popular and is widely implemented these days. This is probably the most beautiful, feature rich and complete free WordPress parallax theme with useful features.', 'accesspress-parallax' ), $this->theme_name ); ?></div>
 
 					<a target="_blank" href="http://www.accesspressthemes.com" class="accesspress-badge wp-badge"><span><?php echo esc_html('AccessPressThemes'); ?></span></a>

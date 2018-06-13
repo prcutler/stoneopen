@@ -218,7 +218,7 @@
 			<p><?php esc_html_e('Build feature rich pages using beautiful inbuilt shortcodes.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<span><?php esc_html_e('0', 'accesspress-parallax'); ?></span>
+			<span><?php esc_html_e('Zero', 'accesspress-parallax'); ?></span>
 		</td>
 		<td>
 			<span><?php esc_html_e('13', 'accesspress-parallax'); ?></span>

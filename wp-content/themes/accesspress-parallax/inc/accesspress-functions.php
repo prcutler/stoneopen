@@ -7,17 +7,6 @@
  * @package accesspress_parallax
  */
 
-/**
- * Get our wp_nav_menu() fallback, wp_page_menu(), to show a home link.
- *
- * @param array $args Configuration arguments.
- * @return array
- */
-function accesspress_parallax_page_menu_args( $args ) {
-	$args['show_home'] = true;
-	return $args;
-}
-add_filter( 'wp_page_menu_args', 'accesspress_parallax_page_menu_args' );
 
 /**
  * Adds custom classes to the array of body classes.
@@ -36,25 +25,14 @@ function accesspress_parallax_body_classes( $classes ) {
 add_filter( 'body_class', 'accesspress_parallax_body_classes' );
 
 /**
- * Sets the authordata global when viewing an author archive.
- *
- * This provides backwards compatibility with
- * http://core.trac.wordpress.org/changeset/25574
- *
- * It removes the need to call the_post() and rewind_posts() in an author
- * template to print information about the author.
- *
- * @global WP_Query $wp_query WordPress Query object.
- * @return void
+ * Add a pingback url auto-discovery header for single posts, pages, or attachments.
  */
-function accesspress_parallax_setup_author() {
-	global $wp_query;
-
-	if ( $wp_query->is_author() && isset( $wp_query->post ) ) {
-		$GLOBALS['authordata'] = get_userdata( $wp_query->post->post_author );
+function accesspress_parallax_pingback_header() {
+	if ( is_singular() && pings_open() ) {
+		echo '<link rel="pingback" href="', esc_url( get_bloginfo( 'pingback_url' ) ), '">';
 	}
 }
-add_action( 'wp', 'accesspress_parallax_setup_author' );
+add_action( 'wp_head', 'accesspress_parallax_pingback_header' );
 
 //bxSlider Callback for do action
 function accesspress_parallax_bxslidercb(){
@@ -169,12 +147,10 @@ add_filter('body_class','accesspress_is_parallax');
 function accesspress_header_styles_scripts(){
 	$sections = array();
 	$sections = of_get_option('parallax_section');
-	$favicon = of_get_option('fav_icon');
 	$custom_css = of_get_option('custom_css');
 	$slider_overlay = of_get_option('slider_overlay');
 	$image_url = get_template_directory_uri()."/images/";
 	$dyamic_style = "";
-	echo "<link type='image/png' rel='icon' href='".esc_url($favicon)."'/>\n";
 	echo "<style type='text/css' media='all'>"; 
 
 	if(!empty($sections)){

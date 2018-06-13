@@ -88,8 +88,12 @@ Images
 
 ---------------------------------------------
 == Changelog ==
+Version 1.62
+ * Requiried Error from Theme Snifer Plugin fixed
+ * Pot file updated
+
 Version 1.61
- * Multicheck field warking on PHP7 fixed
+ * Multicheck field warning on PHP7 fixed
 
 Version 1.60
  * Theme Option Panel error on PHP7 fixed
