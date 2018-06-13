@@ -64,7 +64,17 @@ class BWGViewImage_browser {
       'enable_image_tumblr' => $params['popup_enable_tumblr'],
       'watermark_type' => $params['watermark_type'],
       'slideshow_effect_duration' => isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1,
-      'tags' => (isset($params['tag']) ? $params['tag'] : 0)
+      'tags' => (isset($params['tag']) ? $params['tag'] : 0),
+      'popup_enable_email' => $params['popup_enable_email'],
+      'popup_enable_captcha' => $params['popup_enable_captcha'],
+      'comment_moderation' => $params['comment_moderation'],
+      'autohide_lightbox_navigation' => $params['autohide_lightbox_navigation'],
+      'popup_enable_fullsize_image' => $params['popup_enable_fullsize_image'],
+      'popup_enable_download' => $params['popup_enable_download'],
+      'show_image_counts' => $params['show_image_counts'],
+      'enable_loop' => $params['enable_loop'],
+      'enable_addthis' => $params['enable_addthis'],
+      'addthis_profile_id' => $params['addthis_profile_id']
     );
     if ( BWG()->is_pro ) {
       $current_url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -174,7 +184,7 @@ class BWGViewImage_browser {
         <form id="gal_front_form_<?php echo $bwg; ?>" method="post" action="#" data-current="<?php echo $bwg; ?>">
           <?php
           if ($params['show_search_box']) {
-            WDWLibrary::ajax_html_frontend_search_box('gal_front_form_' . $bwg, $bwg, 'bwg_standart_thumbnails_' . $bwg, $images_count, $params['search_box_width'], $placeholder);
+            WDWLibrary::ajax_html_frontend_search_box('gal_front_form_' . $bwg, $bwg, 'bwg_image_browser_' . $bwg, $images_count, $params['search_box_width'], $placeholder);
           }
           if ($params['showthumbs_name'] && $gallery_row->name != '') {
             ?>
@@ -191,15 +201,15 @@ class BWGViewImage_browser {
             <div id="ajax_loading_<?php echo $bwg; ?>" style="position:absolute;width: 100%; z-index: 115; text-align: center; height: 100%; vertical-align: middle; display:none;">
               <div style="display: table; vertical-align: middle; width: 100%; height: 100%; background-color: #FFFFFF; opacity: 0.7; filter: Alpha(opacity=70);">
                 <div style="display: table-cell; text-align: center; position: relative; vertical-align: middle;" >
-                  <div id="loading_div_<?php echo $bwg; ?>" class="bwg_spider_ajax_loading" style="display: inline-block; text-align:center; position:relative; vertical-align:middle; background-image:url(<?php echo BWG()->plugin_url . '/images/ajax_loader.gif'; ?>); float: none; width:30px;height:30px;background-size:30px 30px;">
+                  <div id="loading_div_<?php echo $bwg; ?>" class="bwg_spider_ajax_loading" style="display: inline-block; text-align:center; position:relative; vertical-align:middle; background-image:url(<?php echo BWG()->plugin_url . '/images/ajax_loader.png'; ?>); float: none; width:30px;height:30px;background-size:30px 30px;">
                   </div>
                 </div>
               </div>
             </div>
-            <div class="image_browser_images_<?php echo $bwg; ?>" id="bwg_standart_thumbnails_<?php echo $bwg; ?>" >
+            <div class="image_browser_images_<?php echo $bwg; ?>" id="bwg_image_browser_<?php echo $bwg; ?>" >
               <?php
               if ( $theme_row->page_nav_position == 'top') {
-                WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page, $bwg, 'bwg_standart_thumbnails_' . $bwg, 0, 'album', BWG()->options->enable_seo);
+                WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page, $bwg, 'bwg_image_browser_' . $bwg, 0, 'album', BWG()->options->enable_seo);
               }
               foreach ($image_rows as $image_row) {
                 $params_array['image_id'] = (isset($_POST['image_id']) ? esc_html($_POST['image_id']) : $image_row->id);
@@ -348,7 +358,7 @@ class BWGViewImage_browser {
                 <?php
               }
               if ( $theme_row->page_nav_position == 'bottom') {
-                WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page, $bwg, 'bwg_standart_thumbnails_' . $bwg, 0, 'album', BWG()->options->enable_seo);
+                WDWLibrary::ajax_html_frontend_page_nav($theme_row, $page_nav['total'], $page_nav['limit'], 'gal_front_form_' . $bwg, $items_per_page, $bwg, 'bwg_image_browser_' . $bwg, 0, 'album', BWG()->options->enable_seo);
               }
               ?>
             </div>

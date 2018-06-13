@@ -610,288 +610,6 @@ class WDWLibrary {
     }
   }
 
-  public static function ajax_html_frontend_page_nav($theme_row, $count_items, $page_number, $form_id, $items_per_page, $current_view, $id, $cur_alb_gal_id = 0, $type = 'album', $enable_seo = false, $pagination = 1) {
-    $limit = $page_number > 1 ? $items_per_page['load_more_image_count'] : $items_per_page['images_per_page'];
-    $limit = $limit ? $limit : 1;
-    $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : $type);
-    $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : $cur_alb_gal_id);
-    if ($count_items) {
-      if ($count_items % $limit) {
-        $items_county = ($count_items - $count_items % $limit) / $limit + 1;
-      }
-      else {
-        $items_county = ($count_items - $count_items % $limit) / $limit;
-      }
-      if ($pagination == 2) {
-        $items_county++;
-      }
-    }
-    else {
-      $items_county = 1;
-    }
-    if ($page_number > $items_county) {
-      return;
-    }
-    $first_page = "first-page-" . $current_view;
-    $prev_page = "prev-page-" . $current_view;
-    $next_page = "next-page-" . $current_view;
-    $last_page = "last-page-" . $current_view;
-    ?>
-    <span class="bwg_nav_cont_<?php echo $current_view; ?>">
-    <?php
-    if ($pagination == 1) {
-      ?>
-    <div class="tablenav-pages_<?php echo $current_view; ?>">
-      <?php
-      if ($theme_row->page_nav_number) {
-      ?>
-      <span class="displaying-num_<?php echo $current_view; ?>"><?php echo $count_items . ' ' . __(' item(s)', BWG()->prefix); ?></span>
-      <?php
-      }
-      if ($count_items > $limit) {
-        if ($theme_row->page_nav_button_text) {
-          $first_button = __('First', BWG()->prefix);
-          $previous_button = __('Previous', BWG()->prefix);
-          $next_button = __('Next', BWG()->prefix);
-          $last_button = __('Last', BWG()->prefix);
-        }
-        else {
-          $first_button = '«';
-          $previous_button = '‹';
-          $next_button = '›';
-          $last_button = '»';
-        }
-        if ($page_number == 1) {
-          $first_page = "first-page disabled";
-          $prev_page = "prev-page disabled";
-        }
-        if ($page_number >= $items_county) {
-          $next_page = "next-page disabled";
-          $last_page = "last-page disabled";
-        }
-      ?>
-      <span class="pagination-links_<?php echo $current_view; ?>">
-        <a class="<?php echo $first_page; ?>" title="<?php echo __('Go to the first page', BWG()->prefix); ?>"><?php echo $first_button; ?></a>
-        <a class="<?php echo $prev_page; ?>" title="<?php echo __('Go to the previous page', BWG()->prefix); ?>" <?php echo  $page_number > 1 && $enable_seo ? 'href="' . esc_url(add_query_arg(array("page_number_" . $current_view => $page_number - 1), $_SERVER['REQUEST_URI'])) . '"' : ""; ?>><?php echo $previous_button; ?></a>
-        <span class="paging-input_<?php echo $current_view; ?>">
-          <span class="total-pages_<?php echo $current_view; ?>"><?php echo $page_number; ?></span> <?php echo __('of', BWG()->prefix); ?> <span class="total-pages_<?php echo $current_view; ?>">
-            <?php echo $items_county; ?>
-          </span>
-        </span>
-        <a class="<?php echo $next_page ?>" title="<?php echo __('Go to the next page', BWG()->prefix); ?>" <?php echo  $page_number + 1 <= $items_county && $enable_seo ? 'href="' . esc_url(add_query_arg(array("page_number_" . $current_view => $page_number + 1), $_SERVER['REQUEST_URI'])) . '"' : ""; ?>><?php echo $next_button; ?></a>
-        <a class="<?php echo $last_page ?>" title="<?php echo __('Go to the last page', BWG()->prefix); ?>"><?php echo $last_button; ?></a>
-      </span>
-      <?php
-      }
-      ?>
-    </div>
-      <?php
-    }
-    elseif ($pagination == 2) {
-      if ($count_items > ($limit * ($page_number - 1)) + $items_per_page['images_per_page']) {
-        ?>
-		<div id="bwg_load_<?php echo $current_view; ?>" class="tablenav-pages_<?php echo $current_view; ?>">
-			<a class="bwg_load_btn_<?php echo $current_view; ?> bwg_load_btn" href="javascript:void(0);"><?php echo __('Load More...', BWG()->prefix); ?></a>
-			<input type="hidden" id="bwg_load_more_<?php echo $current_view; ?>" name="bwg_load_more_<?php echo $current_view; ?>" value="on" />
-		</div>
-    <?php
-      }
-    }
-    elseif ($pagination == 3) {
-      if ($count_items > $limit * $page_number) {
-        ?>
-		<script type="text/javascript">
-		  jQuery(window).on("scroll", function() {
-        if (jQuery(document).scrollTop() + jQuery(window).height() > (jQuery('#<?php echo $form_id; ?>').offset().top + jQuery('#<?php echo $form_id; ?>').height())) {
-          spider_page_<?php echo $current_view; ?>('', <?php echo $page_number; ?>, 1, true);
-          jQuery(window).off("scroll");
-          return false;
-			  }
-		  });
-		</script>
-    <?php
-      }
-    }
-    ?>
-    <input type="hidden" id="page_number_<?php echo $current_view; ?>" name="page_number_<?php echo $current_view; ?>" value="<?php echo ((isset($_POST['page_number_' . $current_view])) ? (int) $_POST['page_number_' . $current_view] : 1); ?>" />
-    <script type="text/javascript">
-      function spider_page_<?php echo $current_view; ?>(cur, x, y, load_more) {
-        if (typeof load_more == "undefined") {
-          var load_more = false;
-        }
-        if (jQuery(cur).hasClass('disabled')) {
-          return false;
-        }
-        var items_county_<?php echo $current_view; ?> = <?php echo $items_county; ?>;
-        switch (y) {
-          case 1:
-            if (x >= items_county_<?php echo $current_view; ?>) {
-              document.getElementById('page_number_<?php echo $current_view; ?>').value = items_county_<?php echo $current_view; ?>;
-            }
-            else {
-              document.getElementById('page_number_<?php echo $current_view; ?>').value = x + 1;
-            }
-            break;
-          case 2:
-            document.getElementById('page_number_<?php echo $current_view; ?>').value = items_county_<?php echo $current_view; ?>;
-            break;
-          case -1:
-            if (x == 1) {
-              document.getElementById('page_number_<?php echo $current_view; ?>').value = 1;
-            }
-            else {
-              document.getElementById('page_number_<?php echo $current_view; ?>').value = x - 1;
-            }
-            break;
-          case -2:
-            document.getElementById('page_number_<?php echo $current_view; ?>').value = 1;
-            break;
-          default:
-            document.getElementById('page_number_<?php echo $current_view; ?>').value = 1;
-        }
-        spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $id; ?>', '<?php echo $album_gallery_id; ?>', '', '<?php echo $type; ?>', 0, '', '', load_more);
-      }
-      jQuery('.<?php echo $first_page; ?>').on('click', function() {
-        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, -2);
-      });
-      jQuery('.<?php echo $prev_page; ?>').on('click', function() {
-        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, -1);
-        return false;
-      });
-      jQuery('.<?php echo $next_page; ?>').on('click', function() {
-        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, 1);
-        return false;
-      });
-      jQuery('.<?php echo $last_page; ?>').on('click', function() {
-        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, 2);
-      });
-      jQuery('.bwg_load_btn_<?php echo $current_view; ?>').on('click', function() {
-        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, 1, true);
-        return false;
-      });
-    </script>
-    </span>
-    <?php
-  }
-
- public static function ajax_html_frontend_search_box($form_id, $current_view, $cur_gal_id, $images_count, $search_box_width = 180, $placeholder = '', $album_gallery_id = 0) {
-   $bwg_search = ((isset($_POST['bwg_search_' . $current_view]) && esc_html($_POST['bwg_search_' . $current_view]) != '') ? esc_html($_POST['bwg_search_' . $current_view]) : '');
-   $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : ($album_gallery_id ? 'gallery' : 'album'));
-   $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : ( $album_gallery_id ? $album_gallery_id : 0));
-   ob_start();
-    ?>
-    #bwg_search_container_2_<?php echo $current_view; ?> {
-      width: <?php echo $search_box_width; ?>px;
-    }
-    <?php
-
-    $inline_style = ob_get_clean();
-    if (BWG()->options->use_inline_stiles_and_scripts) {
-      wp_add_inline_style('bwg_frontend', $inline_style);
-    }
-    else {
-      echo '<style>' . $inline_style . '</style>';
-    }
-    ?>
-    <script type="text/javascript">
-      function clear_input_<?php echo $current_view; ?> (current_view) {
-        jQuery("#bwg_search_input_" + current_view).val('');
-      }
-      function check_enter_key_<?php echo $current_view; ?>(e) {
-        var key_code = e.which || e.keyCode;
-        if (key_code == 13) {
-          spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1);
-          return false;
-        }
-        return true;
-      }
-    </script>
-    <div class="bwg_search_container_1" id="bwg_search_container_1_<?php echo $current_view; ?>">
-      <div class="bwg_search_container_2" id="bwg_search_container_2_<?php echo $current_view; ?>">
-        <span class="bwg_search_reset_container" >
-          <i title="<?php echo __('Reset', BWG()->prefix); ?>" class="bwg_reset fa fa-times" onclick="clear_input_<?php echo $current_view; ?>('<?php echo $current_view; ?>'),spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1)"></i>
-        </span>
-        <span class="bwg_search_loupe_container" >
-          <i title="<?php echo __('Search', BWG()->prefix); ?>" class="bwg_search fa fa-search" onclick="spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1)"></i>
-        </span>
-        <span class="bwg_search_input_container">
-          <input id="bwg_search_input_<?php echo $current_view; ?>" class="bwg_search_input" type="text" onkeypress="return check_enter_key_<?php echo $current_view; ?>(event)" name="bwg_search_<?php echo $current_view; ?>" value="<?php echo $bwg_search; ?>" placeholder="<?php echo $placeholder; ?>" />
-          <input id="bwg_images_count_<?php echo $current_view; ?>" class="bwg_search_input" type="hidden" name="bwg_images_count_<?php echo $current_view; ?>" value="<?php echo $images_count; ?>" >
-        </span>
-      </div>
-    </div>
-    <?php
-  }
-
-  public static function ajax_html_frontend_search_tags($form_id, $current_view, $cur_gal_id, $images_count, $tags_rows) {
-    $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : 'album');
-    $bwg_search_tags = (isset($_POST['bwg_tag_id_' . $cur_gal_id]) && $_POST['bwg_tag_id_' . $cur_gal_id] != '' )? $_POST['bwg_tag_id_' . $cur_gal_id] : array();	
-    $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : 0);
-    ?>
-	  <div id="bwg_tag_wrap">
-      <div id="bwg_tag_container">
-        <select class="search_tags" id="bwg_tag_id_<?php echo $cur_gal_id; ?>" multiple="multiple">		 
-          <?php                
-          foreach($tags_rows as $tags_row) {
-            $selected = (in_array($tags_row->term_id ? $tags_row->term_id : '', $bwg_search_tags)) ? 'selected="selected"' : '';
-            ?>     
-          <option value="<?php echo $tags_row->term_id ?>" <?php echo $selected;?>><?php echo $tags_row->name ?></option>
-            <?php
-          }
-          ?>
-        </select>
-        <span class="bwg_search_loupe_container" >
-          <i title="<?php _e('Search', BWG()->prefix); ?>" class="bwg_search fa fa-search" onclick="bwg_select_tag('<?php echo $current_view; ?>' ,'<?php echo $form_id; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '<?php echo $type; ?>', false);"></i>
-        </span>
-        <span class="bwg_search_reset_container" >
-          <i title="<?php _e('Reset', BWG()->prefix); ?>" class="bwg_reset fa fa-times" onclick="bwg_select_tag('<?php echo $current_view; ?>' ,'<?php echo $form_id; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '<?php echo $type; ?>', '<?php echo $cur_gal_id; ?>');"></i>
-        </span>
-        <input type="hidden" id="bwg_tags_id_<?php echo $cur_gal_id;  ?>" value="" />
-      </div>
-      <div style="clear:both"></div>
-    </div>
-    <script>
-      jQuery(".search_tags").SumoSelect({
-        placeholder: bwg_objectsL10n.bwg_select_tag,
-        search: 1,
-        searchText: bwg_objectsL10n.bwg_search,
-        forceCustomRendering: true
-      });
-    </script>
-    <?php
-  }
-
-  public static function ajax_html_frontend_sort_box($form_id, $current_view, $cur_gal_id, $sort_by = '', $search_box_width = 180) {
-    $bwg_search = ((isset($_POST['bwg_search_' . $current_view]) && esc_html($_POST['bwg_search_' . $current_view]) != '') ? esc_html($_POST['bwg_search_' . $current_view]) : '');	
-    $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : 'album');
-    $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : 0);
-    ob_start();
-    ?>
-    #bwg_order_<?php echo $current_view; ?> {
-      width: <?php echo $search_box_width; ?>px;
-    }
-    <?php
-    $inline_style = ob_get_clean();
-
-    if (BWG()->options->use_inline_stiles_and_scripts) {
-      wp_add_inline_style('bwg_frontend', $inline_style);
-    }
-    else {
-      echo '<style>' . $inline_style . '</style>';
-    }
-    ?>
-    <div class="bwg_order_cont">
-      <span class="bwg_order_label"><?php echo __('Order by: ', BWG()->prefix); ?></span>
-      <select id="bwg_order_<?php echo $current_view; ?>" class="bwg_order" onchange="spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1, '', this.value)">
-        <option <?php if ($sort_by == 'default') echo 'selected'; ?> value="default"><?php echo __('Default', BWG()->prefix); ?></option>
-        <option <?php if ($sort_by == 'filename') echo 'selected'; ?> value="filename"><?php echo __('Filename', BWG()->prefix); ?></option>
-        <option <?php if ($sort_by == 'size') echo 'selected'; ?> value="size"><?php echo __('Size', BWG()->prefix); ?></option>
-        <option <?php if ($sort_by == 'random' || $sort_by == 'RAND()') echo 'selected'; ?> value="random"><?php echo __('Random', BWG()->prefix); ?></option>
-      </select>
-    </div>
-    <?php
-  }
-
   public static function spider_hex2rgb($colour) {
     if ($colour[0] == '#') {
       $colour = substr( $colour, 1 );
@@ -1044,52 +762,10 @@ class WDWLibrary {
     return $google_array; 
   }
 
-  public static function get_theme_row_data($id) {
+  public static function get_default_theme_id() {
     global $wpdb;
-    if ($id) {
-      $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme WHERE id="%d"', $id));
-    }
-    else {
-      $row = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme WHERE default_theme=1');
-    }
-    if (isset($row->options)) {
-      $row = (object) array_merge((array) $row, (array) json_decode($row->options));
-    }
-    return $row;
-  }
-
-  public static function get_gallery_row_data($id, $from = '') {
-    global $wpdb;
-    $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_gallery WHERE published=1 AND id="%d"', $id));
-    if ($row) {
-        $row->permalink = '';
-      if ($from != '') {
-        $row->permalink = self::get_custom_post_permalink( array( 'slug' => $row->slug, 'post_type' => 'gallery' ) );
-      }
-      if ( !empty($row->preview_image) ) {
-        $row->preview_image = $row->preview_image . '?bwg=' . $row->modified_date;
-      }
-      if ( !empty($row->random_preview_image) ) {
-        $row->random_preview_image = $row->random_preview_image . '?bwg=' . $row->modified_date;
-      }
-	  }
-    else if ( $id == 0 ) {
-      $row_count = $wpdb->get_var('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_gallery WHERE published=1');
-      if (!$row_count) {
-        return false;
-      }
-      else {
-        $row = new stdClass();
-        $row->name = '';
-      }
-    }
-    return $row;
-  }
-
-  public static function get_tags_rows_data($gallery_id) {
-    global $wpdb;
-    $row = $wpdb->get_results('Select t1.* FROM ' . $wpdb->prefix . 'terms AS t1 LEFT JOIN ' . $wpdb->prefix . 'term_taxonomy AS t2 ON t1.term_id = t2.term_id' . ($gallery_id ? ' LEFT JOIN (SELECT DISTINCT tag_id , gallery_id  FROM ' . $wpdb->prefix . 'bwg_image_tag) AS t3 ON t1.term_id=t3.tag_id' : '') . ' WHERE taxonomy="bwg_tag"' . ($gallery_id ? ' AND t3.gallery_id="' . $gallery_id . '"' : '') . ' ORDER BY t1.name  ASC');
-    return $row;
+    $id = $wpdb->get_var('SELECT id FROM ' . $wpdb->prefix . 'bwg_theme WHERE default_theme=1');
+    return $id;
   }
 
   /**
@@ -1169,8 +845,7 @@ class WDWLibrary {
     global $wpdb;
     $id = $params['id'];
     $type = $params['type'];
-    $theme_row = self::get_theme_row_data(0);
-    $theme_id = $theme_row->id;
+    $theme_id = self::get_default_theme_id();
     $shortcode_id = 0;
     if (!empty($type['post_type'])) {
       $shortcode = ' use_option_defaults="1" type="' . $type['post_type'] . '" theme_id="' . $theme_id . '" ';
@@ -1315,6 +990,7 @@ class WDWLibrary {
     }
     $items_in_page = $images_per_page;
     $limit = 0;
+    WDWLibrary::bwg_session_start();
     if ( isset($_REQUEST['page_number_' . $bwg]) && $_REQUEST['page_number_' . $bwg] ) {
       if ( $_REQUEST['page_number_' . $bwg] > 1 ) {
         $items_in_page = $load_more_image_count;
@@ -1350,8 +1026,8 @@ class WDWLibrary {
     if ( !empty($rows) ) {
       foreach ( $rows as $row ) {
         if ( strpos($row->filetype, 'EMBED') === FALSE ) {
-          $row->image_url = $row->image_url . '?bwg=' . $row->modified_date;
-          $row->thumb_url = $row->thumb_url . '?bwg=' . $row->modified_date;
+          $row->image_url = self::image_url_version($row->image_url, $row->modified_date);
+          $row->thumb_url = self::image_url_version($row->thumb_url, $row->modified_date);
         }
         $images[] = $row;
       }
@@ -1369,43 +1045,51 @@ class WDWLibrary {
 
     if ( $row ) {
       if ( $from ) {
-          //var_dump($row[0]);
         $row->permalink = WDWLibrary::get_custom_post_permalink(array( 'slug' => $row->slug, 'post_type' => 'album' ));
       }
       if ( !empty($row->preview_image) ) {
-        $row->preview_image = $row->preview_image . '?bwg=' . $row->modified_date;
+        $row->preview_image = self::image_url_version($row->preview_image, $row->modified_date);
       }
       if ( !empty($row->random_preview_image) ) {
-        $row->random_preview_image = $row->random_preview_image . '?bwg=' . $row->modified_date;
+        $row->random_preview_image = self::image_url_version($row->random_preview_image, $row->modified_date);
       }
     }
     return $row;
   }
 
-  public static function get_alb_gals_row( $id, $albums_per_page, $sort_by, $bwg, $sort_direction = 'ASC' ) {
+  public static function get_alb_gals_row( $bwg, $id, $albums_per_page, $sort_by, $pagination_type = 0 ) {
     global $wpdb;
+    if ( $sort_by == 'random' || $sort_by == 'RAND()' ) {
+      $order_by = 'ORDER BY RAND()';
+    } else {
+      $order_by = 'ORDER BY `order` ASC';
+    }
     $limit = 0;
-    if ( isset($_REQUEST['page_number_' . $bwg]) && $_REQUEST['page_number_' . $bwg] ) {
-      $limit = ((int) $_REQUEST['page_number_' . $bwg] - 1) * $albums_per_page;
+    if ( isset( $_REQUEST[ 'page_number_' . $bwg ] ) && $_REQUEST[ 'page_number_' . $bwg ] ) {
+      $limit = ((int)$_REQUEST[ 'page_number_' . $bwg ] - 1) * $albums_per_page;
     }
     $limit_str = '';
     if ( $albums_per_page ) {
       $limit_str = 'LIMIT ' . $limit . ',' . $albums_per_page;
     }
-    // Select all galleries
-    if( $id == 0) {
-        $row = $wpdb->get_results('SELECT * FROM ' . $wpdb->prefix . 'bwg_gallery WHERE `published`=1 ' . $limit_str);
-        $total = $wpdb->get_var('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_gallery');
-
-    } else {
-        $row = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d" ORDER BY `order` ' . $sort_direction . ' ' . $limit_str, $id));
-        $total = $wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d"', $id));
-
+    if ( isset( $_REQUEST[ 'action_' . $bwg ] ) && $_REQUEST[ 'action_' . $bwg ] == 'back' && ($pagination_type == 2 || $pagination_type == 3) ) {
+      if ( isset( $_REQUEST[ 'page_number_' . $bwg ] ) && $_REQUEST[ 'page_number_' . $bwg ] ) {
+        $limit = $albums_per_page * $_REQUEST[ 'page_number_' . $bwg ];
+        $limit_str = 'LIMIT 0,' . $limit;
+      }
     }
-    $page_nav['total'] = $total;
-    $page_nav['limit'] = 1;
-    if ( isset($_REQUEST['page_number_' . $bwg]) && $_REQUEST['page_number_' . $bwg] ) {
-      $page_nav['limit'] = (int) $_REQUEST['page_number_' . $bwg];
+    // Select all galleries
+    if ( $id == 0 ) {
+      $row = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'bwg_gallery WHERE `published`=1 ' . $order_by . ' ' . $limit_str );
+      $total = $wpdb->get_var( 'SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_gallery' );
+    } else {
+      $row = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d" ' . $order_by . ' ' . $limit_str, $id ) );
+      $total = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d"', $id ) );
+    }
+    $page_nav[ 'total' ] = $total;
+    $page_nav[ 'limit' ] = 1;
+    if ( isset( $_REQUEST[ 'page_number_' . $bwg ] ) && $_REQUEST[ 'page_number_' . $bwg ] ) {
+      $page_nav[ 'limit' ] = (int)$_REQUEST[ 'page_number_' . $bwg ];
     }
     return array( 'rows' => $row, 'page_nav' => $page_nav );
   }
@@ -1599,16 +1283,16 @@ class WDWLibrary {
     $width = BWG()->options->upload_img_width;
     global $wpdb;
     $where = ($gallery_id) ? ' `gallery_id` = ' . $gallery_id : 1;
-	$images = $wpdb->get_results('SELECT * FROM `' . $wpdb->prefix . 'bwg_image` WHERE ' . $where);
-    if( !empty($images) ) {
-		foreach ( $images as $image ) {
-		  if ( preg_match('/EMBED/', $image->filetype) == 1 ) {
-			continue;
-		  }
-		  self::recover_image($image, $thumb_width, $width, ($gallery_id == 0 ? 'option_page' : 'gallery_page'));
-		}
-	}
-	self::update_image_modified_date( $where );
+    $images = $wpdb->get_results( 'SELECT * FROM `' . $wpdb->prefix . 'bwg_image` WHERE ' . $where );
+    if ( !empty( $images ) ) {
+      foreach ( $images as $image ) {
+        if ( preg_match( '/EMBED/', $image->filetype ) == 1 ) {
+          continue;
+        }
+        self::recover_image( $image, $thumb_width, $width, ($gallery_id == 0 ? 'option_page' : 'gallery_page') );
+      }
+    }
+    self::update_image_modified_date( $where );
   }
 
   public static function recover_image($image, $thumb_width, $width, $page) {
@@ -1824,7 +1508,7 @@ class WDWLibrary {
    * @return array   $defauls
    */
   public static function get_shortcode_option_params( $params ) {
-    $theme = self::get_theme_row_data(0);
+    $theme_id = self::get_default_theme_id();
     $use_option_defaults = (isset($params['use_option_defaults']) && $params['use_option_defaults'] == 1) ? TRUE : FALSE;
     $from = (isset($params['from']) && $params['from'] == 'widget' ) ? TRUE : FALSE;
     $defaults = array(
@@ -1833,33 +1517,11 @@ class WDWLibrary {
       'gal_title' => isset($params['gal_title']) ? $params['gal_title'] : '',
       'album_id' => isset($params['album_id']) ? $params['album_id'] : 0,
       'tag' => isset($params['tag']) ? $params['tag'] : 0,
-      'theme_id' => (!$use_option_defaults && isset($params['theme_id'])) ? $params['theme_id'] : $theme->id,
-
-      'thumb_click_action' => (($from) ? BWG()->options->thumb_click_action : ($use_option_defaults ? BWG()->options->thumb_click_action : (isset($params['thumb_click_action']) && $params['thumb_click_action'] != 'undefined' ? $params['thumb_click_action'] : 'open_lightbox'))),
-      'thumb_link_target' => (($from) ? BWG()->options->thumb_link_target : ($use_option_defaults ? BWG()->options->thumb_link_target : (isset($params['thumb_link_target']) ? $params['thumb_link_target'] : 1))),
-      'popup_autoplay' => (($from) ? BWG()->options->popup_autoplay : ($use_option_defaults ? BWG()->options->popup_autoplay : (isset($params['popup_autoplay']) ? $params['popup_autoplay'] : 0))),
-      'popup_enable_pinterest' => ($use_option_defaults ? BWG()->options->popup_enable_pinterest : (isset($params['popup_enable_pinterest']) ? $params['popup_enable_pinterest'] : 0)),
-      'popup_enable_tumblr' => ($use_option_defaults ? BWG()->options->popup_enable_tumblr : (isset($params['popup_enable_tumblr']) ? $params['popup_enable_tumblr'] : 0)),
-      'popup_enable_info' => (($from) ? BWG()->options->popup_enable_info : ($use_option_defaults ? BWG()->options->popup_enable_info : (isset($params['popup_enable_info']) ? $params['popup_enable_info'] : 1))),
-      'popup_info_always_show' => (($from) ? BWG()->options->popup_info_always_show : ($use_option_defaults ? BWG()->options->popup_info_always_show : (isset($params['popup_info_always_show']) ? $params['popup_info_always_show'] : 0))),
-      'popup_info_full_width' => (($from) ? BWG()->options->popup_info_full_width : ($use_option_defaults ? BWG()->options->popup_info_full_width : (isset($params['popup_info_full_width']) ? $params['popup_info_full_width'] : 0))),
-      'popup_enable_rate' => (($from) ? BWG()->options->popup_enable_rate : ($use_option_defaults ? BWG()->options->popup_enable_rate : (isset($params['popup_enable_rate']) ? $params['popup_enable_rate'] : 0))),
-      'popup_width' => (($from) ? BWG()->options->popup_width : ($use_option_defaults ? BWG()->options->popup_width : (isset($params['popup_width']) ? $params['popup_width'] : 800))),
-      'popup_height' => (($from) ? BWG()->options->popup_height : ($use_option_defaults ? BWG()->options->popup_height : (isset($params['popup_height']) ? $params['popup_height'] : 500))),
-      'popup_effect' => (($from) ? BWG()->options->popup_type : ($use_option_defaults ? BWG()->options->popup_type : (isset($params['popup_effect']) ? $params['popup_effect'] : 'none'))),
-      'popup_interval' => (($from) ? BWG()->options->popup_interval : ($use_option_defaults ? BWG()->options->popup_interval : (isset($params['popup_interval']) ? $params['popup_interval'] : 5))),
-      'popup_enable_filmstrip' => (($from) ? BWG()->options->popup_enable_filmstrip : ($use_option_defaults ? BWG()->options->popup_enable_filmstrip : (isset($params['popup_enable_filmstrip']) ? $params['popup_enable_filmstrip'] : 0))),
-      'popup_filmstrip_height' => (($from) ? BWG()->options->popup_filmstrip_height : ($use_option_defaults ? BWG()->options->popup_filmstrip_height : (isset($params['popup_filmstrip_height']) ? $params['popup_filmstrip_height'] : 50))),
-      'popup_enable_ctrl_btn' => (($from) ? BWG()->options->popup_enable_ctrl_btn : ($use_option_defaults ? BWG()->options->popup_enable_ctrl_btn : (isset($params['popup_enable_ctrl_btn']) ? $params['popup_enable_ctrl_btn'] : 1))),
-      'popup_enable_fullscreen' => (($from) ? BWG()->options->popup_enable_fullscreen : ($use_option_defaults ? BWG()->options->popup_enable_fullscreen : (isset($params['popup_enable_fullscreen']) ? $params['popup_enable_fullscreen'] : 0))),
-	    'popup_fullscreen' => (($from) ? BWG()->options->popup_fullscreen : ($use_option_defaults ? BWG()->options->popup_fullscreen : (isset($params['popup_fullscreen']) ? $params['popup_fullscreen'] : 0))),
-      'popup_enable_comment' => (($from) ? BWG()->options->popup_enable_comment : ($use_option_defaults ? BWG()->options->popup_enable_comment : (isset($params['popup_enable_comment']) ? $params['popup_enable_comment'] : 0))),
-      'popup_enable_facebook' => (($from) ? BWG()->options->popup_enable_facebook : ($use_option_defaults ? BWG()->options->popup_enable_facebook : (isset($params['popup_enable_facebook']) ? $params['popup_enable_facebook'] : 0))),
-      'popup_enable_twitter' => (($from) ? BWG()->options->popup_enable_twitter : ($use_option_defaults ? BWG()->options->popup_enable_twitter : (isset($params['popup_enable_twitter']) ? $params['popup_enable_twitter'] : 0))),
-      'popup_enable_google' => (($from) ? BWG()->options->popup_enable_google : ($use_option_defaults ? BWG()->options->popup_enable_google : (isset($params['popup_enable_google']) ? $params['popup_enable_google'] : 0))),
-      'popup_enable_ecommerce' => ($use_option_defaults ? BWG()->options->popup_enable_ecommerce : (isset($params['popup_enable_ecommerce']) ? $params['popup_enable_ecommerce'] : 0)),
-      'popup_hit_counter' => (($from) ? BWG()->options->popup_hit_counter : ($use_option_defaults ? BWG()->options->popup_hit_counter : (isset($params['popup_hit_counter']) ? $params['popup_hit_counter'] : 0))),
-      'popup_effect_duration' => (($from) ? BWG()->options->popup_effect_duration : ($use_option_defaults ? BWG()->options->popup_effect_duration : (isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1))),
+      'theme_id' => isset($params['theme_id']) ? $params['theme_id'] : $theme_id,
+      'image_enable_page' => 0,
+      'images_per_page' => 0,
+      'thumb_width' => BWG()->options->thumb_width,
+      'thumb_height' => BWG()->options->thumb_height,
 
       'watermark_type' => (($from) ? BWG()->options->watermark_type : ($use_option_defaults ? BWG()->options->watermark_type : (isset($params['watermark_type']) ? $params['watermark_type'] : 'none'))),
       'watermark_text' => (($from) ? urlencode(BWG()->options->watermark_text) : ($use_option_defaults ? urlencode(BWG()->options->watermark_text) : (isset($params['watermark_text']) ? urlencode($params['watermark_text']) : ''))),
@@ -1867,12 +1529,49 @@ class WDWLibrary {
       'watermark_font' => (($from) ? BWG()->options->watermark_font : ($use_option_defaults ? BWG()->options->watermark_font : (isset($params['watermark_font']) ? $params['watermark_font'] : 'Arial'))),
       'watermark_color' => (($from) ? BWG()->options->watermark_color : ($use_option_defaults ? BWG()->options->watermark_color : (isset($params['watermark_color']) ? $params['watermark_color'] : 'FFFFFF'))),
       'watermark_link' => (($from) ? urlencode(BWG()->options->watermark_link) : ($use_option_defaults ? urlencode(BWG()->options->watermark_link) : (isset($params['watermark_link']) ? urlencode($params['watermark_link']) : ''))),
-      'watermark_url' => (($from) ? urlencode(BWG()->options->watermark_url) : ($use_option_defaults ? urlencode(BWG()->options->watermark_url) : (isset($params['watermark_url']) ? urlencode($params['watermark_url']) : ''))),
+      'watermark_url' => (($from) ? BWG()->options->watermark_url : ($use_option_defaults ? BWG()->options->watermark_url : (isset($params['watermark_url']) ? $params['watermark_url'] : ''))),
       'watermark_width' => (($from) ? BWG()->options->watermark_width: ($use_option_defaults ? BWG()->options->watermark_width : (isset($params['watermark_width']) ? $params['watermark_width'] : 90))),
       'watermark_height' => (($from) ? BWG()->options->watermark_height : ($use_option_defaults ? BWG()->options->watermark_height : (isset($params['watermark_height']) ? $params['watermark_height'] : 90))),
       'watermark_opacity' => (($from) ? BWG()->options->watermark_opacity : ($use_option_defaults ? BWG()->options->watermark_opacity : (isset($params['watermark_opacity']) ? $params['watermark_opacity'] : 30))),
       'watermark_position' => (($from) ? BWG()->options->watermark_position : ($use_option_defaults ? BWG()->options->watermark_position : (isset($params['watermark_position']) ? $params['watermark_position'] : 'bottom-right'))),
     );
+
+    $defaults['thumb_click_action'] = self::get_option_value('thumb_click_action', 'thumb_click_action', 'thumb_click_action', $from || $use_option_defaults, $params);
+    $defaults['thumb_link_target'] = self::get_option_value('thumb_link_target', 'thumb_link_target', 'thumb_link_target', $from || $use_option_defaults, $params);
+    $defaults['popup_fullscreen'] = self::get_option_value('popup_fullscreen', 'popup_fullscreen', 'popup_fullscreen', $from || $use_option_defaults, $params);
+    $defaults['popup_width'] = self::get_option_value('popup_width', 'popup_width', 'popup_width', $from || $use_option_defaults, $params);
+    $defaults['popup_height'] = self::get_option_value('popup_height', 'popup_height', 'popup_height', $from || $use_option_defaults, $params);
+    $defaults['popup_effect'] = self::get_option_value('popup_effect', 'popup_effect', 'popup_type', $from || $use_option_defaults, $params);
+    $defaults['popup_effect_duration'] = self::get_option_value('popup_effect_duration', 'popup_effect_duration', 'popup_effect_duration', $from || $use_option_defaults, $params);
+    $defaults['popup_autoplay'] = self::get_option_value('popup_autoplay', 'popup_autoplay', 'popup_autoplay', $from || $use_option_defaults, $params);
+    $defaults['popup_interval'] = self::get_option_value('popup_interval', 'popup_interval', 'popup_interval', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_filmstrip'] = self::get_option_value('popup_enable_filmstrip', 'popup_enable_filmstrip', 'popup_enable_filmstrip', $from || $use_option_defaults, $params);
+    $defaults['popup_filmstrip_height'] = self::get_option_value('popup_filmstrip_height', 'popup_filmstrip_height', 'popup_filmstrip_height', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_ctrl_btn'] = self::get_option_value('popup_enable_ctrl_btn', 'popup_enable_ctrl_btn', 'popup_enable_ctrl_btn', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_fullscreen'] = self::get_option_value('popup_enable_fullscreen', 'popup_enable_fullscreen', 'popup_enable_fullscreen', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_comment'] = self::get_option_value('popup_enable_comment', 'popup_enable_comment', 'popup_enable_comment', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_email'] = self::get_option_value('popup_enable_email', 'popup_enable_email', 'popup_enable_email', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_captcha'] = self::get_option_value('popup_enable_captcha', 'popup_enable_captcha', 'popup_enable_captcha', $from || $use_option_defaults, $params);
+    $defaults['comment_moderation'] = self::get_option_value('comment_moderation', 'comment_moderation', 'comment_moderation', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_info'] = self::get_option_value('popup_enable_info', 'popup_enable_info', 'popup_enable_info', $from || $use_option_defaults, $params);
+    $defaults['popup_info_always_show'] = self::get_option_value('popup_info_always_show', 'popup_info_always_show', 'popup_info_always_show', $from || $use_option_defaults, $params);
+    $defaults['popup_info_full_width'] = self::get_option_value('popup_info_full_width', 'popup_info_full_width', 'popup_info_full_width', $from || $use_option_defaults, $params);
+    $defaults['autohide_lightbox_navigation'] = self::get_option_value('autohide_lightbox_navigation', 'autohide_lightbox_navigation', 'autohide_lightbox_navigation', $from || $use_option_defaults, $params);
+    $defaults['popup_hit_counter'] = self::get_option_value('popup_hit_counter', 'popup_hit_counter', 'popup_hit_counter', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_rate'] = self::get_option_value('popup_enable_rate', 'popup_enable_rate', 'popup_enable_rate', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_fullsize_image'] = self::get_option_value('popup_enable_fullsize_image', 'popup_enable_fullsize_image', 'popup_enable_fullsize_image', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_download'] = self::get_option_value('popup_enable_download', 'popup_enable_download', 'popup_enable_download', $from || $use_option_defaults, $params);
+    $defaults['show_image_counts'] = self::get_option_value('show_image_counts', 'show_image_counts', 'show_image_counts', $from || $use_option_defaults, $params);
+    $defaults['enable_loop'] = self::get_option_value('enable_loop', 'enable_loop', 'enable_loop', $from || $use_option_defaults, $params);
+    $defaults['enable_addthis'] = self::get_option_value('enable_addthis', 'enable_addthis', 'enable_addthis', $from || $use_option_defaults, $params);
+    $defaults['addthis_profile_id'] = self::get_option_value('addthis_profile_id', 'addthis_profile_id', 'addthis_profile_id', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_facebook'] = self::get_option_value('popup_enable_facebook', 'popup_enable_facebook', 'popup_enable_facebook', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_twitter'] = self::get_option_value('popup_enable_twitter', 'popup_enable_twitter', 'popup_enable_twitter', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_google'] = self::get_option_value('popup_enable_google', 'popup_enable_google', 'popup_enable_google', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_pinterest'] = self::get_option_value('popup_enable_pinterest', 'popup_enable_pinterest', 'popup_enable_pinterest', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_tumblr'] = self::get_option_value('popup_enable_tumblr', 'popup_enable_tumblr', 'popup_enable_tumblr', $from || $use_option_defaults, $params);
+    $defaults['popup_enable_ecommerce'] = self::get_option_value('popup_enable_ecommerce', 'popup_enable_ecommerce', 'popup_enable_ecommerce', $from || $use_option_defaults, $params);
+
     switch ($params['gallery_type']) {
       case 'thumbnails':
         $defaults['thumb_width'] = self::get_option_value('thumb_width', 'thumb_width', 'thumb_width', $use_option_defaults, $params);
@@ -2189,6 +1888,10 @@ class WDWLibrary {
     add_action('create_bwg_tag', array('WDWLibrary', 'update_bwg_tag'), 10, 2);
     // Delete bwg_tag.
     add_action('delete_bwg_tag', array('WDWLibrary', 'delete_bwg_tag'), 10, 3);
+
+    if ('bwg_tag' == self::get('taxonomy')) {
+      add_action( 'admin_notices', array( 'WDWLibrary', 'topbar' ) );
+    }
   }
 
   public static function create_bwg_tag() {
@@ -2319,6 +2022,519 @@ class WDWLibrary {
 		}
 		return $update;
 	}
+
+    /**
+     * Get description and title from gallery or album tables.
+     *
+     * @param string $type
+     * @param int $id
+     *
+     * @return string
+     */
+    public static function get_album_gallery_title_description( $type, $id ) {
+        global $wpdb;
+        $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_'.$type.' WHERE id="%d"', $id));
+        if($row) {
+            return $row;
+        }
+        return '';
+    }
+
+  /**
+   * Adds date modified to image url to avoid caching.
+   *
+   * @param $url
+   * @param $date_modified
+   * @return string
+   */
+    public static function image_url_version($url, $date_modified) {
+      if ($date_modified && !WDWLibrary::check_external_link($url)) {
+        return $url . '?bwg=' . $date_modified;
+      }
+      return $url;
+    }
+
+    // TODO: To be removed when all views are ready.
+  public static function get_theme_row_data($id) {
+    global $wpdb;
+    if ($id) {
+      $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme WHERE id="%d"', $id));
+    }
+    else {
+      $row = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'bwg_theme WHERE default_theme=1');
+    }
+    if (isset($row->options)) {
+      $row = (object) array_merge((array) $row, (array) json_decode($row->options));
+    }
+
+    // TODO: For old views. Delete after changing all views.
+    if ( $row->thumb_hover_effect == 'zoom' ) {
+      $row->thumb_hover_effect = 'scale';
+    }
+
+    return $row;
+  }
+
+  public static function get_gallery_row_data($id, $from = '') {
+    global $wpdb;
+    $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'bwg_gallery WHERE published=1 AND id="%d"', $id));
+    if ($row) {
+      $row->permalink = '';
+      if ($from != '') {
+        $row->permalink = self::get_custom_post_permalink( array( 'slug' => $row->slug, 'post_type' => 'gallery' ) );
+      }
+      if ( !empty($row->preview_image) ) {
+        $row->preview_image = self::image_url_version($row->preview_image, $row->modified_date);
+      }
+      if ( !empty($row->random_preview_image) ) {
+        $row->random_preview_image = self::image_url_version($row->random_preview_image, $row->modified_date);
+      }
+    }
+    else if ( $id == 0 ) {
+      $row_count = $wpdb->get_var('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'bwg_gallery WHERE published=1');
+      if (!$row_count) {
+        return false;
+      }
+      else {
+        $row = new stdClass();
+        $row->name = '';
+      }
+    }
+    return $row;
+  }
+
+  public static function get_tags_rows_data($gallery_id) {
+    global $wpdb;
+    $row = $wpdb->get_results('Select t1.* FROM ' . $wpdb->prefix . 'terms AS t1 LEFT JOIN ' . $wpdb->prefix . 'term_taxonomy AS t2 ON t1.term_id = t2.term_id' . ($gallery_id ? ' LEFT JOIN (SELECT DISTINCT tag_id , gallery_id  FROM ' . $wpdb->prefix . 'bwg_image_tag) AS t3 ON t1.term_id=t3.tag_id' : '') . ' WHERE taxonomy="bwg_tag"' . ($gallery_id ? ' AND t3.gallery_id="' . $gallery_id . '"' : '') . ' ORDER BY t1.name  ASC');
+    return $row;
+  }
+
+  public static function ajax_html_frontend_search_box($form_id, $current_view, $cur_gal_id, $images_count, $search_box_width = 180, $placeholder = '', $album_gallery_id = 0) {
+    $bwg_search = ((isset($_POST['bwg_search_' . $current_view]) && esc_html($_POST['bwg_search_' . $current_view]) != '') ? esc_html($_POST['bwg_search_' . $current_view]) : '');
+    $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : ($album_gallery_id ? 'gallery' : 'album'));
+    $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : ( $album_gallery_id ? $album_gallery_id : 0));
+
+    ob_start();
+    ?>
+    #bwg_search_container_2_<?php echo $current_view; ?> {
+    width: <?php echo $search_box_width; ?>px;
+    }
+    <?php
+    $inline_style = ob_get_clean();
+
+    if (BWG()->options->use_inline_stiles_and_scripts) {
+      wp_add_inline_style('bwg_frontend', $inline_style);
+    }
+    else {
+      echo '<style>' . $inline_style . '</style>';
+    }
+    ?>
+    <div class="bwg_search_container_1" id="bwg_search_container_1_<?php echo $current_view; ?>">
+      <div class="bwg_search_container_2" id="bwg_search_container_2_<?php echo $current_view; ?>">
+        <span class="bwg_search_reset_container" >
+          <i title="<?php echo __('Reset', BWG()->prefix); ?>" class="bwg_reset fa fa-times" onclick="bwg_clear_search_input('<?php echo $current_view; ?>'),spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1)"></i>
+        </span>
+        <span class="bwg_search_loupe_container" >
+          <i title="<?php echo __('Search', BWG()->prefix); ?>" class="bwg_search fa fa-search" onclick="spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1)"></i>
+        </span>
+        <span class="bwg_search_input_container">
+          <input id="bwg_search_input_<?php echo $current_view; ?>" class="bwg_search_input" type="text" onkeypress="return bwg_check_search_input_enter(this, event)" name="bwg_search_<?php echo $current_view; ?>" value="<?php echo $bwg_search; ?>" placeholder="<?php echo $placeholder; ?>" />
+          <input id="bwg_images_count_<?php echo $current_view; ?>" class="bwg_search_input" type="hidden" name="bwg_images_count_<?php echo $current_view; ?>" value="<?php echo $images_count; ?>" >
+        </span>
+      </div>
+    </div>
+    <?php
+  }
+
+  public static function ajax_html_frontend_sort_box($form_id, $current_view, $cur_gal_id, $sort_by = '', $search_box_width = 180) {
+    $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : 'album');
+    $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : 0);
+
+    ob_start();
+    ?>
+    #bwg_order_<?php echo $current_view; ?> {
+    width: <?php echo $search_box_width; ?>px;
+    }
+    <?php
+    $inline_style = ob_get_clean();
+
+    if (BWG()->options->use_inline_stiles_and_scripts) {
+      wp_add_inline_style('bwg_frontend', $inline_style);
+    }
+    else {
+      echo '<style>' . $inline_style . '</style>';
+    }
+    ?>
+    <div class="bwg_order_cont">
+      <span class="bwg_order_label"><?php echo __('Order by: ', BWG()->prefix); ?></span>
+      <select id="bwg_order_<?php echo $current_view; ?>" class="bwg_order" onchange="spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1, '', this.value)">
+        <option <?php if ($sort_by == 'default') echo 'selected'; ?> value="default"><?php echo __('Default', BWG()->prefix); ?></option>
+        <option <?php if ($sort_by == 'filename') echo 'selected'; ?> value="filename"><?php echo __('Filename', BWG()->prefix); ?></option>
+        <option <?php if ($sort_by == 'size') echo 'selected'; ?> value="size"><?php echo __('Size', BWG()->prefix); ?></option>
+        <option <?php if ($sort_by == 'random' || $sort_by == 'RAND()') echo 'selected'; ?> value="random"><?php echo __('Random', BWG()->prefix); ?></option>
+      </select>
+    </div>
+    <?php
+  }
+
+  public static function ajax_html_frontend_search_tags($form_id, $current_view, $cur_gal_id, $images_count, $tags_rows) {
+    $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : 'album');
+    $bwg_search_tags = (isset($_POST['bwg_tag_id_' . $cur_gal_id]) && $_POST['bwg_tag_id_' . $cur_gal_id] != '' )? $_POST['bwg_tag_id_' . $cur_gal_id] : array();
+    $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : 0);
+    ?>
+    <div id="bwg_tag_wrap">
+      <div id="bwg_tag_container">
+        <select class="search_tags" id="bwg_tag_id_<?php echo $cur_gal_id; ?>" multiple="multiple">
+          <?php
+          foreach($tags_rows as $tags_row) {
+            $selected = (in_array($tags_row->term_id ? $tags_row->term_id : '', $bwg_search_tags)) ? 'selected="selected"' : '';
+            ?>
+            <option value="<?php echo $tags_row->term_id ?>" <?php echo $selected;?>><?php echo $tags_row->name ?></option>
+            <?php
+          }
+          ?>
+        </select>
+        <span class="bwg_search_loupe_container" >
+          <i title="<?php _e('Search', BWG()->prefix); ?>" class="bwg_search fa fa-search" onclick="bwg_select_tag('<?php echo $current_view; ?>' ,'<?php echo $form_id; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '<?php echo $type; ?>', false);"></i>
+        </span>
+        <span class="bwg_search_reset_container" >
+          <i title="<?php _e('Reset', BWG()->prefix); ?>" class="bwg_reset fa fa-times" onclick="bwg_select_tag('<?php echo $current_view; ?>' ,'<?php echo $form_id; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '<?php echo $type; ?>', '<?php echo $cur_gal_id; ?>');"></i>
+        </span>
+        <input type="hidden" id="bwg_tags_id_<?php echo $cur_gal_id;  ?>" value="" />
+      </div>
+      <div style="clear:both"></div>
+    </div>
+    <?php
+  }
+
+  public static function ajax_html_frontend_page_nav($theme_row, $count_items, $page_number, $form_id, $items_per_page, $current_view, $id, $cur_alb_gal_id = 0, $type = 'album', $enable_seo = false, $pagination = 1) {
+    $limit = $page_number > 1 ? $items_per_page['load_more_image_count'] : $items_per_page['images_per_page'];
+    $limit = $limit ? $limit : 1;
+    $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : $type);
+    $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : $cur_alb_gal_id);
+    if ($count_items) {
+      if ($count_items % $limit) {
+        $items_county = ($count_items - $count_items % $limit) / $limit + 1;
+      }
+      else {
+        $items_county = ($count_items - $count_items % $limit) / $limit;
+      }
+      if ($pagination == 2) {
+        $items_county++;
+      }
+    }
+    else {
+      $items_county = 1;
+    }
+    if ($page_number > $items_county) {
+      return;
+    }
+    $first_page = "first-page-" . $current_view;
+    $prev_page = "prev-page-" . $current_view;
+    $next_page = "next-page-" . $current_view;
+    $last_page = "last-page-" . $current_view;
+    ?>
+    <span class="bwg_nav_cont_<?php echo $current_view; ?>">
+    <?php
+    if ($pagination == 1) {
+      ?>
+      <div class="tablenav-pages_<?php echo $current_view; ?>">
+      <?php
+      if ($theme_row->page_nav_number) {
+        ?>
+        <span class="displaying-num_<?php echo $current_view; ?>"><?php echo $count_items . ' ' . __(' item(s)', BWG()->prefix); ?></span>
+        <?php
+      }
+      if ($count_items > $limit) {
+        if ($theme_row->page_nav_button_text) {
+          $first_button = __('First', BWG()->prefix);
+          $previous_button = __('Previous', BWG()->prefix);
+          $next_button = __('Next', BWG()->prefix);
+          $last_button = __('Last', BWG()->prefix);
+        }
+        else {
+          $first_button = '«';
+          $previous_button = '‹';
+          $next_button = '›';
+          $last_button = '»';
+        }
+        if ($page_number == 1) {
+          $first_page = "first-page disabled";
+          $prev_page = "prev-page disabled";
+        }
+        if ($page_number >= $items_county) {
+          $next_page = "next-page disabled";
+          $last_page = "last-page disabled";
+        }
+        ?>
+        <span class="pagination-links_<?php echo $current_view; ?>">
+        <a class="<?php echo $first_page; ?>" title="<?php echo __('Go to the first page', BWG()->prefix); ?>"><?php echo $first_button; ?></a>
+        <a class="<?php echo $prev_page; ?>" title="<?php echo __('Go to the previous page', BWG()->prefix); ?>" <?php echo  $page_number > 1 && $enable_seo ? 'href="' . esc_url(add_query_arg(array("page_number_" . $current_view => $page_number - 1), $_SERVER['REQUEST_URI'])) . '"' : ""; ?>><?php echo $previous_button; ?></a>
+        <span class="paging-input_<?php echo $current_view; ?>">
+          <span class="total-pages_<?php echo $current_view; ?>"><?php echo $page_number; ?></span> <?php echo __('of', BWG()->prefix); ?> <span class="total-pages_<?php echo $current_view; ?>">
+            <?php echo $items_county; ?>
+          </span>
+        </span>
+        <a class="<?php echo $next_page ?>" title="<?php echo __('Go to the next page', BWG()->prefix); ?>" <?php echo  $page_number + 1 <= $items_county && $enable_seo ? 'href="' . esc_url(add_query_arg(array("page_number_" . $current_view => $page_number + 1), $_SERVER['REQUEST_URI'])) . '"' : ""; ?>><?php echo $next_button; ?></a>
+        <a class="<?php echo $last_page ?>" title="<?php echo __('Go to the last page', BWG()->prefix); ?>"><?php echo $last_button; ?></a>
+      </span>
+        <?php
+      }
+      ?>
+    </div>
+      <?php
+    }
+    elseif ($pagination == 2) {
+    if ($count_items > ($limit * ($page_number - 1)) + $items_per_page['images_per_page']) {
+    ?>
+		<div id="bwg_load_<?php echo $current_view; ?>" class="tablenav-pages_<?php echo $current_view; ?>">
+			<a class="bwg_load_btn_<?php echo $current_view; ?> bwg_load_btn" href="javascript:void(0);"><?php echo __('Load More...', BWG()->prefix); ?></a>
+			<input type="hidden" id="bwg_load_more_<?php echo $current_view; ?>" name="bwg_load_more_<?php echo $current_view; ?>" value="on" />
+		</div>
+    <?php
+    }
+    }
+    elseif ($pagination == 3) {
+    if ($count_items > $limit * $page_number) {
+    ?>
+		<script type="text/javascript">
+		  jQuery(window).on("scroll", function() {
+        if (jQuery(document).scrollTop() + jQuery(window).height() > (jQuery('#<?php echo $form_id; ?>').offset().top + jQuery('#<?php echo $form_id; ?>').height())) {
+          spider_page_<?php echo $current_view; ?>('', <?php echo $page_number; ?>, 1, true);
+          jQuery(window).off("scroll");
+          return false;
+        }
+      });
+		</script>
+      <?php
+    }
+    }
+    ?>
+      <input type="hidden" id="page_number_<?php echo $current_view; ?>" name="page_number_<?php echo $current_view; ?>" value="<?php echo ((isset($_POST['page_number_' . $current_view])) ? (int) $_POST['page_number_' . $current_view] : 1); ?>" />
+    <script type="text/javascript">
+      function spider_page_<?php echo $current_view; ?>(cur, x, y, load_more) {
+        if (typeof load_more == "undefined") {
+          var load_more = false;
+        }
+        if (jQuery(cur).hasClass('disabled')) {
+          return false;
+        }
+        var items_county_<?php echo $current_view; ?> = <?php echo $items_county; ?>;
+        switch (y) {
+          case 1:
+            if (x >= items_county_<?php echo $current_view; ?>) {
+              document.getElementById('page_number_<?php echo $current_view; ?>').value = items_county_<?php echo $current_view; ?>;
+            }
+            else {
+              document.getElementById('page_number_<?php echo $current_view; ?>').value = x + 1;
+            }
+            break;
+          case 2:
+            document.getElementById('page_number_<?php echo $current_view; ?>').value = items_county_<?php echo $current_view; ?>;
+            break;
+          case -1:
+            if (x == 1) {
+              document.getElementById('page_number_<?php echo $current_view; ?>').value = 1;
+            }
+            else {
+              document.getElementById('page_number_<?php echo $current_view; ?>').value = x - 1;
+            }
+            break;
+          case -2:
+            document.getElementById('page_number_<?php echo $current_view; ?>').value = 1;
+            break;
+          default:
+            document.getElementById('page_number_<?php echo $current_view; ?>').value = 1;
+        }
+        spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $id; ?>', '<?php echo $album_gallery_id; ?>', '', '<?php echo $type; ?>', 0, '', '', load_more);
+      }
+      jQuery('.<?php echo $first_page; ?>').on('click', function() {
+        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, -2);
+      });
+      jQuery('.<?php echo $prev_page; ?>').on('click', function() {
+        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, -1);
+        return false;
+      });
+      jQuery('.<?php echo $next_page; ?>').on('click', function() {
+        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, 1);
+        return false;
+      });
+      jQuery('.<?php echo $last_page; ?>').on('click', function() {
+        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, 2);
+      });
+      jQuery('.bwg_load_btn_<?php echo $current_view; ?>').on('click', function() {
+        spider_page_<?php echo $current_view; ?>(this, <?php echo $page_number; ?>, 1, true);
+        return false;
+      });
+    </script>
+    </span>
+    <?php
+  }
+
+  public static function bwg_session_start() {
+    if (session_id() == '' || (function_exists('session_status') && (session_status() == PHP_SESSION_NONE))) {
+      @session_start();
+    }
+  }
+
+  /**
+   * Generate top bar.
+   *
+   * @return string Top bar html.
+   */
+  public static function topbar() {
+    $page = isset($_GET['page']) ? esc_html($_GET['page']) : '';
+    $taxonomy = isset($_GET['taxonomy']) ? esc_html($_GET['taxonomy']) : '';
+    $user_guide_link = 'https://docs.10web.io/docs/photo-gallery/';
+    $show_content = true;
+    $show_guide_link = true;
+    $show_head = false;
+    if ('bwg_tag' == $taxonomy) {
+      $user_guide_link .= 'image-tags';
+    }
+    else {
+      switch ( $page ) {
+        case 'galleries_bwg':
+          {
+            $user_guide_link .= 'adding-galleries/creating-galleries.html';
+            break;
+          }
+        case 'albums_bwg':
+          {
+            $user_guide_link .= 'gallery-groups';
+            break;
+          }
+        case 'tags_bwg':
+          {
+            $user_guide_link .= 'image-tags';
+            break;
+          }
+        case 'options_bwg':
+          {
+            $user_guide_link .= 'photo-gallery-options';
+            break;
+          }
+        case 'themes_bwg':
+          {
+            $user_guide_link .= 'photo-gallery-themes';
+            break;
+          }
+        case 'comments_bwg':
+          {
+            $user_guide_link .= 'comments-ratings';
+            break;
+          }
+        case 'ratings_bwg':
+          {
+            $user_guide_link .= 'comments-ratings';
+            break;
+          }
+        case 'licensing_bwg':
+          {
+            $user_guide_link .= 'adding-galleries/creating-galleries.html';
+            break;
+          }
+        default:
+          {
+            return '';
+            break;
+          }
+      }
+    }
+    $show_content = $show_content && !BWG()->is_pro;
+    $support_forum_link = 'https://wordpress.org/support/plugin/photo-gallery';
+    $premium_link = 'https://web-dorado.com/files/fromPhotoGallery.php';
+    wp_enqueue_style(BWG()->prefix . '-roboto');
+    wp_enqueue_style(BWG()->prefix . '-pricing');
+    ob_start();
+    ?>
+    <div class="wrap">
+      <h1 class="bwg-head-notice">&nbsp;</h1>
+      <div class="bwg-topbar-container">
+        <?php
+        if ($show_content) {
+          ?>
+          <div class="bwg-topbar bwg-topbar-content">
+            <div class="bwg-topbar-content-container">
+              <div class="bwg-topbar-content-title">
+                <?php _e('Photo Gallery Premium', BWG()->prefix); ?>
+              </div>
+              <div class="bwg-topbar-content-body">
+                <?php _e('Get more stunning views with fully customizable themes, powerful lightbox and much more.', BWG()->prefix); ?>
+              </div>
+            </div>
+            <div class="bwg-topbar-content-button-container">
+              <a href="<?php echo $premium_link; ?>" target="_blank" class="bwg-topbar-upgrade-button"><?php _e( 'Upgrade', BWG()->prefix ); ?></a>
+            </div>
+          </div>
+          <?php
+        }
+        ?>
+        <div class="bwg-topbar bwg-topbar-links">
+          <div class="bwg-topbar-links-container">
+            <?php if ( $show_guide_link ) { ?>
+              <a href="<?php echo $user_guide_link; ?>" target="_blank">
+                <div class="bwg-topbar-links-item">
+                  <?php _e('User guide', BWG()->prefix); ?>
+                </div>
+              </a>
+              <?php
+            }
+            if (!BWG()->is_pro) {
+              if ( $show_guide_link ) {
+                ?>
+                <span class="bwg-topbar-separator"></span>
+              <?php } ?>
+              <a href="<?php echo $support_forum_link; ?>" target="_blank">
+                <div class="bwg-topbar-links-item">
+                  <?php _e('Support Forum', BWG()->prefix); ?>
+                </div>
+              </a>
+              <?php
+            }
+            ?>
+          </div>
+        </div>
+      </div>
+      <?php if ( $show_head ) {
+        $menus = array(
+          'manage' => array(
+            'href' => add_query_arg( array('page' => 'manage' . BWG()->menu_postfix ), admin_url('admin.php')),
+            'name' => __('Forms', BWG()->prefix)
+          ),
+          'addons' => array(
+            'href' => add_query_arg( array('page' => 'addons' . BWG()->menu_postfix ), admin_url('admin.php')),
+            'name' => __('Add-ons', BWG()->prefix)
+          ),
+          'pricing' => array(
+            'href' => add_query_arg( array('page' => 'pricing' . BWG()->menu_postfix ), admin_url('admin.php')),
+            'name' => __('Premium Version', BWG()->prefix) .' <span class="bwg-upgrade">' . __('Upgrade', BWG()->prefix) . '</span>'
+          ),
+        );
+        ?>
+        <style>#wpbody-content>div:not(.wrap), .wrap .notice:not(#wd_bp_notice_cont) { display: none; }</style>
+        <div class="bwg-head">
+          <div><img src="<?php echo BWG()->plugin_url . '/images/FormMaker.png'; ?>"></div>
+          <ul class="bwg-breadcrumbs">
+            <?php
+            foreach ( $menus as $key => $item ) {
+              if ( !BWG()->is_free && $key == 'pricing' ) {
+                continue;
+              }
+              ?>
+              <li class="bwg-breadcrumb-item">
+                <a class="bwg-breadcrumb-item-link<?php echo ( $key == $page ) ? ' bwg-breadcrumb-item-link-active' : ''; ?>" href="<?php echo $item['href']; ?>"><?php echo $item['name']; ?></a>
+              </li>
+              <?php
+            }
+            ?>
+          </ul>
+        </div>
+      <?php }	?>
+    </div>
+    <?php
+    echo ob_get_clean();
+  }
 }
 
 /**
@@ -2342,3 +2558,4 @@ if ( !function_exists('pre') ) {
     }
   }
 }
+

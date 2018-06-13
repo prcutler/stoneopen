@@ -3,7 +3,7 @@ if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class DoradoWebNotices {
+class TenWebNotices {
 
     protected $promo_link = '';
 

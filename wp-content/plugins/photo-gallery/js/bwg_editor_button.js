@@ -24,7 +24,7 @@ function bwg_shortcode_ready() {
       height_window = jQuery(window).height();
       ed.addCommand('mcebwg_mce', function () {
         jQuery('.bwg-shortcode-btn').trigger('click');
-		return;
+		    return;
           /*ed.windowManager.open({
             file:bwg_admin_ajax,
             width: width_window,

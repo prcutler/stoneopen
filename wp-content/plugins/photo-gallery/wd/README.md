@@ -5,8 +5,8 @@ Version: 1.0.13
 Usage:
 
 Copy and paste wd library into your plugin folder.
-In your plugin main file check if library main DoradoWeb class doesn't exist, include it
-	if( !class_exists("DoradoWeb") ){
+In your plugin main file check if library main TenWeb class doesn't exist, include it
+	if( !class_exists("TenWeb") ){
 		require_once(PATH_TO_YOUR_PLUGIN_DIR . '/wd/start.php');
 	}
 
@@ -31,22 +31,8 @@ $options = array (
 		),
 		...          
    ),
-   "user_guide" => array(
-		0 => array(
-			"main_title" => "user guide step 1",
-			"url" => "link to step 1",
-			"titles" => array(
-				array(
-					"title" => "step 1 sub title",
-					"url" => "link to step 1 sub"
-				) 
-			)
-		),
-		...
-   ),
-   "overview_welcome_image" => null, 
    "video_youtube_id" => "your plugin youtube video id",  // e.g. https://www.youtube.com/watch?v=acaexefeP7o youtube id is the acaexefeP7o
-   "plugin_wd_url" => "https://web-dorado.com/products/your plugin", 
+   "plugin_wd_url" => "https://10web.io/plugins/your plugin", 
    "plugin_wd_demo_link" => "http://wpdemo.web-dorado.com/your plugin", 	 
    "plugin_wd_addons_link" => "https://web-dorado.com/products/your plugin addons", 
    "after_subscribe" => "after subsribe page", // this can be plagin overview page or set up page admin.php?page=overview_YOUR_PREFIX
@@ -85,25 +71,6 @@ array(
 	....
 )
 
-user_guide - (type array) plugin user guide links from 	web-dorado.com     
-e.g. (for google maps plugin)
-array(
-	0 => array(
-		"main_title" => __("Installation Wizard/ Options Menu", "gmwd"),
-		"url" => "https://web-dorado.com/wordpress-google-maps/installation-wizard-options-menu.html",
-		"titles" => array(
-			array(
-				"title" => __("Configuring Map API Key", "gmwd"),
-				"url" => "https://web-dorado.com/wordpress-google-maps/installation-wizard-options-menu/configuring-api-key.html"
-			) 
-		)
-	),
-	1 => array(
-		"main_title" => __("Creating Map", "gmwd"),
-		"url" => "https://web-dorado.com/wordpress-google-maps/creating-map.html",
-		"titles" => array()
-	),
-)
 
 video_youtube_id - (type string) if your plugin has video, video's id, else  null 
 ( e.g. for https://www.youtube.com/watch?v=acaexefeP7o , youtube id is the 'acaexefeP7o' ) 

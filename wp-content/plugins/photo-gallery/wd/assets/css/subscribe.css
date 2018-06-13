@@ -1,114 +1,210 @@
-body {
-    color: #444;
-    font-family: "Open Sans",sans-serif;
-    line-height: 1.4em;
-    min-width: 600px;
+#wpfooter {
+    display: none;
 }
-
-.wd-subscribe{
-    background: #fff;
-    border: 2px solid #E2E5EC;
-    width: 55%;
-    margin-top: 40px;
-}
-.wd-subscribe-content{
-	padding: 30px 92px;
-}
-.imgs{
-    text-align: center;    
-}
-.imgs img{
-    vertical-align: middle;
-    width: 125px;
-}
-.imgs span {
-    color: #21759B;
-    font-weight: bold;
-    font-size: 52px;
-    padding: 0px 28px;
-}
-.texts{
-    margin-top: 10px;
-    margin-bottom: 25px;
-}
-
-.btns .allow_and_continue, .btns .allow_and_continue:hover, .btns .allow_and_continue:focus{
-    display: inline-block;
-    background: url(img/allow&continue.png) no-repeat;
-    width: 279px;
-    height: 61px;
-    border: none;
-
-}
-.btns .skip, .btns .skip:hover, .btns .skip:focus{
-    margin-left: 66px;
-    display: inline-block;
-    background: url(img/skip.png) no-repeat;
-    width: 76px;
-    height: 59px;
-}
-.permissions{
-	color: #525252 !important;
-}
-.list{
-    margin-top: 15px;
+#wpbody-content > div:not(.tenweb_subscribe){
 	display:none;
 }
-.list_item{
-    display: table;
-	margin-bottom: 15px;
+#wpbody-content {
+    padding-bottom: 0;
 }
-.list_item:after{
-    content: "";
-    clear: both;
-    display: table;
+
+
+.tenweb_clear:after{
+	content:"";
+	display:table;
+	clear:both;
 }
-.list_img_wrap{
-    float: left;
+.tenweb_subscribe a.button {
+    background: #367bf2;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 16px;
+    padding: 16px 30px;
+    line-height: 1;
+    border-radius: 2px;
+    display: inline-block;
+    border: 0 !important;
+    box-shadow: none;
+    height: auto;
 }
-.list_img_wrap img{
-    width: 27px;
+.tenweb_subscribe a:focus {
+    box-shadow:none;
 }
-.list_text_wrap{
-    margin-left: 33px;
-    float: right;
+.tenweb_subscribe a.button:active,
+.tenweb_subscribe a.button:hover {
+    background: #367bf2;
+    color: #ffffff;
+   box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
 }
-.list_title, .list_text{
-    color: #525252;
-	font-size: 13px;
+
+.tenweb_subscribe a.more {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+    line-height: 1;
+    display: block;
+    text-decoration: none;
+    color: #4e4e4e;
+    margin-top: 9px;
 }
+
 .wd_loader{
     vertical-align: top;
     width: 30px;
     margin-top: 11px;
-	visibility: hidden;
+    display: none;
 }
-.wd-subscribe-footer{
+.tenweb_subscribe {
+    background: #ffffff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    width: calc(100% - 20px);
+    padding: 105px 20px 0;
+    margin: 20px 0 0 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box; 
 	text-align: center;
-	padding: 4px 0px;
-	border-top: 1px solid rgba(204, 204, 204, 0.52);
 }
-.wd-footer-menu {
-	display: inline-block;
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
+.tenweb_subscribe .texts h2 {
+    font-size:28px;
+	text-transform: uppercase;
+    margin: 26px 0 16px;
 }
-.wd-footer-menu li{
-	float: left;
+.tenweb_subscribe .texts h5 {
+    font-size:18px;
+	text-transform: uppercase; 
+	margin: 6px 0; 
+	line-height: 1.4em;
 }
-.wd-footer-menu li, .wd-footer-menu li a{
-	color: rgba(62, 60, 60, 0.57)  !important;
-	text-decoration: none;
-	font-size: 12px;
-    padding: 2px;
-	font-weight: bold;
+.tenweb_subscribe .texts p {
+    font-size:16px;
+}
+.tenweb_subscribe .texts .hi_there {
+    width:66px;
+    height:103px;
+    background: url(../img/allow-and-continue.png) no-repeat;
+	margin: 0 auto;
+}
+.tenweb_subscribe-content{
+    width: 960px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+.tenweb_subscribe .permissions {
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px 0 30px;
+    position: relative;
     display: inline-block;
-    vertical-align: middle;		
+}
+.tenweb_subscribe .permissions:after {
+    content: "";
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    background: url(../img/allow-and-continue.png) no-repeat;
+    background-position: 1px -237px;
+    right: -19px;
+    top: 2px;
+	transition:transform .2s;
+}
+.tenweb_subscribe .permissions.active:after {
+    content: "";
+	transform: rotateZ(-180deg);
+	-webkit-transform: rotateZ(-180deg);
+	-moz-transform: rotateZ(-180deg);
+    top: 3px;
+}
+.tenweb_subscribe .list_item {
+width: 31%;
+    float: left;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    margin-right: 3%;
+    padding: 20px 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+.tenweb_subscribe .list{
+	display:none;
+}
+.tenweb_subscribe .list_item:last-child {
+    margin-right: 0;
+}
+.tenweb_subscribe .list.tenweb_clear {
+    max-width: 100%;
+    width: 580px;
+    margin: 0 auto 28px;
+}
+.tenweb_subscribe .list_text_wrap {
+    font-size: 12px;
+    font-weight: bold;
+}
+.tenweb_subscribe .list_logo {
+    width: 36px;
+    height:33px;
+    background: url(../img/allow-and-continue.png) no-repeat;
+	margin:0 auto 20px;
+}
+.tenweb_subscribe .user_info .list_logo {
+    background-position: 3px -110px;
+}
+.tenweb_subscribe .wp_info .list_logo {
+    background-position: 2px -153px;
+}
+.tenweb_subscribe .plugins_info .list_logo {
+    background-position: 6px -196px;
+}
+.tenweb_subscribe-footer * {
+    color: #afafaf;
+}
+.tenweb_footer-menu a {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+.tenweb_footer-menu li{
+	display:inline-block; 
+	margin: 0 10px;
+}
+ul.tenweb_footer-menu.tenweb_clear {
+    padding: 18px 0 15px;
+    line-height: 1;
+    border-top: 1px solid #ececec;
+    margin: 16px 0 0;
 }
 
-
-.wd-footer-menu li a:hover{
-	color: rgba(62, 60, 60, 0.57) !important;
-	text-decoration: underline;
+.tenweb_subscribe-top-footer {
+    font-size: 13px;
+    color: #afafaf;
+    margin-top: 112px;
+}
+@media only screen and (min-width: 1620px){
+	.tenweb_subscribe-top-footer {
+		margin-top: 130px;
+	}
+	.tenweb_subscribe {
+		padding: 150px 20px 0;
+	}
+}
+@media only screen and (max-width: 768px){
+	.tenweb_subscribe {
+		width: calc(100% - 10px);
+		padding: 60px 20px 0;
+	}
+	.tenweb_subscribe-top-footer {
+    margin-top: 60px;
+}
+.tenweb_subscribe .list_item {
+    width: 100%;
+    float: none;
+    margin-right: 0;
+    padding: 20px 10px;
+    margin-bottom: 10px;
+}
+.tenweb_subscribe .list.tenweb_clear {
+    margin: 0 auto 15px;
+}
 }

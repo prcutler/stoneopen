@@ -48,13 +48,15 @@ class WidgetView_bwg {
 		if ($type == 'gallery') {
 			if ($view_type == 'thumbnails') {
 				$gallery_type = 'thumbnails';
-				require_once(BWG()->plugin_dir . '/frontend/controllers/BWGControllerThumbnails.php');
-				$controller_class = 'BWGControllerThumbnails';
-			}	
+				require_once(BWG()->plugin_dir . '/frontend/controllers/controller.php');
+				$controller_class = 'BWGControllerSite';
+        $view = 'Thumbnails';
+			}
 			else if ($view_type == 'masonry') {
 				$gallery_type = 'thumbnails_masonry';
 				require_once(BWG()->plugin_dir . '/frontend/controllers/BWGControllerThumbnails_masonry.php');
 				$controller_class = 'BWGControllerThumbnails_masonry';
+        $view = '';
 			}
 
 			$params['gallery_type']  = $gallery_type;
@@ -67,6 +69,7 @@ class WidgetView_bwg {
 		else {
 			require_once(BWG()->plugin_dir . '/frontend/controllers/BWGControllerAlbum_compact_preview.php');
 			$controller_class = 'BWGControllerAlbum_compact_preview';
+      $view = '';
 
 			$params['gallery_type']  = 'album_compact_preview';
 			$params['album_id'] = $album_id;
@@ -77,7 +80,7 @@ class WidgetView_bwg {
 			$params['compuct_album_image_thumb_height']  = $height;
 			$params['compuct_album_enable_page'] = 0;
 		}
-		$controller = new $controller_class();
+		$controller = new $controller_class($view);
 		global $bwg;
 		$pairs = WDWLibrary::get_shortcode_option_params( $params );
 		$controller->execute($pairs, 1, $bwg);

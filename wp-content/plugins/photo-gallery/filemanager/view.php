@@ -47,6 +47,7 @@ class FilemanagerView {
     <script src="<?php echo BWG()->plugin_url; ?>/filemanager/js/jq_uploader/jquery.iframe-transport.js"></script>
     <script src="<?php echo BWG()->plugin_url; ?>/filemanager/js/jq_uploader/jquery.fileupload.js"></script>
     <script>
+      var demo_message = "<?php echo addslashes(__('This option is disabled in demo.', BWG()->prefix)); ?>";
       var ajaxurl = "<?php echo wp_nonce_url( admin_url('admin-ajax.php'), 'addImages', 'bwg_nonce' ); ?>";
       var DS = "<?php echo addslashes('/'); ?>";
 
@@ -92,13 +93,13 @@ class FilemanagerView {
           <div class="ctrls_bar ctrls_bar_header">
             <div class="ctrls_left header_bar">
               <a class="ctrl_bar_btn btn_up" onclick="onBtnUpClick(event, this);" title="<?php echo __('Up', BWG()->prefix); ?>"></a>
-              <a class="ctrl_bar_btn btn_make_dir" onclick="onBtnMakeDirClick(event, this);" title="<?php echo __('Make a directory', BWG()->prefix); ?>"></a>
-              <a class="ctrl_bar_btn btn_rename_item" onclick="onBtnRenameItemClick(event, this);" title="<?php echo __('Rename item', BWG()->prefix); ?>"></a>
+              <a class="ctrl_bar_btn btn_make_dir" onclick="<?php echo (BWG()->is_demo ? 'alert(demo_message)' : 'onBtnMakeDirClick(event, this)'); ?>" title="<?php echo __('Make a directory', BWG()->prefix); ?>"></a>
+              <a class="ctrl_bar_btn btn_rename_item" onclick="<?php echo (BWG()->is_demo ? 'alert(demo_message)' : 'onBtnRenameItemClick(event, this)'); ?>" title="<?php echo __('Rename item', BWG()->prefix); ?>"></a>
               <span class="ctrl_bar_divider"></span>
-              <a class="ctrl_bar_btn btn_copy" onclick="onBtnCopyClick(event, this);" title="<?php echo __('Copy', BWG()->prefix); ?>"></a>
-              <a class="ctrl_bar_btn btn_cut" onclick="onBtnCutClick(event, this);" title="<?php echo __('Cut', BWG()->prefix); ?>"></a>
-              <a class="ctrl_bar_btn btn_paste" onclick="onBtnPasteClick(event, this);" title="<?php echo __('Paste', BWG()->prefix); ?>"> </a>
-              <a class="ctrl_bar_btn btn_remove_items" onclick="onBtnRemoveItemsClick(event, this);" title="<?php echo __('Remove items', BWG()->prefix); ?>"></a>
+              <a class="ctrl_bar_btn btn_copy" onclick="<?php echo (BWG()->is_demo ? 'alert(demo_message)' : 'onBtnCopyClick(event, this)'); ?>" title="<?php echo __('Copy', BWG()->prefix); ?>"></a>
+              <a class="ctrl_bar_btn btn_cut" onclick="<?php echo (BWG()->is_demo ? 'alert(demo_message)' : 'onBtnCutClick(event, this)'); ?>" title="<?php echo __('Cut', BWG()->prefix); ?>"></a>
+              <a class="ctrl_bar_btn btn_paste" onclick="<?php echo (BWG()->is_demo ? 'alert(demo_message)' : 'onBtnPasteClick(event, this)'); ?>" title="<?php echo __('Paste', BWG()->prefix); ?>"> </a>
+              <a class="ctrl_bar_btn btn_remove_items" onclick="<?php echo (BWG()->is_demo ? 'alert(demo_message)' : 'onBtnRemoveItemsClick(event, this)'); ?>" title="<?php echo __('Remove items', BWG()->prefix); ?>"></a>
               <span class="ctrl_bar_divider divider_upload"></span>
             </div>
             <div class="ctrls_right">
@@ -107,7 +108,7 @@ class FilemanagerView {
             </div>
             <div class="ctrls_left header_bar">
               <span class="ctrl_bar_btn">
-                <a id="upload_images" class="ctrl_bar_btn wd-btn wd-btn-primary wd-btn-icon wd-btn-uplaod" onclick="onBtnShowUploaderClick(event, this);"><?php echo __('Upload files', BWG()->prefix); ?></a>
+                <a id="upload_images" class="ctrl_bar_btn wd-btn wd-btn-primary wd-btn-icon wd-btn-uplaod" onclick="<?php echo (BWG()->is_demo ? 'alert(demo_message)' : 'onBtnShowUploaderClick(event, this)'); ?>"><?php echo __('Upload files', BWG()->prefix); ?></a>
               </span>
               <span class="ctrl_bar_divider divider_search"></span>
             </div>
@@ -180,7 +181,7 @@ class FilemanagerView {
                 <div id="explorer_body" data-files_count="<?php echo $file_manager_data["files_count"]; ?>">
                   <?php
                   foreach ($file_manager_data['files'] as $key => $file) {
-                    if ( !BWG()->is_demo || strpos( $file[ 'date_modified' ], '20 July 2014' ) === FALSE ) {
+                    if ( BWG()->is_demo !== '1' || strpos( $file[ 'date_modified' ], '20 July 2014' ) === FALSE ) {
                       $file[ 'name' ] = esc_html( $file[ 'name' ] );
                       $file[ 'filename' ] = esc_html( $file[ 'filename' ] );
                       $file[ 'thumb' ] = esc_html( $file[ 'thumb' ] );

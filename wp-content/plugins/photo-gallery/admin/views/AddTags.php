@@ -41,16 +41,17 @@ class AddTagsView_bwg extends AdminView_bwg {
    * @param $params
    */
   public function body( $params ) {
-	?>
+	  ?>
 	<div class="wd-table-container">
 		<?php
-			$image_id = WDWLibrary::get('image_id', 0);
-			echo $this->title( array(
-								 'title' => $params['page_title'],
-								 'title_class' => 'wd-header',
-								 'add_new_button' => FALSE,
-							   )
-			);
+    $image_id = WDWLibrary::get('image_id', 0);
+    echo $this->title( array(
+               'title' => $params['page_title'],
+               'title_class' => 'wd-header',
+               'add_new_button' => FALSE,
+               )
+    );
+    $params['page_url'] = add_query_arg(array('image_id' => $image_id), $params['page_url']);
 		?>
 		<div class="wp-search-wrap">
 			<?php echo $this->search(); ?>

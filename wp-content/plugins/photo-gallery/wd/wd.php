@@ -3,7 +3,7 @@
         exit;
     }
 
-    class DoradoWeb {
+    class TenWeb {
         ////////////////////////////////////////////////////////////////////////////////////////
         // Events                                                                             //
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -37,10 +37,10 @@
             if(!is_array($options)){
                 return false;
             }
-            $config = new DoradoWebConfig();
+            $config = new TenWebConfig();
             $config->set_options( $options );
             $this->config = $config;
-            if( !class_exists("DoradoWebApi") ){
+            if( !class_exists("TenWebApi") ){
                 $this->wd_includes();
             }
 
@@ -55,27 +55,32 @@
            
             $capability = $wd_options->menu_capability ? $wd_options->menu_capability : "manage_options";
             if( get_option( $wd_options->prefix . "_subscribe_done" ) == 1 || $wd_options->subscribe === false ){
-                    $parent_slug = $wd_options->custom_post;
+                    $parent_slug = $wd_options->custom_post;            
             }
             else{
 
                 $subscribe_page = add_menu_page( $wd_options->plugin_menu_title, $wd_options->plugin_menu_title, "manage_options", $wd_options->prefix . '_subscribe' , array( $this, 'display_subscribew_page' ), $wd_options->plugin_menu_icon, $wd_options->menu_position );
 
-                $subscribe_instance = new DoradoWebSubscribe($this->config); 
+                $subscribe_instance = new TenWebSubscribe($this->config);
                 $this->subscribe_instance = $subscribe_instance;        
                 add_action( 'admin_print_styles-' . $subscribe_page, array( $subscribe_instance, 'subscribe_styles' ) );
                 add_action( 'admin_print_scripts-' . $subscribe_page, array( $subscribe_instance, 'subscribe_scripts' ) );
                 
                 $parent_slug = null;                
-            } 
+            }
+            if ($wd_options->display_overview) {
+              $title = __( 'Premium', $wd_options->prefix );
+              if ( FALSE && !get_transient( $wd_options->prefix . '_overview_visited' ) ) {
+                $title .= ' <span class="update-plugins count-2" > <span class="plugin-count">1</span></span>';
+              }
+              $overview_page = add_submenu_page( $parent_slug, __( 'Premium', $wd_options->prefix ), '<span style="color:#4481ea;">' . $title . '</span>', $capability, 'overview_' . $wd_options->prefix, array( $this, 'display_overview_page' ) );
 
-			$overview_page = add_submenu_page( $parent_slug, __( 'Overview', $wd_options->prefix ), __( 'Overview', $wd_options->prefix ), $capability, 'overview_' . $wd_options->prefix, array( $this, 'display_overview_page' )); 
 
-			
-			$overview_instance = new DoradoWebOverview($this->config); 
-			$this->overview_instance = $overview_instance;        
-			add_action( 'admin_print_styles-' . $overview_page, array( $overview_instance, 'overview_styles' ) );
-			add_action( 'admin_print_scripts-' . $overview_page, array( $overview_instance, 'overview_scripts' ) ); 			
+              $overview_instance = new TenWebOverview( $this->config );
+              $this->overview_instance = $overview_instance;
+              add_action( 'admin_print_styles-' . $overview_page, array( $overview_instance, 'overview_styles' ) );
+              add_action( 'admin_print_scripts-' . $overview_page, array( $overview_instance, 'overview_scripts' ) );
+            }
         }
 		
 		public function display_subscribew_page(){
@@ -106,11 +111,11 @@
             $current_url =  $_SERVER['REQUEST_URI'];
             if( $wd_options->deactivate === true ){
                 if(strpos( $current_url, "plugins.php" ) !== false ){   
-                    new DoradoWebDeactivate( $this->config );
+                    new TenWebDeactivate( $this->config );
                 }                
             }           
             
-            new DoradoWebNotices( $this->config ); 
+            new TenWebNotices( $this->config );
 
         }
 		

@@ -5,6 +5,7 @@ class WD_BWG_Options {
 
   // General
   public $images_directory = null;
+  public $resizable_thumbnails = 1;
   public $upload_img_width = 1200;
   public $upload_img_height = 1200;
   public $upload_thumb_width = 500;
@@ -244,24 +245,24 @@ class WD_BWG_Options {
   public $popup_interval = 2.5;
   public $popup_enable_filmstrip = 1;
   public $popup_filmstrip_height = 60;
-  public $popup_hit_counter = 0;
   public $popup_enable_ctrl_btn = 1;
   public $popup_enable_fullscreen = 1;
-  public $popup_enable_info = 1;
-  public $popup_info_always_show = 0;
-  public $popup_info_full_width = 1;
-  public $autohide_lightbox_navigation = 0;
   public $popup_enable_comment = 1;
   public $popup_enable_email = 1;
   public $popup_enable_captcha = 0;
   public $comment_moderation = 0;
+  public $popup_enable_info = 1;
+  public $popup_info_always_show = 0;
+  public $popup_info_full_width = 1;
+  public $autohide_lightbox_navigation = 0;
+  public $popup_hit_counter = 0;
+  public $popup_enable_rate = 0;
   public $popup_enable_fullsize_image = 0;
   public $popup_enable_download = 0;
   public $show_image_counts = 0;
   public $enable_loop = 1;
   public $enable_addthis = 0;
   public $addthis_profile_id = '';
-  public $popup_enable_rate = 0;
   public $popup_enable_facebook = 1;
   public $popup_enable_twitter = 1;
   public $popup_enable_google = 1;
@@ -309,12 +310,14 @@ class WD_BWG_Options {
       $old_images_directory = $options->images_directory;
       if (!$reset) {
         if (isset($options)) {
+          $this->resizable_thumbnails = 0;
           foreach ($options as $name => $value) {
             $this->$name = $value;
           }
         }
       }
     }
+
     if ($this->images_directory === null) {
       $upload_dir = wp_upload_dir();
       if (!isset($this->old_images_directory) && !is_dir($upload_dir['basedir'] . '/photo-gallery') && !$reset) {

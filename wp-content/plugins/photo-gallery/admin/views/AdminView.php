@@ -19,6 +19,7 @@ class AdminView_bwg {
    * @return string Form html.
    */
   protected function form($content = '', $attr = array()) {
+    WDWLibrary::topbar();
     ob_start();
     // Form.
     $action = isset($attr['action']) ? esc_attr($attr['action']) : '';
@@ -76,7 +77,6 @@ class AdminView_bwg {
         $attributes .= $key . '="' . $val . '"';
       }
     }
-
     ob_start();
     ?><div class="wd-page-title <?php echo $title_class; ?>">
     <h1 class="wp-heading-inline"><?php echo $title; ?>
@@ -294,7 +294,7 @@ class AdminView_bwg {
         }
         ?>
       </select>
-      <input type="button" id="doaction" class="button action" onclick="wd_bulk_action(this)" value="<?php _e('Apply', BWG()->prefix); ?>" />
+      <input type="button" id="doaction" class="button action" onclick="<?php echo (BWG()->is_demo ? 'alert(\'' . addslashes(__('This option is disabled in demo.', BWG()->prefix)) . '\')' : 'wd_bulk_action(this)'); ?>" value="<?php _e('Apply', BWG()->prefix); ?>" />
     </div>
     <?php
 

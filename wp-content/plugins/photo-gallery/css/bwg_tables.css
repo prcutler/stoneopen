@@ -1204,7 +1204,10 @@ textarea.bwg_popup_input {
     clear: both;
     display: block;
 }
-#bwg_themes .bwg-tabs { }
+.bwg_themes td.spider_label {
+  vertical-align: top;
+  padding-top: 6px;
+}
 #bwg_themes .bwg-tabs .bwg-tab-item {
 	display:inline-block;
     padding: 12px;

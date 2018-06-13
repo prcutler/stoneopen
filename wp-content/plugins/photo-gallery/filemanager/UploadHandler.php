@@ -173,7 +173,7 @@ class bwg_UploadHandler {
     }
 
     protected function get_user_id() {
-      @session_start();
+      WDWLibrary::bwg_session_start();
       return session_id();
     }
 
@@ -852,8 +852,7 @@ class bwg_UploadHandler {
 
     public function get($print_response = true) {
       if ( isset($_GET['import']) && $_GET['import'] == 1 ) {
-        $file_names = explode('**@**', (isset($_REQUEST['file_namesML']) ? stripslashes($_REQUEST['file_namesML']) : ''));
-
+        $file_names = json_decode(isset($_REQUEST['file_namesML']) ? stripslashes($_REQUEST['file_namesML']) : '');
         $files = array();
         foreach ($file_names as $index => $value) {
           $file_name_array = explode('/', $value);
@@ -882,8 +881,7 @@ class bwg_UploadHandler {
 
     public function post($print_response = true) {
       if ( isset($_REQUEST['import']) && $_REQUEST['import'] == 1 ) {
-        $file_names = explode('**@**', (isset($_REQUEST['file_namesML']) ? stripslashes($_REQUEST['file_namesML']) : ''));
-
+        $file_names = json_decode(isset($_REQUEST['file_namesML']) ? stripslashes($_REQUEST['file_namesML']) : '');
         $files = array();
         foreach ($file_names as $index => $value) {
           $file_name_array = explode('/', $value);

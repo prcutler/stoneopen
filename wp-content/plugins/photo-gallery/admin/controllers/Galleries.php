@@ -24,8 +24,8 @@ class GalleriesController_bwg {
   private $image_actions = array();
 
   public function __construct() {
-	// Allowed upload mime_types.
-	add_filter('upload_mimes', array(BWG(), 'allowed_upload_mime_types'), 10, 2);
+    // Allowed upload mime_types.
+    add_filter('upload_mimes', array(BWG(), 'allowed_upload_mime_types'), 10, 2);
     $this->model = new GalleriesModel_bwg();
     $this->view = new GalleriesView_bwg();
     $this->page = WDWLibrary::get('page');
@@ -394,10 +394,10 @@ class GalleriesController_bwg {
     $message = array('gallery_message' => $data['saved'], 'image_message' => '');
 
     $ajax_task = WDWLibrary::get('ajax_task', '');
-    if ( $ajax_task != '' ) {
+    if ( $ajax_task !== '' ) {
       if ( method_exists($this->model, $ajax_task) ) {
         $image_id = WDWLibrary::get('image_current_id', 0);
-        $message['image_message'] = $this->model->$ajax_task($image_id, $all);
+        $message['image_message'] = $this->model->$ajax_task($image_id, $data['id'], $all);
       }
     }
 
@@ -421,13 +421,13 @@ class GalleriesController_bwg {
 
     if ( method_exists($this->model, $image_action) ) {
       if ( $all ) {
-        $message['image_message'] = $this->model->$image_action(0, TRUE);
+        $message['image_message'] = $this->model->$image_action(0, $data['id'], TRUE);
       }
       else {
         if ( $check ) {
           foreach ( $check as $image_id ) {
             if ( strpos($image_id, 'pr_') === FALSE ) {
-              $message['image_message'] = $this->model->$image_action($image_id);
+              $message['image_message'] = $this->model->$image_action($image_id, $data['id']);
               if ( $message['image_message'] == 6 ) {
                 // Action set watermark with none watermark type.
                 break;

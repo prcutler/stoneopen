@@ -20,6 +20,7 @@ class BWGModelGalleryBox {
     if (strtolower($order_by) != 'asc') {
       $order_by = 'desc';
     }
+    WDWLibrary::bwg_session_start();
     $bwg_random_seed = isset($_SESSION['bwg_random_seed_'. $bwg]) ? $_SESSION['bwg_random_seed_'. $bwg] : '';
     $filter_tags = (isset($_REQUEST['filter_tag_'. $bwg]) && $_REQUEST['filter_tag_'. $bwg]) ? explode(",", $_REQUEST['filter_tag_'. $bwg]) : array();
     $filter_search_name = (isset($_REQUEST['filter_search_name_'. $bwg])) ? esc_html($_REQUEST['filter_search_name_'. $bwg]) : '';
@@ -41,19 +42,20 @@ class BWGModelGalleryBox {
 
     $rows = $wpdb->get_results('SELECT image.*, rates.rate FROM ' . $wpdb->prefix . 'bwg_image as image LEFT JOIN (SELECT rate, image_id FROM ' . $wpdb->prefix . 'bwg_image_rate WHERE ip="%s") as rates ON image.id=rates.image_id ' . $join . ' WHERE image.published=1 ' . $where . ' ORDER BY ' . str_replace('RAND()', 'RAND(' . $bwg_random_seed . ')', $sort_by) . ' ' . $order_by);
 
-	$images = array();
-	if ( !empty($rows) ) {
-		foreach ( $rows as $row ) {
-		  $row->pure_image_url = $row->image_url;
-		  $row->pure_thumb_url = $row->thumb_url;
-      if ( strpos($row->filetype, 'EMBED') === FALSE ) {
-        $row->image_url = $row->image_url . '?bwg=' . $row->modified_date;
-        $row->thumb_url = $row->thumb_url . '?bwg=' . $row->modified_date;
+    $images = array();
+    if ( !empty($rows) ) {
+      foreach ( $rows as $row ) {
+        $row->pure_image_url = $row->image_url;
+        $row->pure_thumb_url = $row->thumb_url;
+        if ( strpos($row->filetype, 'EMBED') === FALSE ) {
+          $row->image_url = WDWLibrary::image_url_version($row->image_url, $row->modified_date);
+          $row->thumb_url = WDWLibrary::image_url_version($row->thumb_url, $row->modified_date);
+        }
+        $images[] = $row;
       }
-			$images[] = $row;
-		}
-	}
-	return $images;
+    }
+
+    return $images;
   }
   
   public function get_image_pricelists($pricelist_id) {

@@ -74,7 +74,8 @@ class BWGViewAlbum_extended_preview {
       $items_per_page = $params['extended_albums_per_page'];
       $items_per_page_arr = array('images_per_page' => $params['extended_albums_per_page'], 'load_more_image_count' => $params['extended_albums_per_page']);
       $items_col_num = 1;
-      $album_galleries_row = WDWLibrary::get_alb_gals_row($album_gallery_id, $items_per_page, 'order', $bwg, 'ASC');
+      $pagination_type = $params['extended_album_enable_page'];
+      $album_galleries_row = WDWLibrary::get_alb_gals_row( $bwg, $album_gallery_id, $items_per_page, 'order', $pagination_type);
       $page_nav = $album_galleries_row['page_nav'];
       $album_galleries_row = $album_galleries_row['rows'];
       if (!$album_galleries_row) {
@@ -141,7 +142,17 @@ class BWGViewAlbum_extended_preview {
       'enable_image_pinterest' => $params['popup_enable_pinterest'],
       'enable_image_tumblr' => $params['popup_enable_tumblr'],
       'watermark_type' => $params['watermark_type'],
-      'slideshow_effect_duration' => isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1
+      'slideshow_effect_duration' => isset($params['popup_effect_duration']) ? $params['popup_effect_duration'] : 1,
+      'popup_enable_email' => $params['popup_enable_email'],
+      'popup_enable_captcha' => $params['popup_enable_captcha'],
+      'comment_moderation' => $params['comment_moderation'],
+      'autohide_lightbox_navigation' => $params['autohide_lightbox_navigation'],
+      'popup_enable_fullsize_image' => $params['popup_enable_fullsize_image'],
+      'popup_enable_download' => $params['popup_enable_download'],
+      'show_image_counts' => $params['show_image_counts'],
+      'enable_loop' => $params['enable_loop'],
+      'enable_addthis' => $params['enable_addthis'],
+      'addthis_profile_id' => $params['addthis_profile_id']
     );
     if ( BWG()->is_pro ) {
       $current_url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -222,7 +233,7 @@ class BWGViewAlbum_extended_preview {
             <div id="ajax_loading_<?php echo $bwg; ?>" style="position:absolute;width: 100%; z-index: 115; text-align: center; height: 100%; vertical-align: middle; display: none;">
               <div style="display: table; vertical-align: middle; width: 100%; height: 100%; background-color:#FFFFFF; opacity:0.7; filter:Alpha(opacity=70);">
                 <div style="display: table-cell; text-align: center; position: relative; vertical-align: middle;" >
-                  <div id="loading_div_<?php echo $bwg; ?>" class="bwg_spider_ajax_loading" style="display: inline-block; text-align:center; position:relative; vertical-align:middle; background-image:url(<?php echo BWG()->plugin_url . '/images/ajax_loader.gif'; ?>); float: none; width:30px;height:30px;background-size:30px 30px;">
+                  <div id="loading_div_<?php echo $bwg; ?>" class="bwg_spider_ajax_loading" style="display: inline-block; text-align:center; position:relative; vertical-align:middle; background-image:url(<?php echo BWG()->plugin_url . '/images/ajax_loader.png'; ?>); float: none; width:30px;height:30px;background-size:30px 30px;">
                   </div>
                 </div>
               </div>
@@ -238,12 +249,12 @@ class BWGViewAlbum_extended_preview {
             }
             if ($params['show_album_name']) {
             ?>
-                <div class="bwg_gal_title_<?php echo $bwg; ?>" ><?php echo isset($_POST['title_' . $bwg]) ? esc_html($_POST['title_' . $bwg]) : $params['album_title']; ?></div>
+                <div class="bwg_gal_title_<?php echo $bwg; ?>" ><?php echo $params['album_title']; ?></div>
             <?php
             }
-            if ($params['show_gallery_description']) {
+            if ($params['show_gallery_description'] && $params['description'] != '') {
                 ?>
-				<span class="bwg_description_spun1_<?php echo $bwg; ?>">
+                    <span class="bwg_description_spun1_<?php echo $bwg; ?> bwg_gal_description">
                     <span class="bwg_description_short_<?php echo $bwg; ?>">
                         <?php echo $params['description']; ?>
                     </span>
@@ -583,7 +594,7 @@ class BWGViewAlbum_extended_preview {
       ?>
       function bwg_document_ready_<?php echo $bwg; ?>() {
         var bwg_touch_flag = false;
-        jQuery(".bwg_lightbox_<?php echo $bwg; ?>").on("click", function () {
+        jQuery("#bwg_container2_<?php echo $bwg; ?>").on("click", ".bwg_lightbox_<?php echo $bwg; ?>", function () {
           if (!bwg_touch_flag) {
             bwg_touch_flag = true;
             setTimeout(function(){ bwg_touch_flag = false; }, 100);
@@ -602,7 +613,7 @@ class BWGViewAlbum_extended_preview {
             return false;
           }
         });
-        jQuery(".bwg_album_<?php echo $bwg; ?>").on("click", function () {
+        jQuery("#bwg_container2_<?php echo $bwg; ?>").on("click", ".bwg_album_<?php echo $bwg; ?>", function () {
           if (!bwg_touch_flag) {
             bwg_touch_flag = true;
             setTimeout(function(){ bwg_touch_flag = false; }, 100);
@@ -797,6 +808,19 @@ class BWGViewAlbum_extended_preview {
     #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_description_short_<?php echo $bwg; ?> {
       display: inline;
     }
+
+    #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_gal_description {
+      background-color: rgba(0, 0, 0, 0);
+      color: #<?php echo $theme_row->album_extended_gal_title_font_color; ?>;
+      display: block;
+      font-family: <?php echo $theme_row->album_extended_gal_title_font_style; ?>;
+      font-size: <?php echo $theme_row->album_extended_gal_title_font_size; ?>px;
+      font-weight: <?php echo $theme_row->album_extended_gal_title_font_weight; ?>;
+      padding: <?php echo $theme_row->album_extended_gal_title_margin; ?>;
+      text-shadow: <?php echo $theme_row->album_extended_gal_title_shadow; ?>;
+      text-align: <?php echo $theme_row->album_extended_gal_title_align; ?>;
+    }
+
     #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_description_full_<?php echo $bwg; ?> {
       display: none;
     }
@@ -1053,6 +1077,9 @@ class BWGViewAlbum_extended_preview {
       top: <?php echo $theme_row->thumb_padding; ?>px;
       opacity: 1;
       filter: Alpha(opacity=100);
+      overflow:hidden;
+      display:inherit;
+      padding: 0 5px;
     }
     #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_image_title_spun2_<?php echo $bwg; ?>,  #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_ecommerce_spun2_<?php echo $bwg; ?>{
       color: #<?php echo $theme_row->thumb_title_font_color; ?>;
@@ -1328,6 +1355,11 @@ class BWGViewAlbum_extended_preview {
       filter: Alpha(opacity=<?php echo $theme_row->page_nav_button_bg_transparent; ?>);
       box-shadow: <?php echo $theme_row->page_nav_box_shadow; ?>;
       <?php echo ($theme_row->page_nav_button_transition ) ? 'transition: all 0.3s ease 0s;-webkit-transition: all 0.3s ease 0s;' : ''; ?>
+    }
+    @media only screen and (max-width : 320px) {
+      #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .displaying-num_<?php echo $bwg; ?> {
+        display: none;
+      }
     }
     #bwg_container1_<?php echo $bwg; ?> #bwg_container2_<?php echo $bwg; ?> .bwg_back_<?php echo $bwg; ?> {
       background-color: rgba(0, 0, 0, 0);

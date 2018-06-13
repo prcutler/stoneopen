@@ -1,9 +1,9 @@
-=== Photo Gallery by WD - Responsive Photo Gallery ===
-Contributors: webdorado,wdsupport,photogallerysupport
+=== Photo Gallery by 10web - Responsive Photo Gallery ===
+Contributors: webdorado,wdsupport,photogallerysupport,10web
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin, photo albums, gallery slider, gallery lightbox, wordpress photo gallery plugin, fullscreen gallery, watermarking, video gallery
 Requires at least: 3.4
 Tested up to: 4.9 
-Stable tag: 1.4.5
+Stable tag: 1.4.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,10 +14,10 @@ Photo Gallery is a powerful gallery plugin with a list of advanced options for c
 https://www.youtube.com/watch?v=3u0O9ZdVsGc
 
 = Useful Links: =  
-[Special Offer for all Premium Plugins](https://web-dorado.com/wordpress-plugins-bundle.html) 
-[WordPress Photo Gallery](https://web-dorado.com/products/wordpress-photo-gallery-plugin.html)  
-[Demo](http://wpdemo.web-dorado.com/photo-gallery/)  
-[User Manual](https://web-dorado.com/wordpress-gallery/installing.html)  
+[Special Offer for all Premium Plugins](https://10web.io/pricing/) 
+[WordPress Photo Gallery](https://10web.io/plugins/wordpress-photo-gallery/)  
+[Demo](https://demo.10web.io/photo-gallery/)  
+[User Manual](https://docs.10web.io/docs/photo-gallery/introduction.html)  
 [Support Forum](https://wordpress.org/support/plugin/photo-gallery)  
  
 
@@ -82,7 +82,7 @@ Adding photos and videos to the galleries from the WordPress dashboard is simple
 Under the social options tab you’ll find settings for the Instagram and Facebook galleries, where you can specify Instagram feed auto update interval (Premium feature). With the available user roles you can choose who can add/edit galleries, images, albums and tags (Premium feature). 
 
 
-[Premium version adds](https://web-dorado.com/products/wordpress-photo-gallery-plugin.html)  
+[Premium version adds](https://10web.io/plugins/wordpress-photo-gallery/)  
 
 *   Masonry gallery View.
 *   Mosaic gallery View
@@ -99,12 +99,12 @@ Under the social options tab you’ll find settings for the Instagram and Facebo
 *   Possibility of changing the roles of who can edit the galleries/albums/images (Author/All Users)
 
 = Photo Gallery Add-ons =
-[Ecommerce Add-on](https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/gallery-ecommerce.html) - Display your digital content and sell it directly from your website.      
-[Facebook Integration Add-on](https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/facebook.html)  -  Display Facebook photos and videos within Photo Gallery Pro without additional efforts.      
-[Export/Import Add-on](https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/export-import.html)  Export/import galleries, albums and all related data from one WordPress site to another. 
+[Ecommerce Add-on](https://10web.io/plugins/wordpress-photo-gallery/) - Display your digital content and sell it directly from your website.      
+[Facebook Integration Add-on](https://10web.io/plugins/wordpress-photo-gallery/)  -  Display Facebook photos and videos within Photo Gallery Pro without additional efforts.      
+[Export/Import Add-on](https://10web.io/plugins/wordpress-photo-gallery/)  Export/import galleries, albums and all related data from one WordPress site to another. 
 
 ###IMPORTANT:    
-If you think you found a bug in Photo Gallery or have any problem/question concerning the plugin, please check out [Support Forum](https://wordpress.org/support/plugin/photo-gallery) in our website. If you do not find a solution here, do not hesitate to [click here to contact us](https://web-dorado.com/support/contact-us.html).
+If you think you found a bug in Photo Gallery or have any problem/question concerning the plugin, please check out [Support Forum](https://wordpress.org/support/plugin/photo-gallery) in our website. If you do not find a solution here, do not hesitate to [click here to contact us](https://10web.io/contact-us/).
 
 
 == Installation ==
@@ -132,7 +132,7 @@ Login to the WordPress Administrator Panel.
 Activate Photo Gallery by going to Plugins and pressing Activate button.   
 
 
-If any problem occurs with installation of Photo Gallery, [please let us know](https://web-dorado.com/support/contact-us.html). 
+If any problem occurs with installation of Photo Gallery, [please let us know](https://10web.io/contact-us/). 
 
 == Frequently Asked Questions ==
 
@@ -278,6 +278,53 @@ Choose whether to display random or the first/last specific number of images.
 
 
 == Changelog ==
+
+= 1.4.10 =
+* Changed: Separate buttons for deactivation.  
+
+= 1.4.9 =
+* Changed: Links to 10web.io.    
+* Fixed: Bug on slideshow widget.   
+* Fixed: Conflict with minifying plugins.   
+
+= 1.4.8 =
+* Fixed: Pagination type "scroll load" functionality.     
+* Fixed: Album back to previous functionality.   
+* Changed: Remove overview page.      
+* Fixed: Delete temporary zip file after images bulk download.   
+* Fixed: Facebook Images do not resize after lightbox resize.    
+* Added: Gutenberg integration.    
+
+= 1.4.7 =
+* Fixed: Gallery save in some cases.
+* Fixed: Thumbnails count in thumbnail view.
+* Fixed: Thumbnails alignment in thumbnail view.
+* Fixed: Conflict with some themes.
+  
+  
+= 1.4.6 =
+* Fixed: "The loopback request to your site failed" error.  
+* Fixed: Import large amount of images from media library.  
+* Fixed: Album random effect from widget.  
+* Fixed: Preload images bug, when count is 0.  
+* Fixed: Fixed: Load more and scroll load doesn't work for images in extended album view (masonry view of images).  
+* Fixed: Show gallery description functionality for Gallery groups.  
+* Fixed: Warnings on PHP 7.1.  
+* Fixed: Total width of mosaic gallery.  
+* Fixed: Gallery title/description in gallery views.  
+* Fixed: Add tag to image.  
+* Fixed: Watermark image broken thumbnail shows on Carousel view.  
+* Fixed: Keep selected theme tab.  
+* Fixed: Filmstrip width on Mac.  
+* Added: All Galleries option in Gallery group when adding a shortcode.  
+* Added: Loading for admin pages.  
+* Added: Zoom effect for thumbnail view.  
+* Added: Resizable functionality for thumbnails.  
+* Added: Distance from container frame option.  
+* Changed: Removed hover effect from mobile devices.  
+* Improved: Distance between thumbnails in standard thumbnail view.   
+* Improved: Spanish translation (thanks to Pedro Javier Fernandez Ruiz).  
+* Improved: Greek translation (thanks to John Fy).   
 
 = 1.4.5 =
 * Fixed: Shortcode save in some cases.    

@@ -4,28 +4,28 @@ function bwg_addons_display() {
   $addons = array(
     'photo-gallery-ecomerce'   => array(
       'name'        => __('Photo Gallery Ecommerce', BWG()->prefix),
-      'url'         => 'https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/gallery-ecommerce.html',
+      'url'         => 'https://10web.io/plugins/wordpress-photo-gallery/',
       'description' => __('Using Photo Gallery Ecommerce you can sell images included in galleries either as digital downloads or products/prints via Paypal or Stripe.', BWG()->prefix),
       'icon'        => '',
       'image'       => BWG()->plugin_url . '/addons/images/ecommerce.png',
     ),  
     'photo-gallery-facebook'   => array(
       'name'        => __('Photo Gallery Facebook', BWG()->prefix),
-      'url'         => 'https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/facebook.html',
+      'url'         => 'https://10web.io/plugins/wordpress-photo-gallery/',
       'description' => __('Photo Gallery Facebook is an add-on, which helps to display Facebook photos and videos within Photo Gallery plugin. You can create Facebook-only galleries, embed individual images and videos or include Facebook albums within mixed type albums.', BWG()->prefix),
       'icon'        => '',
       'image'       => BWG()->plugin_url . '/addons/images/facebook.png',
     ),
     'ngitopg'   => array(
       'name'        => __('NextGen Gallery Import to Photo Gallery', BWG()->prefix),
-      'url'         => 'https://wordpress.org/plugins/import-to-photo-gallery-from-nextgen-gallery/',
+      'url'         => 'https://10web.io/plugins/wordpress-photo-gallery/',
       'description' => __('This addon integrates NextGen with Photo Gallery allowing to import images and related data from NextGen to use with Photo Gallery', BWG()->prefix),
       'icon'        => '',
       'image'       => BWG()->plugin_url . '/addons/images/nextgen_gallery.png',
     ),
     'photo-gallery-export'   => array(
       'name'        => __('Photo Gallery Export / Import', BWG()->prefix),
-      'url'         => 'https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/export-import.html',
+      'url'         => 'https://10web.io/plugins/wordpress-photo-gallery/',
       'description' => __('Photo Gallery Export/Import helps to move created galleries and gallery groups from one site to another. This way you can save the gallery/album options and manual modifications.', BWG()->prefix),
       'icon'        => '',
       'image'       => BWG()->plugin_url . '/addons/images/import_export.png',

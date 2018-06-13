@@ -387,7 +387,7 @@ class BWGUpdate {
       require_once(BWG()->plugin_dir . '/framework/WDWLibrary.php');
       WDWLibrary::before_update_create_custom_posts();
     }
-	if ( version_compare($version, '1.4.0' ) == -1 ) {
+	  if ( version_compare($version, '1.4.0' ) == -1 ) {
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_gallery ADD `modified_date` int(10) NOT NULL DEFAULT 0");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_album ADD `modified_date` int(10) NOT NULL DEFAULT 0");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_image ADD `modified_date` int(10) NOT NULL DEFAULT 0");

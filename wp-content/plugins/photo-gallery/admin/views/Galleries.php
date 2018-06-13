@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 /**
  * Class GalleriesView_bwg
@@ -353,7 +353,7 @@ class GalleriesView_bwg extends AdminView_bwg {
                         do_action('init_display_facebook_gallery_options_bwg', $params);
                       }
                       else {
-                        $link = '<a href="https://web-dorado.com/products/wordpress-photo-gallery-plugin/add-ons/facebook.html" target="_blank">' . __('Photo Gallery Facebook Integration', BWG()->prefix) . '</a>';
+                        $link = '<a href="https://10web.io/plugins/wordpress-photo-gallery/" target="_blank">' . __('Photo Gallery Facebook Integration', BWG()->prefix) . '</a>';
                         echo '<div class="error inline"><p>' . sprintf(__("Please install %s add-on to use this feature.", BWG()->prefix), $link) . '</p></div>';
                       }
                       ?>
@@ -409,12 +409,10 @@ class GalleriesView_bwg extends AdminView_bwg {
     $ids_string = '';
     ?>
     <div class="buttons_div_left">
-      <a href="<?php echo $params['add_images_action']; ?>" id="add_image_bwg" onclick="jQuery('#loading_div').show();" class="button button-primary button-large thickbox thickbox-preview" title="<?php _e("Add Images", BWG()->prefix); ?>" onclick="return false;" style="margin-bottom:5px; <?php if ( $params['gallery_type'] != '' ) {
-        echo 'display:none';
-      } ?>">
+      <a href="<?php echo $params['add_images_action']; ?>" id="add_image_bwg" onclick="jQuery('#loading_div').show();" class="button button-primary button-large thickbox thickbox-preview" title="<?php _e("Add Images", BWG()->prefix); ?>" onclick="return false;" style="margin-bottom:5px; <?php if ( $params['gallery_type'] != '' ) { echo 'display:none';} ?>">
         <?php _e('Add Images', BWG()->prefix); ?>
       </a>
-      <input type="button" class="button button-secondary button-large" onclick="spider_media_uploader(event, true); return false;" value="<?php _e("Import from Media Library", BWG()->prefix); ?>" />
+      <input type="button" class="button button-secondary button-large" onclick="<?php echo (BWG()->is_demo ? 'alert(\'' . addslashes(__('This option is disabled in demo.', BWG()->prefix)) . '\');' : 'spider_media_uploader(event, true);'); ?>return false;" value="<?php _e("Import from Media Library", BWG()->prefix); ?>" style="<?php if ( $params['gallery_type'] != '' ) { echo 'display:none';} ?>" />
       <?php
       /*(re?)define ajax_url to add nonce only in admin*/
       ?>
@@ -688,14 +686,9 @@ class GalleriesView_bwg extends AdminView_bwg {
                 <?php } ?>
               </strong>
               <div class="row-actions">
-                <span class="wd-image-actions <?php echo ( !$is_embed && ( $params['gallery_type'] == '' ) ? '' : ' wd-hide' ); ?>"><a class="thickbox thickbox-preview" href="<?php echo $edit_link; ?>"><?php _e('Edit', BWG()->prefix); ?></a> |</span>
-                <span class="wd-image-actions <?php echo ( !$is_embed && ( $params['gallery_type'] == '' ) ? '' : ' wd-hide' ); ?>"><a class="thickbox thickbox-preview" href="<?php echo $crop_link; ?>"><?php _e('Crop', BWG()->prefix); ?></a> |</span>
-                <span class="wd-image-actions <?php echo ( !$is_embed && ( $params['gallery_type'] == '' ) ? '' : ' wd-hide' ); ?>"><a onclick="if (confirm('<?php echo addslashes(__('Do you want to reset the image?', BWG()->prefix)); ?>')) {
-                    spider_set_input_value('ajax_task', 'image_reset');
-                    spider_set_input_value('image_current_id', '<?php echo $row->id; ?>');
-                    spider_ajax_save('bwg_gallery');
-                    }
-                    return false;"><?php _e('Reset', BWG()->prefix); ?></a> |</span>
+                <span class="wd-image-actions <?php echo ( !$is_embed && ( $params['gallery_type'] == '' ) ? '' : ' wd-hide' ); ?>"><a class="<?php echo (BWG()->is_demo ? '' : 'thickbox thickbox-preview'); ?>" href="<?php echo (BWG()->is_demo ? 'javascript:alert(\'' . addslashes(__('This option is disabled in demo.', BWG()->prefix)) . '\');' : $edit_link); ?>"><?php _e('Edit', BWG()->prefix); ?></a> |</span>
+                <span class="wd-image-actions <?php echo ( !$is_embed && ( $params['gallery_type'] == '' ) ? '' : ' wd-hide' ); ?>"><a class="<?php echo (BWG()->is_demo ? '' : 'thickbox thickbox-preview'); ?>" href="<?php echo (BWG()->is_demo ? 'javascript:alert(\'' . addslashes(__('This option is disabled in demo.', BWG()->prefix)) . '\');' : $crop_link); ?>"><?php _e('Crop', BWG()->prefix); ?></a> |</span>
+                <span class="wd-image-actions <?php echo ( !$is_embed && ( $params['gallery_type'] == '' ) ? '' : ' wd-hide' ); ?>"><a onclick="<?php echo (BWG()->is_demo ? 'alert(\'' . addslashes(__('This option is disabled in demo.', BWG()->prefix)) . '\');' : 'if (confirm(\'' . addslashes(__('Do you want to reset the image?', BWG()->prefix)) . '\')) { spider_set_input_value(\'ajax_task\', \'image_reset\'); spider_set_input_value(\'image_current_id\', \'' . $row->id . '\'); spider_ajax_save(\'bwg_gallery\'); } return false;'); ?>"><?php _e('Reset', BWG()->prefix); ?></a> |</span>
                 <span><a onclick="spider_set_input_value('ajax_task', 'image_<?php echo $row->published ? 'unpublish' : 'publish'; ?>');
                     spider_set_input_value('image_current_id', '<?php echo $row->id; ?>');
                     spider_ajax_save('bwg_gallery');"><?php echo($row->published ? __('Unpublish', BWG()->prefix) : __('Publish', BWG()->prefix)); ?></a> |</span>

@@ -52,25 +52,24 @@ class AlbumsgalleriesView_bwg extends AdminView_bwg {
    * @param $params
    */
   public function body( $params ) {
-	?>
-	<div id="loading_div"></div>
-	<div id="wd-content">
-	<div class="wd-table-container">
-	<?php
+    ?>
+    <div id="loading_div"></div>
+    <div class="wd-table-container">
+	  <?php
 		echo $this->title( array(
 			'title' => $params['page_title'],
 			'title_class' => 'wd-header',
 			'add_new_button' => FALSE,
 		  )
 		);
-	?>
+	  ?>
     <div class="wp-search-wrap">
-		<?php echo $this->search(); ?>
-		<div class="tablenav top">
-			<?php echo $this->pagination($params['page_url'], $params['total'], $params['items_per_page']); ?>
-		</div>
+      <?php echo $this->search(); ?>
+      <div class="tablenav top">
+        <?php echo $this->pagination($params['page_url'], $params['total'], $params['items_per_page']); ?>
+      </div>
     </div>
-	<div>
+	  <div>
       <table class="wp-list-table widefat fixed pages media">
         <thead>
           <td class="sortable manage-column column-cb check-column table_small_col">
@@ -84,17 +83,17 @@ class AlbumsgalleriesView_bwg extends AdminView_bwg {
         if ($params['rows']) {
           $iterator = 0;
           foreach ($params['rows'] as $row) {
-			$alternate = (!isset($alternate) || $alternate == '') ? 'class="alternate"' : '';
-            $preview_image = BWG()->plugin_url . '/images/no-image.png';
-			if ( !empty($row->preview_image) ) {
-				$preview_image = site_url() . '/' . BWG()->upload_dir . $row->preview_image;
-			}
-			if ( !empty($row->random_preview_image)) {
-				$preview_image = site_url() . '/' . BWG()->upload_dir . $row->random_preview_image;
-				if ( WDWLibrary::check_external_link($row->random_preview_image) ) {
-					$preview_image = $row->random_preview_image;
-				}
-			}
+            $alternate = (!isset($alternate) || $alternate == '') ? 'class="alternate"' : '';
+                  $preview_image = BWG()->plugin_url . '/images/no-image.png';
+            if ( !empty($row->preview_image) ) {
+              $preview_image = site_url() . '/' . BWG()->upload_dir . $row->preview_image;
+            }
+            if ( !empty($row->random_preview_image)) {
+              $preview_image = site_url() . '/' . BWG()->upload_dir . $row->random_preview_image;
+              if ( WDWLibrary::check_external_link($row->random_preview_image) ) {
+                $preview_image = $row->random_preview_image;
+              }
+            }
             ?>
             <tr id="tr_<?php echo $iterator; ?>" <?php echo $alternate; ?>>
               <th class="table_small_col check-column">
@@ -109,12 +108,12 @@ class AlbumsgalleriesView_bwg extends AdminView_bwg {
                     <?php echo $row->name?>
                   </a>
                   <?php if ( !$row->published ) { ?>
-					— <span class="post-state"><?php _e('Unpublished', BWG()->prefix); ?></span>
-                  <?php } ?>
+                    — <span class="post-state"><?php _e('Unpublished', BWG()->prefix); ?></span>
+                            <?php } ?>
                 </strong>
-				<button class="toggle-row" type="button">
-					<span class="screen-reader-text"><?php _e('Show more details', BWG()->prefix); ?></span>
-				</button>
+                <button class="toggle-row" type="button">
+                  <span class="screen-reader-text"><?php _e('Show more details', BWG()->prefix); ?></span>
+                </button>
               </td>
               <td id="type_<?php echo $iterator; ?>" class="table_medium_col_uncenter" data-colname="<?php _e('Type', BWG()->prefix); ?>">
                 <?php echo ($row->is_album ? __("Gallery group", BWG()->prefix) : __("Gallery", BWG()->prefix)) ; ?>
@@ -125,7 +124,7 @@ class AlbumsgalleriesView_bwg extends AdminView_bwg {
           }
         }
         else {
-          echo WDWLibrary::no_items('galleries or gallery groups',3);
+          echo WDWLibrary::no_items('galleries or gallery groups', 3);
         }
         ?>
         </tbody>
@@ -138,12 +137,11 @@ class AlbumsgalleriesView_bwg extends AdminView_bwg {
           <button class="button media-button button-primary button-large media-button-insert" type="button" onclick="jQuery('#loading_div').show(); spider_get_items();"><?php _e('Add to Gallery Group', BWG()->prefix); ?></button>
         </div>
       </div>
-	</div>
-	</div>
-	<script>
-	jQuery(window).load(function() {
-		jQuery("#loading_div", window.parent.document).hide();
-	});
+	  </div>
+    <script>
+      jQuery(window).load(function() {
+        jQuery("#loading_div", window.parent.document).hide();
+      });
     </script>
   <?php
   }

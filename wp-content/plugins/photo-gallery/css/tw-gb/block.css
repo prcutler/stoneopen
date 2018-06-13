@@ -1,3 +1,7 @@
+/**
+ * 10Web plugins Gutenberg integration
+ * version 2.0.0
+ */
 .tw-container {
     position: fixed;
     top: 0;
@@ -9,12 +13,25 @@
 }
 
 .tw-container .tw-container-wrap {
-    height: 90%;
-    background: #fff;
-    width: 90%;
-    position: absolute;
-    top: 5%;
-    left: 5%;
+  background: #fff;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  right: 0;
+  left: 0;
+}
+
+.tw-container .tw-container-wrap-520-400 {
+  max-width: 520px;
+  max-height: 400px;
+}
+
+.tw-container .tw-container-wrap-420-450 {
+  max-width: 420px;
+  max-height: 450px;
 }
 
 .tw-container .tw-container-wrap  .media-modal-close{
@@ -26,4 +43,8 @@
 .tw-container .tw-container-wrap iframe {
     height: 100%;
     width: 100%;
+}
+.tw-gb-select {
+  width: 100%;
+  height: auto !important;
 }

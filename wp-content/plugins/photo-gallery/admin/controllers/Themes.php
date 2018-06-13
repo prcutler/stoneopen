@@ -223,101 +223,127 @@ class ThemesController_bwg {
    * @param int  $id
    * @param bool $bulk
    */
-  public function edit( $id = 0, $bulk = FALSE ) {
-    $reset = WDWLibrary::get('reset', FALSE);
-    // Get Theme data.
-    $row = $this->model->get_row_data($id, $reset);
-    $current_type = WDWLibrary::get('current_type', 'Thumbnail');
-    $form_action = add_query_arg(array(
-                                   'page' => 'themes_' . BWG()->prefix,
-                                   'current_id' => $id,
-                                   BWG()->nonce => wp_create_nonce(BWG()->nonce),
-                                 ), admin_url('admin.php'));
-    $tabs = array(
-      'Thumbnail' => __('Thumbnail', BWG()->prefix),
-      'Masonry' => __('Masonry', BWG()->prefix),
-      'Mosaic' => __('Mosaic', BWG()->prefix),
-      'Slideshow' => __('Slideshow', BWG()->prefix),
-      'Image_browser' => __('Image browser', BWG()->prefix),
-      'Compact_album' => __('Compact album', BWG()->prefix),
-      'Masonry_album' => __('Masonry album', BWG()->prefix),
-      'Extended_album' => __('Extended album', BWG()->prefix),
-      'Blog_style' => __('Blog style', BWG()->prefix),
-      'Lightbox' => __('Lightbox', BWG()->prefix),
-      'Navigation' => __('Navigation', BWG()->prefix),
-      'Carousel' => __('Carousel', BWG()->prefix),
-    );
-    $border_styles = array(
-      'none' => __('None', BWG()->prefix),
-      'solid' => __('Solid', BWG()->prefix),
-      'dotted' => __('Dotted', BWG()->prefix),
-      'dashed' => __('Dashed', BWG()->prefix),
-      'double' => __('Double', BWG()->prefix),
-      'groove' => __('Groove', BWG()->prefix),
-      'ridge' => __('Ridge', BWG()->prefix),
-      'inset' => __('Inset', BWG()->prefix),
-      'outset' => __('Outset', BWG()->prefix),
-    );
-    $google_fonts = WDWLibrary::get_google_fonts();
-    $font_families = array(
-      'arial' => 'Arial',
-      'lucida grande' => 'Lucida grande',
-      'segoe ui' => 'Segoe ui',
-      'tahoma' => 'Tahoma',
-      'trebuchet ms' => 'Trebuchet ms',
-      'verdana' => 'Verdana',
-      'cursive' => 'Cursive',
-      'fantasy' => 'Fantasy',
-      'monospace' => 'Monospace',
-      'serif' => 'Serif',
-    );
-    $aligns = array(
-      'left' => __('Left', BWG()->prefix),
-      'center' => __('Center', BWG()->prefix),
-      'right' => __('Right', BWG()->prefix),
-    );
-    $font_weights = array(
-      'lighter' => __('Lighter', BWG()->prefix),
-      'normal' => __('Normal', BWG()->prefix),
-      'bold' => __('Bold', BWG()->prefix),
-    );
-    $hover_effects = array(
+public function edit( $id = 0, $bulk = FALSE ) {
+		$reset = WDWLibrary::get('reset', FALSE);
+		// Get Theme data.
+		$row = $this->model->get_row_data($id, $reset);
+    if (!isset($row->container_margin)) {
+      $row->container_margin = 1;
+    }
+		$current_type = WDWLibrary::get('current_type', 'Thumbnail');
+		$form_action  = add_query_arg( array(
+                                'page' => 'themes_' . BWG()->prefix,
+								                'current_id' => $id,
+                                BWG()->nonce => wp_create_nonce(BWG()->nonce),
+							), admin_url('admin.php') );
+
+		$tabs = array(
+			'Thumbnail' => __('Thumbnail', BWG()->prefix),
+			'Masonry' => __('Masonry', BWG()->prefix),
+			'Mosaic' => __('Mosaic', BWG()->prefix),
+			'Slideshow' => __('Slideshow', BWG()->prefix),
+			'Image_browser' => __('Image browser', BWG()->prefix),
+			'Compact_album' => __('Compact album', BWG()->prefix),
+			'Masonry_album' => __('Masonry album', BWG()->prefix),
+			'Extended_album' => __('Extended album', BWG()->prefix),
+			'Blog_style' => __('Blog style', BWG()->prefix),
+			'Lightbox' => __('Lightbox', BWG()->prefix),
+			'Navigation' => __('Navigation', BWG()->prefix),
+			'Carousel' => __('Carousel', BWG()->prefix),
+		);
+
+		$border_styles = array(
+			'none' => __('None', BWG()->prefix),
+			'solid' => __('Solid', BWG()->prefix),
+			'dotted' => __('Dotted', BWG()->prefix),
+			'dashed' => __('Dashed', BWG()->prefix),
+			'double' => __('Double', BWG()->prefix),
+			'groove' => __('Groove', BWG()->prefix),
+			'ridge' => __('Ridge', BWG()->prefix),
+			'inset' => __('Inset', BWG()->prefix),
+			'outset' => __('Outset', BWG()->prefix),
+		);
+
+		$google_fonts = WDWLibrary::get_google_fonts();
+		$font_families = array(
+			'arial' => 'Arial',
+			'lucida grande' => 'Lucida grande',
+			'segoe ui' => 'Segoe ui',
+			'tahoma' => 'Tahoma',
+			'trebuchet ms' => 'Trebuchet ms',
+			'verdana' => 'Verdana',
+			'cursive' =>'Cursive',
+			'fantasy' => 'Fantasy',
+			'monospace' => 'Monospace',
+			'serif' => 'Serif',
+		);
+
+		$aligns = array(
+			'left' 	=> __('Left', BWG()->prefix),
+			'center' 	=> __('Center', BWG()->prefix),
+			'right' 	=> __('Right', BWG()->prefix),
+		);
+
+		$font_weights = array(
+			'lighter' => __('Lighter', BWG()->prefix),
+			'normal' => __('Normal', BWG()->prefix),
+			'bold' => __('Bold', BWG()->prefix),
+		);
+
+		// ToDO: Remove after global update.
+		$hover_effects = array(
+			'none' => __('None', BWG()->prefix),
+			'rotate' => __('Rotate', BWG()->prefix),
+			'scale' => __('Scale', BWG()->prefix),
+			'skew' => __('Skew', BWG()->prefix),
+		);
+
+    $thumbnail_hover_effects = array(
       'none' => __('None', BWG()->prefix),
       'rotate' => __('Rotate', BWG()->prefix),
       'scale' => __('Scale', BWG()->prefix),
+      'zoom' => __('Zoom', BWG()->prefix),
       'skew' => __('Skew', BWG()->prefix),
     );
-    $button_styles = array(
-      'fa-chevron' => __('Chevron', BWG()->prefix),
-      'fa-angle' => __('Angle', BWG()->prefix),
-      'fa-angle-double' => __('Double', BWG()->prefix),
-    );
-    $rate_icons = array(
-      'star' => __('Star', BWG()->prefix),
-      'bell' => __('Bell', BWG()->prefix),
-      'circle' => __('Circle', BWG()->prefix),
-      'flag' => __('Flag', BWG()->prefix),
-      'heart' => __('Heart', BWG()->prefix),
-      'square' => __('Square', BWG()->prefix),
-    );
-    $params = array(
-      'id' => $id,
-      'row' => $row,
-      'reset' => $reset,
-      'form_action' => $form_action,
-      'tabs' => $tabs,
-      'current_type' => $current_type,
-      'border_styles' => $border_styles,
-      'google_fonts' => $google_fonts,
-      'font_families' => $font_families,
-      'aligns' => $aligns,
-      'font_weights' => $font_weights,
-      'hover_effects' => $hover_effects,
-      'button_styles' => $button_styles,
-      'rate_icons' => $rate_icons,
-    );
-    $this->view->edit($params);
-  }
+
+		$button_styles = array(
+			'fa-chevron' => __('Chevron', BWG()->prefix),
+			'fa-angle' => __('Angle', BWG()->prefix),
+			'fa-angle-double' => __('Double', BWG()->prefix),
+		);
+
+		$rate_icons = array(
+			'star' => __('Star', BWG()->prefix),
+			'bell' => __('Bell', BWG()->prefix),
+			'circle' => __('Circle', BWG()->prefix),
+			'flag' => __('Flag', BWG()->prefix),
+			'heart' => __('Heart', BWG()->prefix),
+			'square' => __('Square', BWG()->prefix),
+		);
+
+    $active_tab = WDWLibrary::get('active_tab','Thumbnail');
+
+		$params = array(
+			'id' => $id,
+			'row' => $row,
+			'reset' => $reset,
+			'form_action' => $form_action,
+			'tabs' => $tabs,
+			'current_type' => $current_type,
+			'border_styles' => $border_styles,
+			'google_fonts' => $google_fonts,
+			'font_families' => $font_families,
+			'aligns' => $aligns,
+			'font_weights' => $font_weights,
+			'hover_effects' => $hover_effects,
+			'thumbnail_hover_effects' => $thumbnail_hover_effects,
+			'button_styles' => $button_styles,
+			'rate_icons' => $rate_icons,
+      'active_tab' => $active_tab,
+		);
+		$this->view->edit( $params );
+	}
+
 
   /**
    * Reset by id.
@@ -340,12 +366,14 @@ class ThemesController_bwg {
    */
   public function save( $id = 0 ) {
     $data = $this->save_db($id);
+    $active_tab = WDWLibrary::get('active_tab','Thumbnail');
     $page = WDWLibrary::get('page');
     $query_url = wp_nonce_url(admin_url('admin.php'), 'themes_bwg', 'bwg_nonce');
     $query_url = add_query_arg(array(
                                  'page' => $page,
                                  'task' => 'edit',
                                  'current_id' => $data['id'],
+                                 'active_tab' => $active_tab,
                                  'message' => $data['msg'],
                                ), $query_url);
     WDWLibrary::spider_redirect($query_url);

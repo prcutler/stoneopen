@@ -33,7 +33,7 @@ class BWGControllerGalleryBox {
     }
     if (BWG()->options->popup_enable_captcha) {
       $bwg_captcha_input = (isset($_POST['bwg_captcha_input']) ? esc_html(stripslashes($_POST['bwg_captcha_input'])) : '');
-      @session_start();
+      WDWLibrary::bwg_session_start();
       $bwg_captcha_code = (isset($_SESSION['bwg_captcha_code']) ? esc_html(stripslashes($_SESSION['bwg_captcha_code'])) : '');
       if ($bwg_captcha_input === $bwg_captcha_code) {
         $captcha = TRUE;

@@ -15,9 +15,14 @@ class ThemesView_bwg extends AdminView_bwg {
    */
   public function display( $params ) {
     if ( !BWG()->is_pro && get_option("wd_bwg_theme_version") ) {
-      echo WDWLibrary::message_id(0, __('You can\'t change theme parameters in free version.', BWG()->prefix), 'error');
+      WDWLibrary::topbar();
+      ?>
+      <div class="wrap">
+      <?php
+      echo WDWLibrary::message_id(0, __('You can\'t change theme parameters in free version.', BWG()->prefix), 'error inline');
       ?>
       <img class="wd-width-100" src="<?php echo BWG()->plugin_url . '/images/theme.png'; ?>" />
+      </div>
       <?php
       return;
     }
@@ -153,7 +158,7 @@ class ThemesView_bwg extends AdminView_bwg {
 		  'name' => BWG()->prefix . '_themes',
 		  'class' => BWG()->prefix . '_themes wd-form',
 		  'action' => $params['form_action'],
-		  'current_id' => $params['id']
+		  'current_id' => $params['id'],
 		);
 		echo $this->form(ob_get_clean(), $form_attr);
 	}
@@ -164,7 +169,8 @@ class ThemesView_bwg extends AdminView_bwg {
 	* @param $params
 	*/
 	public function edit_body( $params ) {
-		extract($params); ?>
+		extract($params);
+    ?>
 		<div class="bwg-page-header">
 			<div class="wd-page-title wd-header">
 				<h1 class="wp-heading-inline"><?php _e('Theme title', BWG()->prefix); ?></h1>
@@ -174,24 +180,24 @@ class ThemesView_bwg extends AdminView_bwg {
 					<button class="button button-primary button-large" onclick="if (spider_check_required('name', 'Title')) {return false;}; spider_set_input_value('task', 'save')">
 					<?php echo !empty($row->name) ? __('Update', BWG()->prefix) :  __('Save', BWG()->prefix); ?>
 					</button>
-					<?php if( $id ) { ?> 
-					<input title="<?php _e('Reset to default theme', BWG()->prefix); ?>" 
+					<?php if( $id ) { ?>
+					<input title="<?php _e('Reset to default theme', BWG()->prefix); ?>"
 						class="button preview-button button-large wd-btn-reset" type="submit"
 						onclick="if (confirm('<?php echo addslashes(__('Do you want to reset to default?', BWG()->prefix)); ?>')) {
 																spider_set_input_value('task', 'reset');
 															} else {
 																return false;
-															}" 
+															}"
 						value="<?php echo __('Reset', BWG()->prefix); ?>"/>
 					<?php } ?>
 				</div>
         <?php } ?>
 			</div>
 			<div class="bwg-clear"></div>
-		</div>	
+		</div>
 		<ul class="bwg-tabs">
 			<?php foreach($tabs as $key => $value) { ?>
-			<li data-id="<?php echo $key ?>" class="bwg-tab-item <?php echo ($current_type == $key) ? 'active': ''; ?>"><?php echo $value; ?></li>
+			<li data-id="<?php echo $key ?>" class="bwg-tab-item <?php echo ($params['active_tab'] == $key) ? 'active': ''; ?>"><?php echo $value; ?></li>
 			<?php } ?>
 		</ul>
 		<div>
@@ -203,11 +209,21 @@ class ThemesView_bwg extends AdminView_bwg {
 							<table style="clear:both;">
 								<tbody>
 								<tr>
-								  <td class="spider_label"><label for="thumb_margin"><?php echo __('Margin:', BWG()->prefix); ?> </label></td>
+								  <td class="spider_label"><label for="thumb_margin"><?php _e('Distance between pictures:', BWG()->prefix); ?> </label></td>
 								  <td>
-									<input type="text" name="thumb_margin" id="thumb_margin" value="<?php echo $row->thumb_margin; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
+									  <input type="text" name="thumb_margin" id="thumb_margin" value="<?php echo $row->thumb_margin; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
 								  </td>
 								</tr>
+                <tr>
+                  <td class="spider_label"><label><?php _e('Distance from container frame:', BWG()->prefix); ?> </label></td>
+                  <td>
+                    <input type="radio" name="container_margin" id="container_margin1" value="1"<?php if ($row->container_margin == 1) echo 'checked="checked"'; ?> />
+                    <label for="container_margin1"><?php _e('Yes', BWG()->prefix); ?></label>
+                    <input type="radio" name="container_margin" id="container_margin0" value="0"<?php if ($row->container_margin == 0) echo 'checked="checked"'; ?> />
+                    <label for="container_margin0"><?php _e('No', BWG()->prefix); ?></label>
+                    <div class="spider_description"><?php _e('Enable this option to add distance between the parent container and the thumbnails grid.', BWG()->prefix); ?></div>
+                  </td>
+                </tr>
 								<tr>
 								  <td class="spider_label"><label for="thumb_padding"><?php echo __('Padding:', BWG()->prefix); ?> </label></td>
 								  <td>
@@ -250,16 +266,16 @@ class ThemesView_bwg extends AdminView_bwg {
 								<tr>
 								  <td class="spider_label"><label for="thumb_box_shadow"><?php echo __('Shadow:', BWG()->prefix); ?> </label></td>
 								  <td>
-									<input type="text" name="thumb_box_shadow" id="thumb_box_shadow" value="<?php echo $row->thumb_box_shadow; ?>" class="spider_box_input" />
+									<input type="text" name="thumb_box_shadow" id="thumb_box_shadow" value="<?php echo $row->thumb_box_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 									<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 								  </td>
 								</tr>
 								<tr>
 								  <td class="spider_label"><label for="thumb_hover_effect"><?php echo __('Hover effect:', BWG()->prefix); ?> </label></td>
 								  <td>
-									<select name="thumb_hover_effect" id="thumb_hover_effect" class="spider_int_input select_icon_them">
+									<select name="thumb_hover_effect" id="thumb_hover_effect">
 									  <?php
-									  foreach ($hover_effects as $key => $hover_effect) {
+									  foreach ($thumbnail_hover_effects as $key => $hover_effect) {
 										?>
 										<option value="<?php echo $key; ?>" <?php echo (($row->thumb_hover_effect == $key) ? 'selected="selected"' : ''); ?>><?php echo __($hover_effect, BWG()->prefix); ?></option>
 										<?php
@@ -272,7 +288,7 @@ class ThemesView_bwg extends AdminView_bwg {
 								  <td class="spider_label"><label for="thumb_hover_effect_value"><?php echo __('Hover effect value:', BWG()->prefix); ?> </label></td>
 								  <td>
 									<input type="text" name="thumb_hover_effect_value" id="thumb_hover_effect_value" value="<?php echo $row->thumb_hover_effect_value; ?>" class="spider_char_input"/>
-									<div class="spider_description"><?php echo __('E.g. Rotate: 10deg, Scale: 1.5, Skew: 10deg.', BWG()->prefix); ?></div>
+									<div class="spider_description"><?php echo __('E.g. Rotate: 10deg, Scale/Zoom: 1.5, Skew: 10deg.', BWG()->prefix); ?></div>
 								  </td>
 								</tr>
 								<tr>
@@ -337,7 +353,7 @@ class ThemesView_bwg extends AdminView_bwg {
 								  </td>
 								</tr>
 							  </tbody>
-							</table>					  
+							</table>
 							</div>
 						</div>
 					</div>
@@ -371,7 +387,7 @@ class ThemesView_bwg extends AdminView_bwg {
 										  <td class="spider_label"><label for="thumb_title_font_style"><?php echo __('Title font family:', BWG()->prefix); ?> </label></td>
 										  <td>
 											<select name="thumb_title_font_style" id="thumb_title_font_style">
-											<?php											  
+											<?php
 											   $is_google_fonts = (in_array($row->thumb_title_font_style, $google_fonts)) ? true : false;
 											  $thumb_font_families = ($is_google_fonts == true) ? $google_fonts : $font_families;
 											  foreach ($thumb_font_families as $key => $font_family) {
@@ -406,7 +422,7 @@ class ThemesView_bwg extends AdminView_bwg {
 										<tr>
 										  <td class="spider_label"><label for="thumb_title_shadow"><?php echo __('Title box shadow:', BWG()->prefix); ?> </label></td>
 										  <td>
-											<input type="text" name="thumb_title_shadow" id="thumb_title_shadow" value="<?php echo $row->thumb_title_shadow; ?>" class="spider_box_input" />
+											<input type="text" name="thumb_title_shadow" id="thumb_title_shadow" value="<?php echo $row->thumb_title_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 											<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 										  </td>
 										</tr>
@@ -420,7 +436,7 @@ class ThemesView_bwg extends AdminView_bwg {
 										<tr>
 										  <td class="spider_label"><label for="thumb_gal_title_font_size"><?php echo __('Gallery title/description font size:', BWG()->prefix); ?> </label></td>
 										  <td>
-											<input type="text" name="thumb_gal_title_font_size" id="thumb_gal_title_font_size" value="<?php echo 
+											<input type="text" name="thumb_gal_title_font_size" id="thumb_gal_title_font_size" value="<?php echo
 											$row->thumb_gal_title_font_size; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
 										  </td>
 										</tr>
@@ -469,7 +485,7 @@ class ThemesView_bwg extends AdminView_bwg {
 										<tr>
 										  <td class="spider_label"><label for="thumb_gal_title_shadow"><?php echo __('Gallery title/description box shadow:', BWG()->prefix); ?> </label></td>
 										  <td>
-											<input type="text" name="thumb_gal_title_shadow" id="thumb_gal_title_shadow" value="<?php echo $row->thumb_gal_title_shadow; ?>" class="spider_box_input" />
+											<input type="text" name="thumb_gal_title_shadow" id="thumb_gal_title_shadow" value="<?php echo $row->thumb_gal_title_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 											<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 										  </td>
 										</tr>
@@ -549,7 +565,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									</tr>
 								  </tbody>
 								</table>
-				
+
 							</div>
 						</div>
 					</div>
@@ -594,7 +610,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									</tr>
 								  </tbody>
 								</table>
-				
+
 							</div>
 						</div>
 					</div>
@@ -606,7 +622,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="masonry_thumb_hover_effect"><?php echo __('Hover effect:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<select name="masonry_thumb_hover_effect" id="masonry_thumb_hover_effect" class="spider_int_input select_icon_them">
+										<select name="masonry_thumb_hover_effect" id="masonry_thumb_hover_effect">
 										  <?php
 										  foreach ($hover_effects as $key => $hover_effect) {
 											?>
@@ -647,7 +663,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									</tr>
 									<tr>
 									  <td class="spider_label"><label for="masonry_description_font_style"><?php echo __('Description font family:', BWG()->prefix); ?> </label></td>
-									  <td>										
+									  <td>
 										<select name="masonry_description_font_style" id="masonry_description_font_style">
 										<?php
 										  $is_google_fonts = (in_array($row->masonry_description_font_style, $google_fonts)) ? true : false;
@@ -659,7 +675,7 @@ class ThemesView_bwg extends AdminView_bwg {
 										  }
 										  ?>
 										</select>
-										<div>										
+										<div>
 											<input type="radio" name="masonry_description_google_fonts" id="masonry_description_google_fonts1" onchange="bwg_change_fonts('masonry_description_font_style', jQuery(this).attr('id'))" value="1" <?php if ($is_google_fonts == true) echo 'checked="checked"'; ?> />
 											<label for="masonry_description_google_fonts1" id="masonry_description_google_fonts1_lbl"><?php echo __('Google fonts', BWG()->prefix); ?></label>
 											<input type="radio" name="masonry_description_google_fonts" id="masonry_description_google_fonts0" onchange="bwg_change_fonts('masonry_description_font_style', '')" value="0" <?php if ($is_google_fonts == false) echo 'checked="checked"'; ?> />
@@ -718,7 +734,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="masonry_thumb_gal_title_shadow"><?php echo __('Gallery title/description box shadow:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="masonry_thumb_gal_title_shadow" id="masonry_thumb_gal_title_shadow" value="<?php echo $row->masonry_thumb_gal_title_shadow; ?>" class="spider_box_input" />
+										<input type="text" name="masonry_thumb_gal_title_shadow" id="masonry_thumb_gal_title_shadow" value="<?php echo $row->masonry_thumb_gal_title_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 										<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 									  </td>
 									</tr>
@@ -853,7 +869,7 @@ class ThemesView_bwg extends AdminView_bwg {
 										<tr>
 										  <td class="spider_label"><label for="mosaic_thumb_hover_effect"><?php echo __('Hover effect:', BWG()->prefix); ?> </label></td>
 										  <td>
-											<select name="mosaic_thumb_hover_effect" id="mosaic_thumb_hover_effect" class="spider_int_input select_icon_them">
+											<select name="mosaic_thumb_hover_effect" id="mosaic_thumb_hover_effect">
 											  <?php
 											  foreach ($hover_effects as $key => $hover_effect) {
 												?>
@@ -931,7 +947,7 @@ class ThemesView_bwg extends AdminView_bwg {
 										<tr>
 										  <td class="spider_label"><label for="mosaic_thumb_title_shadow"><?php echo __('Title box shadow:', BWG()->prefix); ?> </label></td>
 										  <td>
-											<input type="text" name="mosaic_thumb_title_shadow" id="mosaic_thumb_title_shadow" value="<?php echo $row->mosaic_thumb_title_shadow; ?>" class="spider_box_input" />
+											<input type="text" name="mosaic_thumb_title_shadow" id="mosaic_thumb_title_shadow" value="<?php echo $row->mosaic_thumb_title_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 											<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 										  </td>
 										</tr>
@@ -993,7 +1009,7 @@ class ThemesView_bwg extends AdminView_bwg {
 										<tr>
 										  <td class="spider_label"><label for="mosaic_thumb_gal_title_shadow"><?php echo __('Gallery title/description box shadow:', BWG()->prefix); ?> </label></td>
 										  <td>
-											<input type="text" name="mosaic_thumb_gal_title_shadow" id="mosaic_thumb_gal_title_shadow" value="<?php echo $row->mosaic_thumb_gal_title_shadow; ?>" class="spider_box_input" />
+											<input type="text" name="mosaic_thumb_gal_title_shadow" id="mosaic_thumb_gal_title_shadow" value="<?php echo $row->mosaic_thumb_gal_title_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 											<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 										  </td>
 										</tr>
@@ -1137,7 +1153,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="slideshow_rl_btn_box_shadow"><?php echo __('Right, left buttons box shadow:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="slideshow_rl_btn_box_shadow" id="slideshow_rl_btn_box_shadow" value="<?php echo $row->slideshow_rl_btn_box_shadow; ?>" class="spider_box_input"/>
+										<input type="text" name="slideshow_rl_btn_box_shadow" id="slideshow_rl_btn_box_shadow" value="<?php echo $row->slideshow_rl_btn_box_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 										<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 									  </td>
 									</tr>
@@ -1357,7 +1373,7 @@ class ThemesView_bwg extends AdminView_bwg {
 											<label for="slideshow_title_google_fonts1" id="slideshow_title_google_fonts1_lbl"><?php echo __('Google fonts', BWG()->prefix); ?></label>
 											<input type="radio" name="slideshow_title_google_fonts" id="slideshow_title_google_fonts0" onchange="bwg_change_fonts('slideshow_title_font', '')" value="0" <?php if ($is_google_fonts == false) echo 'checked="checked"'; ?> />
 											<label for="slideshow_title_google_fonts0" id="slideshow_title_google_fonts0_lbl"><?php echo __('Default', BWG()->prefix); ?></label>
-										</div>										
+										</div>
 									  </td>
 									</tr>
 									<tr>
@@ -1575,7 +1591,7 @@ class ThemesView_bwg extends AdminView_bwg {
 										<tr>
 										  <td class="spider_label"><label for="image_browser_box_shadow"><?php echo __('Box shadow:', BWG()->prefix); ?> </label></td>
 										  <td>
-											<input type="text" name="image_browser_box_shadow" id="image_browser_box_shadow" value="<?php echo $row->image_browser_box_shadow; ?>" class="spider_box_input" />
+											<input type="text" name="image_browser_box_shadow" id="image_browser_box_shadow" value="<?php echo $row->image_browser_box_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 											<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 										  </td>
 										</tr>
@@ -1702,7 +1718,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="image_browser_gal_title_font_size"><?php echo __('Gallery title/description font size:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="image_browser_gal_title_font_size" id="image_browser_gal_title_font_size" value="<?php echo 
+										<input type="text" name="image_browser_gal_title_font_size" id="image_browser_gal_title_font_size" value="<?php echo
 										$row->image_browser_gal_title_font_size; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
 									  </td>
 									</tr>
@@ -1751,7 +1767,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="image_browser_gal_title_shadow"><?php echo __('Gallery title/description box shadow:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="image_browser_gal_title_shadow" id="image_browser_gal_title_shadow" value="<?php echo $row->image_browser_gal_title_shadow; ?>" class="spider_box_input" />
+										<input type="text" name="image_browser_gal_title_shadow" id="image_browser_gal_title_shadow" value="<?php echo $row->image_browser_gal_title_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 										<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 									  </td>
 									</tr>
@@ -1840,7 +1856,7 @@ class ThemesView_bwg extends AdminView_bwg {
 										<tr>
 										  <td class="spider_label"><label for="album_compact_thumb_box_shadow"><?php echo __('Shadow:', BWG()->prefix); ?> </label></td>
 										  <td>
-											<input type="text" name="album_compact_thumb_box_shadow" id="album_compact_thumb_box_shadow" value="<?php echo $row->album_compact_thumb_box_shadow; ?>" class="spider_box_input" />
+											<input type="text" name="album_compact_thumb_box_shadow" id="album_compact_thumb_box_shadow" value="<?php echo $row->album_compact_thumb_box_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 											<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 										  </td>
 										</tr>
@@ -1994,7 +2010,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="album_compact_title_shadow"><?php echo __('Title box shadow:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="album_compact_title_shadow" id="album_compact_title_shadow" value="<?php echo $row->album_compact_title_shadow; ?>" class="spider_box_input" />
+										<input type="text" name="album_compact_title_shadow" id="album_compact_title_shadow" value="<?php echo $row->album_compact_title_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 										<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 									  </td>
 									</tr>
@@ -2111,7 +2127,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="album_compact_gal_title_shadow"><?php echo __('Gallery title/description box shadow:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="album_compact_gal_title_shadow" id="album_compact_gal_title_shadow" value="<?php echo $row->album_compact_gal_title_shadow; ?>" class="spider_box_input" />
+										<input type="text" name="album_compact_gal_title_shadow" id="album_compact_gal_title_shadow" value="<?php echo $row->album_compact_gal_title_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 										<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 									  </td>
 									</tr>
@@ -2198,7 +2214,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="album_extended_thumb_box_shadow"><?php echo __('Thumbnail box shadow:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="album_extended_thumb_box_shadow" id="album_extended_thumb_box_shadow" value="<?php echo $row->album_extended_thumb_box_shadow; ?>" class="spider_box_input"/>
+										<input type="text" name="album_extended_thumb_box_shadow" id="album_extended_thumb_box_shadow" value="<?php echo $row->album_extended_thumb_box_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 										<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 									  </td>
 									</tr>
@@ -2274,7 +2290,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									</tr>
 								  </tbody>
 								</table>
-					
+
 							</div>
 						</div>
 					</div>
@@ -2731,7 +2747,7 @@ class ThemesView_bwg extends AdminView_bwg {
 								<tr>
 								  <td class="spider_label"><label for="album_extended_gal_title_shadow"><?php echo __('Gallery title/description box shadow:', BWG()->prefix); ?> </label></td>
 								  <td>
-									<input type="text" name="album_extended_gal_title_shadow" id="album_extended_gal_title_shadow" value="<?php echo $row->album_extended_gal_title_shadow; ?>" class="spider_box_input" />
+									<input type="text" name="album_extended_gal_title_shadow" id="album_extended_gal_title_shadow" value="<?php echo $row->album_extended_gal_title_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 									<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 								  </td>
 								</tr>
@@ -2938,7 +2954,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="album_masonry_title_shadow"><?php echo __('Title box shadow:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="album_masonry_title_shadow" id="album_masonry_title_shadow" value="<?php echo $row->album_masonry_title_shadow; ?>" class="spider_box_input" />
+										<input type="text" name="album_masonry_title_shadow" id="album_masonry_title_shadow" value="<?php echo $row->album_masonry_title_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 										<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 									  </td>
 									</tr>
@@ -3048,7 +3064,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="album_masonry_gal_title_shadow"><?php echo __('Gallery title/description box shadow:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="album_masonry_gal_title_shadow" id="album_masonry_gal_title_shadow" value="<?php echo $row->album_masonry_gal_title_shadow; ?>" class="spider_box_input" />
+										<input type="text" name="album_masonry_gal_title_shadow" id="album_masonry_gal_title_shadow" value="<?php echo $row->album_masonry_gal_title_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 										<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 									  </td>
 									</tr>
@@ -3131,7 +3147,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="blog_style_box_shadow"><?php echo __('Box shadow:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="blog_style_box_shadow" id="blog_style_box_shadow" value="<?php echo $row->blog_style_box_shadow; ?>" class="spider_box_input"/>
+										<input type="text" name="blog_style_box_shadow" id="blog_style_box_shadow" value="<?php echo $row->blog_style_box_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 										<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 									  </td>
 									</tr>
@@ -3304,7 +3320,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="blog_style_gal_title_font_size"><?php echo __('Gallery title/description font size:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="blog_style_gal_title_font_size" id="blog_style_gal_title_font_size" value="<?php echo 
+										<input type="text" name="blog_style_gal_title_font_size" id="blog_style_gal_title_font_size" value="<?php echo
 										$row->blog_style_gal_title_font_size; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
 									  </td>
 									</tr>
@@ -3353,7 +3369,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="blog_style_gal_title_shadow"><?php echo __('Gallery title/description box shadow:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="blog_style_gal_title_shadow" id="blog_style_gal_title_shadow" value="<?php echo $row->blog_style_gal_title_shadow; ?>" class="spider_box_input" />
+										<input type="text" name="blog_style_gal_title_shadow" id="blog_style_gal_title_shadow" value="<?php echo $row->blog_style_gal_title_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 										<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 									  </td>
 									</tr>
@@ -3541,7 +3557,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr id="lightbox_close3">
 									  <td class="spider_label"><label for="lightbox_close_btn_box_shadow"><?php echo __('Close button box shadow:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="lightbox_close_btn_box_shadow" id="lightbox_close_btn_box_shadow" value="<?php echo $row->lightbox_close_btn_box_shadow; ?>" class="spider_box_input"/>
+										<input type="text" name="lightbox_close_btn_box_shadow" id="lightbox_close_btn_box_shadow" value="<?php echo $row->lightbox_close_btn_box_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 										<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 									  </td>
 									</tr>
@@ -3644,7 +3660,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr id="lightbox_right_left3">
 									  <td class="spider_label"><label for="lightbox_rl_btn_box_shadow"><?php echo __('Right, left buttons box shadow:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="lightbox_rl_btn_box_shadow" id="lightbox_rl_btn_box_shadow" value="<?php echo $row->lightbox_rl_btn_box_shadow; ?>" class="spider_box_input"/>
+										<input type="text" name="lightbox_rl_btn_box_shadow" id="lightbox_rl_btn_box_shadow" value="<?php echo $row->lightbox_rl_btn_box_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 										<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 									  </td>
 									</tr>
@@ -4525,7 +4541,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									<tr>
 									  <td class="spider_label"><label for="page_nav_box_shadow"><?php echo __('Box shadow:', BWG()->prefix); ?> </label></td>
 									  <td>
-										<input type="text" name="page_nav_box_shadow" id="page_nav_box_shadow" value="<?php echo $row->page_nav_box_shadow; ?>" class="spider_box_input"/>
+										<input type="text" name="page_nav_box_shadow" id="page_nav_box_shadow" value="<?php echo $row->page_nav_box_shadow; ?>" class="spider_box_input" placeholder="10px 10px 10px #888888" />
 										<div class="spider_description"><?php echo __('Use CSS type values.', BWG()->prefix); ?></div>
 									  </td>
 									</tr>
@@ -4613,7 +4629,7 @@ class ThemesView_bwg extends AdminView_bwg {
 								  <td>
 									<input type="text" name="carousel_rl_btn_size" id="carousel_rl_btn_size" value="<?php echo $row->carousel_rl_btn_size; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
 								  </td>
-								</tr> 
+								</tr>
 								 <tr>
 								  <td class="spider_label"><label for="carousel_play_pause_btn_size"><?php echo __('Play, pause buttons size:', BWG()->prefix); ?> </label></td>
 								  <td>
@@ -4703,7 +4719,7 @@ class ThemesView_bwg extends AdminView_bwg {
 									  ?>
 									</select>
 								  </td>
-								</tr>             
+								</tr>
 							  </tbody>
 							</table>
 						</div>
@@ -4719,14 +4735,14 @@ class ThemesView_bwg extends AdminView_bwg {
 										<td>
 											<input type="text" name="carousel_mergin_bottom" id="carousel_mergin_bottom" value="<?php echo $row->carousel_mergin_bottom; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
 										</td>
-									</tr>                               
+									</tr>
 								 <tr>
 								  <td class="spider_label"><label for="carousel_feature_border_width"><?php echo __('Image border width:', BWG()->prefix); ?> </label></td>
 								  <td>
 									<input type="text" name="carousel_feature_border_width" id="carousel_feature_border_width" value="<?php echo $row->carousel_feature_border_width; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/>px
 								  </td>
 								</tr>
-								
+
 								<tr>
 								  <td class="spider_label"><label for="carousel_feature_border_style"><?php echo __('Image border style:', BWG()->prefix); ?> </label>
 								  </td>
@@ -4747,7 +4763,7 @@ class ThemesView_bwg extends AdminView_bwg {
 								  <td>
 									<input type="text" name="carousel_feature_border_color" id="carousel_feature_border_color" value="<?php echo $row->carousel_feature_border_color; ?>" class="color"/>
 								  </td>
-								</tr>                             
+								</tr>
 							  </tbody>
 							</table>
 						</div>
@@ -4813,7 +4829,7 @@ class ThemesView_bwg extends AdminView_bwg {
 										<label for="carousel_google_fonts0" id="carousel_google_fonts0_lbl"><?php echo __('Default', BWG()->prefix); ?></label>
 									</div>
 								  </td>
-								</tr>   
+								</tr>
 								  <td class="spider_label"><label for="carousel_caption_p_font_size"><?php echo __('Title font size:', BWG()->prefix); ?> </label></td>
 								  <td>
 									<input type="text" name="carousel_caption_p_font_size" id="carousel_caption_p_font_size" value="<?php echo $row->carousel_caption_p_font_size; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)" /> px
@@ -4824,7 +4840,7 @@ class ThemesView_bwg extends AdminView_bwg {
 								  <td>
 									<input type="text" name="carousel_caption_p_color" id="carousel_caption_p_color" value="<?php echo $row->carousel_caption_p_color; ?>" class="color"/>
 								  </td>
-								</tr>                
+								</tr>
 								<tr>
 								  <td class="spider_label"><label for="carousel_caption_p_font_weight"><?php echo __('Title font weight:', BWG()->prefix); ?> </label></td>
 								  <td>
@@ -4848,7 +4864,7 @@ class ThemesView_bwg extends AdminView_bwg {
 		</fieldset>
 		</div>
 		<input type="hidden" id="default_theme" name="default_theme" value="<?php echo $row->default_theme; ?>"/>
-		<input type="hidden" id="current_type" name="current_type" value="<?php echo $current_type; ?>" />
+    <input type="hidden" id="active_tab" name="active_tab"  value="Thumbnail" />
     <?php
 	}
 }

@@ -30,9 +30,10 @@ class WidgetSlideshowView_bwg {
 		  echo $before_title . $title . $after_title;
 		}
 		// Widget output.
-		require_once(BWG()->plugin_dir . '/frontend/controllers/BWGControllerSlideshow.php');
-		$controller_class = 'BWGControllerSlideshow';
-		$controller = new $controller_class();
+		require_once(BWG()->plugin_dir . '/frontend/controllers/controller.php');
+    $controller_class = 'BWGControllerSite';
+    $view = 'Slideshow';
+    $controller = new $controller_class($view);
 
 		global $bwg;
 		$params = array (
