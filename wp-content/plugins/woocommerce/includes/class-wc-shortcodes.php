@@ -2,15 +2,11 @@
 /**
  * Shortcodes
  *
- * @author   Automattic
- * @category Class
- * @package  WooCommerce/Classes
- * @version  3.2.0
+ * @package WooCommerce/Classes
+ * @version 3.2.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * WooCommerce Shortcodes class.
@@ -479,7 +475,7 @@ class WC_Shortcodes {
 		$args = array(
 			'posts_per_page'      => 1,
 			'post_type'           => 'product',
-			'post_status'         => 'publish',
+			'post_status'         => ( ! empty( $atts['status'] ) ) ? $atts['status'] : 'publish',
 			'ignore_sticky_posts' => 1,
 			'no_found_rows'       => 1,
 		);
@@ -503,6 +499,9 @@ class WC_Shortcodes {
 			remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_title', 5 );
 		}
 
+		// Change form action to avoid redirect.
+		add_filter( 'woocommerce_add_to_cart_form_action', '__return_empty_string' );
+
 		$single_product = new WP_Query( $args );
 
 		$preselected_id = '0';
@@ -510,7 +509,7 @@ class WC_Shortcodes {
 		// Check if sku is a variation.
 		if ( isset( $atts['sku'] ) && $single_product->have_posts() && 'product_variation' === $single_product->post->post_type ) {
 
-			$variation = new WC_Product_Variation( $single_product->post->ID );
+			$variation  = new WC_Product_Variation( $single_product->post->ID );
 			$attributes = $variation->get_attributes();
 
 			// Set preselected id to be used by JS to provide context.
@@ -575,6 +574,8 @@ class WC_Shortcodes {
 			add_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_title', 5 );
 		}
 
+		remove_filter( 'woocommerce_add_to_cart_form_action', '__return_empty_string' );
+
 		return '<div class="woocommerce">' . ob_get_clean() . '</div>';
 	}
 
@@ -584,9 +585,7 @@ class WC_Shortcodes {
 	 * @return string
 	 */
 	public static function shop_messages() {
-		ob_start();
-		wc_print_notices();
-		return '<div class="woocommerce">' . ob_get_clean() . '</div>';
+		return '<div class="woocommerce">' . wc_print_notices( true ) . '</div>';
 	}
 
 	/**

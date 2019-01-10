@@ -214,8 +214,9 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 				$incremental_sets = array_keys($backups[$timestamp]['incremental_sets']);
 				// Check if there are more than one timestamp in the incremental set
 				if (1 < count($incremental_sets)) {
-					$incremental_select_html = '<label>'.__('Select your incremental restore point', 'updraftplus').': </label>';
+					$incremental_select_html = '<label>'.__('This backup set contains incremental backups of your files; please select the time you wish to restore your files to', 'updraftplus').': </label>';
 					$incremental_select_html .= '<select name="updraft_incremental_restore_point" id="updraft_incremental_restore_point">';
+					$incremental_sets = array_reverse($incremental_sets);
 					$first_timestamp = $incremental_sets[0];
 					
 					foreach ($incremental_sets as $timestamp) {
@@ -435,16 +436,17 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 				if (!empty($params['path'])) $path = $params['path'];
 
 				if (!empty($params['drop_directory']) && true == $params['drop_directory']) $path = dirname($path);
-
-				$node_array[] = array(
-					'text' => basename($path),
-					'children' => true,
-					'id' => $path,
-					'icon' => 'jstree-folder',
-					'state' => array(
-						'opened' => true
-					)
-				);
+				if (empty($params['skip_root_node'])) {
+					$node_array[] = array(
+						'text' => basename($path),
+						'children' => true,
+						'id' => $path,
+						'icon' => 'jstree-folder',
+						'state' => array(
+							'opened' => true
+						)
+					);
+				}
 		} else {
 			$path = $params['node']['id'];
 		}
@@ -460,14 +462,14 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 						$node_array[] = array(
 							'text' => $value,
 							'children' => true,
-							'id' => $path . DIRECTORY_SEPARATOR . $value,
+							'id' => UpdraftPlus_Manipulation_Functions::wp_normalize_path($path . DIRECTORY_SEPARATOR . $value),
 							'icon' => 'jstree-folder'
 						);
 					} else {
 						$node_array[] = array(
 							'text' => $value,
 							'children' => false,
-							'id' => $path . DIRECTORY_SEPARATOR . $value,
+							'id' => UpdraftPlus_Manipulation_Functions::wp_normalize_path($path . DIRECTORY_SEPARATOR . $value),
 							'type' => 'file',
 							'icon' => 'jstree-file'
 						);
@@ -495,14 +497,7 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 
 		$node_array = array();
 
-		include_once(UPDRAFTPLUS_DIR.'/class-zip.php');
-		
-		$zip_object = 'UpdraftPlus_ZipArchive';
-
-		// In tests, PclZip was found to be 25% slower than ZipArchive
-		if (((defined('UPDRAFTPLUS_PREFERPCLZIP') && UPDRAFTPLUS_PREFERPCLZIP == true) || !class_exists('ZipArchive') || !class_exists('UpdraftPlus_ZipArchive') || (!extension_loaded('zip') && !method_exists('ZipArchive', 'AddFile')))) {
-			$zip_object = 'UpdraftPlus_PclZip';
-		}
+		$zip_object = $updraftplus->get_zip_object_name();
 
 		// Retrieve the information from our backup history
 		$backup_history = UpdraftPlus_Backup_History::get_history();
@@ -703,5 +698,24 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 			$action_data['similar_type_collate'] = $similar_type_collate;
 		}
 		return $action_data;
+	}
+
+	/**
+	 * Set the Tour status
+	 *
+	 * @param array $params - the $_REQUEST. We're looking for 'current_step'
+	 * @return bool
+	 */
+	public function set_tour_status($params) {
+		return class_exists('UpdraftPlus_Tour') ? UpdraftPlus_Tour::get_instance()->set_tour_status($params) : false;
+	}
+
+	/**
+	 * Resets the tour status
+	 *
+	 * @return bool
+	 */
+	public function reset_tour_status() {
+		return class_exists('UpdraftPlus_Tour') ? UpdraftPlus_Tour::get_instance()->reset_tour_status() : false;
 	}
 }

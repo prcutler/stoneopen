@@ -1,7 +1,7 @@
 var bwg_shortcode_type;
 jQuery(document).ready(function () {
   jQuery(".mce-toolbar-grp.mce-inline-toolbar-grp.mce-container.mce-panel", parent.document).hide();
-  // Add tabs.
+  /* Add tabs. */
   jQuery(".bwg_tabs").each(function () {
     jQuery(this).tabs({
       activate: function( event, ui ) {
@@ -36,7 +36,7 @@ jQuery(document).ready(function () {
 			body.animate({ scrollTop: top }, 500 );
   });
 
-  // Changing label Number of image rows to columns in masonry view
+  /* Changing label Number of image rows to columns in masonry view */
   jQuery('input[name=masonry]').on('click', function(){
     if(jQuery(this).val() == 'horizontal') {
       jQuery('.masonry_col_num').hide();
@@ -206,13 +206,13 @@ function bwg_shortcode_hide_show_params() {
   if (jQuery('#slideshow_enable_ctrl_yes').is(':checked')) {
     jQuery("#tr_autohide_slideshow_navigation").show();
   }
-  if (jQuery('#image_enable_page_loadmore').is(':checked')) {
+  if (jQuery('#image_enable_page_2').is(':checked')) {
     jQuery("#tr_load_more_image_count").show();
   }
-  if (jQuery('#masonry_image_enable_page_loadmore').is(':checked')) {
+  if (jQuery('#masonry_image_enable_page_2').is(':checked')) {
     jQuery("#tr_masonry_load_more_image_count").show();
   }
-  if (jQuery('#mosaic_image_enable_page_loadmore').is(':checked')) {
+  if (jQuery('#mosaic_image_enable_page_2').is(':checked')) {
     jQuery("#tr_mosaic_load_more_image_count").show();
   }
   if (jQuery('#blog_style_enable_page_2').is(':checked')) {
@@ -372,7 +372,7 @@ function bwg_gallery_type(gallery_type) {
   jQuery("#tr_ecommerce_icon_hover .ecommerce_icon_show").css('display', 'none');
   jQuery("#tr_tag").css('display', 'none');
 
-  // Watermark.
+  /* Watermark. */
   jQuery("#tr_watermark_type").css('display', '');
   if (jQuery("input[name=watermark_type]:checked").val() == 'image') {
     bwg_watermark('watermark_type_image');
@@ -415,7 +415,7 @@ function bwg_gallery_type(gallery_type) {
     }
     case 'thumbnails_mosaic': {
       jQuery('#options_link').attr('href', jQuery('#options_link').attr('data-href') + '&active_tab=1&gallery_type=' + gallery_type);
-	    jQuery("#tr_ecommerce_icon_hover ").css('display', '');
+  	  jQuery("#tr_ecommerce_icon_hover ").css('display', '');
       jQuery("#tr_gallery").css('display', '');
       jQuery("#tr_tag").css('display', '');
       jQuery("#bwg_pro_version").html('Mosaic');
@@ -470,7 +470,7 @@ function bwg_gallery_type(gallery_type) {
       jQuery(".bwg-section.bwg-pro-views").show();
       break;
     }
-		case 'album_masonry_preview': {
+	case 'album_masonry_preview': {
       jQuery('#options_link').attr('href', jQuery('#options_link').attr('data-href') + '&active_tab=2&album_type=' + gallery_type);
       jQuery("#tr_album").css('display', '');
       jQuery("#bwg_pro_version").html('Masonry gallery group');
@@ -495,9 +495,9 @@ function bwg_gallery_type(gallery_type) {
       }
       break;
     }
-		case 'carousel': {
+	case 'carousel': {
       jQuery('#options_link').attr('href', jQuery('#options_link').attr('data-href') + '&active_tab=1&gallery_type=' + gallery_type);
-	    jQuery("#tr_gallery").css('display', '');
+	  jQuery("#tr_gallery").css('display', '');
       jQuery("#tr_tag").css('display', '');
       jQuery("#bwg_pro_version").html('Carousel');
       jQuery("#bwg_pro_version_link").attr("href", "https://demo.10web.io/photo-gallery/carousel/");
@@ -507,7 +507,7 @@ function bwg_gallery_type(gallery_type) {
         jQuery(".bwg-pro-views").hide();
       }
       break;
-		}
+	}
   }
 
   bwg_lightbox_hide_show_params();
@@ -571,13 +571,13 @@ function bwg_get_textarea_selection(id) {
   var textComponent = top.document.getElementById(id);
   var selectedText;
   if (textComponent.selectionStart !== undefined) {
-    // Standards Compliant Version
+    /* Standards Compliant Version */
     var startPos = textComponent.selectionStart;
     var endPos = textComponent.selectionEnd;
     selectedText = textComponent.value.substring(startPos, endPos);
   }
   else if (document.selection !== undefined) {
-    // IE Version
+    /* IE Version */
     textComponent.focus();
     var sel = document.selection.createRange();
     selectedText = sel.text;

@@ -85,7 +85,14 @@ class Sharing_Admin {
 			}
 		}
 
-		add_submenu_page( 'options-general.php', __( 'Sharing Settings', 'jetpack' ), __( 'Sharing', 'jetpack' ), 'publish_posts', 'sharing', array( &$this, 'management_page' ) );
+		add_submenu_page(
+			'options-general.php',
+			__( 'Sharing Settings', 'jetpack' ),
+			__( 'Sharing', 'jetpack' ),
+			'publish_posts',
+			'sharing',
+			array( &$this, 'wrapper_admin_page' )
+		);
 	}
 
 	public function ajax_save_services() {
@@ -173,6 +180,10 @@ class Sharing_Admin {
 <?php
 	}
 
+	public function wrapper_admin_page() {
+		Jetpack_Admin_Page::wrap_ui( array( &$this, 'management_page' ), array( 'is-wide' =>true ) );
+	}
+
 	public function management_page() {
 		$sharer	 = new Sharing_Service();
 		$enabled = $sharer->get_blog_services();
@@ -183,7 +194,7 @@ class Sharing_Admin {
 
 		if ( false == function_exists( 'mb_stripos' ) ) {
 			echo '<div id="message" class="updated fade"><h3>' . __( 'Warning! Multibyte support missing!', 'jetpack' ) . '</h3>';
-			echo '<p>' . sprintf( __( 'This plugin will work without it, but multibyte support is used <a href="%s" target="_blank">if available</a>. You may see minor problems with Tweets and other sharing services.', 'jetpack' ), 'http://www.php.net/manual/en/mbstring.installation.php' ) . '</p></div>';
+			echo '<p>' . sprintf( __( 'This plugin will work without it, but multibyte support is used <a href="%s" rel="noopener noreferrer" target="_blank">if available</a>. You may see minor problems with Tweets and other sharing services.', 'jetpack' ), 'http://www.php.net/manual/en/mbstring.installation.php' ) . '</p></div>';
 		}
 
 		if ( isset( $_GET['update'] ) && $_GET['update'] == 'saved' ) {

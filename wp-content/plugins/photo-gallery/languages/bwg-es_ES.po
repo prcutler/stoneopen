@@ -4098,7 +4098,7 @@ msgid "Theme successfully copied."
 msgstr "Tema copiado con éxito."
 
 #: framework/WDWLibrary.php:177
-msgid "Items successfully reset."
+msgid "Items were reset successfully."
 msgstr "Artículos restablecidos con éxito."
 
 #: framework/WDWLibrary.php:182

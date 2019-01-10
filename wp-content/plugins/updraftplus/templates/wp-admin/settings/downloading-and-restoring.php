@@ -40,7 +40,7 @@ if (!empty($options['include_header'])) echo '<h2>'.__('Existing Backups', 'updr
 	?>
 	<ul class="updraft-disk-space-actions">
 		<?php
-			echo $updraftplus_admin->web_server_disk_space($options['will_immediately_calculate_disk_space']);
+			echo UpdraftPlus_Filesystem_Functions::web_server_disk_space($options['will_immediately_calculate_disk_space']);
 		?>
 
 		<li class="updraft-server-scan">
@@ -48,12 +48,12 @@ if (!empty($options['include_header'])) echo '<h2>'.__('Existing Backups', 'updr
 			<?php
 				if (!empty($options['include_uploader'])) {
 				?>
-					<a class="updraft_uploader_toggle" href="#"><?php _e('Upload backup files', 'updraftplus'); ?></a> |
+					<a class="updraft_uploader_toggle" href="<?php echo UpdraftPlus::get_current_clean_url();?>"><?php _e('Upload backup files', 'updraftplus'); ?></a> |
 				<?php
 				}
 			?>
-			<a href="#" class="updraft_rescan_local" title="<?php echo __('Press here to look inside your UpdraftPlus directory (in your web hosting space) for any new backup sets that you have uploaded.', 'updraftplus').' '.__('The location of this directory is set in the expert settings, in the Settings tab.', 'updraftplus'); ?>"><?php _e('Rescan local folder for new backup sets', 'updraftplus');?></a>
-			| <a href="#" class="updraft_rescan_remote" title="<?php _e('Press here to look inside your remote storage methods for any existing backup sets (from any site, if they are stored in the same folder).', 'updraftplus'); ?>"><?php _e('Rescan remote storage', 'updraftplus');?></a>
+			<a href="<?php echo UpdraftPlus::get_current_clean_url();?>" class="updraft_rescan_local" title="<?php echo __('Press here to look inside your UpdraftPlus directory (in your web hosting space) for any new backup sets that you have uploaded.', 'updraftplus').' '.__('The location of this directory is set in the expert settings, in the Settings tab.', 'updraftplus'); ?>"><?php _e('Rescan local folder for new backup sets', 'updraftplus');?></a>
+			| <a href="<?php echo UpdraftPlus::get_current_clean_url();?>" class="updraft_rescan_remote" title="<?php _e('Press here to look inside your remote storage methods for any existing backup sets (from any site, if they are stored in the same folder).', 'updraftplus'); ?>"><?php _e('Rescan remote storage', 'updraftplus');?></a>
 		</li>
 		<?php if (!empty($options['include_opera_warning'])) { ?>
 			<li class="updraft-opera-warning"><strong><?php _e('Opera web browser', 'updraftplus');?>:</strong> <?php _e('If you are using this, then turn Turbo/Road mode off.', 'updraftplus');?></li>
@@ -91,7 +91,7 @@ if (!empty($options['include_header'])) echo '<h2>'.__('Existing Backups', 'updr
 
 	<div class="ud_downloadstatus"></div>
 	<div class="updraft_existing_backups">
-		<?php echo $updraftplus_admin->existing_backup_table($backup_history); ?>
+		<?php echo UpdraftPlus_Backup_History::existing_backup_table($backup_history); ?>
 	</div>
 
 </div>

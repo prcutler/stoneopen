@@ -1,5 +1,6 @@
 .ajax-msg,
-.unsaved-msg {
+.unsaved-msg,
+.sorting-msg {
   display: inline-block;
   width: 100%;
 }
@@ -218,7 +219,7 @@
 }
 
 #TB_window {
-  margin-left: -400px !important;
+  margin-left: -400px;
 }
 
 .input_th {
@@ -473,12 +474,6 @@
   text-align: right;
   vertical-align: middle;
   width: 30px;
-}
-
-.updated,
-.error,
-.notice {
-  margin: 5px 0 2px !important;
 }
 
 .buttons_div {
@@ -1421,11 +1416,13 @@ textarea.bwg_popup_input {
     height: calc(100% - 230px);
   }
 }
+
 .tab_image {
   width: 100%;
   height: 100%;
   position: relative;
   background-size: cover;
+  background-position: center;
 }
 .bwg_tabs .tab_link {
   display: block !important;
@@ -1571,7 +1568,7 @@ textarea.bwg_popup_input {
 }
 
 .col_num {
-  width: 25px;
+  width: 32px;
   text-align: right !important;
   vertical-align: top;
 }
@@ -1584,17 +1581,22 @@ textarea.bwg_popup_input {
 }
 
 .col_drag {
-  width: 30px !important;
+  width: 90px !important;
   text-align: center !important;
   cursor: pointer;
   vertical-align: top;
 }
-
+.col_order {
+  width: 110px !important;
+  text-align: center !important;
+  cursor: pointer;
+}
 .wd-order {
   vertical-align: top;
 }
 
 .wd-order {
+  max-width: 45px;
   width: 100%;
   margin: 0 !important;
   text-align: right;
@@ -1607,18 +1609,46 @@ textarea.bwg_popup_input {
   width: 100%;
   resize: vertical;
 }
-
-.images_table.media .column-title .media-icon img {
-  max-width: 120px;
-}
-
 .images_table.media .column-title .media-icon {
   max-height: 90px;
+  height: 90px;
   overflow: hidden;
+  position: relative;
+  border: 1px solid #e5e5e5;
+}
+.images_table.media .column-title .media-icon img {
+  max-width: 120px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  border-style: none;
+}
+
+.bwg-gallery-lists.media .column-title .media-icon {
+	max-height: 60px;
+	height: 60px;
+	width: 100px;
+}
+
+.bwg-gallery-lists.media .column-title .media-icon img {
+	 max-width: 100px;
 }
 
 .images_table .media-icon {
   width: 122px;
+}
+
+.gallery_image_thumb {
+  width: 120px;
+  height: 90px;
+}
+
+.media-icon .bwg_no_border {
+  border: none;
 }
 
 .wd-delete-tag {
@@ -1629,6 +1659,18 @@ textarea.bwg_popup_input {
   vertical-align: middle;
   width: 20px;
   float: right;
+}
+
+@media screen and (max-width: 1280px) {
+  #images_table .has-media-icon~.row-actions {
+    margin-left: 0px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  #images_table .has-media-icon~.row-actions {
+    margin-left: 132px;
+  }
 }
 
 @media screen and (max-width: 782px) {
@@ -1664,6 +1706,11 @@ textarea.bwg_popup_input {
   margin-bottom: 10px;
 }
 
+.search-box select {
+  margin: 0 10px;
+  float: left;
+}
+
 .bwg_albumsgalleries .tablenav .tablenav-pages a,
 .bwg_albumsgalleries .tablenav-pages-navspan,
 .bwg_tags .tablenav .tablenav-pages a,
@@ -1684,6 +1731,11 @@ textarea.bwg_popup_input {
     width: calc(100% - 0%);
     height: 40px;
     margin-bottom: 0px;
+  }
+
+  .search-box select {
+    margin: 5px 0;
+    width: 100%;
   }
 
   .bwg_albumsgalleries p.search-box input,
@@ -1717,7 +1769,7 @@ textarea.bwg_popup_input {
 	opacity: 0.6;
 	position: fixed;
 	background-color: #000000;
-	background-image: url(../images/spinner.gif);
+	background-image: url(../images/ajax_loader.png);
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: 50px;
@@ -2038,6 +2090,19 @@ li.tabs {
     display: flex;
   }
 }
+#bwg_options_form .gallery_type_radio,
+#bwg_options_form .album_type_radio {
+  display: none !important;
+}
+#bwg_options_form .gallery_type_label,
+#bwg_options_form .album_type_label {
+  text-align: center;
+}
+#bwg_options_form .gallery_type.gallery_type_active .gallery_type_div,
+#bwg_options_form .gallery_type.gallery_type_active .album_type_div {
+  background: #0073aa;
+  color: #ffffff;
+}
 /* Shortcode styles in options */
 
 .pro_btn {
@@ -2054,4 +2119,27 @@ li.tabs {
   position: relative;
   top: 0;
   width: 20px;
+}
+
+#select_msg {
+  display: block;
+}
+
+#croped_preview .spider_crop, #crop_image .spider_crop {
+  margin-top: 10px;
+}
+
+.col_redirect .dashicons-info {
+  cursor: pointer;
+  color:#32373c;
+}
+
+.ui-tooltip-content a {
+  color:#FFFFFF;
+}
+
+@media screen and (min-width: 768px) {
+  #images_table .column-primary {
+    width: 360px;
+  }
 }

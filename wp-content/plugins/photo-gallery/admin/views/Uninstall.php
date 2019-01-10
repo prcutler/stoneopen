@@ -6,7 +6,7 @@ class UninstallView_bwg extends AdminView_bwg {
    *
    * @param $params
    */
-  public function display($params) {
+  public function display($params = array()) {
     ob_start();
     echo $this->body($params);
     // Pass the content to form.
@@ -24,7 +24,7 @@ class UninstallView_bwg extends AdminView_bwg {
    *
    * @param $params
    */
-  public function body( $params ) {
+  public function body( $params = array() ) {
     $deactivate_url = add_query_arg(array(
                                       'action' => 'deactivate',
                                       'plugin' => BWG()->main_file,

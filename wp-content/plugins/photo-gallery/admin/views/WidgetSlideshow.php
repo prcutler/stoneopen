@@ -31,12 +31,11 @@ class WidgetSlideshowView_bwg {
 		}
 		// Widget output.
 		require_once(BWG()->plugin_dir . '/frontend/controllers/controller.php');
-    $controller_class = 'BWGControllerSite';
-    $view = 'Slideshow';
-    $controller = new $controller_class($view);
-
-		global $bwg;
-		$params = array (
+		$controller_class = 'BWGControllerSite';
+		$view = 'Slideshow';
+		$controller = new $controller_class($view);
+    $bwg = WDWLibrary::unique_number();
+    $params = array (
 		  'from' => 'widget',
 		  'gallery_type' => 'slideshow',
 		  'gallery_id' => $gallery_id,
@@ -52,7 +51,6 @@ class WidgetSlideshowView_bwg {
 		);
 		$pairs = WDWLibrary::get_shortcode_option_params( $params );
 		$controller->execute($pairs, 1, $bwg);
-		$bwg++;
 		// After widget.
 		echo $after_widget;
 	}
@@ -82,7 +80,7 @@ class WidgetSlideshowView_bwg {
 		?>
 		<p>
 		  <label for="<?php echo $id_title; ?>"><?php _e('Title:', BWG()->prefix); ?></label>
-		  <input class="widefat" id="<?php echo $id_title; ?>" name="<?php echo $name_title; ?>" type="text" value="<?php echo $instance['title']; ?>"/>
+		  <input class="widefat" id="<?php echo $id_title; ?>" name="<?php echo $name_title; ?>" type="text" value="<?php echo htmlspecialchars( $instance['title'] ); ?>"/>
 		</p>    
 		<p>
 			<label for="<?php echo $id_gallery_id; ?>"><?php _e('Galleries:', BWG()->prefix); ?></label><br>

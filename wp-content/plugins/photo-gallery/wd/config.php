@@ -3,7 +3,7 @@
         exit;
     }
 
-    class TenWebConfig {
+    class TenWebLibConfig {
         public static $instance; 
 
         public $prefix = null;          
@@ -77,10 +77,10 @@
             if(isset( $options["plugin_wd_demo_link"] )) {
                 $this->plugin_wd_demo_link =  $options["plugin_wd_demo_link"];
             }
-            if(isset( $options["plugin_wd_docs_link"] )) {
+            if(isset( $options["plugin_wd_demo_link"] )) {
                 $this->plugin_wd_demo_link =  $options["plugin_wd_demo_link"];
             }
-            if(isset( $options["plugin_wd_addons_link"] )) {
+            if(isset( $options["plugin_wd_docs_link"] )) {
                 $this->plugin_wd_docs_link =  $options["plugin_wd_docs_link"];
             }
             if(isset( $options["plugin_wizard_link"] )) {

@@ -21,7 +21,6 @@ class GalleriesController_bwg {
    * @var array $actions
    */
   private $actions = array();
-  private $image_actions = array();
 
   public function __construct() {
     // Allowed upload mime_types.
@@ -45,71 +44,15 @@ class GalleriesController_bwg {
       ),
     );
 
-    $this->image_actions = array(
-      'image_resize' => array(
-        'title' => __('Resize', BWG()->prefix),
-        'bulk_action' => __('resized', BWG()->prefix),
-      ),
-      'image_recreate_thumbnail' => array(
-        'title' => __('Recreate thumbnail', BWG()->prefix),
-        'bulk_action' => __('recreated', BWG()->prefix),
-      ),
-      'image_rotate_left' => array(
-        'title' => __('Rotate left', BWG()->prefix),
-        'bulk_action' => __('rotated left', BWG()->prefix),
-      ),
-      'image_rotate_right' => array(
-        'title' => __('Rotate right', BWG()->prefix),
-        'bulk_action' => __('rotated right', BWG()->prefix),
-      ),
-      'image_set_watermark' => array(
-        'title' => __('Set watermark', BWG()->prefix),
-        'bulk_action' => __('edited', BWG()->prefix),
-      ),
-      'image_reset' => array(
-        'title' => __('Reset', BWG()->prefix),
-        'bulk_action' => __('reset', BWG()->prefix),
-      ),
-      'image_edit' => array(
-        'title' => __('Edit info', BWG()->prefix),
-        'bulk_action' => __('edited', BWG()->prefix),
-      ),
-      'image_add_tag' => array(
-        'title' => __('Add tag', BWG()->prefix),
-        'bulk_action' => __('edited', BWG()->prefix),
-      ),
-      'image_publish' => array(
-        'title' => __('Publish', BWG()->prefix),
-        'bulk_action' => __('published', BWG()->prefix),
-      ),
-      'image_unpublish' => array(
-        'title' => __('Unpublish', BWG()->prefix),
-        'bulk_action' => __('unpublished', BWG()->prefix),
-      ),
-      'image_delete' => array(
-        'title' => __('Delete', BWG()->prefix),
-        'bulk_action' => __('deleted', BWG()->prefix),
-      ),
-    );
-    if ( function_exists('BWGEC') ) {
-      $this->image_actions['set_image_pricelist'] = array(
-        'title' => __('Add pricelist', BWG()->prefix),
-        'bulk_action' => __('edited', BWG()->prefix),
-      );
-      $this->image_actions['remove_pricelist_all'] = array(
-        'title' => __('Remove pricelist', BWG()->prefix),
-        'bulk_action' => __('edited', BWG()->prefix),
-      );
-    }
-
     $user = get_current_user_id();
     $screen = get_current_screen();
-    $option = $screen->get_option('per_page', 'option');
-    $this->items_per_page = get_user_meta($user, $option, TRUE);
-
-    if ( empty ($this->items_per_page) || $this->items_per_page < 1 ) {
-      $this->items_per_page = $screen->get_option('per_page', 'default');
-    }
+	if ( !empty($screen) ) {
+		$option = $screen->get_option('per_page', 'option');
+		$this->items_per_page = get_user_meta($user, $option, TRUE);
+		if ( empty ($this->items_per_page) || $this->items_per_page < 1 ) {
+			$this->items_per_page = $screen->get_option('per_page', 'default');
+		}
+	}
   }
 
   /**
@@ -118,8 +61,8 @@ class GalleriesController_bwg {
   public function execute() {
     $task = WDWLibrary::get('task');
     $id = (int) WDWLibrary::get('current_id', 0);
-    if ( method_exists($this, $task) ) {
-      if ( $task != 'edit' && $task != 'display' ) {
+    if ( $task != 'display' && method_exists($this, $task) ) {
+      if ( $task != 'edit' ) {
         check_admin_referer(BWG()->nonce, BWG()->nonce);
       }
       $action = WDWLibrary::get('bulk_action', -1);
@@ -149,15 +92,19 @@ class GalleriesController_bwg {
     $params['page_title'] = __('Galleries', BWG()->prefix);
     $params['actions'] = $this->actions;
     $params['order'] = WDWLibrary::get('order', 'asc');
-    $params['orderby'] = WDWLibrary::get('orderby', 'name');
+    $params['orderby'] = WDWLibrary::get('orderby', 'order');
     // To prevent SQL injections.
     $params['order'] = ($params['order'] == 'desc') ? 'desc' : 'asc';
     if ( !in_array($params['orderby'], array( 'name', 'author' )) ) {
-      $params['orderby'] = 'id';
+      $params['orderby'] = 'order';
     }
     $params['items_per_page'] = $this->items_per_page;
     $page = (int) WDWLibrary::get('paged', 1);
+    if ( $page < 0 ) {
+      $page = 1;
+    }
     $page_num = $page ? ($page - 1) * $params['items_per_page'] : 0;
+	  $params['paged'] = $page;
     $params['page_num'] = $page_num;
     $params['search'] = WDWLibrary::get('s', '');
 
@@ -172,6 +119,11 @@ class GalleriesController_bwg {
 
     $page_url = add_query_arg($url_arg, $page_url);
     $params['page_url'] = $page_url;
+	  $params['galleries_ordering_ajax_url'] = add_query_arg( array(
+									'action' => 'galleries_' . BWG()->prefix,
+									'task' => 'ordering',
+									BWG()->nonce => wp_create_nonce(BWG()->nonce),
+								), admin_url('admin-ajax.php') );
 
     // Delete images without gallery.
     $this->model->delete_unknown_images();
@@ -333,8 +285,8 @@ class GalleriesController_bwg {
                                            ), admin_url('admin.php'));
     $params['add_preview_image_action'] = add_query_arg(array(
                                                           'action' => 'addImages',
-                                                          'width' => '800',
-                                                          'height' => '550',
+                                                          'bwg_width' => '800',
+                                                          'bwg_height' => '550',
                                                           'extensions' => 'jpg,jpeg,png,gif',
                                                           'callback' => 'bwg_add_preview_image',
                                                           BWG()->nonce => wp_create_nonce('addImages'),
@@ -342,8 +294,8 @@ class GalleriesController_bwg {
                                                         ), admin_url('admin-ajax.php'));
     $params['add_images_action'] = add_query_arg(array(
                                                    'action' => 'addImages',
-                                                   'width' => '800',
-                                                   'height' => '550',
+                                                   'bwg_width' => '1150',
+                                                   'bwg_height' => '800',
                                                    'extensions' => 'jpg,jpeg,png,gif',
                                                    'callback' => 'bwg_add_image',
                                                    BWG()->nonce => wp_create_nonce('addImages'),
@@ -351,8 +303,8 @@ class GalleriesController_bwg {
                                                  ), admin_url('admin-ajax.php'));
     $params['add_tags_action'] = add_query_arg(array(
                                                  'action' => 'addTags_' . BWG()->prefix,
-                                                 'width' => '785',
-                                                 'height' => '550',
+                                                 'bwg_width' => '785',
+                                                 'bwg_height' => '550',
                                                  BWG()->nonce => wp_create_nonce('addTags_' . BWG()->prefix),
                                                ), admin_url('admin-ajax.php'));
     $params['preview_action'] = WDWLibrary::get_custom_post_permalink(array(
@@ -365,30 +317,38 @@ class GalleriesController_bwg {
     $params['gallery_type'] = ($params['row']->gallery_type == 'instagram' || $params['row']->gallery_type == 'instagram_post') ? 'instagram' : (($params['row']->gallery_type == 'facebook_post' || $params['row']->gallery_type == 'facebook') ? 'facebook' : '');
 
     // Image display params.
-    $params['actions'] = $this->image_actions;
+    $params['actions'] = WDWLibrary::image_actions();
     $params['page_url'] = $params['form_action'];
-    $params['order'] = 'asc';
-    $params['orderby'] = 'order';
+    $order_by = WDWLibrary::get('order_by', 'order_asc');
+    if ( !array_key_exists($order_by, WDWLibrary::admin_images_ordering_choices())) {
+      $order_by = 'order_asc';
+    }
+    $order_by = explode('_', $order_by);
+    $params['order'] = $order_by[1];
+    $params['orderby'] = $order_by[0];
     $params['items_per_page'] = $this->items_per_page;
     $page = (int) WDWLibrary::get('paged', 1);
+    if ( $page < 0 ) {
+      $page = 1;
+    }
     $page_num = $page ? ($page - 1) * $params['items_per_page'] : 0;
     $params['page_num'] = $page_num;
     $params['search'] = WDWLibrary::get('s', '');
     $params['message'] = $message;
-
     $params['total'] = $this->model->image_total($id, $params);
     $params['rows'] = $this->model->get_image_rows_data($id, $params);
     $params['pager'] = 0;
     $params['facebook_embed'] = $this->get_facebook_embed();
-	  $this->view->edit( $params );
+	$this->view->edit( $params );
   }
 
   /**
    * Save.
    *
    * @param $id
+   * @param boolean $all
    */
-  public function save( $id, $all = FALSE ) {
+  public function save( $id = 0, $all = FALSE ) {
     // Save gallery and images.
     $data = $this->model->save();
     $message = array('gallery_message' => $data['saved'], 'image_message' => '');
@@ -407,59 +367,13 @@ class GalleriesController_bwg {
   /**
    * Bulk actions for images.
    *
-   * @param $image_action
+   * @param string $image_action
    */
   public function image_bulk_action($image_action) {
     // Save gallery and images.
-    $data = $this->model->save();
-
-    $message = array();
-    $successfully_updated = 0;
-
-    $check = WDWLibrary::get('check', '');
-    $all = WDWLibrary::get('check_all_items', FALSE);
-
-    if ( method_exists($this->model, $image_action) ) {
-      if ( $all ) {
-        $message['image_message'] = $this->model->$image_action(0, $data['id'], TRUE);
-      }
-      else {
-        if ( $check ) {
-          foreach ( $check as $image_id ) {
-            if ( strpos($image_id, 'pr_') === FALSE ) {
-              $message['image_message'] = $this->model->$image_action($image_id, $data['id']);
-              if ( $message['image_message'] == 6 ) {
-                // Action set watermark with none watermark type.
-                break;
-              }
-              elseif ( $message['image_message'] != 2 ) {
-                // Increase successfully updated items count, if action doesn't failed.
-                $successfully_updated++;
-              }
-            }
-          }
-        }
-        if ( $successfully_updated ) {
-          $message['image_message'] = sprintf(_n('%s item successfully %s.', '%s items successfully %s.', $successfully_updated, BWG()->prefix), $successfully_updated, $this->image_actions[$image_action]['bulk_action']);
-        }
-      }
-    }
-
+    $data = $this->model->save($image_action);
+    $message = array('image_message' => $data['image_message']);
     $this->edit($data['id'], $message);
-  }
-
-  // ToDo: remove
-  public function save_old() {
-
-    $msg = __("Item Succesfully Saved.", BWG()->prefix);
-    if ( function_exists('BWGEC') ) {
-      $not_set_items = $this->check_pricelist();
-      if ( empty($not_set_items) === FALSE ) {
-        $msg .= __(" Selected pricelist item longest dimension greater than some original images dimensions.", BWG()->prefix);
-      }
-    }
-    echo WDWLibrary::message($msg, 'wd_updated');
-    $this->display();
   }
 
   public function check_pricelist() {
@@ -470,7 +384,8 @@ class GalleriesController_bwg {
       $rows = $wpdb->get_results('SELECT T_IMAGES.thumb_url, T_PRICELISTS.item_longest_dimension, T_IMAGES.id FROM ' . $wpdb->prefix . 'bwg_image AS T_IMAGES LEFT JOIN ( SELECT  MAX(item_longest_dimension) AS item_longest_dimension, pricelist_id FROM ' . $wpdb->prefix . 'wdpg_ecommerce_pricelist_items AS T_PRICELIST_ITEMS LEFT JOIN ' . $wpdb->prefix . 'wdpg_ecommerce_pricelists AS T_PRICELISTS ON T_PRICELIST_ITEMS.pricelist_id = T_PRICELISTS.id  WHERE  T_PRICELISTS.sections LIKE "%downloads%" GROUP BY pricelist_id) AS T_PRICELISTS ON T_IMAGES.pricelist_id = T_PRICELISTS.pricelist_id WHERE T_IMAGES.gallery_id="' . $gallery_id . '"');
       foreach ( $rows as $row ) {
         if ( $row->item_longest_dimension ) {
-          $file_path = str_replace("thumb", ".original", htmlspecialchars_decode(ABSPATH . BWG()->upload_dir . $row->thumb_url, ENT_COMPAT | ENT_QUOTES));
+          $file_path = str_replace("thumb", ".original", htmlspecialchars_decode(BWG()->upload_dir . $row->thumb_url, ENT_COMPAT | ENT_QUOTES));
+          WDWLibrary::repair_image_original($file_path);
           list($img_width) = @getimagesize(htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES));
           if ( $row->item_longest_dimension > $img_width ) {
             $not_set_items[] = $row->id;
@@ -490,5 +405,13 @@ class GalleriesController_bwg {
       $data = apply_filters('init_display_facebook_gallery_embed_bwg', array(),  array() );
       return $data;
     }
+  }
+
+  public function ordering( $id = 0 ) {
+    $jsonData = array();
+    $message_id = $this->model->ordering( WDWLibrary::get('orders', array()) );
+    $jsonData['message'] = WDWLibrary::message_id($message_id);
+    echo json_encode($jsonData);
+    exit;
   }
 }

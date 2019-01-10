@@ -1,8 +1,28 @@
 /**
  * 10Web plugins Gutenberg integration
- * version 2.0.0
+ * version 2.0.2
  */
 ( function ( blocks, element ) {
+  if ( !window['tw_gb'] ) {
+    window['tw_gb'] = {};
+  }
+  if ( !window['tw_gb'][tw_obj_translate.key] ) {
+    window['tw_gb'][tw_obj_translate.key] = {
+      title: tw_obj_translate.plugin_name,
+      titleSelect: tw_obj_translate.select,
+      iconUrl: tw_obj_translate.icon_url,
+      iconSvg: {
+      width: '20',
+        height: '20',
+        src: tw_obj_translate.icon_svg
+      },
+      isPopup: true,
+        data: {
+        shortcodeUrl: tw_obj_translate.url
+      }
+    }
+  }
+
   registerAllPluginBlocks();
 
   function registerAllPluginBlocks() {
@@ -82,7 +102,7 @@
 
         function showPopup( shortcode, shortcode_id ) {
           var shortcodeCbName = generateUniqueCbName( pluginId );
-          // Store shortcode attribute into a global variable to get it from an iframe.
+          /* Store shortcode attribute into a global variable to get it from an iframe. */
           window[shortcodeCbName + '_shortcode'] = shortcode ? shortcode : '';
           window[shortcodeCbName] = function ( shortcode, shortcode_id ) {
             delete window[shortcodeCbName];
@@ -92,6 +112,15 @@
             }
           };
           props.setAttributes( { popupOpened: true } );
+          if (!shortcode_id && undefined != shortcode) {
+            var shortcode_extract = shortcode.split(' ');
+            for (i = 0; i < shortcode_extract.length; i++) {
+              var attributes = shortcode_extract[i].split('=');
+              if ('id'== attributes[0]) {
+                shortcode_id = attributes[1].replace(/"/g, "");
+              }
+            }
+          }
           var elem = el( 'form', { className: 'tw-container' }, el( 'div', { className: 'tw-container-wrap' + (pluginData.containerClass ? ' ' + pluginData.containerClass : '') }, el( 'span', {
             className: "media-modal-close",
             onClick: close
@@ -105,7 +134,7 @@
           var shortcodeList = JSON.parse( pluginData.data );
           shortcodeList.inputs.forEach( function ( inputItem ) {
             if ( inputItem.type === 'select' ) {
-              children.push( el( 'option', { value: '', dataId: 0 }, tw_obj.empty_item ) );
+              children.push( el( 'option', { value: '', dataId: 0 }, tw_obj_translate.empty_item ) );
               if ( inputItem.options.length ) {
                 inputItem.options.forEach( function ( optionItem ) {
                   var shortcode = '[' + shortcodeList.shortcode_prefix + ' ' + inputItem.shortcode_attibute_name + '="' + optionItem.id + '"]';
@@ -142,7 +171,7 @@
             onClick: function () {
               props.setAttributes( { popupOpened: true } );
             }.bind( this )
-          }, tw_obj.nothing_selected );
+          }, tw_obj_translate.nothing_selected );
         }
 
         function showShortcode() {

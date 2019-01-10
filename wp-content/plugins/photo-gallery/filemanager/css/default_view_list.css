@@ -94,13 +94,13 @@
 
 .item_icon {
   display: table-cell;
-  width: 40px;
+  width: 60px;
   padding: 0 2px;
   vertical-align: middle;
 }
 
 .item_icon img {
-  max-width: 32px;
+  max-width: 60px;
   max-height: 32px;
 }
 

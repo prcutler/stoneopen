@@ -4273,7 +4273,7 @@ msgstr "Element uspešno shranjen."
 #: framework/WDWLibrary.php:177
 #, fuzzy
 #| msgid "Items Succesfully Deleted."
-msgid "Items successfully reset."
+msgid "Items were reset successfully."
 msgstr "Element uspešno izbrisan."
 
 #: framework/WDWLibrary.php:182

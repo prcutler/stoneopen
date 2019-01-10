@@ -9,13 +9,13 @@
  * @link http://jscolor.com
  */
 var jscolor = {
-    // location of jscolor directory (leave empty to autodetect)
+  /* location of jscolor directory (leave empty to autodetect). */
   dir : '',
-  //class name
+  /* class name. */
   bindClass : 'color',
-  //automatic binding via <input class="...">
+  /* automatic binding via <input class="...">. */
   binding : true,
-  //use image preloading?
+  /* use image preloading?. */
   preloading : true,
 
   install : function() {
@@ -136,7 +136,7 @@ var jscolor = {
       var ev = document.createEventObject();
       el.fireEvent('on' + evnt, ev);
     } else if (el['on' + evnt]) {
-      // model (IE5)
+      /* model (IE5). */
       el['on' + evnt]();
     }
   },
@@ -285,7 +285,6 @@ var jscolor = {
               t.path = removeDotSegments(r.path);
             } else {
               if (base.authority !== null && base.path === '') {
-                // === ?
                 t.path = '/' + r.path;
               } else {
                 t.path = base.path.replace(/[^\/]+$/, '') + r.path;
@@ -357,10 +356,10 @@ var jscolor = {
     this.pickerFaceColor = 'ThreeDFace';
     this.pickerBorder = 1;
     this.pickerBorderColor = 'ThreeDHighlight ThreeDShadow ThreeDShadow ThreeDHighlight';
-    // color
+    /* color */
     this.pickerInset = 1;
     this.pickerInsetColor = 'ThreeDShadow ThreeDHighlight ThreeDHighlight ThreeDShadow';
-    // color
+    /* color */
     this.pickerZIndex = 10000;
 
     for (var p in prop) {
@@ -440,7 +439,7 @@ var jscolor = {
           this.exportColor(leaveValue | leaveStyle);
 
         } else if (this.fromString(valueElement.value)) {
-          // OK
+          /* OK */
         } else {
           this.exportColor();
         }
@@ -597,10 +596,9 @@ var jscolor = {
         jscolor.picker.box.appendChild(jscolor.picker.btn);
         jscolor.picker.boxB.appendChild(jscolor.picker.box);
       }
-
       var p = jscolor.picker;
 
-      // controls interaction
+      /* controls interaction */
       p.box.onmouseup = p.box.onmouseout = function() {
         target.focus();
       };
@@ -639,12 +637,12 @@ var jscolor = {
         setSld(e);
       };
 
-      // picker
+      /* picker */
       var dims = getPickerDims(THIS);
       p.box.style.width = dims[0] + 'px';
       p.box.style.height = dims[1] + 'px';
 
-      // picker border
+      /* picker border */
       p.boxB.style.position = 'absolute';
       p.boxB.style.clear = 'both';
       p.boxB.style.left = x + 'px';
@@ -654,18 +652,18 @@ var jscolor = {
       p.boxB.style.borderColor = THIS.pickerBorderColor;
       p.boxB.style.background = THIS.pickerFaceColor;
 
-      // pad image
+      /* pad image */
       p.pad.style.width = jscolor.images.pad[0] + 'px';
       p.pad.style.height = jscolor.images.pad[1] + 'px';
 
-      // pad border
+      /* pad border */
       p.padB.style.position = 'absolute';
       p.padB.style.left = THIS.pickerFace + 'px';
       p.padB.style.top = THIS.pickerFace + 'px';
       p.padB.style.border = THIS.pickerInset + 'px solid';
       p.padB.style.borderColor = THIS.pickerInsetColor;
 
-      // pad mouse area
+      /* pad mouse area */
       p.padM.style.position = 'absolute';
       p.padM.style.left = '0';
       p.padM.style.top = '0';
@@ -674,12 +672,12 @@ var jscolor = {
       p.padM.style.height = p.box.style.height;
       p.padM.style.cursor = 'crosshair';
 
-      // slider image
+      /* slider image */
       p.sld.style.overflow = 'hidden';
       p.sld.style.width = jscolor.images.sld[0] + 'px';
       p.sld.style.height = jscolor.images.sld[1] + 'px';
 
-      // slider border
+      /* slider border */
       p.sldB.style.display = THIS.slider ? 'block' : 'none';
       p.sldB.style.position = 'absolute';
       p.sldB.style.right = THIS.pickerFace + 'px';
@@ -687,7 +685,7 @@ var jscolor = {
       p.sldB.style.border = THIS.pickerInset + 'px solid';
       p.sldB.style.borderColor = THIS.pickerInsetColor;
 
-      // slider mouse area
+      /* slider mouse area */
       p.sldM.style.display = THIS.slider ? 'block' : 'none';
       p.sldM.style.position = 'absolute';
       p.sldM.style.right = '0';
@@ -701,7 +699,7 @@ var jscolor = {
         p.sldM.style.cursor = 'hand';
       }
 
-      // "close" button
+      /* "close" button */
       function setBtnBorder() {
         var insetColors = THIS.pickerInsetColor.split(/\s+/);
         var pickerOutsetColor = insetColors.length < 2 ? insetColors[0]
@@ -730,7 +728,7 @@ var jscolor = {
       };
       p.btnS.style.lineHeight = p.btn.style.height;
 
-      // load images in optimal order
+      /* load images in optimal order */
       switch (modeID) {
       case 0:
         var padImg = 'hs.png';
@@ -748,7 +746,7 @@ var jscolor = {
       p.pad.style.backgroundRepeat = "no-repeat";
       p.pad.style.backgroundPosition = "0 0";
 
-      // place pointers
+      /* place pointers */
       redrawPad();
       redrawSld();
 
@@ -772,7 +770,7 @@ var jscolor = {
     }
 
     function redrawPad() {
-      // redraw the pad pointer
+      /* redraw the pad pointer */
       switch (modeID) {
       case 0:
         var yComponent = 1;
@@ -791,7 +789,7 @@ var jscolor = {
  + (THIS.pickerFace + THIS.pickerInset + y - Math
               .floor(jscolor.images.cross[1] / 2)) + 'px';
 
-      // redraw the slider image
+      /* redraw the slider image */
       var seg = jscolor.picker.sld.childNodes;
 
       switch (modeID) {
@@ -848,7 +846,7 @@ var jscolor = {
     }
 
     function redrawSld() {
-      // redraw the slider pointer
+      /* redraw the slider pointer */
       switch (modeID) {
       case 0:
         var yComponent = 2;
@@ -921,10 +919,10 @@ var jscolor = {
     var valueElement = jscolor.fetchElement(this.valueElement), styleElement = jscolor
         .fetchElement(this.styleElement);
     var holdPad = false, holdSld = false;
-    //var leaveValue = 1 << 0, leaveStyle = 1 << 1, leavePad = 1 << 2, leaveSld = 1 << 3;
+    /* var leaveValue = 1 << 0, leaveStyle = 1 << 1, leavePad = 1 << 2, leaveSld = 1 << 3; */
     var leaveValue = 1, leaveStyle = 2, leavePad = 4, leaveSld = 8;
 
-    // target
+    /* target */
     jscolor.addEvent(target, 'focus', function() {
       if (THIS.pickerOnfocus) {
         THIS.showPicker();
@@ -941,7 +939,7 @@ var jscolor = {
       }
     });
 
-    // valueElement
+    /* valueElement */
     if (valueElement) {
       var updateField = function() {
         THIS.fromString(valueElement.value, leaveValue);
@@ -952,7 +950,7 @@ var jscolor = {
       valueElement.setAttribute('autocomplete', 'off');
     }
 
-    // styleElement
+    /* styleElement */
     if (styleElement) {
       styleElement.jscStyle = {
         backgroundColor : styleElement.style.backgroundColor,
@@ -960,7 +958,7 @@ var jscolor = {
       };
     }
 
-    // require images
+    /* require images */
     switch (modeID) {
     case 0:
       jscolor.requireImage('hs.png');

@@ -1,210 +1,271 @@
 <?php
 /**
- * Author: Rob
- * Date: 6/24/13
- * Time: 11:31 AM
+ * Class FilemanagerModel
  */
-
-$p_dir;
-$s_order;
-
 class FilemanagerModel {
-  private $controller;
-  private $element_load_count = 100;
 
-  public function __construct($controller) {
-    $this->controller = $controller;
-  }
+	private $controller;
 
-  public function get_file_manager_data() {
-    $session_data = array();
-    $session_data['sort_by'] = $this->get_from_session('sort_by', 'date_modified');
-    $session_data['sort_order'] = $this->get_from_session('sort_order', 'desc');
-    $session_data['items_view'] = $this->get_from_session('items_view', 'thumbs');
-    $session_data['clipboard_task'] = $this->get_from_session('clipboard_task', '');
-    $session_data['clipboard_files'] = $this->get_from_session('clipboard_files', '');
-    $session_data['clipboard_src'] = $this->get_from_session('clipboard_src', '');
-    $session_data['clipboard_dest'] = $this->get_from_session('clipboard_dest', '');
+	public function __construct($controller) {
+		$this->controller = $controller;
+	}
 
-    $data = array();
-    $data['session_data'] = $session_data;
-    $data['path_components'] = $this->get_path_components();
-    $data['dir'] = $this->controller->get_uploads_dir() . (isset($_REQUEST['dir']) ? esc_html($_REQUEST['dir']) : '');
-    $data['dir'] = str_replace('../', '', $data['dir']);
-    $get_files_data =  $this->get_files($session_data['sort_by'], $session_data['sort_order']);
-    $data['files'] = $get_files_data['files'];
-    $data['files_count'] = $get_files_data['files_count'];
-    $data['all_files'] = $get_files_data['all_files'];
-    $data['element_load_count'] = $this->element_load_count;
-    $data['extensions'] = (isset($_REQUEST['extensions']) ? esc_html($_REQUEST['extensions']) : '');
-    $data['callback'] = (isset($_REQUEST['callback']) ? esc_html($_REQUEST['callback']) : '');
-    return $data;
-  }
+	public function get_path_components( $dir = '' ) {
+		$dir_names = explode('/', $dir);
+		$path = '';
 
-  private function get_from_session($key, $default) {
-    if (isset($_REQUEST[$key])) {
-      $_REQUEST[$key] = stripslashes($_REQUEST[$key]);
-    }
-    else {
-      $_REQUEST[$key] = stripslashes($default);
-    }
-    return esc_html(stripslashes($_REQUEST[$key]));
-  }
+		$components = array();
+		$component = array();
 
-  public function get_path_components() {
-    $dir_names = explode('/', (isset($_REQUEST['dir']) ? str_replace('../', '', esc_html($_REQUEST['dir'])) : ''));
-    $path = '';
+		$component['name'] = BWG()->upload_dir;
+		$component['path'] = $path;
+		$components[] = $component;
+		for ($i = 0; $i < count($dir_names); $i++) {
+			$dir_name = $dir_names[$i];
+			if ($dir_name == '') {
+				continue;
+			}
+			$path .= (($path == '') ? $dir_name : '/' . $dir_name);
+			$component = array();
+			$component['name'] = $dir_name;
+			$component['path'] = $path;
+			$components[] = $component;
+		}
+		return $components;
+	}
 
-    $components = array();
-    $component = array();
-    
-    $component['name'] = BWG()->upload_dir;
-    $component['path'] = $path;
-    $components[] = $component;
-    for ($i = 0; $i < count($dir_names); $i++) {
-      $dir_name = $dir_names[$i];
-      if ($dir_name == '') {
-          continue;
-      }
-      $path .= (($path == '') ? $dir_name : '/' . $dir_name);
-      $component = array();
-      $component['name'] = $dir_name;
-      $component['path'] = $path;
-      $components[] = $component;
-    }
-    return $components;
-  }
+  /**
+   * Get file lists.
+   *
+   * @param array $params
+   * @return array
+   */
+	public function get_file_lists( $params = array() ) {
+		global $wpdb;
+		$results = array();
+		$results['num_rows'] = 0;
+		$results['files'] = array();
+		$dir = $params['dir'];
+		$orderby = $params['orderby'];
+		$order = $params['order'];
+		$search = $params['search'];
+		$page_num = $params['page_num'];
+		$page_per = $params['page_per'];
 
-  function get_files($sort_by, $sort_order) {
-    $icons_dir_path = BWG()->plugin_dir . '/filemanager/images/file_icons';
-    $icons_dir_url = BWG()->plugin_url . '/filemanager/images/file_icons';
-    $valid_types = explode(',', isset($_REQUEST['extensions']) ? strtolower(esc_html($_REQUEST['extensions'])) : '*');
-    $dir = (isset($_REQUEST['dir']) ? '/' . htmlspecialchars_decode(stripslashes(esc_html(str_replace('../', '', $_REQUEST['dir']))), ENT_COMPAT | ENT_QUOTES) : '');
-    $parent_dir = $this->controller->get_uploads_dir() . $dir;
-    $parent_dir = str_replace('../', '', $parent_dir);
-    $parent_dir_url = $this->controller->get_uploads_url() . $dir;
+		$query  = ' SELECT * FROM `' . $wpdb->prefix . 'bwg_file_paths`';
+		$query .= ' WHERE `path` = "' . $dir . '"';
+		if ( $search ) {
+			$query .= ' AND ((filename LIKE "%' . $search . '%") OR (alt LIKE "%' . $search . '%")) ';
+		}
+		if ( $orderby == 'size') {
+			$orderby = 'CAST('. $orderby .' AS unsigned)';
+		}
+		$query .= ' ORDER BY `is_dir` DESC, '. $orderby . ' ' . $order;
+		// Get total num rows.
+		$results['page_per'] = $page_per;
+		$results['num_rows'] = $wpdb->get_var( str_replace('SELECT *', 'SELECT COUNT(*)', $query) );
+		$query .= ' LIMIT ' . ($page_num * $page_per) . ',' . $page_per;
+		$items = $wpdb->get_results($query, 'ARRAY_A');
+		if ( empty($items) && empty($search) ) {
+			$params['dir'] = BWG()->upload_dir . $dir;
+			$params['path'] = $dir;
+			$this->files_parsing_db( $params );
+			$items = $wpdb->get_results($query, 'ARRAY_A');
+			$results['num_rows'] = $wpdb->get_var( str_replace('SELECT *', 'SELECT COUNT(*)', $query) );
+		}
+		if ( !empty($items) ) {
+		  foreach( $items as $item ) {
+			$thumb = BWG()->plugin_url . $item['thumb'];
+			if ( $item['is_dir'] == 0 ) {
+			  $thumb = $this->controller->get_uploads_url() .''. $item['path'] .''. $item['thumb'];
+			}
+			$item['thumb'] = $thumb;
+			$results['files'][] = $item;
+		  }
+		}
+		return $results;
+	}
 
-    $file_names = $this->get_sorted_file_names($parent_dir, $sort_by, $sort_order);
+  /**
+   * Is img.
+   * @param $file_type
+   *
+   * @return bool
+   */
+	private function is_img($file_type) {
+		switch ($file_type) {
+			case 'jpg':
+			case 'jpeg':
+			case 'png':
+			case 'bmp':
+			case 'gif':
+				return true;
+			break;
+		}
+		return false;
+	}
 
-    $dirs = array();
-    $files = array();
-    foreach ($file_names as $file_name) {
-      if (($file_name == '.') || ($file_name == '..') || ($file_name == 'thumb') || ($file_name == '.original')) {
-        continue;
-      }
-      if (is_dir($parent_dir . '/' . $file_name) == TRUE) {
-        $file = array();
-        $file['is_dir'] = TRUE;
-        $file['name'] = $file_name;
-        $file['alt'] = str_replace("_", " ", $file_name);
-        $file['filename'] = str_replace("_", " ", $file_name);
-        $file['type'] = '';
-        $file['thumb'] = $icons_dir_url . '/dir.png';
-        $file['icon'] = $icons_dir_url . '/dir.png';
-        $file['size'] = '';
-        $file['date_modified'] = '';
-        $file['resolution'] = '';
-        $dirs[] = $file;
-      }
-      else {
-        $file = array();
-        $file['is_dir'] = FALSE;
-        $file['name'] = $file_name;
-        $filename = substr($file_name, 0, strrpos($file_name, '.'));
-        $file['alt'] = str_replace("_", " ", $filename);
-        $file['filename'] = str_replace("_", " ", $filename);
-        $file_extension = explode('.', $file_name);
-        $file['type'] = strtolower(end($file_extension));
-        $icon = $icons_dir_url . '/' . $file['type'] . '.png';
-        if (file_exists($icons_dir_path . '/' . $file['type'] . '.png') == FALSE) {
-          $icon = $icons_dir_url . '/' . '_blank.png';
-        }
-        $file['thumb'] = $this->is_img($file['type']) ? $parent_dir_url . '/thumb/' . $file_name : $icon;
-        $file['icon'] = $icon;
-        if (($valid_types[0] != '*') && (in_array($file['type'], $valid_types) == FALSE)) {
-          continue;
-        }
-        $file_size_kb = (int)(filesize($parent_dir . '/' . $file_name) / 1024);
-        // $file_size_mb = (int)($file_size_kb / 1024);
-        // $file['size'] = $file_size_kb < 1024 ? (string)$file_size_kb . 'KB' : (string)$file_size_mb . 'MB';
-        $file['size'] = $file_size_kb . ' KB';
-        $file['date_modified'] = date('d F Y, H:i', filemtime($parent_dir . '/' . $file_name));
-        $image_info = getimagesize(htmlspecialchars_decode($parent_dir . '/' . $file_name, ENT_COMPAT | ENT_QUOTES));
-        $file['resolution'] = $this->is_img($file['type']) ? $image_info[0]  . ' x ' . $image_info[1] . ' px' : '';
-        $exif = WDWLibrary::read_image_metadata( $parent_dir . '/.original/' . $file_name );
-        $file['credit'] = $exif['credit'];
-        $file['aperture'] = $exif['aperture'];
-        $file['camera'] = $exif['camera'];
-        $file['caption'] = $exif['caption'];
-        $file['iso'] = $exif['iso'];
-        $file['orientation'] = $exif['orientation'];
-        $file['copyright'] = $exif['copyright'];
-        $files[] = $file;
-      }
-    }
+  /**
+   * Get dir contents.
+   *
+   * @param        $dir
+   * @param string $filter
+   * @param array  $results
+   *
+   * @return array
+   */
+	function get_dir_contents( $dir, $filter = '', &$results = array() ) {
+		$files = scandir($dir);
+		if ( !empty($files) ) {
+			foreach ( $files as $key => $value ) {
+				if ( in_array($value, array('.','..','thumb','.original') ) ) continue;
+				$path = realpath($dir.DIRECTORY_SEPARATOR.$value);
+				if ( !is_dir($path) ) {
+					if ( empty($filter) || preg_match($filter, $path) ) {
+						$results[] = $path;
+					}
+				} else {
+					$results[] = $path;
+					// is recursive
+					// $this->get_dir_contents($path, $filter, $results);
+				}
+			}
+		}
+		return $results;
+	}
 
-    // $result = $sort_order == 'asc' ? array_merge($dirs, $files) : array_merge($files, $dirs);
-    $result = array_merge($dirs, $files);
-    $files_count = count($result);
-    $all_files = $result;
-    $result = array_slice($result, 0, $this->element_load_count, true);
-    return array("files" => $result, "all_files"=>$all_files, "files_count" => $files_count);
-  }
+  /**
+   * Get all files.
+   *
+   * @param array $params
+   *
+   * @return array
+   */
+	function get_all_files( $params = array() ) {
+		global $wpdb;
+		$dir = $params['dir'];
+		$search = $params['search'];
+		$orderby = $params['orderby'];
+		$order = $params['order'];
 
-  private function get_sorted_file_names($parent_dir, $sort_by, $sort_order) {
-    $file_names = scandir($parent_dir);
+		$query  = ' SELECT * FROM `' . $wpdb->prefix . 'bwg_file_paths`';
+		$query .= ' WHERE `path` = "' . $dir . '"';
+		if ( $search ) {
+			$query .= ' AND ((filename LIKE "%' . $search . '%") OR (alt LIKE "%' . $search . '%")) ';
+		}
+		$query .= ' ORDER BY `is_dir` DESC, `' . $orderby . '` ' . $order;
+		$items = $wpdb->get_results($query, 'ARRAY_A');
+		$results = array();
+		if ( !empty($items) ) {
+		  foreach( $items as $item ) {
+			$thumb = BWG()->plugin_url . $item['thumb'];
+			if ( $item['is_dir'] == 0 ) {
+			  $thumb = $this->controller->get_uploads_url() .''. $item['path'] .''. $item['thumb'];
+			}
+			$item['thumb'] = $thumb;
+			$results[] = $item;
+		  }
+		}
+		return $results;
+	}
 
-    global $p_dir;
-    global $s_order;
+  /**
+   * Files parsing db.
+   *
+   * @param array $params
+   */
+	function files_parsing_db( $params = array() ) {
+		global $wpdb;
+		$dir = $params['dir'];
+		$path = $params['path'];
+		$valid_types = $params['valid_types'];
+		$truncate = !empty($params['truncate']) ? true : false;
 
-    $p_dir = $parent_dir;
-    $s_order = $sort_order;
+		$dir = str_replace('/', DIRECTORY_SEPARATOR , $dir);
+		$data = array();
+		$dirs = array();
+		$files = array();
+		$items = $this->get_dir_contents($dir);
+		if ( !empty($items) ) {
+			foreach ( $items as $item ) {
+				$value = str_replace($dir, '', $item);
+				$value = explode(DIRECTORY_SEPARATOR, $value);
+				$name = end($value);
+				/*
+				$paths = $value;
+				array_pop($paths);
+				$implode_path = implode($paths,'/');
+				$path = !empty($implode_path) ? '/'. $implode_path . '/' : '/';
+				*/
+				if ( is_dir($item) == TRUE ) {
+					$file = array();
+					$file['is_dir'] = 1;
+					$file['path'] = $path;
+					$file['name'] = $name;
+					$file['filename'] = str_replace("_", " ", $name);
+					$file['alt'] = str_replace("_", " ", $name);
+					$file['thumb'] = '/filemanager/images/dir.png';
+					$dirs[] = $file;
+				}
+				else {
+					$file = array();
+					$file['is_dir'] = 0;
+					$file['path'] = $path;
+					$file['name'] = $name;
+					$filename = substr($name, 0, strrpos($name, '.'));
+					$file['filename'] = str_replace("_", " ", $filename);
+					$file_extension = explode('.', $name);
+					$file['type'] = strtolower(end($file_extension));
+					$file['thumb'] = 'thumb/' . $name;
+					if (($valid_types[0] != '*') && (in_array($file['type'], $valid_types) == FALSE)) {
+					  continue;
+					}
+					$file_size_kb = (int)(filesize($item) / 1024);
+					$file['size'] = $file_size_kb . ' KB';
+					$image_info = getimagesize(htmlspecialchars_decode($item, ENT_COMPAT | ENT_QUOTES));
+					$file['resolution'] = $this->is_img($file['type']) ? $image_info[0]  . ' x ' . $image_info[1] . ' px' : '';
+					$exif = WDWLibrary::read_image_metadata( $dir . '/.original/' . $name );
+					$file['alt'] = BWG()->options->read_metadata && $exif['title'] ? $exif['title'] : str_replace("_", " ", $filename);
+					$file['credit'] = !empty($exif['credit']) ? $exif['credit'] : '';
+					$file['aperture'] = !empty($exif['aperture']) ? $exif['aperture'] : '';
+					$file['camera'] = !empty($exif['camera']) ? $exif['camera'] : '';
+					$file['caption'] = !empty($exif['caption']) ? $exif['caption'] : '';
+					$file['iso'] = !empty($exif['iso']) ? $exif['iso'] : '';
+					$file['orientation'] = !empty($exif['orientation']) ? $exif['orientation'] : '';
+					$file['copyright'] = !empty($exif['copyright']) ? $exif['copyright']: '';
+					$file['tags'] = !empty($exif['tags']) ? $exif['tags'] : '';
+					$file['date_modified'] = date("Y-m-d H:i:s", filemtime($item));
+					$files[] = $file;
+				}
+			}
+			$data = array_merge($dirs,$files);
+			$insert = 0;
+			$tbl = $wpdb->prefix . 'bwg_file_paths';
+			if( !empty($params['refresh']) ) {
+				$wpdb->delete($tbl, array('path' => $path ) );
+			}
+			foreach( $data as $val ) {
+				$insert = $wpdb->insert($tbl, $val );
+			}
+			return $insert;
+		}
+	}
 
-    function sort_by_size ($a, $b) {
-      global $p_dir;
-      global $s_order;
+  /**
+   * Get from session.
+   * @param $key
+   * @param $default
+   *
+   * @return mixed
+   */
+	public function get_from_session( $key, $default ) {
+		if (isset($_REQUEST[$key])) {
+			$_REQUEST[$key] = stripslashes($_REQUEST[$key]);
+		}
+		else {
+			$_REQUEST[$key] = stripslashes($default);
+		}
 
-      $size_of_a = filesize($p_dir . '/' . $a);
-      $size_of_b = filesize($p_dir . '/' . $b);
-      return $s_order == 'asc' ? $size_of_a > $size_of_b : $size_of_a < $size_of_b;
-    }
-
-    function sort_by_date($a, $b) {
-      global $p_dir;
-      global $s_order;
-
-      $m_time_a = filemtime($p_dir . '/' . $a);
-      $m_time_b = filemtime($p_dir . '/' . $b);
-      return $s_order == 'asc' ? $m_time_a > $m_time_b : $m_time_a < $m_time_b;
-    }
-
-    switch ($sort_by) {
-      case 'name':
-        natcasesort($file_names);
-        if ($sort_order == 'desc') {
-          $file_names = array_reverse($file_names);
-        }
-        break;
-      case 'size':
-        usort($file_names, 'sort_by_size');
-        break;
-      case 'date_modified':
-        usort($file_names, 'sort_by_date');
-        break;
-    }
-    return $file_names;
-  }
-
-  private function is_img($file_type) {
-    switch ($file_type) {
-      case 'jpg':
-      case 'jpeg':
-      case 'png':
-      case 'bmp':
-      case 'gif':
-        return true;
-        break;
-    }
-    return false;
-  }
+		return esc_html(stripslashes($_REQUEST[$key]));
+	}
 }

@@ -27,12 +27,12 @@ class ShortcodeController_bwg {
     $params['gutenberg_callback'] = WDWLibrary::get('callback', 0);
     $params['gutenberg_id'] = WDWLibrary::get('edit', 0);
     $params['from_menu'] = $this->from_menu;
-    $params['gallery_rows'] = $this->model->get_gallery_rows_data();
-    $params['album_rows'] = $this->model->get_album_rows_data();
-    $params['theme_rows'] = $this->model->get_theme_rows_data();
+    $params['gallery_rows'] = WDWLibrary::get_galleries();
+    $params['album_rows'] = WDWLibrary::get_gallery_groups();
+    $params['theme_rows'] = WDWLibrary::get_theme_rows_data();
     $params['shortcodes'] = $this->model->get_shortcode_data();
     $params['shortcode_max_id'] = $this->model->get_shortcode_max_id();
-    $params['tag_rows'] = $this->model->get_tag_rows_data();
+    $params['tag_rows'] = WDWLibrary::get_tags();
 
     $params['watermark_fonts'] = WDWLibrary::get_fonts();
     $params['gallery_types_name'] = array(

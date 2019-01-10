@@ -4276,7 +4276,7 @@ msgstr "Objekt erfolgreich gesichert."
 #: framework/WDWLibrary.php:177
 #, fuzzy
 #| msgid "Items Succesfully Deleted."
-msgid "Items successfully reset."
+msgid "Items were reset successfully."
 msgstr "Objekte erfrolgreich gelöscht."
 
 #: framework/WDWLibrary.php:182

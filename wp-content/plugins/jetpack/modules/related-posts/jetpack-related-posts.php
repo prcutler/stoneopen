@@ -79,6 +79,8 @@ class Jetpack_RelatedPosts {
 		if ( function_exists( 'register_rest_field' ) ) {
 			add_action( 'rest_api_init',  array( $this, 'rest_register_related_posts' ) );
 		}
+
+		jetpack_register_block( 'related-posts' );
 	}
 
 	/**
@@ -384,7 +386,7 @@ EOT;
 		$ui_settings = sprintf(
 			$ui_settings_template,
 			checked( $options['show_headline'], true, false ),
-			esc_html__( 'Show a "Related" header to more clearly separate the related section from posts', 'jetpack' ),
+			esc_html__( 'Highlight related content with a heading', 'jetpack' ),
 			checked( $options['show_thumbnails'], true, false ),
 			esc_html__( 'Show a thumbnail image where available', 'jetpack' ),
 			checked( $options['show_date'], true, false ),
@@ -980,7 +982,7 @@ EOT;
 	 * @uses get_post, get_permalink, remove_query_arg, get_post_format, apply_filters
 	 * @return array
 	 */
-	protected function _get_related_post_data_for_post( $post_id, $position, $origin ) {
+	public function get_related_post_data_for_post( $post_id, $position, $origin ) {
 		$post = get_post( $post_id );
 
 		return array(
@@ -1198,7 +1200,7 @@ EOT;
 
 		$related_posts = array();
 		foreach ( $hits as $i => $hit ) {
-			$related_posts[] = $this->_get_related_post_data_for_post( $hit['id'], $i, $post_id );
+			$related_posts[] = $this->get_related_post_data_for_post( $hit['id'], $i, $post_id );
 		}
 		return $related_posts;
 	}
@@ -1536,6 +1538,7 @@ EOT;
 
 	/**
 	 * Build an array of Related Posts.
+	 * By default returns cached results that are stored for up to 12 hours.
 	 *
 	 * @since 4.4.0
 	 *

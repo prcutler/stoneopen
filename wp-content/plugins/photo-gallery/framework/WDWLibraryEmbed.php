@@ -97,22 +97,22 @@ class WDWLibraryEmbed {
     $fifth = strtok('/');
     //sixth is for video's fbid if url is video url
     $sixth = strtok('/');
-    if($second_token === 'www.facebook.com') {
+    if ( $second_token === 'www.facebook.com') {
         $json_data = array("error", "Incorect url.");
-		if ( has_filter('init_facebook_add_embed_bwg') ) {
-			$arg = array(
-				'app_id' => BWG()->options->facebook_app_id,
-				'app_secret' => BWG()->options->facebook_app_secret,
-				'third_token' => $third_token,
-				'fourth' => $fourth,
-				'fifth' => $fifth,
-				'sixth' => $sixth,
-				'url' => $url
-			);
-			$json_data = array();
-            $json_data = apply_filters('init_facebook_add_embed_bwg', array(), $arg);
+		    if ( has_filter('init_facebook_add_embed_bwg') ) {
+          $arg = array(
+            'app_id' => BWG()->options->facebook_app_id,
+            'app_secret' => BWG()->options->facebook_app_secret,
+            'third_token' => $third_token,
+            'fourth' => $fourth,
+            'fifth' => $fifth,
+            'sixth' => $sixth,
+            'url' => $url
+          );
+          $json_data = array();
+          $json_data = apply_filters('init_facebook_add_embed_bwg', array(), $arg);
         }
-		return json_encode($json_data);
+		  return json_encode($json_data);
     }
 	
     /*check if we can embed this using wordpress class WP_oEmbed */
@@ -136,13 +136,13 @@ class WDWLibraryEmbed {
 		 * Wordpress oembed not recognize instagram post url,
 		 * so we check manually.
 		*/
-		if (!$host) {
+		if ( !$host ) {
 			$parse = parse_url($url);
 			$host = ($parse['host'] == "www.instagram.com") ? 'INSTAGRAM' : false;
 		}
 		/*return json_encode($host); for test*/
     /*handling oembed cases*/    
-    if ($host) {
+    if ( $host ) {
       /*instagram is exception*/
       /*standard oembed fetching does not return thumbnail_url! so we do it manually*/
       if ($host == 'INSTAGRAM' && strtolower(substr($url,-4)) != 'post') {
@@ -241,6 +241,7 @@ class WDWLibraryEmbed {
           $filename = $matches[1];
         }
         if (!$instagram_data) {
+          $instagram_data = new stdClass();
           $get_embed_data = wp_remote_get("http://api.instagram.com/oembed?url=http://instagram.com/p/".$filename);
           if ( is_wp_error( $get_embed_data ) ) {
             return json_encode(array("error", "cannot get Instagram data"));
@@ -279,7 +280,7 @@ class WDWLibraryEmbed {
       if(!$result){
           return json_encode(array("error", "please enter ". $host . " correct single media URL"));
       }
-      else{/*one of known oembed types*/
+      else { /*one of known oembed types*/
         $embed_type = 'EMBED_OEMBED_'.$host;
         switch ($embed_type) {
           case 'EMBED_OEMBED_YOUTUBE':
@@ -303,8 +304,8 @@ class WDWLibraryEmbed {
               'redirect_url' => '');
 
             return json_encode($embedData);
-            
-            break;
+          break;
+
           case 'EMBED_OEMBED_VIMEO':
             
             $embedData = array(
@@ -322,8 +323,8 @@ class WDWLibraryEmbed {
               'redirect_url' => '');
 
             return json_encode($embedData);
-            
-            break;
+          break;
+
           case 'EMBED_OEMBED_FLICKR':
             $matches = preg_match('~^.+/(\d+)~',$url,$matches);
             $filename = $matches[1];
@@ -349,8 +350,7 @@ class WDWLibraryEmbed {
               'redirect_url' => '');
 
             return json_encode($embedData);
-            break;
-          
+          break;
           case 'EMBED_OEMBED_DAILYMOTION':
             $filename = strtok(basename($url), '_');
 
@@ -369,10 +369,9 @@ class WDWLibraryEmbed {
               'redirect_url' => '');
 
             return json_encode($embedData);
-            
-            break;
+          break;
           case 'EMBED_OEMBED_GETTYIMAGES':
-          /*not working yet*/
+             /*not working yet*/
             $filename = strtok(basename($url), '_');
             
             $embedData = array(
@@ -390,10 +389,9 @@ class WDWLibraryEmbed {
               'redirect_url' => '');
 
             return json_encode($embedData);
-         
           default:
-            return json_encode(array("error", "unknown URL host"));
-            break;
+            return json_encode( array("error", __('The entered URL is incorrect. Please check the URL and try again.', BWG()->prefix) ) );
+          break;
         }
       }
     }/*end of oembed cases*/
@@ -401,12 +399,12 @@ class WDWLibraryEmbed {
       /*check for direct image url*/
       /*check if something else*/
       /*not implemented yet*/
-      return json_encode(array("error", "unknown URL"));
+      return json_encode( array("error", __('The entered URL is incorrect. Please check the URL and try again.', BWG()->prefix) ) );
     }
-    return json_encode(array("error", "unknown URL"));
+    return json_encode( array("error", __('The entered URL is incorrect. Please check the URL and try again.', BWG()->prefix) ) );
   }
 
-/** 
+  /**
  * client side analogue is function spider_display_embed in bwg_embed.js
  *
  * @param embed_type: string , one of predefined accepted types
@@ -414,12 +412,21 @@ class WDWLibraryEmbed {
  * @param attrs: associative array with html attributes and values format e.g. array('width'=>"100px", 'style'=>"display:inline;")
  * 
  */
-
   public static function display_embed($embed_type, $file_url, $embed_id = '', $attrs = array()) {
     $html_to_insert = '';
-
+    $is_visible = true;
+    if( isset($attrs['is_visible']) ) {
+      $is_visible = $attrs['is_visible'];
+      $bwg = $attrs['bwg'];
+      $image_key = $attrs['image_key'];
+      /*  The attrs using in div as attribute  */
+      unset( $attrs['bwg'],$attrs['is_visible'],$attrs['image_key'] );
+      if ( !$is_visible ) {
+          $attrs['class'] .= ' bwg_carousel_preload';
+      }
+    }
     switch ($embed_type) {
-      case 'EMBED_OEMBED_YOUTUBE_VIDEO':
+      case 'EMBED_OEMBED_YOUTUBE_VIDEO': {
         $oembed_youtube_html ='<iframe ';
         if ($embed_id != '') {
           $oembed_youtube_query_args = array();
@@ -450,7 +457,11 @@ class WDWLibraryEmbed {
             $oembed_youtube_query_args = array('start' => $seconds);
           }
           $oembed_youtube_query_args += array('enablejsapi' => 1, 'wmode' => 'transparent');
-          $oembed_youtube_html .= ' src="' . add_query_arg($oembed_youtube_query_args, '//www.youtube.com/embed/'. $embed_id) . '"';
+          if( $is_visible ) {
+            $oembed_youtube_html .= ' src="' . add_query_arg($oembed_youtube_query_args, '//www.youtube.com/embed/' . $embed_id) . '"';
+          } else {
+            $oembed_youtube_html .= 'id="bwg_carousel_preload_'.$bwg.'_'.$image_key.'"  data-src="' . add_query_arg($oembed_youtube_query_args, '//www.youtube.com/embed/' . $embed_id) . '"';
+          }
         }
         foreach ($attrs as $attr => $value) {
           if (preg_match('/src/i', $attr) === 0) {
@@ -462,10 +473,15 @@ class WDWLibraryEmbed {
         $oembed_youtube_html .= " ></iframe>";
         $html_to_insert .= $oembed_youtube_html;
         break;
-      case 'EMBED_OEMBED_VIMEO_VIDEO':
+	  }
+      case 'EMBED_OEMBED_VIMEO_VIDEO': {
         $oembed_vimeo_html ='<iframe ';
         if($embed_id!=''){
-          $oembed_vimeo_html .= ' src="' . '//player.vimeo.com/video/'. $embed_id . '?enablejsapi=1"';
+          if( $is_visible ) {
+            $oembed_vimeo_html .= ' src="' . '//player.vimeo.com/video/' . $embed_id . '?enablejsapi=1"';
+          } else {
+            $oembed_vimeo_html .= 'id="bwg_carousel_preload_'.$bwg.'_'.$image_key.'" data-src="' . '//player.vimeo.com/video/' . $embed_id . '?enablejsapi=1"';
+          }
         }
         foreach ($attrs as $attr => $value) {
           if(preg_match('/src/i', $attr)===0){
@@ -477,7 +493,8 @@ class WDWLibraryEmbed {
         $oembed_vimeo_html .= " ></iframe>";
         $html_to_insert .= $oembed_vimeo_html;
         break;
-      case 'EMBED_OEMBED_FLICKR_IMAGE':
+	  }
+      case 'EMBED_OEMBED_FLICKR_IMAGE': {
          $oembed_flickr_html ='<div ';
         foreach ($attrs as $attr => $value) {
           if(preg_match('/src/i', $attr)===0){
@@ -488,8 +505,12 @@ class WDWLibraryEmbed {
         }
         $oembed_flickr_html .= " >";
         if($embed_id!=''){
-        $oembed_flickr_html .= '<img src="'.$embed_id.'"'. 
-        ' style="'.
+        if( $is_visible ) {
+          $oembed_flickr_html .= '<img src="' . $embed_id . '"';
+        } else {
+          $oembed_flickr_html .= '<img id="bwg_carousel_preload_'.$bwg.'_'.$image_key.'" data-src="' . $embed_id . '"';
+        }
+        $oembed_flickr_html .= ' style="'.
         'max-width:'.'100%'." !important".
         '; max-height:'.'100%'." !important".
         '; width:'.'auto !important'.
@@ -500,9 +521,11 @@ class WDWLibraryEmbed {
 
         $html_to_insert .= $oembed_flickr_html;
         break;
-      case 'EMBED_OEMBED_FLICKR_VIDEO':
+	}
+      case 'EMBED_OEMBED_FLICKR_VIDEO': {
         # code...not implemented yet
-        break;  
+        break;
+	  }
       case 'EMBED_OEMBED_INSTAGRAM_VIDEO':
         $oembed_instagram_html ='<div ';
         foreach ($attrs as $attr => $value) {
@@ -514,9 +537,13 @@ class WDWLibraryEmbed {
         }
         $oembed_instagram_html .= " >";
         if($embed_id!=''){
-        $oembed_instagram_html .= '<video style="width:auto !important; height:auto !important; max-width:100% !important; max-height:100% !important; margin:0 !important;" controls>'.
-        '<source src="'. $embed_id .
-        '" type="video/mp4"> Your browser does not support the video tag. </video>'; 
+          $oembed_instagram_html .= '<video class="bwg_carousel_video" style="width:auto !important; height:auto !important; max-width:100% !important; max-height:100% !important; margin:0 !important;" controls>';
+          if ( $is_visible ) {
+            $oembed_instagram_html .= '<source src="' . $embed_id;
+          } else {
+            $oembed_instagram_html .= '<source id="bwg_carousel_preload_'.$bwg.'_'.$image_key.'" data-src="' . $embed_id;
+          }
+          $oembed_instagram_html .= '" type="video/mp4"> Your browser does not support the video tag. </video>';
         }
         $oembed_instagram_html .="</div>";
         $html_to_insert .= $oembed_instagram_html;
@@ -532,54 +559,66 @@ class WDWLibraryEmbed {
         }
         $oembed_instagram_html .= " >";
         if($embed_id!=''){
-        $oembed_instagram_html .= '<img src="//instagram.com/p/'.$embed_id.'/media/?size=l"'. 
-        ' style="'.
-        'max-width:'.'100%'." !important".
-        '; max-height:'.'100%'." !important".
-        '; width:'.'auto !important'.
-        '; height:'. 'auto !important' . 
-        ';">';
+          if ( $is_visible ) {
+            $oembed_instagram_html .= '<img src="//instagram.com/p/' . $embed_id . '/media/?size=l"';
+          } else {
+            $oembed_instagram_html .= '<img  id="bwg_carousel_preload_'.$bwg.'_'.$image_key.'" data-src="//instagram.com/p/' . $embed_id . '/media/?size=l"';
+          }
+          $oembed_instagram_html .= ' style="'.
+          'max-width:'.'100%'." !important".
+          '; max-height:'.'100%'." !important".
+          '; width:'.'auto !important'.
+          '; height:'. 'auto !important' .
+          ';">';
         }
         $oembed_instagram_html .="</div>";
         $html_to_insert .= $oembed_instagram_html;
         break;
-	  case 'EMBED_OEMBED_FACEBOOK_IMAGE':
+      case 'EMBED_OEMBED_FACEBOOK_IMAGE':
         $oembed_facebook_html ='<div ';
-        foreach ($attrs as $attr => $value) {
-          if(preg_match('/src/i', $attr)===0){
-            if($attr != '' && $value != ''){
-              $oembed_facebook_html .= ' '. $attr . '="'. $value . '"';
+          foreach ($attrs as $attr => $value) {
+            if(preg_match('/src/i', $attr)===0){
+              if($attr != '' && $value != ''){
+                $oembed_facebook_html .= ' '. $attr . '="'. $value . '"';
+              }
             }
           }
-        }
-        $oembed_facebook_html .= " >";
-        if($embed_id!=''){
-        $oembed_facebook_html .= '<img src="'.$file_url.'"'. 
-        ' style="'.
-        'max-width:'.'100%'." !important".
-        '; max-height:'.'100%'." !important".
-        '; width:'.'auto !important'.
-        '; height:'. 'auto !important' . 
-        ';">';
-        }
-        $oembed_facebook_html .="</div>";
-        $html_to_insert .= $oembed_facebook_html;
-        break;	  
-	  case 'EMBED_OEMBED_FACEBOOK_VIDEO':
-        $oembed_facebook_html ='<iframe class="bwg_fb_video"';
-        if($embed_id!=''){
-          $oembed_facebook_html .= ' src="//www.facebook.com/video/embed?video_id=' . $file_url . '&enablejsapi=1&wmode=transparent"';
-        }
-        foreach ($attrs as $attr => $value) {
-          if(preg_match('/src/i', $attr)===0){
-            if($attr != '' && $value != ''){
-              $oembed_facebook_html .= ' '. $attr . '="'. $value . '"';
+          $oembed_facebook_html .= " >";
+          if($embed_id!=''){
+            if ( $is_visible ) {
+              $oembed_facebook_html .= '<img src="' . $file_url . '"';
+            } else {
+              $oembed_facebook_html .= '<img id="bwg_carousel_preload_'.$bwg.'_'.$image_key.'" data-src="' . $file_url . '"';
+            }
+            $oembed_facebook_html .= ' style="'.
+            'max-width:'.'100%'." !important".
+            '; max-height:'.'100%'." !important".
+            '; width:'.'auto !important'.
+            '; height:'. 'auto !important' .
+            ';">';
+          }
+          $oembed_facebook_html .="</div>";
+          $html_to_insert .= $oembed_facebook_html;
+          break;
+      case 'EMBED_OEMBED_FACEBOOK_VIDEO':
+          $oembed_facebook_html ='<iframe class="bwg_fb_video"';
+          if($embed_id!=''){
+            if( $is_visible ) {
+              $oembed_facebook_html .= ' src="//www.facebook.com/video/embed?video_id=' . $file_url . '&enablejsapi=1&wmode=transparent"';
+            } else {
+              $oembed_facebook_html .= ' id="bwg_carousel_preload_'.$bwg.'_'.$image_key.'" data-src="//www.facebook.com/video/embed?video_id=' . $file_url . '&enablejsapi=1&wmode=transparent"';
             }
           }
-        }
-        $oembed_facebook_html .= " ></iframe>";
-        $html_to_insert .= $oembed_facebook_html;
-        break;	  
+          foreach ($attrs as $attr => $value) {
+            if(preg_match('/src/i', $attr)===0){
+              if($attr != '' && $value != ''){
+                $oembed_facebook_html .= ' '. $attr . '="'. $value . '"';
+              }
+            }
+          }
+          $oembed_facebook_html .= " ></iframe>";
+          $html_to_insert .= $oembed_facebook_html;
+          break;
       case 'EMBED_OEMBED_INSTAGRAM_POST':
         $oembed_instagram_html ='<div ';
         $id = '';
@@ -595,16 +634,20 @@ class WDWLibraryEmbed {
         }
         $oembed_instagram_html .= " >";       
         if($embed_id!=''){
-        $oembed_instagram_html .= '<iframe class="inner_instagram_iframe_'.$class.'" src="//instagr.am/p/'.$embed_id.'/embed/?enablejsapi=1"'. 
-        ' style="'.
-        'max-width:'.'100%'." !important".
-        '; max-height:'.'100%'." !important".
-        '; width:'.'100%'.
-        '; height:'. '100%' .
-        '; margin:0'.
-        '; display:table-cell; vertical-align:middle;"'.
-        'frameborder="0" scrolling="no" allowtransparency="false" allowfullscreen'. 
-        '></iframe>';
+          if ( $is_visible ) {
+            $oembed_instagram_html .= '<iframe class="inner_instagram_iframe_' . $class . '" src="//instagr.am/p/' . $embed_id . '/embed/?enablejsapi=1"';
+          } else {
+            $oembed_instagram_html .= '<iframe id="bwg_carousel_preload_'.$bwg.'_'.$image_key.'" class="inner_instagram_iframe_' . $class . '" data-src="//instagr.am/p/' . $embed_id . '/embed/?enablejsapi=1"';
+          }
+          $oembed_instagram_html .= ' style="'.
+          'max-width:'.'100%'." !important".
+          '; max-height:'.'100%'." !important".
+          '; width:'.'100%'.
+          '; height:'. '100%' .
+          '; margin:0'.
+          '; display:table-cell; vertical-align:middle;"'.
+          'frameborder="0" scrolling="no" allowtransparency="false" allowfullscreen'.
+          '></iframe>';
         }
         $oembed_instagram_html .="</div>";
         $html_to_insert .= $oembed_instagram_html;
@@ -612,7 +655,11 @@ class WDWLibraryEmbed {
       case 'EMBED_OEMBED_DAILYMOTION_VIDEO':
         $oembed_dailymotion_html ='<iframe ';
         if($embed_id!=''){
-          $oembed_dailymotion_html .= ' src="' . '//www.dailymotion.com/embed/video/'. $embed_id . '?api=postMessage"';
+          if ( $is_visible ) {
+            $oembed_dailymotion_html .= ' src="' . '//www.dailymotion.com/embed/video/' . $embed_id . '?api=postMessage"';
+          } else {
+            $oembed_dailymotion_html .= ' id="bwg_carousel_preload_'.$bwg.'_'.$image_key.'" data-src="' . '//www.dailymotion.com/embed/video/' . $embed_id . '?api=postMessage"';
+          }
         }
         foreach ($attrs as $attr => $value) {
           if(preg_match('/src/i', $attr)===0){
@@ -637,7 +684,7 @@ class WDWLibraryEmbed {
    * @return json_encode(array("error","error message")) on failure
    * @return json_encode(array of data of instagram user recent posts) on success
    */
-  public static function add_instagram_gallery( $instagram_user, $access_token, $whole_post, $autogallery_image_number ) {
+  public static function add_instagram_gallery( $access_token, $whole_post, $autogallery_image_number ) {
     @set_time_limit(0);
     $instagram_posts_response = wp_remote_get("https://api.instagram.com/v1/users/self/media/recent/?access_token=" . $access_token . "&count=" . $autogallery_image_number);
     if ( is_wp_error($instagram_posts_response) ) {
@@ -709,41 +756,40 @@ class WDWLibraryEmbed {
     global $wpdb;
     $id = $args->id;
     $type = $args->gallery_type;
-	$source = $args->gallery_source;
     $update_flag = $args->update_flag;
     $autogallery_image_number = $args->autogallery_image_number;
 
-	$is_instagram = false;
+	  $is_instagram = false;
     if ( $type == 'instagram' ) {
-	  $is_instagram = true;
+      $is_instagram = TRUE;
       $whole_post = 0;
     }
     elseif ( $type == 'instagram_post' ) {
-	  $is_instagram = true;
-	  $whole_post = 1;
-	}
-
-    if(!$id || !$type || !$source){
-      return array(false, "Gallery id, type or source are empty");
+      $is_instagram = TRUE;
+      $whole_post = 1;
     }
 
-	$images_new = array();
+    if ( !$id || !$type ) {
+      return array( FALSE, "Gallery id, type or source are empty" );
+    }
+
+	  $images_new = array();
+
     if ($is_instagram) {
       $instagram_access_token = BWG()->options->instagram_access_token;
       if ( !$instagram_access_token ) {
         return array(false, "Cannot get access token from the database");
       }
-      $data = self::add_instagram_gallery($source, $instagram_access_token, $whole_post, $autogallery_image_number);
+      $data = self::add_instagram_gallery($instagram_access_token, $whole_post, $autogallery_image_number);
       $images_new = json_decode($data);
     }
     elseif( !empty($args->images_list) ) {
-		$images_new = $args->images_list;
+		  $images_new = $args->images_list;
     }
 
     if ( empty($images_new) ) {
       return array(false, "Cannot get social data");
     }
-
     $images = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "bwg_image WHERE gallery_id = '" . $id . "' ", OBJECT);
     $images_count = sizeof($images);
     
@@ -757,7 +803,6 @@ class WDWLibraryEmbed {
     else{
       $author = 1; 
     }
-
     /*loops to compare new and existing images*/
     foreach ($images_new as $image_new) {
       $to_add = true;
@@ -769,7 +814,7 @@ class WDWLibraryEmbed {
           }
         }
       }
-      if($to_add){
+      if ( $to_add ) {
         /*if image does not exist, insert*/
         $new_order++;
         $new_image_data = array(
@@ -860,69 +905,33 @@ class WDWLibraryEmbed {
 		}
     }
 		/*add new images*/
-		foreach($images_insert as $image){
-		  $save = $wpdb->insert($wpdb->prefix . 'bwg_image', array(
-			'gallery_id' => $image['gallery_id'],
-			'slug' => self::spider_replace4byte($image['slug']),
-			'filename' => $image['filename'],
-			'image_url' => $image['image_url'],
-			'thumb_url' => $image['thumb_url'],
-			'description' => self::spider_replace4byte($image['description']),
-			'alt' => self::spider_replace4byte($image['alt']),
-			'date' => $image['date'],
-			'size' => $image['size'],
-			'filetype' => $image['filetype'],
-			'resolution' => $image['resolution'],
-			'author' => $image['author'],
-			'order' => $image['order'],
-			'published' => $image['published'],
-			'comment_count' => $image['comment_count'],
-			'avg_rating' => $image['avg_rating'],
-			'rate_count' => $image['rate_count'],
-			'hit_count' => $image['hit_count'],
-			'redirect_url' => $image['redirect_url'],
-		  ), array(
-			'%d',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%d',
-			'%d',
-			'%d',
-			'%d',
-			'%d',
-			'%d',
-			'%d',
-			'%s',
-		  ));
-		}
+    foreach ( $images_insert as $image ) {
+      $wpdb->insert($wpdb->prefix . 'bwg_image', array(
+        'gallery_id' => $image['gallery_id'],
+        'slug' => self::spider_replace4byte($image['slug']),
+        'filename' => $image['filename'],
+        'image_url' => $image['image_url'],
+        'thumb_url' => $image['thumb_url'],
+        'description' => self::spider_replace4byte($image['description']),
+        'alt' => self::spider_replace4byte($image['alt']),
+        'date' => $image['date'],
+        'size' => $image['size'],
+        'filetype' => $image['filetype'],
+        'resolution' => $image['resolution'],
+        'author' => $image['author'],
+        'order' => $image['order'],
+        'published' => $image['published'],
+        'comment_count' => $image['comment_count'],
+        'avg_rating' => $image['avg_rating'],
+        'rate_count' => $image['rate_count'],
+        'hit_count' => $image['hit_count'],
+        'redirect_url' => $image['redirect_url'],
+      ));
+    }
 
 		$time = date('d F Y, H:i');
 		/*return time of last update*/
 		return array(true, $time);
-	}
-
-    /**
-     * Get autoupdate interval.
-     *
-     * @return int
-     */
-	public static function get_autoupdate_interval() {
-		if(!isset(BWG()->options)){
-		  return 30;
-		}
-		if(!isset(BWG()->options->autoupdate_interval)){
-		  return 30;
-		}
-		$autoupdate_interval = BWG()->options->autoupdate_interval;
-		return $autoupdate_interval;
 	}
 
     /**

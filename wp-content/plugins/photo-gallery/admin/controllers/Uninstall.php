@@ -18,6 +18,18 @@ class UninstallController_bwg {
   private $page;
  
   public function __construct() {
+    if ( !BWG()->is_pro ) {
+      global $bwg_options;
+      if ( !class_exists("TenWebLibConfig") ) {
+        $plugin_dir = apply_filters('tenweb_free_users_lib_path', array('version' => '1.1.1', 'path' => BWG()->plugin_dir));
+        include_once($plugin_dir['path'] . "/wd/config.php");
+      }
+      $config = new TenWebLibConfig();
+      $config->set_options($bwg_options);
+      $deactivate_reasons = new TenWebLibDeactivate($config);
+      $deactivate_reasons->submit_and_deactivate();
+    }
+
     $this->model = new UninstallModel_bwg();
     $this->view = new UninstallView_bwg();
 
@@ -67,6 +79,7 @@ class UninstallController_bwg {
       $wpdb->prefix . 'bwg_option',
       $wpdb->prefix . 'bwg_theme',
       $wpdb->prefix . 'bwg_shortcode',
+      $wpdb->prefix . 'bwg_file_paths',
     );
 
     return $tables;

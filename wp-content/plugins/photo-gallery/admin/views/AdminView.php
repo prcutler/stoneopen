@@ -63,13 +63,14 @@ class AdminView_bwg {
    *
    * @return string Title html.
    */
-  protected function title($params) {
+  protected function title($params = array()) {
     $title = !empty($params['title']) ? $params['title'] : '';
     $title_class = !empty($params['title_class']) ? $params['title_class'] : '';
     $title_name = !empty($params['title_name']) ? $params['title_name'] : '';
     $title_id = !empty($params['title_id']) ? $params['title_id'] : '';
     $title_value = !empty($params['title_value']) ? $params['title_value'] : '';
     $add_new_button = !empty($params['add_new_button']) ? $params['add_new_button'] : '';
+    $how_to_button = !empty($params['how_to_button']) ? $params['how_to_button'] : false;
 
     $attributes = '';
     if ( !empty($add_new_button) && is_array($add_new_button) ) {
@@ -97,6 +98,11 @@ class AdminView_bwg {
       }
       ?>
     </h1>
+    <?php
+    if ( $how_to_button ) {
+      require BWG()->plugin_dir . '/framework/howto/howto.php';
+    }
+    ?>
     </div><?php
     return ob_get_clean();
   }
@@ -150,6 +156,29 @@ class AdminView_bwg {
   }
 
   /**
+   * Sorting.
+   *
+   * @param  array $params
+   * @return string
+   */
+  protected function sorting() {
+    $options = WDWLibrary::admin_images_ordering_choices();
+    ob_start();
+    ?>
+    <select name="order_by" onchange="bwg_sort_images(this.value);">
+      <?php
+      foreach ( $options as $key => $option ) {
+        ?>
+        <option value="<?php echo $key; ?>"><?php echo $option; ?></option>
+        <?php
+      }
+      ?>
+    </select>
+    <?php
+    return ob_get_clean();
+  }
+
+  /**
    * Search.
    *
    * @param  array $params
@@ -160,6 +189,11 @@ class AdminView_bwg {
     ob_start();
     ?>
     <p class="search-box">
+      <?php
+      if (isset($params['sorting']) && $params['sorting']) {
+        echo $this->sorting();
+      }
+      ?>
       <input name="s" value="<?php echo $search; ?>" type="search" onkeypress="return input_search(event, this)" />
       <input class="button" value="<?php echo __('Search', BWG()->prefix) . ' ' . ( !empty( $params['search_item_name'] ) ? $params['search_item_name'] : '' ); ?>" type="button" onclick="search(this)" />
     </p>
@@ -177,7 +211,7 @@ class AdminView_bwg {
    * @return string
    */
   protected function pagination($page_url, $total, $items_per_page = 20) {
-    $page_number = WDWLibrary::get('paged', 1);
+    $page_number = WDWLibrary::get('paged', 1) < 0 ? 1 : WDWLibrary::get('paged', 1);
     $search = WDWLibrary::get('s', '');
     $orderby = WDWLibrary::get('orderby', '');
     $order = WDWLibrary::get('order', '');
@@ -289,7 +323,7 @@ class AdminView_bwg {
         <?php
         foreach ( $actions as $key => $action ) {
           ?>
-          <option value="<?php echo $key; ?>"><?php echo $action['title']; ?></option>
+          <option value="<?php echo $key; ?>" <?php echo isset($action['disabled']) ? $action['disabled'] : ''; ?>><?php echo $action['title']; ?></option>
           <?php
         }
         ?>

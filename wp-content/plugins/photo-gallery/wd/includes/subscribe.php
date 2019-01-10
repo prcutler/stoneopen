@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class TenWebSubscribe
+class TenWebLibSubscribe
 {
     // //////////////////////////////////////////////////////////////////////////////////////
     // Events                                                                              //
@@ -54,7 +54,7 @@ class TenWebSubscribe
         if (isset($_GET[$wd_options->prefix . "_sub_action"])) {
 
             if ($_GET[$wd_options->prefix . "_sub_action"] == "allow") {
-                //$api = new TenWebApi($wd_options);
+                //$api = new TenWebLibApi($wd_options);
                 $all_plugins = array();
                 $plugins = get_plugins();
                 foreach ($plugins as $slug => $data) {
@@ -83,7 +83,7 @@ class TenWebSubscribe
                 $data["all_plugins"] = json_encode($all_plugins);
 
 
-                $response = wp_remote_post(TEN_WEB_SUBSCRIBE_URL, array(
+                $response = wp_remote_post(TEN_WEB_LIB_SUBSCRIBE_URL, array(
                         'method'      => 'POST',
                         'timeout'     => 45,
                         'redirection' => 5,

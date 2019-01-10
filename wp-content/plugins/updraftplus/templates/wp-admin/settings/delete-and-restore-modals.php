@@ -1,12 +1,5 @@
 <?php if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed'); ?>
 
-<div id="ud_massactions" class="updraft-hidden" style="display:none;">
-	<strong><?php _e('Actions upon selected backups', 'updraftplus');?></strong> <br>
-	<div class="updraftplus-remove" style="float: left;"><a href="#" onclick="updraft_deleteallselected(); return false;"><?php _e('Delete', 'updraftplus');?></a></div>
-	<div class="updraft-viewlogdiv"><a href="#" onclick="jQuery('#updraft-navtab-backups-content .updraft_existing_backups .updraft_existing_backups_row').addClass('backuprowselected'); return false;"><?php _e('Select all', 'updraftplus');?></a></div>
-	<div class="updraft-viewlogdiv"><a href="#" onclick="jQuery('#updraft-navtab-backups-content .updraft_existing_backups .updraft_existing_backups_row').removeClass('backuprowselected'); jQuery('#ud_massactions').hide(); return false;"><?php _e('Deselect', 'updraftplus');?></a></div>
-</div>
-
 <div id="updraft-message-modal" title="UpdraftPlus">
 	<div id="updraft-message-modal-innards">
 	</div>
@@ -26,16 +19,15 @@
 			<input type="hidden" name="subaction" value="deleteset">
 			<input type="hidden" name="backup_timestamp" value="0" id="updraft_delete_timestamp">
 			<input type="hidden" name="backup_nonce" value="0" id="updraft_delete_nonce">
-			<div id="updraft-delete-remote-section"><input checked="checked" type="checkbox" name="delete_remote" id="updraft_delete_remote" value="1"> <label for="updraft_delete_remote"><?php _e('Also delete from remote storage', 'updraftplus');?></label><br>
-				<p id="updraft-delete-waitwarning" class="updraft-hidden" style="display:none;"><em><?php _e('Deleting... please allow time for the communications with the remote storage to complete.', 'updraftplus');?></em></p>
-				<p id="updraft-deleted-files-total"></p>
+			<div id="updraft-delete-remote-section">
+				<input checked="checked" type="checkbox" name="delete_remote" id="updraft_delete_remote" value="1"> <label for="updraft_delete_remote"><?php _e('Also delete from remote storage', 'updraftplus');?></label><br>
 			</div>
 		</fieldset>
 	</form>
 </div>
 
 <div id="updraft-restore-modal" title="UpdraftPlus - <?php _e('Restore backup', 'updraftplus');?>">
-	<p><strong><?php _e('Restore backup from', 'updraftplus');?>:</strong> <span class="updraft_restore_date"></span></p>
+	<p><strong><?php _e('Restore files from', 'updraftplus');?>:</strong> <span class="updraft_restore_date"></span></p>
 
 	<div id="updraft-restore-modal-stage2">
 

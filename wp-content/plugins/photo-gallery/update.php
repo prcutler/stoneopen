@@ -63,7 +63,7 @@ class BWGUpdate {
       // Add search box option.
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `show_search_box` tinyint(1) NOT NULL DEFAULT 0");
       // Add search box width option.
-      $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `search_box_width` int(4) NOT NULL DEFAULT 180");
+      $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `search_box_width` int(4) NOT NULL DEFAULT 330");
       // Add info enable/disable option.
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `popup_enable_info` tinyint(1) NOT NULL DEFAULT 1");
     }
@@ -175,7 +175,7 @@ class BWGUpdate {
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_back_font_size` int(4) NOT NULL DEFAULT 16");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_back_font_weight` varchar(8) NOT NULL DEFAULT 'bold'");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_back_padding` varchar(32) NOT NULL DEFAULT '0'");
-      $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_title_font_color` varchar(8) NOT NULL DEFAULT 'CCCCCC'");
+      $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_title_font_color` varchar(8) NOT NULL DEFAULT '323A45'");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_title_font_style` varchar(16) NOT NULL DEFAULT 'segoe ui'");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_title_pos` varchar(8) NOT NULL DEFAULT 'bottom'");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_title_font_size` int(4) NOT NULL DEFAULT 14");
@@ -183,18 +183,18 @@ class BWGUpdate {
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_title_margin` varchar(32) NOT NULL DEFAULT '2px'");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_title_shadow` varchar(32) NOT NULL DEFAULT '0px 0px 0px #888888'");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_margin` int(4) NOT NULL DEFAULT 4");
-      $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_padding` int(4) NOT NULL DEFAULT 0");
+      $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_padding` int(4) NOT NULL DEFAULT 4");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_border_radius` varchar(32) NOT NULL DEFAULT '0'");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_border_width` int(4) NOT NULL DEFAULT 0");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_border_style` varchar(8) NOT NULL DEFAULT 'none'");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_border_color` varchar(8) NOT NULL DEFAULT 'CCCCCC'");
-      $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_bg_color` varchar(8) NOT NULL DEFAULT 'FFFFFF'");
+      $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_bg_color` varchar(8) NOT NULL DEFAULT '000000'");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumbs_bg_color` varchar(8) NOT NULL DEFAULT 'FFFFFF'");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_bg_transparent` int(4) NOT NULL DEFAULT 0");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_box_shadow` varchar(32) NOT NULL DEFAULT '0px 0px 0px #888888'");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_transparent` int(4) NOT NULL DEFAULT 100");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_align` varchar(8) NOT NULL DEFAULT 'center'");
-      $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_hover_effect` varchar(64) NOT NULL DEFAULT 'scale'");
+      $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_hover_effect` varchar(64) NOT NULL DEFAULT 'zoom'");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_hover_effect_value` varchar(64) NOT NULL DEFAULT '1.1'");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_theme ADD `album_masonry_thumb_transition` tinyint(1) NOT NULL DEFAULT 0");
     }
@@ -231,7 +231,9 @@ class BWGUpdate {
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_gallery ADD `gallery_source` varchar(64) NOT NULL DEFAULT ''");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_gallery ADD `update_flag` varchar(32) NOT NULL DEFAULT ''");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_gallery ADD `autogallery_image_number` int(4) NOT NULL DEFAULT 12");
-      wp_schedule_event(time(), 'bwg_autoupdate_interval', 'bwg_schedule_event_hook');
+      if ( BWG()->is_pro ) {
+        wp_schedule_event(time(), 'bwg_autoupdate_interval', 'bwg_schedule_event_hook');
+      }
       /*auto-filling image meta description*/
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_option ADD `description_tb` tinyint(1) NOT NULL DEFAULT 1");
       /*convert old videos with "YOUTUBE" and "VIMEO" videos to new EMBED format*/
@@ -387,11 +389,37 @@ class BWGUpdate {
       require_once(BWG()->plugin_dir . '/framework/WDWLibrary.php');
       WDWLibrary::before_update_create_custom_posts();
     }
-	  if ( version_compare($version, '1.4.0' ) == -1 ) {
+	if ( version_compare($version, '1.4.0' ) == -1 ) {
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_gallery ADD `modified_date` int(10) NOT NULL DEFAULT 0");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_album ADD `modified_date` int(10) NOT NULL DEFAULT 0");
       $wpdb->query("ALTER TABLE " . $wpdb->prefix . "bwg_image ADD `modified_date` int(10) NOT NULL DEFAULT 0");
     }
+	if ( version_compare($version, '1.5.12' ) == -1 ) {
+		$charset_collate = $wpdb->get_charset_collate();
+		$file_paths_tbl = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "bwg_file_paths` (
+			`id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`is_dir` tinyint(1) DEFAULT 0,
+			`path` mediumtext,
+			`type` varchar(5),
+			`name` varchar(250),
+			`filename` varchar(250),
+			`alt` varchar(250),
+			`thumb` varchar(250),
+			`size` varchar(10),
+			`resolution` varchar(15),
+			`credit` varchar(250),
+			`aperture` int(10),
+			`camera` varchar(250),
+			`caption` varchar(250),
+			`iso` int(10),
+			`orientation` int(10),
+			`copyright` varchar(250),
+			`tags` mediumtext,
+			`date_modified` datetime,
+			PRIMARY KEY (`id`)
+		) " . $charset_collate . ";";
+		$wpdb->query($file_paths_tbl);
+	}
     return;
   }
 }

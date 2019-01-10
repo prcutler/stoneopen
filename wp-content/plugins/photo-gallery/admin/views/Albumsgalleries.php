@@ -21,7 +21,7 @@ class AlbumsgalleriesView_bwg extends AdminView_bwg {
    *
    * @param $params
    */
-  public function display( $params ) {
+  public function display( $params = array() ) {
     ob_start();
     $params['page_url'] = add_query_arg(array(
       'action' => 'albumsgalleries_' . BWG()->prefix,
@@ -51,7 +51,7 @@ class AlbumsgalleriesView_bwg extends AdminView_bwg {
    *
    * @param $params
    */
-  public function body( $params ) {
+  public function body( $params = array() ) {
     ?>
     <div id="loading_div"></div>
     <div class="wd-table-container">
@@ -86,10 +86,10 @@ class AlbumsgalleriesView_bwg extends AdminView_bwg {
             $alternate = (!isset($alternate) || $alternate == '') ? 'class="alternate"' : '';
                   $preview_image = BWG()->plugin_url . '/images/no-image.png';
             if ( !empty($row->preview_image) ) {
-              $preview_image = site_url() . '/' . BWG()->upload_dir . $row->preview_image;
+              $preview_image = BWG()->upload_url . $row->preview_image;
             }
             if ( !empty($row->random_preview_image)) {
-              $preview_image = site_url() . '/' . BWG()->upload_dir . $row->random_preview_image;
+              $preview_image = BWG()->upload_url . $row->random_preview_image;
               if ( WDWLibrary::check_external_link($row->random_preview_image) ) {
                 $preview_image = $row->random_preview_image;
               }

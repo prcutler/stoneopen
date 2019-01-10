@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class TenWebDeactivate
+class TenWebLibDeactivate
 {
     ////////////////////////////////////////////////////////////////////////////////////////
     // Events                                                                             //
@@ -41,14 +41,10 @@ class TenWebDeactivate
                 'text' => __('Free version is limited', $wd_options->prefix),
             ),
             3 => array(
-                'id'   => self::REASON_PRO_EXPENSIVE,
-                'text' => __('Premium is expensive', $wd_options->prefix),
-            ),
-            4 => array(
                 'id'   => self::REASON_UPGRADING_TO_PAID_VERSION,
                 'text' => __('Upgrading to paid version', $wd_options->prefix),
             ),
-            5 => array(
+            4 => array(
                 'id'   => self::REASON_TEMPORARY_DEACTIVATION,
                 'text' => __('Temporary deactivation', $wd_options->prefix),
             ),
@@ -58,8 +54,9 @@ class TenWebDeactivate
         add_action('admin_init', array($this, 'submit_and_deactivate'));
 
 
-        add_action('admin_enqueue_scripts', array($this, 'scripts'));
-
+        // add_action('admin_enqueue_scripts', array($this, 'scripts'));
+        // Just enqueue styles/scripts and they will be in the footer.
+        $this->scripts();
 
     }
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +70,7 @@ class TenWebDeactivate
         ?>
         <script>
             jQuery(document).ready(function () {
-                wdReady("<?php echo $wd_options->prefix; ?>");
+                tenwebReady("<?php echo $wd_options->prefix; ?>");
             });
         </script>
         <?php
@@ -95,11 +92,11 @@ class TenWebDeactivate
     public function scripts()
     {
         $wd_options = $this->config;
-        wp_enqueue_style('wd-deactivate-popup', $wd_options->wd_url_css . '/deactivate_popup.css', array(), get_option($wd_options->prefix . "_version"));
-        wp_enqueue_script('wd-deactivate-popup', $wd_options->wd_url_js . '/deactivate_popup.js', array(), get_option($wd_options->prefix . "_version"));
+        wp_enqueue_style('tenweb-deactivate-popup', $wd_options->wd_url_css . '/deactivate_popup.css', array(), get_option($wd_options->prefix . "_version"));
+        wp_enqueue_script('tenweb-deactivate-popup', $wd_options->wd_url_js . '/deactivate_popup.js', array(), get_option($wd_options->prefix . "_version"));
 
         $admin_data = wp_get_current_user();
-        wp_localize_script('wd-deactivate-popup', $wd_options->prefix . 'WDDeactivateVars', array(
+        wp_localize_script('tenweb-deactivate-popup', $wd_options->prefix . 'WDDeactivateVars', array(
             "prefix"           => $wd_options->prefix,
             "deactivate_class" => $wd_options->prefix . '_deactivate_link',
             "email"            => $admin_data->data->user_email,
@@ -115,7 +112,7 @@ class TenWebDeactivate
         if (isset($_POST[$wd_options->prefix . "_submit_and_deactivate"])) {
 
             if ($_POST[$wd_options->prefix . "_submit_and_deactivate"] == 2 || $_POST[$wd_options->prefix . "_submit_and_deactivate"] == 3) {
-                //$api = new TenWebApi( $wd_options );
+                //$api = new TenWebLibApi( $wd_options );
 
                 $data = array();
 
@@ -131,7 +128,7 @@ class TenWebDeactivate
 
                 $data["name"] = $user_first_name || $user_last_name ? $user_first_name . " " . $user_last_name : $admin_data->data->user_login;
 
-                $response = wp_remote_post(TEN_WEB_DEACTIVATION_URL, array(
+                $response = wp_remote_post(TEN_WEB_LIB_DEACTIVATION_URL, array(
                         'method'      => 'POST',
                         'timeout'     => 45,
                         'redirection' => 5,

@@ -2,16 +2,13 @@
 /**
  * Template Loader
  *
- * @class WC_Template
  * @package WooCommerce/Classes
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
- * WC_Template_Loader.
+ * Template loader class.
  */
 class WC_Template_Loader {
 
@@ -196,7 +193,7 @@ class WC_Template_Loader {
 	 * @since 3.3.0
 	 */
 	public static function unsupported_theme_init() {
-		if ( self::$shop_page_id ) {
+		if ( 0 < self::$shop_page_id ) {
 			if ( is_product_taxonomy() ) {
 				self::unsupported_theme_tax_archive_init();
 			} elseif ( is_product() ) {
@@ -215,7 +212,7 @@ class WC_Template_Loader {
 	private static function unsupported_theme_shop_page_init() {
 		add_filter( 'the_content', array( __CLASS__, 'unsupported_theme_shop_content_filter' ), 10 );
 		add_filter( 'the_title', array( __CLASS__, 'unsupported_theme_title_filter' ), 10, 2 );
-		add_filter( 'comments_number', '__return_empty_string' );
+		add_filter( 'comments_number', array( __CLASS__, 'unsupported_theme_comments_number_filter' ) );
 	}
 
 	/**
@@ -496,12 +493,27 @@ class WC_Template_Loader {
 		remove_filter( 'the_content', array( __CLASS__, 'unsupported_theme_product_content_filter' ) );
 
 		if ( is_product() ) {
-			$content = do_shortcode( '[product_page id="' . get_the_ID() . '" show_title=0]' );
+			$content = do_shortcode( '[product_page id="' . get_the_ID() . '" show_title=0 status="any"]' );
 		}
 
 		self::$in_content_filter = false;
 
 		return $content;
+	}
+
+	/**
+	 * Suppress the comments number on the Shop page for unsupported themes since there is no commenting on the Shop page.
+	 *
+	 * @since 3.4.5
+	 * @param string $comments_number The comments number text.
+	 * @return string
+	 */
+	public static function unsupported_theme_comments_number_filter( $comments_number ) {
+		if ( is_page( self::$shop_page_id ) ) {
+			return '';
+		}
+
+		return $comments_number;
 	}
 
 	/**

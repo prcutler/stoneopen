@@ -19,7 +19,13 @@ class EditimageController_bwg {
   }
 
   public function execute() {
-    $this->display();
+    $task = WDWLibrary::get('task');
+    if ( $task != 'display' && method_exists($this, $task) ) {
+        $this->$task();
+    }
+    else {
+      $this->display();
+    }
   }
 
   public function display() {

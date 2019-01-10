@@ -229,6 +229,9 @@ class WP_Optimizer {
 			$option_id = call_user_func(array($optimization, 'get_'.$which_option.'_id'));
 			
 			if (isset($optimization_options[$option_id])) {
+				// if options saved as a string then compare with string (for support different versions)
+				if (is_string($optimization_options[$option_id]) && 'false' === $optimization_options[$option_id]) continue;
+
 				if ('auto' == $which_option && empty($optimization->available_for_auto)) continue;
 
 				$this->change_time_limit();
@@ -289,7 +292,13 @@ class WP_Optimizer {
 				$table_status[$index]->is_type_supported = WP_Optimize()->get_db_info()->is_table_type_optimize_supported($table_name);
 				// add information about corrupted tables.
 				$table_status[$index]->is_needing_repair = WP_Optimize()->get_db_info()->is_table_needing_repair($table_name);
-
+				// add information about using table by any of installed plugins.
+				$table_status[$index]->plugin   = WP_Optimize()->get_db_info()->get_table_plugin($table_name);
+				$table_status[$index]->is_using = WP_Optimize()->get_db_info()->is_table_using_by_plugin($table_name);
+				// if table belongs to any plugin then add plugins status.
+				if ($table_status[$index]->plugin) {
+					$table_status[$index]->plugin_status   = WP_Optimize()->get_db_info()->get_plugin_status($table_status[$index]->plugin);
+				}
 			}
 		}
 
@@ -309,6 +318,14 @@ class WP_Optimizer {
 		$table->is_optimizable = WP_Optimize()->get_db_info()->is_table_optimizable($table_name);
 		$table->is_type_supported = WP_Optimize()->get_db_info()->is_table_type_optimize_supported($table_name);
 		$table->is_needing_repair = WP_Optimize()->get_db_info()->is_table_needing_repair($table_name);
+
+		// add information about using table by any of installed plugins.
+		$table->plugin   = WP_Optimize()->get_db_info()->get_table_plugin($table_name);
+		$table->is_using = WP_Optimize()->get_db_info()->is_table_using_by_plugin($table_name);
+		// if table belongs to any plugin then add plugins status.
+		if ($table->plugin) {
+			$table->plugin_status   = WP_Optimize()->get_db_info()->get_plugin_status($table->plugin);
+		}
 
 		$table = apply_filters('wp_optimize_get_table', $table);
 		return $table;
@@ -438,7 +455,6 @@ class WP_Optimizer {
 		$total_now = strval($previously_saved + $converted_current);
 
 		$options->update_option('total-cleaned', $total_now);
-		$options->update_option('current-cleaned', $current);
 
 		return $total_now;
 	}

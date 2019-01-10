@@ -196,19 +196,18 @@ class bwg_UploadHandler {
       return strpos($url, '?') === false ? '?' : '&';
     }
 
-    protected function get_download_url($file_name, $version = null) {
+    protected function get_download_url($file, $version = null) {
       if ($this->options['download_via_php']) {
-        $url = $this->options['script_url']
-            .$this->get_query_separator($this->options['script_url'])
-            .'file='.rawurlencode($file_name);
+        $url = $this->options['script_url'] . $this->get_query_separator($this->options['script_url']) . 'file='.rawurlencode($file->name);
         if ($version) {
           $url .= '&version='.rawurlencode($version);
         }
         return $url.'&download=1';
       }
       $version_path = empty($version) ? '' : rawurlencode($version).'/';
-      return $this->options['upload_url'].$this->get_user_path().'/'
-          .$version_path.rawurlencode($file_name);
+	  $file_path = !empty($file->path) ? $file->path : '';
+	  $url =  $this->options['upload_url'].$this->get_user_path() . $file_path . $version_path .  rawurlencode($file->name);
+      return $url;
     }
 
     protected function set_file_delete_properties($file) {
@@ -238,7 +237,6 @@ class bwg_UploadHandler {
         clearstatcache(true, $file_path);
       }*/
       return $this->fix_integer_overflow(filesize($file_path));
-
     }
 
     protected function is_valid_file_object($file_name) {
@@ -256,12 +254,12 @@ class bwg_UploadHandler {
         $file->size = $this->get_file_size(
           $this->get_upload_path($file_name)
         );
-        $file->url = $this->get_download_url($file->name);
+        $file->url = $this->get_download_url($file);
         foreach($this->options['image_versions'] as $version => $options) {
           if (!empty($version)) {
             if (is_file($this->get_upload_path($file_name, $version))) {
               $file->{$version.'_url'} = $this->get_download_url(
-                $file->name,
+                $file,
                 $version
               );
             }
@@ -299,35 +297,7 @@ class bwg_UploadHandler {
       } else {
         $new_file_path = $file_path;
       }
-      $image = wp_get_image_editor( $file_path );
-      $success = false;
-      if ( ! is_wp_error( $image ) ) {
-        $image_size = $image->get_size();
-        $img_width = $image_size['width'];
-        $img_height = $image_size['height'];
-        if (!$img_width || !$img_height) {
-          return false;
-        }
-        $max_width = $options['max_width'];
-        $max_height = $options['max_height'];
-        $scale = min(
-          $max_width / $img_width,
-          $max_height / $img_height
-        );
-        if (($scale >= 1) || (($max_width == NULL) && ($max_height == NULL))) {
-          if ($file_path !== $new_file_path) {
-            return copy($file_path, $new_file_path);
-          }
-          return true;
-        }
-
-        $new_width = $img_width * $scale;
-        $new_height = $img_height * $scale;
-        $image->set_quality(BWG()->options->image_quality);
-        $image->resize($new_width, $new_height, false);
-        $success = $image->save($new_file_path);
-        $success = !is_wp_error($success);
-      }
+      $success = WDWLibrary::resize_image($file_path, $new_file_path, $options['max_width'], $options['max_height']);
 
       return $success;
     }
@@ -338,16 +308,17 @@ class bwg_UploadHandler {
 
     function get_config_bytes($val) {
       $val = trim($val);
+	  $int_val = intval($val);
       $last = strtolower($val[strlen($val)-1]);
       switch($last) {
         case 'g':
-          $val *= 1024;
+          $int_val *= 1024;
         case 'm':
-          $val *= 1024;
+          $int_val *= 1024;
         case 'k':
-          $val *= 1024;
+          $int_val *= 1024;
       }
-      return $this->fix_integer_overflow($val);
+      return $this->fix_integer_overflow($int_val);
     }
 
     protected function validate($uploaded_file, $file, $error, $index) {
@@ -446,7 +417,13 @@ class bwg_UploadHandler {
       // into different directories or replacing hidden system files.
       // Also remove control characters and spaces (\x00..\x20) around the filename:
       $name = trim(stripslashes($name), ".\x00..\x20");
-      $name = str_replace(array(" ",'%'), array("_",''), $name);
+      $name = str_replace(array(" ",'%','&'), array("_",'',''), $name);
+      $tempname = explode(".", $name);
+
+      if ( $tempname[0] == '' ) {
+          $tempname[0] = 'unnamed-file';
+          $name = $tempname[0].".".$tempname[1];
+      }
       // Use a timestamp for empty filenames:
       if (!$name) {
         $name = str_replace('.', '-', microtime(true));
@@ -514,10 +491,7 @@ class bwg_UploadHandler {
       foreach($this->options['image_versions'] as $version => $options) {
         if ($this->create_scaled_image($file->name, $version, $options)) {
           if (!empty($version)) {
-            $file->{$version.'_url'} = $this->get_download_url(
-              $file->name,
-              $version
-            );
+            $file->{$version.'_url'} = $this->get_download_url($file, $version);
           }
           else {
             $file->size = $this->get_file_size($file_path, true);
@@ -531,12 +505,10 @@ class bwg_UploadHandler {
         case 0:
           break;
         case 1:
-          $file->error = 'Failed to create scaled version: '
-              .$failed_versions[0];
+          $file->error = 'Failed to create scaled version: ' .$failed_versions[0];
           break;
         default:
-          $file->error = 'Failed to create scaled versions: '
-              .implode($failed_versions,', ');
+          $file->error = 'Failed to create scaled versions: ' .implode($failed_versions,', ');
       }
     }
 
@@ -557,7 +529,7 @@ class bwg_UploadHandler {
         if ($allow_extract) {
           $target_dir = substr($file_path, 0, strlen($file_path) - 4);
           if (!is_dir($target_dir)) {
-            mkdir($target_dir, 0777);
+            mkdir($target_dir, 0755);
           }
           $zip->extractTo($target_dir);
         }
@@ -586,7 +558,8 @@ class bwg_UploadHandler {
             if (is_file($ex_file)) {
               $type = filetype($ex_file);
               $name = basename($ex_file);
-              $extension = end(explode(".", $name));
+              $extension = explode(".", $name);
+              $extension = end($extension);
               $name = str_replace('.' . $extension, strtolower('.' . $extension), $name);
               $index = null;
               $content_range = null;
@@ -595,7 +568,7 @@ class bwg_UploadHandler {
               $file->name = $name;
               $file->size = $this->fix_integer_overflow(intval($size));
               $file->type = $type;
-              $file->url = $this->get_download_url($file->name);
+              $file->url = $this->get_download_url($file);
               list($img_width, $img_height) = @getimagesize(htmlspecialchars_decode($ex_file, ENT_COMPAT | ENT_QUOTES));
               if ($this->options['max_width'] && $this->options['max_height']) {
                 // Zip Upload.
@@ -615,78 +588,81 @@ class bwg_UploadHandler {
     }
 
     protected function handle_file_import($uploaded_file, $name) {
-      $parent_dir = wp_upload_dir();
-      $basedir = $parent_dir['basedir'];
+		$parent_dir = wp_upload_dir();
+		$basedir = $parent_dir['basedir'];
+		$file_type_array = explode('.', $name);
+		$type = strtolower(end($file_type_array));
+		$file = new stdClass();
+		if ( WDWLibrary::allowed_upload_types($type) ) {
+			$file->error = false;
+			$file->name = $this->get_file_name($name, $type, 0, "");
+			$file->type = $type;
+			$this->handle_form_data($file, 0);
+			$upload_dir = $this->get_upload_path();
+			if ( !is_dir($upload_dir) ) {
+				mkdir($upload_dir, $this->options['mkdir_mode'], true);
+			}
+			$file_path = $this->get_upload_path($file->name);
+			copy($basedir . '/' . $uploaded_file, $file_path);
 
-      $file_type_array = explode('.', $name);
-      $type = strtolower(end($file_type_array));
-
-      $file = new stdClass();
-      $file->name = $this->get_file_name($name, $type, 0, "");
-      $file->type = $type;
-      $this->handle_form_data($file, 0);
-      $upload_dir = $this->get_upload_path();
-      if ( !is_dir($upload_dir) ) {
-        mkdir($upload_dir, $this->options['mkdir_mode'], true);
-      }
-      $file_path = $this->get_upload_path($file->name);
-	    copy($basedir . '/' . $uploaded_file, $file_path);
-	  
-      if ( $this->options['max_width'] && $this->options['max_height'] ) {
-        // Media library Upload.
-        $this->create_scaled_image($file->name, 'main', $this->options);
-      }
-      list($img_width) = @getimagesize(htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES));
-      if ( is_int($img_width) ) {
-        $this->handle_image_file($file_path, $file);
-      }
-      $this->set_file_delete_properties($file);
-
-      // Additional information.
-
-      $file->filetype = $type;
-      $file->filename = str_replace('.' . $file->filetype, '', $file->name);
-      $file->alt = $file->filename;
-      $file->reliative_url = $this->options['upload_url'] . '/' . $this->options['media_library_folder'] . $file->name;
-      $file->url = '/' . $this->options['media_library_folder'] . '/' . $file->name;
-      $file->thumb = $this->options['upload_url'] . '/' . $this->options['media_library_folder'] . '/thumb/' . $file->name;
-      $file->thumb_url = '/' . $this->options['media_library_folder'] . '/thumb/' . $file->name;
-
-      $file_size_kb = (int)(filesize($file_path) / 1024);
-      $file->size = $file_size_kb . ' KB';
-      $file->date_modified = date('d F Y, H:i', filemtime($file_path));
-      $image_info = getimagesize(htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES));
-      $file->resolution = $image_info[0]  . ' x ' . $image_info[1] . ' px';
-
-      
-      if ( BWG()->options->read_metadata ) {
-        $exif = WDWLibrary::read_image_metadata($upload_dir . '.original/' . $file->name);
-        $file->credit = $exif['credit'];
-        $file->aperture = $exif['aperture'];
-        $file->camera = $exif['camera'];
-        $file->caption = $exif['caption'];
-        $file->iso = $exif['iso'];
-        $file->orientation = $exif['orientation'];
-        $file->copyright = $exif['copyright'];
-      }
-
-      return $file;
+			if ( $this->options['max_width'] && $this->options['max_height'] ) {
+				// Media library Upload.
+				$this->create_scaled_image($file->name, 'main', $this->options);
+			}
+			list($img_width) = @getimagesize(htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES));
+			if ( is_int($img_width) ) {
+				$this->handle_image_file($file_path, $file);
+			}
+			$this->set_file_delete_properties($file);
+			// Additional information.
+			$file->path = '/' . $this->options['media_library_folder'];
+			$file->filetype = $type;
+			$file->filename = str_replace('.' . $file->filetype, '', $file->name);
+			$file->alt = $file->filename;
+			$file->reliative_url = $this->options['upload_url'] . '/' . $this->options['media_library_folder'] . $file->name;
+			$file->url = '/' . $this->options['media_library_folder'] . $file->name;
+			$file->thumb = $this->options['upload_url'] . '/' . $this->options['media_library_folder'] . 'thumb/' . $file->name;
+			$file->thumb_url = '/' . $this->options['media_library_folder'] . 'thumb/' . $file->name;
+			$file_size_kb = (int)(filesize($file_path) / 1024);
+			$file->size = $file_size_kb . ' KB';
+			$file->date_modified = date('Y-m-d H:i:s', filemtime($file_path));
+			$image_info = @getimagesize(htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES));
+			$file->resolution = $image_info[0]  . ' x ' . $image_info[1] . ' px';
+			if ( BWG()->options->read_metadata ) {
+				$meta = WDWLibrary::read_image_metadata($upload_dir . '.original/' . $file->name);
+				$file->credit = $meta['credit'];
+				$file->aperture = $meta['aperture'];
+				$file->camera = $meta['camera'];
+				$file->caption = $meta['caption'];
+				$file->iso = $meta['iso'];
+				$file->orientation = $meta['orientation'];
+				$file->copyright = $meta['copyright'];
+				$file->alt = $meta['title'] ? $meta['title'] : $file->filename;
+				$file->tags = $meta['tags'];
+			}
+		}
+		else {
+			$file->error = true;
+		}
+		return $file;
     }
 
-    protected function handle_file_upload($uploaded_file, $name, $size, $type, $error, $index = null, $content_range = null) {
+    protected function handle_file_upload($uploaded_file, $name, $size, $type, $error, $index = null, $content_range = null, $path = '') {
       $file = new stdClass();
+      $file->dir  = $this->get_upload_path();
+      $file->path = $path;
       $file->name = $this->get_file_name($name, $type, $index, $content_range);
       $file->size = $this->fix_integer_overflow(intval($size));
       $file->type = $type;
-      if ($this->validate($uploaded_file, $file, $error, $index)) {
+      if ( $this->validate($uploaded_file, $file, $error, $index) ) {
         $this->handle_form_data($file, $index);
         $upload_dir = $this->get_upload_path();
         if (!is_dir($upload_dir)) {
           mkdir($upload_dir, $this->options['mkdir_mode'], true);
         }
         $file_path = $this->get_upload_path($file->name);
-        $append_file = $content_range && is_file($file_path) &&
-            $file->size > $this->get_file_size($file_path);
+		$append_file = $content_range && is_file($file_path) &&
+		$file->size = $this->get_file_size($file_path);
         if ($uploaded_file && is_uploaded_file($uploaded_file)) {
           // multipart/formdata uploads (POST method uploads)
           if ($append_file) {
@@ -714,7 +690,7 @@ class bwg_UploadHandler {
             // Upload.
             $this->create_scaled_image($file->name, 'main', $this->options);
           }
-          $file->url = $this->get_download_url($file->name);
+          $file->url = $this->get_download_url($file);
           list($img_width, $img_height) = @getimagesize(htmlspecialchars_decode($file_path, ENT_COMPAT | ENT_QUOTES));
           if (is_int($img_width)) {
             $this->handle_image_file($file_path, $file);
@@ -730,7 +706,26 @@ class bwg_UploadHandler {
             $file->error = 'abort';
           }
         }
+
+		$file->filename = str_replace( "_", " ", substr($file->name, 0, strrpos($file->name, '.')) );
+		$file_ex = explode('.', $file->name);
+		$file->type = strtolower(end($file_ex));
+		$file->thumb = $file->name;
+		$file->size = (int)($file->size / 1024) . ' KB';
+		$image_info = @getimagesize(htmlspecialchars_decode($file->url, ENT_COMPAT | ENT_QUOTES));
+		$file->resolution = $image_info[0]  . ' x ' . $image_info[1] . ' px';
+		$meta = WDWLibrary::read_image_metadata( $file->dir . '/.original/' . $file->name );
+		$file->alt = (BWG()->options->read_metadata && $meta['title']) ? $meta['title'] : str_replace("_", " ", $file->filename);
+		$file->credit = !empty($meta['credit']) ? $meta['credit'] : '';
+		$file->aperture = !empty($meta['aperture']) ? $meta['aperture'] : '';
+		$file->camera = !empty($meta['camera']) ? $meta['camera'] : '';
+		$file->caption = !empty($meta['caption']) ? $meta['caption'] : '';
+		$file->iso = !empty($meta['iso']) ? $meta['iso'] : '';
+		$file->orientation = !empty($meta['orientation']) ? $meta['orientation'] : '';
+		$file->copyright = !empty($meta['copyright']) ? $meta['copyright']: '';
+		$file->tags = !empty($meta['tags']) ? $meta['tags'] : '';
         $this->set_file_delete_properties($file);
+		// $file->date_modified = date('d F Y, H:i');
       }
       return $file;
     }
@@ -880,14 +875,31 @@ class bwg_UploadHandler {
     }
 
     public function post($print_response = true) {
-      if ( isset($_REQUEST['import']) && $_REQUEST['import'] == 1 ) {
-        $file_names = json_decode(isset($_REQUEST['file_namesML']) ? stripslashes($_REQUEST['file_namesML']) : '');
+	  global $wpdb;
+	  $path = isset($_REQUEST['dir']) ? str_replace('\\', '', ($_REQUEST['dir'])) . '/' : '/';
+	  if ( isset($_REQUEST['import']) && $_REQUEST['import'] == 1 ) {
         $files = array();
-        foreach ($file_names as $index => $value) {
-          $file_name_array = explode('/', $value);
-          $files[] = $this->handle_file_import($value, end($file_name_array));
-        }
-        echo json_encode($files);
+        $file_names = json_decode( isset($_REQUEST['file_namesML']) ? stripslashes($_REQUEST['file_namesML']) : array() );
+		if ( !empty($file_names) ) {
+			// Create IMPORTED_FROM_MEDIA_LIBRAY folder.
+			if ( !is_dir( $this->get_upload_path() ) ) {
+				$folder = new stdClass();
+				$folder_name = trim($this->options['media_library_folder'],'/');
+				$folder->path = '/';
+				$folder->name = $folder_name;
+				$folder->filename = $folder_name;
+				$folder->alt = $folder_name;
+				$wpdb->insert( $wpdb->prefix . 'bwg_file_paths', $this->set_folder_info($folder) );
+			}
+			// Adding images on IMPORTED_FROM_MEDIA_LIBRAY folder.
+			foreach ($file_names as $index => $value) {
+				$file_name_array = explode('/', $value);
+				$file_info = $this->handle_file_import($value, end($file_name_array));
+				$files[] = $file_info;
+				$wpdb->insert($wpdb->prefix . 'bwg_file_paths', $this->set_file_info($file_info) );
+			}
+			echo json_encode($files);
+		}
         return;
       }
       if (isset($_REQUEST['_method']) && $_REQUEST['_method'] === 'DELETE') {
@@ -910,41 +922,48 @@ class bwg_UploadHandler {
         // $_FILES is a multi-dimensional array:
         foreach ($upload['tmp_name'] as $index => $value) {
           $filename = $file_name ? $file_name : $upload['name'][$index];
-          $extension = end(explode(".", $filename));
+          $extension = explode(".", $filename);
+          $extension = end($extension);
           $filename = str_replace('.' . $extension, strtolower('.' . $extension), $filename);
-            $files[] = $this->handle_file_upload(
+          $files[] = $this->handle_file_upload(
                 $upload['tmp_name'][$index],
                 $filename,
                 $size ? $size : $upload['size'][$index],
                 $upload['type'][$index],
                 $upload['error'][$index],
                 $index,
-                $content_range
+                $content_range,
+				$path
             );
         }
       }
       else {
         $filename = $file_name ? $file_name : (isset($upload['name']) ? $upload['name'] : null);
-        $extension = end(explode(".", $filename));
+        $extension = explode(".", $filename);
+        $extension = end($extension);
         $filename = str_replace('.' . $extension, strtolower('.' . $extension), $filename);
         // param_name is a single object identifier like "file",
         // $_FILES is a one-dimensional array:
         $files[] = $this->handle_file_upload(
             isset($upload['tmp_name']) ? $upload['tmp_name'] : null,
             $filename,
-            $size ? $size : (isset($upload['size']) ?
-                    $upload['size'] : $_SERVER['CONTENT_LENGTH']),
-            isset($upload['type']) ?
-                    $upload['type'] : $_SERVER['CONTENT_TYPE'],
+            $size ? $size : (isset($upload['size']) ? $upload['size'] : $_SERVER['CONTENT_LENGTH']),
+            isset($upload['type']) ? $upload['type'] : $_SERVER['CONTENT_TYPE'],
             isset($upload['error']) ? $upload['error'] : null,
             null,
-            $content_range
+            $content_range,
+			$path
         );
       }
-      return $this->generate_response(
-        array($this->options['param_name'] => $files),
-        $print_response
-      );
+
+	  if ( !empty($files) ) {
+		foreach( $files as $file ) {
+			if ( empty($file->error) ) {
+				$wpdb->insert($wpdb->prefix . 'bwg_file_paths', $this->set_file_info($file) );
+			}
+		}
+	  }
+      return $this->generate_response( array($this->options['param_name'] => $files), $print_response);
     }
 
     public function delete($print_response = true) {
@@ -964,6 +983,49 @@ class bwg_UploadHandler {
       return $this->generate_response(array('success' => $success), $print_response);
     }
 
-}
+  /**
+   * Set folder info
+   *
+   * @param $info
+   * @return mixed
+   */
+	private function set_folder_info( $info ) {
+		$data['is_dir'] = 1;
+		$data['path'] = $info->path;
+		$data['name'] = $info->name;
+		$data['filename'] = $info->name;
+		$data['thumb'] = '/filemanager/images/dir.png';
+		$data['alt'] = $info->alt;
+		$data['date_modified'] = date("Y-m-d H:i:s");
+		return $data;
+	}
 
+  /**
+   * Set file info.
+   *
+   * @param $info
+   * @return mixed
+   */
+	private function set_file_info( $info ) {
+		$data['is_dir'] = 0;
+		$data['path'] = $info->path;
+		$data['type'] = $info->type;
+		$data['name'] = $info->name;
+		$data['filename'] = $info->filename;
+		$data['alt'] = $info->alt;
+		$data['thumb'] = 'thumb/' . $info->name;
+		$data['size'] = $info->size;
+		$data['resolution'] = $info->resolution;
+		$data['credit'] = $info->credit;
+		$data['aperture'] = $info->aperture;
+		$data['camera'] = $info->camera;
+		$data['caption'] = $info->caption;
+		$data['iso'] = $info->iso;
+		$data['orientation'] = $info->orientation;
+		$data['copyright'] = $info->copyright;
+		$data['tags'] = $info->tags;
+		$data['date_modified'] = date('Y-m-d H:i:s');
+		return $data;
+	}
+}
 die();

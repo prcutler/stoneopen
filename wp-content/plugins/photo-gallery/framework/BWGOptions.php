@@ -4,7 +4,7 @@ defined('ABSPATH') || die('Access Denied');
 class WD_BWG_Options {
 
   // General
-  public $images_directory = null;
+  public $images_directory = 'wp-content/uploads';
   public $resizable_thumbnails = 1;
   public $upload_img_width = 1200;
   public $upload_img_height = 1200;
@@ -15,9 +15,11 @@ class WD_BWG_Options {
   public $preload_images_count = 10;
   public $show_hide_custom_post = 0;
   public $show_hide_post_meta = 0;
+  public $save_ip = 1;
   public $image_right_click = 0;
   public $use_inline_stiles_and_scripts = 0;
-  public $enable_wp_editor = 1;
+  public $enable_google_fonts = 1;
+  public $enable_wp_editor = 0;
   public $enable_seo = 1;
   public $read_metadata = 1;
 
@@ -31,13 +33,13 @@ class WD_BWG_Options {
   public $sort_by = 'order';
   public $order_by = 'asc';
   public $show_search_box = 0;
-  public $placeholder = '';
-  public $search_box_width = 180;
+  public $placeholder = 'Search';
+  public $search_box_width = 330;
   public $show_sort_images = 0;
   public $show_tag_box = 0;
   public $showthumbs_name = 0;
   public $show_gallery_description = 0;
-  public $image_title_show_hover = 'none';
+  public $image_title_show_hover = 'hover';
   public $play_icon = 1;
   public $gallery_download = 0;
   public $ecommerce_icon_show_hover = 'none';
@@ -53,12 +55,13 @@ class WD_BWG_Options {
   public $masonry_sort_by = 'order';
   public $masonry_order_by = 'asc';
   public $masonry_show_search_box = 0;
-  public $masonry_placeholder = '';
+  public $masonry_placeholder = 'Search';
   public $masonry_search_box_width = 180;
   public $masonry_show_sort_images = 0;
   public $masonry_show_tag_box = 0;
   public $masonry_show_gallery_title = 0;
   public $masonry_show_gallery_description = 0;
+  public $masonry_image_title = 'none';
   public $masonry_play_icon = 1;
   public $masonry_gallery_download = 0;
   public $masonry_ecommerce_icon_show_hover = 'none';
@@ -74,7 +77,7 @@ class WD_BWG_Options {
   public $mosaic_sort_by = 'order';
   public $mosaic_order_by = 'asc';
   public $mosaic_show_search_box = 0;
-  public $mosaic_placeholder = '';
+  public $mosaic_placeholder = 'Search';
   public $mosaic_search_box_width = 180;
   public $mosaic_show_sort_images = 0;
   public $mosaic_show_tag_box = 0;
@@ -117,7 +120,9 @@ class WD_BWG_Options {
   public $image_browser_show_gallery_title = 0;
   public $image_browser_show_gallery_description = 0;
   public $image_browser_show_search_box = 0;
-  public $image_browser_placeholder = '';
+  public $image_browser_show_sort_images = 0;
+  public $image_browser_show_tag_box = 0;
+  public $image_browser_placeholder = 'Search';
   public $image_browser_search_box_width = 180;
   public $image_browser_gallery_download = 0;
 
@@ -133,7 +138,7 @@ class WD_BWG_Options {
   public $blog_style_show_gallery_title = 0;
   public $blog_style_show_gallery_description = 0;
   public $blog_style_show_search_box = 0;
-  public $blog_style_placeholder = '';
+  public $blog_style_placeholder = 'Search';
   public $blog_style_search_box_width = 180;
   public $blog_style_show_sort_images = 0;
   public $blog_style_show_tag_box = 0;
@@ -168,7 +173,7 @@ class WD_BWG_Options {
   public $album_sort_by = 'order';
   public $album_order_by = 'asc';
   public $album_show_search_box = 0;
-  public $album_placeholder = '';
+  public $album_placeholder = 'Search';
   public $album_search_box_width = 180;
   public $album_show_sort_images = 0;
   public $album_show_tag_box = 0;
@@ -195,29 +200,31 @@ class WD_BWG_Options {
   public $album_masonry_sort_by = 'order';
   public $album_masonry_order_by = 'asc';
   public $album_masonry_show_search_box = 0;
-  public $album_masonry_placeholder = '';
+  public $album_masonry_placeholder = 'Search';
   public $album_masonry_search_box_width = 180;
   public $album_masonry_show_sort_images = 0;
   public $album_masonry_show_tag_box = 0;
   public $show_album_masonry_name = 0;
   public $album_masonry_show_gallery_description = 0;
+  public $album_masonry_image_title = 0;
   public $album_masonry_gallery_download = 0;
   public $album_masonry_ecommerce_icon_show_hover = 'none';
 
   // Album extended
-  public $extended_album_height = 200;
-  public $album_extended_thumb_width = 250;
-  public $album_extended_thumb_height = 140;
+  public $extended_album_column_number = 2;
+  public $extended_album_height = 160;
+  public $album_extended_thumb_width = 357;
+  public $album_extended_thumb_height = 201;
   public $album_extended_image_column_number = 5;
-  public $album_extended_image_thumb_width = 250;
-  public $album_extended_image_thumb_height = 140;
+  public $album_extended_image_thumb_width = 357;
+  public $album_extended_image_thumb_height = 201;
   public $album_extended_enable_page = 1;
   public $albums_extended_per_page = 30;
   public $album_extended_images_per_page = 30;
   public $album_extended_sort_by = 'order';
   public $album_extended_order_by = 'asc';
   public $album_extended_show_search_box = 0;
-  public $album_extended_placeholder = '';
+  public $album_extended_placeholder = 'Search';
   public $album_extended_search_box_width = 180;
   public $album_extended_show_sort_images = 0;
   public $album_extended_show_tag_box = 0;
@@ -285,7 +292,7 @@ class WD_BWG_Options {
   public $watermark_width = 90;
   public $watermark_height = 90;
   public $watermark_url = '';
-  public $watermark_text = '10web.io';
+  public $watermark_text = '10Web.io';
   public $watermark_link = 'https://10web.io/';
   public $watermark_font_size = 20;
   public $watermark_font = 'segoe ui';
@@ -296,7 +303,7 @@ class WD_BWG_Options {
   public $built_in_watermark_position = 'middle-center';
   public $built_in_watermark_size = 15;
   public $built_in_watermark_url = '';
-  public $built_in_watermark_text = '10web.io';
+  public $built_in_watermark_text = '10Web.io';
   public $built_in_watermark_font_size = 20;
   public $built_in_watermark_font = 'arial';
   public $built_in_watermark_color = 'FFFFFF';
@@ -318,28 +325,34 @@ class WD_BWG_Options {
       }
     }
 
-    if ($this->images_directory === null) {
+    if ( $this->images_directory === 'wp-content/uploads' ) {
+      // If images directory has not been changed by user.
       $upload_dir = wp_upload_dir();
-      if (!isset($this->old_images_directory) && !is_dir($upload_dir['basedir'] . '/photo-gallery') && !$reset) {
-        $this->make_directory($upload_dir['basedir']);
-      }
-      $this->images_directory = str_replace(ABSPATH, '', $upload_dir['basedir']);
+      $this->upload_dir = $upload_dir['basedir'] . '/photo-gallery';
+      $this->upload_url = $upload_dir['baseurl'] . '/photo-gallery';
     }
+    else {
+      // For old users, who have changed images directory.
+      $this->upload_dir = ABSPATH . '/' . $this->images_directory . '/photo-gallery';
+      $this->upload_url = site_url() . '/' . $this->images_directory . '/photo-gallery';
+    }
+
+    // Create directory if not exist.
+    if ( !is_dir($this->upload_dir) ) {
+      mkdir($this->upload_dir, 0755);
+    }
+
     $this->old_images_directory = $old_images_directory;
+
     if ( $reset ) {
       $this->watermark_url = BWG()->plugin_url . '/images/watermark.png';
-    }
-    if ( $reset ) {
       $this->built_in_watermark_url = BWG()->plugin_url . '/images/watermark.png';
     }
     if ($this->permissions != 'moderate_comments' && $this->permissions != 'publish_posts' && $this->permissions != 'edit_posts') {
       $this->permissions = 'manage_options';
     }
+
     $this->jpeg_quality = $this->image_quality;
     $this->png_quality = 9 - round(9 * $this->image_quality / 100);
-  }
-
-  private function make_directory($upload_dir) {
-    mkdir($upload_dir . '/photo-gallery', 0777);
   }
 }

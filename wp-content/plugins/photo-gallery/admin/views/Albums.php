@@ -4,12 +4,19 @@
  * Class AlbumsView_bwg
  */
 class AlbumsView_bwg extends AdminView_bwg {
+
+  public function __construct() {
+    wp_enqueue_script(BWG()->prefix . '_jquery.ui.touch-punch.min');
+    parent::__construct();
+  }
+
   /**
    * Display page.
    *
    * @param $params
    */
-	public function display( $params ) {
+	public function display( $params = array() ) {
+    wp_enqueue_script(BWG()->prefix . '_jquery.ui.touch-punch.min');
 		ob_start();
 		echo $this->body($params);
 		// Pass the content to form.
@@ -27,13 +34,14 @@ class AlbumsView_bwg extends AdminView_bwg {
 	*
 	* @param $params
 	*/
-	public function body( $params ) {
+	public function body( $params = array() ) {
 		echo $this->title( array(
 							'title' => $params['page_title'],
 							'title_class' => 'wd-header',
 							'add_new_button' => array(
 								'href' => add_query_arg(array( 'page' => $params['page'], 'task' => 'edit' ), admin_url('admin.php')),
-							)
+							),
+              'how_to_button' => true,
 						  )
 						);
 		echo $this->search();
@@ -44,7 +52,7 @@ class AlbumsView_bwg extends AdminView_bwg {
 			echo $this->pagination($params['page_url'], $params['total'], $params['items_per_page']);
 		?>
 		</div>
-		<table class="adminlist table table-striped wp-list-table widefat fixed pages media">
+		<table class="images_table adminlist table table-striped wp-list-table widefat fixed pages media bwg-gallery-lists">
 			<thead>
 				<td id="cb" class="column-cb check-column">
 				  <label class="screen-reader-text" for="cb-select-all-1"><?php _e('Select all', BWG()->prefix); ?></label>
@@ -73,10 +81,10 @@ class AlbumsView_bwg extends AdminView_bwg {
 					$preview_url =  WDWLibrary::get_custom_post_permalink( array('slug' => $row->slug, 'post_type' => 'album' ));
 					$preview_image = BWG()->plugin_url . '/images/no-image.png';
 					if ( !empty($row->preview_image) ) {
-						$preview_image = site_url() . '/' . BWG()->upload_dir . $row->preview_image;
+						$preview_image = BWG()->upload_url . $row->preview_image;
 					}
 					if ( !empty($row->random_preview_image)) {
-						$preview_image = site_url() . '/' . BWG()->upload_dir . $row->random_preview_image;
+						$preview_image = BWG()->upload_url . $row->random_preview_image;
 						if ( WDWLibrary::check_external_link($row->random_preview_image) ) {
 							$preview_image = $row->random_preview_image;
 						}
@@ -133,7 +141,7 @@ class AlbumsView_bwg extends AdminView_bwg {
    *
    * @return string html.
    */
-  public function edit( $params ) {
+  public function edit( $params = array() ) {
     wp_enqueue_script('jquery-ui-sortable');
     wp_admin_css('thickbox');
     wp_enqueue_media();
@@ -155,11 +163,11 @@ class AlbumsView_bwg extends AdminView_bwg {
    *
    * @param $params
    */
-  public function edit_body( $params ) {
-	wp_enqueue_style('thickbox');
+  public function edit_body( $params = array() ) {
+	  wp_enqueue_style('thickbox');
     wp_enqueue_script('thickbox');
     $row = $params['row'];
-    $enable_wp_editor = isset(BWG()->options->enable_wp_editor) ? BWG()->options->enable_wp_editor : 1;
+    $enable_wp_editor = isset(BWG()->options->enable_wp_editor) ? BWG()->options->enable_wp_editor : 0;
     ?>
     <div class="bwg-page-header">
       <div class="wd-page-title wd-header">
@@ -168,11 +176,7 @@ class AlbumsView_bwg extends AdminView_bwg {
         <div class="bwg-page-actions">
           <?php
           if ( $params['shortcode_id'] ) {
-            ?>
-          <button class="button button-secondary button-large" onclick="how_to_use(); return false;">
-            <?php _e('How to use', BWG()->prefix); ?>
-          </button>
-            <?php
+            require BWG()->plugin_dir . '/framework/howto/howto.php';
           }
           ?>
           <button class="button button-primary button-large" onclick="if (spider_check_required('name', 'Title')) {return false;}; spider_set_input_value('task', 'save')">
@@ -204,7 +208,7 @@ class AlbumsView_bwg extends AdminView_bwg {
 					<a href="<?php echo $params['add_preview_image_action']; ?>" id="button_preview_image" class="button wd-preview-image-btn thickbox thickbox-preview <?php echo ($row->preview_image == '') ? 'bwg_not-preview-image' : '' ?>" title="<?php _e('Add Preview Image', BWG()->prefix); ?>" onclick="return false;" style="<?php echo !empty($row->preview_image)?'display:none;':'' ?>">
 						<span class="dashicons dashicons-camera"></span><?php _e('Add', BWG()->prefix); ?>
 					</a>
-					<img id="img_preview_image" src="<?php echo $row->preview_image ? (site_url() . '/' . BWG()->upload_dir . $row->preview_image) : ''; ?>" style="<?php echo empty($row->preview_image)?'display:none;':'' ?>"/>
+					<img id="img_preview_image" src="<?php echo $row->preview_image ? (BWG()->upload_url . $row->preview_image) : ''; ?>" style="<?php echo empty($row->preview_image)?'display:none;':'' ?>"/>
 					<span id="delete_preview_image" class="spider_delete_img dashicons dashicons-no-alt" onclick="spider_remove_url('button_preview_image', 'preview_image', 'delete_preview_image', 'img_preview_image')" style="<?php echo empty($row->preview_image)?'display:none;':'' ?>"></span>
 					<input type="hidden" id="preview_image" name="preview_image" value="<?php echo $row->preview_image; ?>"/>
 					<p class="description"><?php _e('Add a preview image, which will be displayed as the cover image of the gallery group when it is published in a parent gallery group.', BWG()->prefix); ?></p>
@@ -264,40 +268,6 @@ class AlbumsView_bwg extends AdminView_bwg {
             </div>
         </div>
 	</div>
-	<?php if ( $params['shortcode_id'] ) { ?>
-      <div class="wd-table-row wd-table-col-100 wd-table-col-left">
-        <div class="wd-box-section">
-          <div class="postbox closed how_to_postbox">
-            <button class="button-link handlediv" type="button" aria-expanded="true">
-              <span class="screen-reader-text"><?php _e('Toggle panel:', BWG()->prefix); ?></span>
-              <span class="toggle-indicator" aria-hidden="false"></span>
-            </button>
-            <h2 class="hndle">
-              <span><?php _e('How to use', BWG()->prefix); ?></span>
-            </h2>
-            <div class="inside">
-              <div class="howto_container">
-                <div class="howto_content">
-                  <h2><?php _e('Page or Post editor', BWG()->prefix); ?></h2>
-                  <h4><?php _e('Insert it into an existing post with the button.', BWG()->prefix); ?></h4>
-                  <img src="<?php echo BWG()->plugin_url . '/images/wp-publish.png'; ?>" alt="<?php _e('Post editor', BWG()->prefix); ?>" />
-                </div>
-                <div class="howto_content">
-                  <h2><?php _e('PHP code', BWG()->prefix); ?></h2>
-                  <h4><?php _e('Copy and paste the PHP code into your template file.', BWG()->prefix); ?></h4>
-                  <input type="text" class="bwg_howto_phpcode" value="&#60;?php photo_gallery(<?php echo $params['shortcode_id']; ?>); ?&#62;" onclick="spider_select_value(this)" size="17" readonly="readonly" />
-                </div>
-                <div class="howto_content">
-                  <h2><?php _e('Widget', BWG()->prefix); ?></h2>
-                  <h4><?php _e('Insert as Widget.', BWG()->prefix); ?></h4>
-                  <img src="<?php echo BWG()->plugin_url . '/images/wp-widget.png'; ?>" alt="<?php _e('Widget', BWG()->prefix); ?>" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <?php } ?>
 	</div>
 	<div class="wd-table">
       <div class="wd-table-col wd-table-col-100 meta-box-sortables">
@@ -309,7 +279,7 @@ class AlbumsView_bwg extends AdminView_bwg {
                 <?php
                 foreach ($params['albums_galleries'] as $item) {
                   $item->published = !$item->published ? 'dashicons-hidden' : 'hidden';
-                  $item->preview_image = 'background-image:url("'. $item->preview_image .'")';
+                  $item->preview_image = 'style="background-image:url(&quot;'. $item->preview_image .'&quot;)"';
                   echo $this->albumgallery_template($item);
                 }
                 $template = new stdClass();
@@ -348,7 +318,7 @@ class AlbumsView_bwg extends AdminView_bwg {
     }
     ?>
       <div class="bwg_subtab connectedSortable <?php echo 'bwg_subtab_' . $albumgallery_row->published; ?>" data-id="<?php echo $albumgallery_row->alb_gal_id; ?>" data-is-album="<?php echo $albumgallery_row->is_album; ?>" data-status="<?php echo $albumgallery_row->published; ?>">
-        <div style='<?php echo $albumgallery_row->preview_image; ?>; background-position: center;' class="tab_image">
+        <div <?php echo $albumgallery_row->preview_image; ?> class="tab_image">
           <div class="tab_buttons">
             <div class="handle_wrap">
               <span class="bwg_move dashicons dashicons-move" title="<?php _e('Drag to re-order', BWG()->prefix); ?>"></span>

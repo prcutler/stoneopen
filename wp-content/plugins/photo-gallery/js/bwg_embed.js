@@ -305,7 +305,7 @@ function bwg_add_instagram_gallery(instagram_access_token, from_popup){
     'async':true
   };
 
-   // get response data. Here we use the server as a proxy, since Cross-Origin Resource Sharing AJAX is forbidden.
+   /* get response data. Here we use the server as a proxy, since Cross-Origin Resource Sharing AJAX is forbidden. */
   jQuery.post(ajax_url, data, function(response) {
     if ( response == false ) {
       alert('Error: cannot get response from the server.');

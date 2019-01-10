@@ -4276,7 +4276,7 @@ msgstr "Item succesvol opgeslagen."
 #: framework/WDWLibrary.php:177
 #, fuzzy
 #| msgid "Items Succesfully Deleted."
-msgid "Items successfully reset."
+msgid "Items were reset successfully."
 msgstr "Items succesvol verwijderd."
 
 #: framework/WDWLibrary.php:182

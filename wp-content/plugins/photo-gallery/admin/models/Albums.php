@@ -288,7 +288,7 @@ class AlbumsModel_bwg {
     $slug = WDWLibrary::get('slug');
     $slug = $this->create_unique_slug((empty($slug) ? $name : $slug), $id);
     $old_slug = WDWLibrary::get('old_slug');
-    $published = WDWLibrary::get('published', 0);
+	$published = WDWLibrary::get('published', 0);
     $preview_image = WDWLibrary::get('preview_image');
     $description = WDWLibrary::get('description', '', FALSE);
     $albumgallery_ids = WDWLibrary::get('albumgallery_ids');
@@ -445,10 +445,10 @@ class AlbumsModel_bwg {
       foreach ( $results as $result ) {
 			$preview_image = BWG()->plugin_url . '/images/no-image.png';
 			if ( !empty($result->preview_image) ) {
-				$preview_image = site_url() . '/' . BWG()->upload_dir . $result->preview_image;
+				$preview_image = BWG()->upload_url . $result->preview_image;
 			}
 			if ( !empty($result->random_preview_image) ) {
-				$preview_image = site_url() . '/' . BWG()->upload_dir . $result->random_preview_image;
+				$preview_image = BWG()->upload_url . $result->random_preview_image;
 				if ( WDWLibrary::check_external_link($result->random_preview_image) ) {
 				    $preview_image = $result->random_preview_image;
 				}

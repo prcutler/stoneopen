@@ -19,9 +19,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WC_Admin_Taxonomies {
 
 	/**
+	 * Default category ID.
+	 *
+	 * @var int
+	 */
+	private $default_cat_id = 0;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
+		// Default category ID.
+		$this->default_cat_id = get_option( 'default_product_cat', 0 );
+
 		// Category/term ordering
 		add_action( 'create_term', array( $this, 'create_term' ), 5, 3 );
 		add_action( 'delete_term', array( $this, 'delete_term' ), 5 );
@@ -54,13 +64,16 @@ class WC_Admin_Taxonomies {
 
 		// Maintain hierarchy of terms
 		add_filter( 'wp_terms_checklist_args', array( $this, 'disable_checked_ontop' ) );
+
+		// Admin footer scripts for this product categories admin screen
+		add_action( 'admin_footer', array( $this, 'scripts_at_product_cat_screen_footer' ) );
 	}
 
 	/**
 	 * Order term when created (put in position 0).
 	 *
-	 * @param mixed $term_id
-	 * @param mixed $tt_id
+	 * @param mixed  $term_id
+	 * @param mixed  $tt_id
 	 * @param string $taxonomy
 	 */
 	public function create_term( $term_id, $tt_id = '', $taxonomy = '' ) {
@@ -132,9 +145,9 @@ class WC_Admin_Taxonomies {
 
 					// Create the media frame.
 					file_frame = wp.media.frames.downloadable_file = wp.media({
-						title: '<?php _e( "Choose an image", "woocommerce" ); ?>',
+						title: '<?php _e( 'Choose an image', 'woocommerce' ); ?>',
 						button: {
-							text: '<?php _e( "Use image", "woocommerce" ); ?>'
+							text: '<?php _e( 'Use image', 'woocommerce' ); ?>'
 						},
 						multiple: false
 					});
@@ -200,7 +213,7 @@ class WC_Admin_Taxonomies {
 			$image = wc_placeholder_img_src();
 		}
 		?>
-		<tr class="form-field">
+		<tr class="form-field term-display-type-wrap">
 			<th scope="row" valign="top"><label><?php _e( 'Display type', 'woocommerce' ); ?></label></th>
 			<td>
 				<select id="display_type" name="display_type" class="postform">
@@ -211,7 +224,7 @@ class WC_Admin_Taxonomies {
 				</select>
 			</td>
 		</tr>
-		<tr class="form-field">
+		<tr class="form-field term-thumbnail-wrap">
 			<th scope="row" valign="top"><label><?php _e( 'Thumbnail', 'woocommerce' ); ?></label></th>
 			<td>
 				<div id="product_cat_thumbnail" style="float: left; margin-right: 10px;"><img src="<?php echo esc_url( $image ); ?>" width="60px" height="60px" /></div>
@@ -242,9 +255,9 @@ class WC_Admin_Taxonomies {
 
 						// Create the media frame.
 						file_frame = wp.media.frames.downloadable_file = wp.media({
-							title: '<?php _e( "Choose an image", "woocommerce" ); ?>',
+							title: '<?php _e( 'Choose an image', 'woocommerce' ); ?>',
 							button: {
-								text: '<?php _e( "Use image", "woocommerce" ); ?>'
+								text: '<?php _e( 'Use image', 'woocommerce' ); ?>'
 							},
 							multiple: false
 						});
@@ -280,8 +293,8 @@ class WC_Admin_Taxonomies {
 	/**
 	 * save_category_fields function.
 	 *
-	 * @param mixed $term_id Term ID being saved
-	 * @param mixed $tt_id
+	 * @param mixed  $term_id Term ID being saved
+	 * @param mixed  $tt_id
 	 * @param string $taxonomy
 	 */
 	public function save_category_fields( $term_id, $tt_id = '', $taxonomy = '' ) {
@@ -310,7 +323,7 @@ class WC_Admin_Taxonomies {
 		?>
 		<div class="form-wrap edit-term-notes">
 			<p>
-				<strong><?php _e( 'Note:', 'woocommerce' ) ?></strong><br>
+				<strong><?php _e( 'Note:', 'woocommerce' ); ?></strong><br>
 				<?php
 					printf(
 						/* translators: %s: default category */
@@ -346,7 +359,7 @@ class WC_Admin_Taxonomies {
 
 		$new_columns['thumb'] = __( 'Image', 'woocommerce' );
 
-		$columns = array_merge( $new_columns, $columns );
+		$columns           = array_merge( $new_columns, $columns );
 		$columns['handle'] = '';
 
 		return $columns;
@@ -355,7 +368,7 @@ class WC_Admin_Taxonomies {
 	/**
 	 * Adjust row actions.
 	 *
-	 * @param array $actions Array of actions.
+	 * @param array  $actions Array of actions.
 	 * @param object $term Term object.
 	 * @return array
 	 */
@@ -393,7 +406,7 @@ class WC_Admin_Taxonomies {
 	 *
 	 * @param string $columns
 	 * @param string $column
-	 * @param int $id
+	 * @param int    $id
 	 *
 	 * @return string
 	 */
@@ -435,6 +448,26 @@ class WC_Admin_Taxonomies {
 			$args['checked_ontop'] = false;
 		}
 		return $args;
+	}
+
+	/**
+	 * Admin footer scripts for the product categories admin screen
+	 *
+	 * @return void
+	 */
+	public function scripts_at_product_cat_screen_footer() {
+		if ( ! isset( $_GET['taxonomy'] ) || 'product_cat' !== $_GET['taxonomy'] ) {
+			return;
+		}
+		// Ensure the tooltip is displayed when the image column is disabled on product categories
+		wc_enqueue_js("
+			(function( $ ) {
+				'use strict';
+				var product_cat = $( 'tr#tag-" . absint( $this->default_cat_id ) . "' );
+				product_cat.find( 'th' ).empty();
+				product_cat.find( 'td.thumb span' ).detach( 'span' ).appendTo( product_cat.find( 'th' ) );
+			})( jQuery );
+		");
 	}
 }
 

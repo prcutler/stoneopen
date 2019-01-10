@@ -491,10 +491,11 @@
 }
 .bwg-topbar-links a,
 .bwg-topbar-links a:focus {
+  text-decoration: none;
   align-self: center;
   box-shadow: none;
   color: #000000;
-  text-decoration: none;
+  cursor:pointer;
 }
 .bwg-topbar-links a:hover {
   opacity: 0.5;

@@ -3,7 +3,7 @@
         exit;
     }
 
-    class TenWebApi{
+    class TenWebLibApi{
         ////////////////////////////////////////////////////////////////////////////////////////
         // Events                                                                             //
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -31,7 +31,7 @@
 
        
         public function get_remote_data( $id ) {
-            $remote_data_path = TEN_WEB_API_PLUGIN_DATA_PATH . '/' . $this->userhash;
+            $remote_data_path = TEN_WEB_LIB_API_PLUGIN_DATA_PATH . '/' . $this->userhash;
             $request = wp_remote_get( ( str_replace( '_id_', $id, $remote_data_path ) ) );
 		
             if ( !is_wp_error($request) || wp_remote_retrieve_response_code($request) === 200 ) {

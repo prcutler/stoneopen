@@ -75,16 +75,23 @@ class WidgetController_bwg extends WP_Widget {
    * @return mixed
    */
 	public function update($new_instance, $old_instance) {
-		$instance['title'] = strip_tags($new_instance['title']);
-		$instance['type'] = $new_instance['type'];
-		$instance['gallery_id'] = $new_instance['gallery_id'];
-		$instance['album_id'] = $new_instance['album_id'];
-		$instance['show'] = $new_instance['show'];
-		$instance['count'] = $new_instance['count'];
-		$instance['width'] = $new_instance['width'];
-		$instance['height'] = $new_instance['height'];
-		$instance['theme_id'] = $new_instance['theme_id'];
-		$instance['view_type'] = $new_instance['view_type'];
+		$instance['title'] = isset($new_instance['title']) ? strip_tags($new_instance['title']) : '';
+		$instance['type'] = isset($new_instance['type']) ? $new_instance['type'] : 'gallery';
+		$instance['gallery_id'] = isset($new_instance['gallery_id']) ? $new_instance['gallery_id'] : 0;
+		$instance['album_id'] = isset($new_instance['album_id']) ? $new_instance['album_id'] : 0;
+		$instance['show'] = isset($new_instance['show']) ? $new_instance['show'] : 'random';
+		$instance['count'] = isset($new_instance['count']) ? $new_instance['count'] : 4;
+		$instance['width'] = isset($new_instance['width']) ? $new_instance['width'] : 100;
+		$instance['height'] = isset($new_instance['height']) ? $new_instance['height'] : 100;
+		$instance['theme_id'] = isset($new_instance['theme_id']) ? $new_instance['theme_id'] : 1;
+		$instance['view_type'] = isset($new_instance['view_type']) ? $new_instance['view_type'] : 'thumbnails';
 		return $instance;
 	}
 }
+
+/**
+ * Class BWGControllerWidget
+ *
+ * Allow to work old widgets registered with this name of class added with SiteOrigin builder.
+ */
+class BWGControllerWidget extends WidgetController_bwg {}

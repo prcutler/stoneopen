@@ -576,7 +576,7 @@ class WC_REST_Orders_V1_Controller extends WC_REST_Posts_Controller {
 
 			// If items have changed, recalculate order totals.
 			if ( isset( $request['billing'] ) || isset( $request['shipping'] ) || isset( $request['line_items'] ) || isset( $request['shipping_lines'] ) || isset( $request['fee_lines'] ) || isset( $request['coupon_lines'] ) ) {
-				$order->calculate_totals();
+				$order->calculate_totals( true );
 			}
 
 			return $order->get_id();
@@ -1148,6 +1148,9 @@ class WC_REST_Orders_V1_Controller extends WC_REST_Posts_Controller {
 					'description' => __( 'Payment method title.', 'woocommerce' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
 				),
 				'set_paid' => array(
 					'description' => __( 'Define if the order is paid. It will set the status to processing and reduce stock items.', 'woocommerce' ),

@@ -5,10 +5,26 @@ Version: 1.0.13
 Usage:
 
 Copy and paste wd library into your plugin folder.
-In your plugin main file check if library main TenWeb class doesn't exist, include it
-	if( !class_exists("TenWeb") ){
-		require_once(PATH_TO_YOUR_PLUGIN_DIR . '/wd/start.php');
-	}
+    add_action('init', array($this, 'init_free_users_lib'), 8);
+    public function init_free_users_lib() {
+        add_filter('tenweb_free_users_lib_path', array($this, 'tenweb_lib_path'));
+    }
+
+  public function tenweb_lib_path($path) {
+    // The version of WD Lib
+    $version = '1.1.0';
+    if (!isset($path['version']) || version_compare($path['version'], $version) === -1) {
+      $path['version'] = $version;
+      $path['path'] = $this->plugin_dir;
+    }
+    return $path;
+  }
+  
+In your plugin main file check if library main TenWebLib class doesn't exist, include it
+    if (!class_exists("TenWebLib")) {
+        $plugin_dir = apply_filters('tenweb_free_users_lib_path', array('version' => '1.1.0', 'path' => $this->plugin_dir));
+        require_once($plugin_dir['path'] . '/wd/start.php');
+    }
 
 Then call dorado_web_init($options) function.
 $options = array (

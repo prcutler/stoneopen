@@ -85,13 +85,21 @@ class OptionsController_bwg {
     }
 
     $params['row']  = $row;
+    $params['row']->lightbox_shortcode = 0;
     $params['page'] = $this->page;
-	  $params['instagram_return_url'] = 'https://api.instagram.com/oauth/authorize/?client_id=54da896cf80343ecb0e356ac5479d9ec&scope=basic+public_content&redirect_uri=http://api.web-dorado.com/instagram/?return_url=' . urlencode( admin_url('admin.php?page=options_bwg')) . '&response_type=token';
+    $params['imgcount'] = $this->model->get_image_count();
+    $params['options_url_ajax'] = add_query_arg( array(
+													'action' => 'options_' . BWG()->prefix,
+													BWG()->nonce => wp_create_nonce(BWG()->nonce),
+												), admin_url('admin-ajax.php') );
+
+	$params['instagram_return_url'] = 'https://api.instagram.com/oauth/authorize/?client_id=54da896cf80343ecb0e356ac5479d9ec&scope=basic+public_content&redirect_uri=http://api.web-dorado.com/instagram/?return_url=' . urlencode( admin_url('admin.php?page=options_bwg')) . '&response_type=token';
     $params['instagram_reset_href'] =  add_query_arg( array(
-			'page' => $this->page,
-			'task' => 'reset_instagram_access_token',
-			BWG()->nonce => wp_create_nonce(BWG()->nonce),
-		), admin_url('admin.php'));
+														'page' => $this->page,
+														'task' => 'reset_instagram_access_token',
+														BWG()->nonce => wp_create_nonce(BWG()->nonce),
+													), admin_url('admin.php') );
+
     $this->view->display($params);
   }
 
@@ -103,6 +111,11 @@ class OptionsController_bwg {
   public function reset( $params = array() ) {
     $params['row'] = new WD_BWG_Options(true);
     $params['page'] = $this->page;
+	$params['imgcount'] = $this->model->get_image_count();
+    $params['options_url_ajax'] = add_query_arg( array(
+													'action' => 'options_' . BWG()->prefix,
+													BWG()->nonce => wp_create_nonce(BWG()->nonce),
+												), admin_url('admin-ajax.php') );
     $params['instagram_return_url'] = 'https://api.instagram.com/oauth/authorize/?client_id=54da896cf80343ecb0e356ac5479d9ec&scope=basic+public_content&redirect_uri=http://api.web-dorado.com/instagram/?return_url=' . urlencode( admin_url('admin.php?page=options_bwg')) . '&response_type=token';
     $params['instagram_reset_href'] =  add_query_arg( array(
 			'page' => $this->page,
@@ -136,6 +149,7 @@ class OptionsController_bwg {
     if (isset($_POST['old_images_directory'])) {
       $row->old_images_directory = esc_html(stripslashes($_POST['old_images_directory']));
     }
+
     if (isset($_POST['images_directory'])) {
       $row->images_directory = esc_html(stripslashes($_POST['images_directory']));
       if (!is_dir(ABSPATH . $row->images_directory) || (is_dir(ABSPATH . $row->images_directory . '/photo-gallery') && $row->old_images_directory && $row->old_images_directory != $row->images_directory)) {
@@ -151,103 +165,120 @@ class OptionsController_bwg {
         else {
           $upload_dir = wp_upload_dir();
           if (!is_dir($upload_dir['basedir'] . '/photo-gallery')) {
-            mkdir($upload_dir['basedir'] . '/photo-gallery', 0777);
+            mkdir($upload_dir['basedir'] . '/photo-gallery', 0755);
           }
           $row->images_directory = str_replace(ABSPATH, '', $upload_dir['basedir']);
         }
       }
-    }
-    else {
-      $upload_dir = wp_upload_dir();
-      if (!is_dir($upload_dir['basedir'] . '/photo-gallery')) {
-        mkdir($upload_dir['basedir'] . '/photo-gallery', 0777);
-      }
-      $row->images_directory = str_replace(ABSPATH, '', $upload_dir['basedir']);
     }
 
     foreach ($row as $name => $value) {
       if ($name == 'autoupdate_interval') {
         $autoupdate_interval = (isset($_POST['autoupdate_interval_hour']) && isset($_POST['autoupdate_interval_min']) ? ((int) $_POST['autoupdate_interval_hour'] * 60 + (int) $_POST['autoupdate_interval_min']) : null);
         /*minimum autoupdate interval is 1 min*/
-        $row->autoupdate_interval = isset($autoupdate_interval) && $autoupdate_interval >= 1 ? $autoupdate_interval : 1;
+        $row->autoupdate_interval = isset($autoupdate_interval) && $autoupdate_interval >= 1 ? $autoupdate_interval : 30;
       }
       else if ($name != 'images_directory' && isset($_POST[$name])) {
         $row->$name = esc_html(stripslashes($_POST[$name]));
       }
     }
-
     $save = update_option('wd_bwg_options', json_encode($row), 'no');
-    if (isset($_POST['watermark']) && $_POST['watermark'] == "image_set_watermark") {
-      $this->image_set_watermark();
-    }
     if (isset($_POST['recreate']) && $_POST['recreate'] == "resize_image_thumb") {
       $this->resize_image_thumb();
       echo WDWLibrary::message_id(0, __('All thumbnails are successfully recreated.', BWG()->prefix));
     }
 
-    if ($save) {
+    if ( $save ) {
+      // Move images folder to the new direction if image directory has been changed.
       if ($row->old_images_directory && $row->old_images_directory != $row->images_directory) {
         rename(ABSPATH . $row->old_images_directory . '/photo-gallery', ABSPATH . $row->images_directory . '/photo-gallery');
       }
+
       if (!is_dir(ABSPATH . $row->images_directory . '/photo-gallery')) {
-        mkdir(ABSPATH . $row->images_directory . '/photo-gallery', 0777);
+        mkdir(ABSPATH . $row->images_directory . '/photo-gallery', 0755);
       }
       else {
         echo WDWLibrary::message_id(0, __('Item Succesfully Saved.', BWG()->prefix));
       }
 
-      /*clear hook for scheduled events,
-        refresh filter according to new time interval,
-        then add new schedule with the same hook name
-      */
-      wp_clear_scheduled_hook( 'bwg_schedule_event_hook' );
-      remove_filter( 'cron_schedules', array(BWG(), 'autoupdate_interval') );
-      add_filter( 'cron_schedules', array(BWG(), 'autoupdate_interval') );
-      wp_schedule_event( time(), 'bwg_autoupdate_interval', 'bwg_schedule_event_hook' );
+      if ( BWG()->is_pro ) {
+        // Clear hook for scheduled events.
+        wp_clear_scheduled_hook('bwg_schedule_event_hook');
+        // Refresh filter according to new time interval.
+        remove_filter('cron_schedules', array( BWG(), 'autoupdate_interval' ));
+        add_filter('cron_schedules', array( BWG(), 'autoupdate_interval' ));
+        // Then add new schedule with the same hook name.
+        wp_schedule_event(time(), 'bwg_autoupdate_interval', 'bwg_schedule_event_hook');
+      }
     }
   }
 
-  public function image_set_watermark() {
-    WDWLibrary::bwg_image_set_watermark(0);
-    echo WDWLibrary::message_id(0, __('All images are successfully watermarked.', BWG()->prefix), 'updated');
+  public function image_set_watermark($params = array()) {
+	  $limitstart = WDWLibrary::get('limitstart');
+
+    /*  Update options only first time of the loop  */
+    if ( $limitstart == 0 ) {
+		$update_options = array(
+			'built_in_watermark_type' => WDWLibrary::get('built_in_watermark_type'),
+			'built_in_watermark_position' => WDWLibrary::get('built_in_watermark_position')
+		);
+		if ( $update_options['built_in_watermark_type'] == 'text' ){
+			$update_options['built_in_watermark_text'] = WDWLibrary::get('built_in_watermark_text');
+			$update_options['built_in_watermark_font_size'] = WDWLibrary::get('built_in_watermark_font_size');
+			$update_options['built_in_watermark_font'] = WDWLibrary::get('built_in_watermark_font');
+			$update_options['built_in_watermark_color'] = WDWLibrary::get('built_in_watermark_color');
+		} 
+		else {
+			$update_options['built_in_watermark_size'] = WDWLibrary::get('built_in_watermark_size');
+			$update_options['built_in_watermark_url'] = WDWLibrary::get('built_in_watermark_url');
+		}
+		$this->model->update_options_by_key( $update_options );
+    }
+
+	  $error = false;
+    if ( ini_get('allow_url_fopen') == 0 ) {
+      $error = true;
+      $message = WDWLibrary::message_id(0, __('http:// wrapper is disabled in the server configuration by allow_url_fopen=0.', $this->prefix), 'error');
+    }
+    else {
+      list($width_watermark, $height_watermark, $type_watermark) = getimagesize($update_options['built_in_watermark_url']);
+      if ( $update_options['built_in_watermark_type'] == 'image' && (empty($width_watermark) OR empty($height_watermark) OR empty($type_watermark)) ) {
+        $error = TRUE;
+        $message = WDWLibrary::message_id(0, __('Watermark could not be set. The image URL is incorrect.', $this->prefix), 'error');
+      }
+      if ( $error === FALSE ) {
+        WDWLibrary::bwg_image_set_watermark(0, 0, $limitstart);
+        $message = WDWLibrary::message_id(0, __('All images are successfully watermarked.', $this->prefix), 'updated');
+      }
+    }
+    $json_data = array('error' => $error, 'message' => $message);
+    echo json_encode($json_data); die();
   }
 
-  public function image_recover_all($params) {
-    WDWLibrary::bwg_image_recover_all(0);
-    echo WDWLibrary::message_id(0, __('All images are successfully reset.', BWG()->prefix), 'updated');
-    $this->display($params);
+  public function image_recover_all($params = array()) {
+    $limitstart = WDWLibrary::get('limitstart');
+    WDWLibrary::bwg_image_recover_all(0, $limitstart);
   }
 
-  public function resize_image_thumb() {
+  public function resize_image_thumb($params = array()) {
     global $wpdb;
-    
-    $img_ids = $wpdb->get_results('SELECT id, thumb_url, filetype FROM ' . $wpdb->prefix . 'bwg_image');
+    $max_width = WDWLibrary::get('img_option_width');
+    $max_height = WDWLibrary::get('img_option_height');
+    $limitstart = WDWLibrary::get('limitstart');
+
+    /*  Update options only first time of the loop  */
+    if ( $limitstart == 0 ) {
+      $this->model->update_options_by_key( array('upload_thumb_width' => $max_width,'upload_thumb_height' => $max_height ) );
+    }
+    $img_ids = $wpdb->get_results('SELECT id, thumb_url, filetype FROM ' . $wpdb->prefix . 'bwg_image LIMIT 50 OFFSET ' . $limitstart);
     foreach ($img_ids as $img_id) {
       if ( preg_match('/EMBED/', $img_id->filetype) == 1 ) {
         continue;
       }
-      $file_path = str_replace("thumb", ".original", htmlspecialchars_decode(ABSPATH . BWG()->upload_dir . $img_id->thumb_url, ENT_COMPAT | ENT_QUOTES));
-      $new_file_path = htmlspecialchars_decode(ABSPATH . BWG()->upload_dir . $img_id->thumb_url, ENT_COMPAT | ENT_QUOTES);
-      $image = wp_get_image_editor( $file_path );
-      if ( ! is_wp_error( $image ) ) {
-        $image_size = $image->get_size();
-        $img_width = $image_size[ 'width' ];
-        $img_height = $image_size[ 'height' ];
-        if ( !$img_width || !$img_height ) {
-          continue;
-        }
-        $max_width = BWG()->options->upload_thumb_width;
-        $max_height = BWG()->options->upload_thumb_height;
-        $scale = min(
-          $max_width / $img_width,
-          $max_height / $img_height
-        );
-        $new_width = $img_width * $scale;
-        $new_height = $img_height * $scale;
-
-        $image->set_quality( BWG()->options->image_quality );
-        $image->resize( $new_width, $new_height, false );
-        $image->save( $new_file_path );
+      $file_path = str_replace("thumb", ".original", htmlspecialchars_decode(BWG()->upload_dir . $img_id->thumb_url, ENT_COMPAT | ENT_QUOTES));
+      $new_file_path = htmlspecialchars_decode( BWG()->upload_dir . $img_id->thumb_url, ENT_COMPAT | ENT_QUOTES );
+      if ( WDWLibrary::repair_image_original($file_path) ) {
+        WDWLibrary::resize_image( $file_path, $new_file_path, $max_width, $max_height );
       }
     }
   }
