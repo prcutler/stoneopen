@@ -15,5 +15,5 @@
 </div>
 
 <div class="theme-image">
-	<img src="<?php echo get_template_directory_uri() ?>/screenshot.png">
+	<img src="<?php echo esc_url(get_template_directory_uri().'/screenshot.png') ?>">
 </div>

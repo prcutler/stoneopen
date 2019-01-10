@@ -1,14 +1,16 @@
 <div class="two-col">
 	<div class="support-process col">
 		<h3><?php echo esc_html__('Documentation', 'accesspress-parallax'); ?></h3>
-		<p><?php printf(esc_html__('Read the detailed documentation of the theme. The documentation contain all the necessary information required to setup the theme %s.', 'accesspress-parallax'), $this->theme_name ); ?></p>
+		<p><?php 
+		/* translators: Theme Name */
+		printf(esc_html__('Read the detailed documentation of the theme. The documentation contain all the necessary information required to setup the theme %s.', 'accesspress-parallax'), esc_html($this->theme_name) ); ?></p>
 		<a class="button" target="_blank" href="https://accesspressthemes.com/theme-instruction-accesspress-parallax"><?php echo esc_html__('Read Full Documentation', 'accesspress-parallax'); ?></a>
 	</div>
 
 	<div class="support-process col">
 		<h3><?php echo esc_html__('Create Support Tickets', 'accesspress-parallax'); ?></h3>
 		<p><?php echo esc_html__('Still having problem after reading all the documentation? No Problem!! Please create a support ticket. Our dedicated support team will help you to solve your problem', 'accesspress-parallax'); ?></p>
-		<a class="button" target="_blank" href="http://accesspressthemes.com/support/"><?php echo esc_html__('Create Support Tickets', 'accesspress-parallax'); ?></a>
+		<a class="button" target="_blank" href="https://accesspressthemes.com/support/"><?php echo esc_html__('Create Support Tickets', 'accesspress-parallax'); ?></a>
 	</div>
 </div>
 

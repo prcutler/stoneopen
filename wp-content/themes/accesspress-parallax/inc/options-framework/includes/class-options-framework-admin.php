@@ -75,7 +75,7 @@ class Options_Framework_Admin {
 
             // Submenu default settings
             'page_title' => '',
-			'menu_title' => __('Theme Options', 'accesspress-parallax'),
+			'menu_title' => esc_html__('Theme Options', 'accesspress-parallax'),
 			'capability' => 'edit_theme_options',
 			'menu_slug' => 'theme-options',
             'parent_slug' => 'themes.php',
@@ -123,7 +123,7 @@ class Options_Framework_Admin {
 
 		if ( $this->options_screen != $hook )
 	        return;
-	    wp_enqueue_style( 'accesspress-parallax-font-awesome', get_template_directory_uri() . '/css/fontawesome/css/font-awesome.min.css' );
+	    wp_enqueue_style( 'accesspress-parallax-font-awesome', esc_url(get_template_directory_uri() . '/css/fontawesome/css/font-awesome.min.css') );
 		wp_enqueue_style( 'optionsframework', OPTIONS_FRAMEWORK_DIRECTORY . 'css/optionsframework.css', array(),  Options_Framework::VERSION );
 		wp_enqueue_style( 'wp-color-picker' );
 	}
@@ -170,12 +170,12 @@ class Options_Framework_Admin {
 
 		<div class="theme-header clearfix">
 		<div class="accesspresslite-logo">
-		<img src="<?php echo get_template_directory_uri();?>/inc/options-framework/images/logo.png" alt="<?php esc_attr_e('AccessPress Lite','accesspress-parallax'); ?>" />
+		<img src="<?php echo esc_url(get_template_directory_uri().'/inc/options-framework/images/logo.png') ?>" alt="<?php esc_attr_e('AccessPress Lite','accesspress-parallax'); ?>" />
 		</div>
 
 		<div class="ak-socials">
-		<a target='_blank' href="<?php echo esc_url('https://accesspressthemes.com/theme-demos/?theme=accesspress-parallax'); ?>"><?php _e('Demo','accesspress-parallax'); ?></a>
-		<a target='_blank' href="<?php echo esc_url('https://accesspressthemes.com/documentation/theme-instruction-accesspress-parallax/'); ?>"><?php _e('Documentation/Video Tutorial','accesspress-parallax'); ?></a>
+		<a target='_blank' href="<?php echo esc_url('https://accesspressthemes.com/theme-demos/?theme=accesspress-parallax'); ?>"><?php esc_html_e('Demo','accesspress-parallax'); ?></a>
+		<a target='_blank' href="<?php echo esc_url('https://accesspressthemes.com/documentation/theme-instruction-accesspress-parallax/'); ?>"><?php esc_html_e('Documentation/Video Tutorial','accesspress-parallax'); ?></a>
 		</div>
 		</div>
 
@@ -193,28 +193,28 @@ class Options_Framework_Admin {
 				<?php Options_Framework_Interface::optionsframework_fields(); /* Settings */ ?>
 				<div id="optionsframework-submit">
 					<input type="submit" class="button-primary" name="update" value="<?php esc_attr_e( 'Save Options', 'accesspress-parallax' ); ?>" />
-					<input type="submit" class="reset-button button-secondary" name="reset" value="<?php esc_attr_e( 'Restore Defaults', 'accesspress-parallax' ); ?>" onclick="return confirm( '<?php print esc_js( __( 'Click OK to reset. Any theme settings will be lost!', 'accesspress-parallax' ) ); ?>' );" />
+					<input type="submit" class="reset-button button-secondary" name="reset" value="<?php esc_attr_e( 'Restore Defaults', 'accesspress-parallax' ); ?>" onclick="return confirm( '<?php print esc_js( esc_html__( 'Click OK to reset. Any theme settings will be lost!', 'accesspress-parallax' ) ); ?>' );" />
 					<div class="clear"></div>
 				</div>
 				</form>
 			</div> <!-- / #container -->
             
             <div class="update-banner">
-            	<h3><?php _e('Upgrade to Parallax Pro','accesspress-parallax') ?></h3>
-    			<img src="<?php echo get_template_directory_uri(); ?>/inc/options-framework/images/upgrade-top.jpg">
+            	<h3><?php esc_html_e('Upgrade to Parallax Pro','accesspress-parallax') ?></h3>
+    			<img src="<?php echo esc_url(get_template_directory_uri().'/inc/options-framework/images/upgrade-top.jpg') ?>">
     			<div class="button-link">
-    				<a href="<?php echo esc_url('http://accesspressthemes.com/theme-demos/?theme=accesspress-parallax-pro'); ?>" target="_blank"><img src="<?php echo get_template_directory_uri(); ?>/inc/options-framework/images/demo-btn.png"></a>
-    				<a href="<?php echo esc_url('https://accesspressthemes.com/wordpress-themes/accesspress-parallax-pro/'); ?>" target="_blank"><img src="<?php echo get_template_directory_uri(); ?>/inc/options-framework/images/upgrade-btn.png"></a>
+    				<a href="<?php echo esc_url('https://accesspressthemes.com/theme-demos/?theme=accesspress-parallax-pro'); ?>" target="_blank"><img src="<?php echo esc_url(get_template_directory_uri().'/inc/options-framework/images/demo-btn.png') ?>"></a>
+    				<a href="<?php echo esc_url('https://accesspressthemes.com/wordpress-themes/accesspress-parallax-pro/'); ?>" target="_blank"><img src="<?php echo esc_url(get_template_directory_uri().'/inc/options-framework/images/upgrade-btn.png') ?>"></a>
     			</div>
     			<div class="any-question">
-    				<?php echo sprintf(__('Any question!! Click <a href="%s" target="_blank">here</a> for Live Chat.','accesspress-parallax'), esc_url('https://accesspressthemes.com/contact/')); ?>
+    				<?php echo sprintf( wp_kses_post('Any question!! Click <a href="%s" target="_blank">here</a> for Live Chat.','accesspress-parallax'), esc_url('https://accesspressthemes.com/contact/')); ?>
     			</div>
-    			<h3 class="pro-feature-title"><?php _e('Pro Features','accesspress-parallax') ?><span>&#8250;</span></h3>
+    			<h3 class="pro-feature-title"><?php esc_html_e('Pro Features','accesspress-parallax') ?><span>&#8250;</span></h3>
     			<div class="feature-img">
-    			<img src="<?php echo get_template_directory_uri(); ?>/inc/options-framework/images/upgrade-bottom.jpg">
+    			<img src="<?php echo esc_url(get_template_directory_uri().'/inc/options-framework/images/upgrade-bottom.jpg') ?>">
     			<div class="button-link">
-    				<a href="<?php echo esc_url('https://accesspressthemes.com/theme-demos/?theme=accesspress-parallax-pro'); ?>" target="_blank"><img src="<?php echo get_template_directory_uri(); ?>/inc/options-framework/images/demo-btn.png"></a>
-    				<a href="<?php echo esc_url('https://accesspressthemes.com/wordpress-themes/accesspress-parallax-pro/'); ?>" target="_blank"><img src="<?php echo get_template_directory_uri(); ?>/inc/options-framework/images/upgrade-btn.png"></a>
+    				<a href="<?php echo esc_url('https://accesspressthemes.com/theme-demos/?theme=accesspress-parallax-pro'); ?>" target="_blank"><img src="<?php echo esc_url(get_template_directory_uri().'/inc/options-framework/images/demo-btn.png') ?>"></a>
+    				<a href="<?php echo esc_url('https://accesspressthemes.com/wordpress-themes/accesspress-parallax-pro/'); ?>" target="_blank"><img src="<?php echo esc_url(get_template_directory_uri().'/inc/options-framework/images/upgrade-btn.png') ?>"></a>
     			</div>
     			</div>
     		</div>
@@ -244,7 +244,7 @@ class Options_Framework_Admin {
 		 */
 
 		if ( isset( $_POST['reset'] ) ) {
-			add_settings_error( 'options-framework', 'restore_defaults', __( 'Default options restored.', 'accesspress-parallax' ), 'updated fade' );
+			add_settings_error( 'options-framework', 'restore_defaults', esc_html__( 'Default options restored.', 'accesspress-parallax' ), 'updated fade' );
 			return $this->get_default_values();
 		}
 
@@ -303,7 +303,7 @@ class Options_Framework_Admin {
 	 */
 
 	function save_options_notice() {
-		add_settings_error( 'options-framework', 'save_options', __( 'Options saved.', 'accesspress-parallax' ), 'updated fade' );
+		add_settings_error( 'options-framework', 'save_options', esc_html__( 'Options saved.', 'accesspress-parallax' ), 'updated fade' );
 	}
 
 	/**

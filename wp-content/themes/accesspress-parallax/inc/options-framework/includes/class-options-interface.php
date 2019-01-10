@@ -360,7 +360,7 @@ class Options_Framework_Interface {
 			// Editor
 			case 'editor':
 				$output .= '<div class="explain">' . wp_kses( $explain_value, $allowedtags ) . '</div>'."\n";
-				echo $output;
+				echo $output; // WPCS: XSS OK.
 				$textarea_name = esc_attr( $option_name . '[' . $value['id'] . ']' );
 				$default_editor_settings = array(
 					'textarea_name' => $textarea_name,
@@ -568,7 +568,7 @@ class Options_Framework_Interface {
 				$output .= '</div></div>'."\n";
 			}
 
-			echo $output;
+			echo $output; // WPCS: XSS OK.
 		}
 
 		// Outputs closing div if there tabs

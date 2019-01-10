@@ -12,7 +12,7 @@
 
 	<footer id="colophon" class="site-footer">
 		<?php if(is_active_sidebar('footer-1') || is_active_sidebar('footer-2') || is_active_sidebar('footer-3') || is_active_sidebar('footer-4')) :?>
-		<div class="top-footer footer-column-<?php echo accesspress_footer_count(); ?>">
+		<div class="top-footer footer-column-<?php echo esc_attr(accesspress_footer_count()); ?>">
 			<div class="mid-content">
             <div class="top-footer-wrap clearfix">
 				<?php if(is_active_sidebar('footer-1')): ?>
@@ -47,7 +47,7 @@
 		<div class="bottom-footer">
 			<div class="mid-content clearfix">
 				<div  class="copy-right">
-					&copy; <?php echo date('Y')." "; bloginfo('name'); ?>  
+					&copy; <?php echo esc_html(date('Y'))." "; bloginfo('name'); ?>  
 				</div><!-- .copy-right -->
 				<div class="site-info">
 				WordPress Theme:

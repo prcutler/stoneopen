@@ -8,7 +8,7 @@
  */
 ?>
 
-<section class="no-results not-found">
+<article class="no-results not-found article-wrap">
 	<header class="page-header">
 		<h1 class="page-title"><?php esc_html_e( 'Nothing Found', 'accesspress-parallax' ); ?></h1>
 	</header><!-- .page-header -->
@@ -40,4 +40,4 @@
 
 		<?php endif; ?>
 	</div><!-- .page-content -->
-</section><!-- .no-results -->
+</article><!-- .no-results -->

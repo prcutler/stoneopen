@@ -40,18 +40,18 @@
 					<div class="plugin-img-wrap">
 						<img src="<?php echo esc_url($icon_url); ?>" />
 						<div class="version-author-info">
-							<span class="version"><?php printf('Version %s', $plugin['version']); ?></span>
+							<span class="version"><?php printf('Version %s', esc_html($plugin['version'])); ?></span>
 							<span class="seperator">|</span>
-							<span class="author"><?php echo esc_html($plugin['author']); ?></span>
+							<span class="author"><?php echo wp_kses_post($plugin['author']); ?></span>
 						</div>
 					</div>
 					<div class="plugin-title-install clearfix">
-						<span class="title" title="<?php echo $plugin['name']; ?>">
+						<span class="title" title="<?php echo esc_attr($plugin['name']); ?>">
 							<?php echo esc_html($plugin['name']); ?>
 						</span>
 
 						<span class="plugin-btn-wrapper plugin-card-<?php echo esc_attr($plugin['slug']); ?>">
-							<a class="<?php echo esc_attr($btn_class); ?>" data-file="<?php echo esc_attr($plugin['slug']).'/'.esc_attr($plugin['filename']); ?>" data-slug="<?php echo esc_attr($plugin['slug']); ?>" href="<?php echo esc_html($link); ?>"><?php echo $label; ?></a>
+							<a class="<?php echo esc_attr($btn_class); ?>" data-file="<?php echo esc_attr($plugin['slug']).'/'.esc_attr($plugin['filename']); ?>" data-slug="<?php echo esc_attr($plugin['slug']); ?>" href="<?php echo esc_html($link); ?>"><?php echo esc_html($label); ?></a>
 						</span>
 					</div>
 				</div>
@@ -96,20 +96,20 @@
 					<div class="plugin-img-wrap">
 						<img src="<?php echo esc_url($icon_url); ?>" />
 						<div class="version-author-info">
-							<span class="version"><?php printf('Version %s', $info->version); ?></span>
+							<span class="version"><?php printf('Version %s', esc_html($info->version)); ?></span>
 							<span class="seperator">|</span>
-							<span class="author"><?php echo $info->author; ?></span>
+							<span class="author"><?php echo wp_kses_post($info->author); ?></span>
 						</div>
 					</div>
 					<div class="plugin-title-install clearfix">
-						<span class="title" title="<?php echo $info->name; ?>">
+						<span class="title" title="<?php echo esc_attr($info->name); ?>">
 							<?php
 								echo esc_html($info->name);
 							?>	
 						</span>
 
 						<span class="plugin-btn-wrapper plugin-card-<?php echo esc_attr($plugin['slug']); ?>" action_button>
-							<a class="<?php echo esc_attr($btn_class); ?>" data-file"<?php echo esc_attr($plugin['slug']); ?>" data-slug="<?php echo esc_attr($plugin['slug']); ?>" href="<?php echo esc_url($btn_url); ?>"><?php echo $label; ?></a>
+							<a class="<?php echo esc_attr($btn_class); ?>" data-file"<?php echo esc_attr($plugin['slug']); ?>" data-slug="<?php echo esc_attr($plugin['slug']); ?>" href="<?php echo esc_url($btn_url); ?>"><?php echo esc_html($label); ?></a>
 						</span>
 					</div>
 				</div>

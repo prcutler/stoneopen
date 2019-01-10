@@ -7,7 +7,7 @@
 ?>
 
 	<div class="content-area googlemap-section">
-	<div class="googlemap-toggle"><?php _e('Map','accesspress-parallax'); ?></div>
+	<div class="googlemap-toggle"><?php esc_html_e('Map','accesspress-parallax'); ?></div>
 
 		<?php  
             $query = new WP_Query( 'page_id='.$section['page'] );

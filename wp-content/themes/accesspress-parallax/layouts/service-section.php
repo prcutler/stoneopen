@@ -22,13 +22,13 @@
 			$service_class = ($count_service % 2 == 0) ? "even wow fadeInRight" : "odd wow fadeInLeft";
 		?>
 
-		<div class="clearfix service-list <?php echo esc_attr($service_class); ?>" data-wow-delay="<?php echo $i; ?>s">
+		<div class="clearfix service-list <?php echo esc_attr($service_class); ?>" data-wow-delay="<?php echo esc_attr($i); ?>s">
 			<div class="service-image">
 				<?php if(has_post_thumbnail()) : 
 				$image = wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()),'thumbnail'); ?>
 					<img src="<?php echo esc_url($image[0]); ?>" alt="<?php the_title(); ?>">
 				<?php else: ?>
-					<img src="<?php echo get_template_directory_uri(); ?>/images/no-image.jpg" alt="<?php the_title(); ?>">
+					<img src="<?php echo esc_url(get_template_directory_uri().'/images/no-image.jpg') ?>" alt="<?php the_title(); ?>">
 				<?php endif; ?>
 			</div>
 

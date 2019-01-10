@@ -4,12 +4,12 @@ Theme URI: https://accesspressthemes.com/wordpress-themes/accesspress-parallax/
 Author: AccessPress Themes
 Author URI: https://accesspressthemes.com/
 Description: AccessPress Parallax is a beautiful WordPress theme with Parallax design. Parallax design has become popular and is widely implemented these days. This is probably the most beautiful, feature rich and complete free WordPress parallax theme with features like: fully responsive, advance theme option panel, featured slider, advance post settings, services/team/blog/portfolio/testimonial layout, Google map integration, custom logo/fav icon, call to action, CSS animation, SEO friendly, translation ready, RTL support, custom CSS/JS and more! More over the theme is fully translation ready, WooCommerce Compatible, bbPress Compatible and fully support multilanguage via POLYLANG plugin. Demo: https://accesspressthemes.com/theme-demos/?theme=accesspress-parallax Support forum: https://accesspressthemes.com/support/ Pro version: https://accesspressthemes.com/wordpress-themes/accesspress-parallax-pro/ 
-Version: 1.62
+Version: 1.69
 License: GNU General Public License v3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: accesspress-parallax
 Domain Path: /languages/
-Tags: custom-background, custom-colors, custom-header, custom-menu, featured-images, one-column, right-sidebar, theme-options, threaded-comments, translation-ready, two-columns, grid-layout, footer-widgets, blog, e-commerce, photography, portfolio
+Tags: custom-background, custom-colors, custom-header, custom-menu, featured-images, one-column, right-sidebar, theme-options, threaded-comments, translation-ready, two-columns, grid-layout, footer-widgets, blog, photography, portfolio
 
 This theme, like WordPress, is licensed under the GPL.
 Use it to make something cool, have fun, and share what you've learned with others.
@@ -712,7 +712,7 @@ Posts and pages
     margin-bottom: 0;
 }
 
-.hentry {
+.article-wrap {
     margin: 0 0 40px;
     background: #FFF;
     padding: 40px;
@@ -724,7 +724,7 @@ Posts and pages
     margin-bottom: 0;
 }
 
-.archive .hentry {
+.archive .article-wrap {
     margin-bottom: 60px;
 }
 
@@ -757,11 +757,17 @@ Posts and pages
     margin: 0 0 20px;
 }
 
-.entry-header h1.entry-title {
+.entry-meta + h2.entry-title,
+.entry-meta + .byline + h2.entry-title,
+.entry-meta + h1.entry-title,
+.entry-meta + .byline,
+.entry-meta + .byline + h1.entry-title{
     margin-left: 80px;
 }
 
-.entry-header h1.entry-title.no-date {
+.entry-thumb + .entry-header h2.entry-title,
+.entry-thumb + .entry-header h1.entry-title,
+.entry-thumb + .entry-header .byline{
     margin-left: 0;
 }
 
@@ -769,7 +775,7 @@ Posts and pages
     margin-left: 0;
 }
 
-.entry-header h1.entry-title a {
+.entry-header h2.entry-title a {
     color: #333;
     text-decoration: none;
 }
@@ -920,7 +926,7 @@ Comments
 }
 
 .comments-title {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 #commentform label {
@@ -940,7 +946,7 @@ textarea#comment {
 /*Comment Lists*/
 
 .comments-area ol {
-    margin: 0;
+    margin: 0 0 40px;
     padding: 0;
     list-style: none;
 }
@@ -950,15 +956,15 @@ textarea#comment {
 }
 
 .comment-list li .comment-body {
-    margin-bottom: 10px;
-    padding: 10px;
-    background: #FCFCFC;
-    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 25px;
+    background: #FAFAFA;
 }
 
 .comment-author img {
     vertical-align: text-top;
     margin-right: 10px;
+    float: left;
 }
 
 .comment-author .fn {
@@ -966,6 +972,10 @@ textarea#comment {
     font-size: 15px;
     text-transform: capitalize;
     font-weight: normal;
+}
+
+.comment-metadata{
+    margin-bottom: 20px;
 }
 
 .comment-metadata a {
@@ -1037,7 +1047,7 @@ textarea#comment {
 
 #cancel-comment-reply-link {
     font-style: italic;
-    color: #333;
+    color: #FFF;
 }
 
 #cancel-comment-reply-link:before {
@@ -1399,7 +1409,7 @@ body.parallax-on .wpcf7-not-valid-tip {
 .site-main .post-navigation a,
 .site-main .posts-navigation a {
     background: #333;
-    padding: 20px 40px;
+    padding: 10px 20px;
     color: #FFF;
     text-decoration: none;
     font-size: 14px;
@@ -1419,6 +1429,10 @@ body.parallax-on .wpcf7-not-valid-tip {
     color: #FFF;
     line-height: 1;
     margin: 0 2px;
+}
+
+.pagination .nav-links span.current{
+    background: #333;
 }
 
 /*--------------------------------------------------------------
@@ -1521,8 +1535,8 @@ Main SLider
 
 .slider-caption .caption-description a:hover,
 .btn:hover {
-    background: #E56432 !important;
-    border: 2px solid #E56432 !important;
+    background: #E56432;
+    border: 2px solid #E56432;
     color: #FFF !important;
 }
 
@@ -2141,6 +2155,7 @@ Blog Section
     margin-bottom: 15px;
     color: #E66432;
     text-align: right;
+    font-weight: normal;
 }
 
 .blog-list .blog-excerpt .posted-date .fa {

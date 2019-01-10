@@ -26,10 +26,10 @@
 			<p><?php esc_html_e('Tired of configuring site from scratch. Installation of demo is just one click away.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/no.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/no.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -38,10 +38,10 @@
 			<p><?php esc_html_e('Displays fine in device with different screen sizes.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -50,10 +50,10 @@
 			<p><?php esc_html_e('Create the site in your own custom language.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/no.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/no.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -62,10 +62,10 @@
 			<p><?php esc_html_e('Choose any theme skin color you like for your site.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/no.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/no.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -74,10 +74,10 @@
 			<p><?php esc_html_e('Easily configure the theme using easy to configure theme options.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -86,10 +86,10 @@
 			<p><?php esc_html_e('Multi layer, smooth parallax! Add some interaction on your website, business sites also can be fun to browse!', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -98,10 +98,10 @@
 			<p><?php esc_html_e('Configure a beautiful Featured Slider', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -122,10 +122,10 @@
 			<p><?php esc_html_e('Integrate a feature rich slider in your website.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/no.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/no.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -134,10 +134,10 @@
 			<p><?php esc_html_e('Have advanced parallax scrolling with css3 animation in your website.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/no.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/no.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -146,10 +146,10 @@
 			<p><?php esc_html_e('Have a new interactive sections with cool animation effects.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/no.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/no.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -158,10 +158,10 @@
 			<p><?php esc_html_e('Have variation amongst the pages choosing the layout from the multiple page layouts.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/no.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/no.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -182,10 +182,10 @@
 			<p><?php esc_html_e('Customize breadcrumb to display the way you want with advanced options to customize.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/no.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/no.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -194,10 +194,10 @@
 			<p><?php esc_html_e('Choose to display either solid color, pattern or image as a background for your website.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/no.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/no.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -206,10 +206,10 @@
 			<p><?php esc_html_e('Set the fonts for your website from available 600+ Google Fonts.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/no.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/no.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -242,10 +242,10 @@
 			<p><?php esc_html_e('Yes - Stop your WooCommerce theme search here.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -254,10 +254,10 @@
 			<p><?php esc_html_e('Google will love it.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 		<td>
-			<img src="<?php echo get_template_directory_uri().'/welcome/css/yes.png'; ?>">
+			<img src="<?php echo esc_url(get_template_directory_uri().'/welcome/css/yes.png'); ?>">
 		</td>
 	</tr>
 	<tr>
@@ -266,7 +266,7 @@
 			<p><?php esc_html_e('Upgrade to pro version for additional features and better supports.', 'accesspress-parallax'); ?></p>
 		</td>
 		<td colspan="2">
-			<a class="buy-pro-btn" href="http://accesspressthemes.com/wordpress-themes/accesspress-parallax-pro/"><?php esc_html_e('Buy Now', 'accesspress-parallax'); ?></a>
+			<a class="buy-pro-btn" href="https://accesspressthemes.com/wordpress-themes/accesspress-parallax-pro/"><?php esc_html_e('Buy Now', 'accesspress-parallax'); ?></a>
 		</td>
 	</tr>
 </table>

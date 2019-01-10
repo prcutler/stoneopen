@@ -25,21 +25,23 @@ function accesspress_parallax_posted_on() {
 		esc_html( get_the_modified_date() )
 	);
 
-	$posted_on = $time_string ;
-
 	$byline = sprintf(
+		/* translators: Post Author */
 		_x( 'By %s', 'post author', 'accesspress-parallax' ),
 		'<span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a></span>'
 	);
 
 	$post_date = of_get_option('post_date');
 	$post_author = of_get_option('post_author');
+
 	if($post_date ==  1 || empty($post_date)) :
-	echo '<span class="posted-on">' . $posted_on . '</span>';
+	echo '<div class="entry-meta">';
+	echo '<span class="posted-on">' . $time_string . '</span>'; // WPCS: XSS OK.
+	echo '</div>';
 	endif;
 
 	if($post_author ==  1 || empty($post_author)) :
-	echo '<span class="byline"> ' . $byline . '</span>';
+	echo '<div class="byline"> ' . $byline . '</div>'; // WPCS: XSS OK.
 	endif;
 
 }

@@ -19,7 +19,7 @@
 
 <body <?php body_class(); ?>>
 <div id="page" class="hfeed site">
-	<header id="masthead" class="<?php echo of_get_option('header_layout'); ?>">
+	<header id="masthead" class="<?php echo esc_attr(of_get_option('header_layout')); ?>">
 		<div class="mid-content clearfix">
         
         <div class="flex-box">
@@ -36,7 +36,7 @@
 
 		<nav id="site-navigation" class="main-navigation">
         
-		<div class="menu-toggle"><?php _e( 'Menu', 'accesspress-parallax' ); ?></div>
+		<div class="menu-toggle"><?php esc_html_e( 'Menu', 'accesspress-parallax' ); ?></div>
 					
 			<?php 
 			$sections = of_get_option('parallax_section');
@@ -46,9 +46,7 @@
 				<?php
 				$home_text = of_get_option('home_text');
 				if(of_get_option('show_slider')== "yes" && !empty($home_text)) : 
-					if(function_exists('pll__')){
-						$home_text = pll__($home_text);
-					}
+					$home_text = apply_filters('accesspress_translate_string', $home_text, __('Home Text in Menu','accesspress-parallax'));
 					?>
 					<li class="current"><a href="<?php echo esc_url( home_url( '/' ) ); ?>#main-slider"><?php echo esc_html($home_text); ?></a></li>
 				<?php endif;
@@ -56,14 +54,10 @@
 				if(!empty($sections)):
 				foreach ($sections as $single_sections): 
 					if($single_sections['layout'] != "action_template" && $single_sections['layout'] != "blank_template" && $single_sections['layout'] != "googlemap_template" && !empty($single_sections['page'])) :
-						if(function_exists('pll_get_post')){
-							$title_id = pll_get_post($single_sections['page']);
-							$title = empty($title_id) ? get_the_title($single_sections['page']) : get_the_title($title_id);
-						}else{
-							$title = get_the_title($single_sections['page']); 
-						}	
+						$title_id = apply_filters('accesspress_translate_id', $single_sections['page']);
+						$title = get_the_title($title_id);
 						?>
-						<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#section-<?php echo $single_sections['page']; ?>"><?php echo esc_html($title); ?></a></li>
+						<li><a href="<?php echo esc_url( home_url( '/' ) ); ?>#section-<?php echo esc_attr($single_sections['page']); ?>"><?php echo esc_html($title); ?></a></li>
 					<?php 
 					endif;
 				endforeach; 

@@ -50,7 +50,7 @@ function accesspress_parallax_bxslidercb(){
 		?>
 
 		<?php if( $accesspress_show_slider == "yes" || empty($accesspress_show_slider)) : ?>
-		<section id="main-slider" class="full-screen-<?php echo $accesspress_slider_full_window; ?>">
+		<section id="main-slider" class="full-screen-<?php echo esc_attr($accesspress_slider_full_window); ?>">
 
 		<?php if(!empty($accesspress_parallax_first_page) && $accesspress_enable_parallax == 1): ?>
 		<div class="next-page"><a href="<?php echo esc_url( home_url( '/' ) ); ?>#section-<?php echo esc_attr($accesspress_parallax_first_page); ?>"></a></div>
@@ -73,7 +73,7 @@ function accesspress_parallax_bxslidercb(){
 						$image_url =  "style = 'background-image:url(".esc_url($image[0]).");'";
 				    endif;
 					?>
-					<div class="main-slides" <?php echo $image_url; ?>>
+					<div class="main-slides" <?php echo $image_url; // WPCS: XSS OK.?>>
 					
 					<?php if($accesspress_slider_full_window == "no") : ?>		
 						<img src="<?php echo esc_url($image[0]); ?>">
@@ -92,35 +92,6 @@ function accesspress_parallax_bxslidercb(){
 					<?php endwhile; ?>
 					</div>
 					<?php endif; ?>
-			<?php else: ?>
-
-            <div class="bx-slider">
-				<div class="main-slides">
-					<img src="<?php echo get_template_directory_uri(); ?>/images/demo/slider1.jpg" alt="slider1">
-					<div class="slider-caption">
-						<div class="mid-content">
-							<h1 class="caption-title"><?php _e('Welcome to AccessPress Parallax!','accesspress-parallax'); ?></h1>
-							<h2 class="caption-description">
-							<p><?php _e('A full featured parallax theme - and its absolutely free!','accesspress-parallax'); ?></p>
-							<p><a href="#"><?php _e('Read More','accesspress-parallax'); ?></a></p>
-							</h2>
-						</div>
-					</div>
-				</div>
-						
-				<div class="main-slides">
-					<img src="<?php echo get_template_directory_uri(); ?>/images/demo/slider2.jpg" alt="slider2">
-					<div class="slider-caption">
-						<div class="ak-container">
-							<h1 class="caption-title"><?php _e('Amazing multi-purpose parallax theme','accesspress-parallax'); ?></h1>
-							<h2 class="caption-description">
-							<p><?php _e('Travel, corporate, small biz, portfolio, agencies, photography, health, creative - useful for anyone and everyone','accesspress-parallax'); ?></p>
-							<p><a href="#"><?php _e('Read More','accesspress-parallax'); ?></a></p>
-							</h2>
-							</div>
-					</div>
-				</div>
-			</div>
 
 			<?php  endif; ?>
 		</section>
@@ -304,3 +275,28 @@ function accesspress_register_string(){
 }
 
 add_action('after_setup_theme','accesspress_register_string');
+
+function accesspress_translated_id($orginal_id){
+	$translation_title_id = apply_filters( 'wpml_object_id', $orginal_id, 'page', true);
+	
+	if( ($translation_title_id == $orginal_id) && function_exists('pll_get_post') ){
+		$translation_title_id = pll_get_post($orginal_id);
+	}
+	return $translation_title_id;
+}
+
+add_filter( 'accesspress_translate_id', 'accesspress_translated_id' );
+
+function accesspress_translated_string($string, $domain){
+	$wpml_translation = apply_filters('wpml_translate_single_string', $string, $domain, $string);
+    
+    if ($wpml_translation === $string && function_exists('pll__')) {
+    	pll_register_string($domain, $string);
+        return pll__($string);
+    }
+
+    return $wpml_translation;
+
+}
+
+add_filter( 'accesspress_translate_string', 'accesspress_translated_string', 10, 2 );

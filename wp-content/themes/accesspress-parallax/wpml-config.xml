@@ -1,0 +1,7 @@
+<wpml-config>
+    <admin-texts>
+        <key name="accesspress_parallax">
+            <key name="home_text" />
+        </key>
+    </admin-texts>       
+</wpml-config>

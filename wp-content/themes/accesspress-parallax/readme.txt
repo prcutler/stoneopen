@@ -88,6 +88,30 @@ Images
 
 ---------------------------------------------
 == Changelog ==
+Version 1.69
+ * WMPL translation bug in menu fixed.
+
+Version 1.68
+ * WMPL translation bug in menu fixed.
+
+Version 1.67
+ * Issue with WMPL translation fixed.
+
+Version 1.66
+ * Added Dynamic Color Option
+
+Version 1.65
+ * Made Translation Ready
+ * Minor Bug Fixes
+
+Version 1.64
+ * Fixed Some Escaping and Security Issues
+
+Version 1.63
+ * Warning Error from Theme Snifer Plugin fixed
+ * Pot file updated
+ * Other minor fixes
+
 Version 1.62
  * Requiried Error from Theme Snifer Plugin fixed
  * Pot file updated

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AccessPress Parallax\n"
 "Report-Msgid-Bugs-To: AccessPress Themes <info@accesspressthemes.com>\n"
-"POT-Creation-Date: 2018-05-25 05:44+0000\n"
+"POT-Creation-Date: 2018-07-17 09:14+0000\n"
 "POT-Revision-Date: Tue Sep 22 2015 15:07:07 GMT+0545 (Nepal Standard Time)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
@@ -72,30 +72,32 @@ msgstr ""
 msgid "Pages:"
 msgstr ""
 
-#: content-page.php:24 content-search.php:53 content-single.php:56
-#: content.php:68
+#: content-page.php:24 content-search.php:56 content-single.php:56
+#: content.php:72
 msgid "Edit"
 msgstr ""
 
-#: content-search.php:34
+#. Category List
+#: content-search.php:35
 #, php-format
-msgid "Posted in %1$s"
+msgid "Posted in %s"
 msgstr ""
 
-#: content-search.php:44
+#. Tag List
+#: content-search.php:47
 #, php-format
-msgid "Tagged %1$s"
+msgid "Tagged %s"
 msgstr ""
 
-#: content-search.php:50
+#: content-search.php:53
 msgid "Leave a comment"
 msgstr ""
 
-#: content-search.php:50
+#: content-search.php:53
 msgid "1 Comment"
 msgstr ""
 
-#: content-search.php:50
+#: content-search.php:53
 msgid "% Comments"
 msgstr ""
 
@@ -103,362 +105,26 @@ msgstr ""
 msgid "Continue reading <span class=\"meta-nav\">&rarr;</span>"
 msgstr ""
 
-#: content.php:49
+#: content.php:51
 #, php-format
-msgid "<i class=\"fa fa-folder-open\"></i>Posted in %1$s"
+msgid "Posted in %1$s"
 msgstr ""
 
-#. translators: used between list items, there is a space after the comma
-#. translators: used between list items, there is a space after the comma
-#. translators: used between list items, there is a space after the comma
-#. translators: used between list items, there is a space after the comma
-#. translators: used between list items, there is a space after the comma
-#. translators: used between list items, there is a space after the comma
-#: content.php:55
-msgid ", "
-msgstr ""
-
-#: content.php:59
+#: content.php:63
 #, php-format
-msgid "<i class=\"fa fa-tags\"></i>Tagged %1$s"
+msgid "Tagged %1$s"
 msgstr ""
 
-#: content.php:65
+#: content.php:69
 msgid "<i class=\"fa fa-comments\"></i>Leave a comment"
 msgstr ""
 
-#: content.php:65
+#: content.php:69
 msgid "<i class=\"fa fa-comments\"></i>1 Comment"
 msgstr ""
 
-#: content.php:65
+#: content.php:69
 msgid "<i class=\"fa fa-comments\"></i>% Comments"
-msgstr ""
-
-#: demo.php:6
-msgid ""
-"Curabitur eget interdum risus. Curabitur dictum, libero ut mattis consequat, "
-"lectus mauris congue risus, et volutpat nulla eros vel arcu."
-msgstr ""
-
-#: demo.php:16 demo.php:28 demo.php:40 demo.php:52 demo.php:64 demo.php:76
-#: demo.php:89
-msgid ""
-"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec iaculis metus "
-"vitae ligula elementum ut luctus lorem facilisis."
-msgstr ""
-
-#: demo.php:99
-msgid "Product 11"
-msgstr ""
-
-#: demo.php:108
-msgid "Product 10"
-msgstr ""
-
-#: demo.php:117
-msgid "Product 9"
-msgstr ""
-
-#: demo.php:126
-msgid "Product 8"
-msgstr ""
-
-#: demo.php:135
-msgid "Product 7"
-msgstr ""
-
-#: demo.php:144
-msgid "Product 6"
-msgstr ""
-
-#: demo.php:153
-msgid "Product 5"
-msgstr ""
-
-#: demo.php:162
-msgid "Product 4"
-msgstr ""
-
-#: demo.php:207
-msgid "Russel Clinton"
-msgstr ""
-
-#: demo.php:208
-msgid "Interior Head"
-msgstr ""
-
-#: demo.php:209
-msgid ""
-"Duis luctus nisl vel rhoncus rhoncus. Nam vehicula maximus sagittis. Proin "
-"quis lobortis nisi. Etiam luctus auctor urna, a luctus metus blandit in. Nam "
-"quis facilisis nunc, nec scelerisque ligula. Aenean quis lacus bibendum, "
-"lobortis dolor sed, facilisis ipsum. Nunc feugiat augue ac ligula blandit, "
-"id maximus purus molestie.<br /><br />\n"
-"                                Duis luctus nisl vel rhoncus rhoncus. Nam "
-"vehicula maximus sagittis. Proin quis lobortis nisi. Etiam luctus auctor "
-"urna, a luctus metus blandit in. Nam quis facilisis nunc, nec scelerisque "
-"ligula. Aenean quis lacus bibendum, lobortis dolor sed, facilisis ipsum. "
-"Nunc feugiat augue ac ligula blandit, id maximus purus molestie."
-msgstr ""
-
-#: demo.php:218
-msgid "Bibo Aurther"
-msgstr ""
-
-#: demo.php:219
-msgid "CEO"
-msgstr ""
-
-#: demo.php:220
-msgid ""
-"Proin libero odio, ultrices et tincidunt vitae, consequat et sapien. Duis "
-"luctus nisl vel rhoncus rhoncus. Nam vehicula maximus sagittis. Proin quis "
-"lobortis nisi. Etiam luctus auctor urna, a luctus metus blandit in. Nam quis "
-"facilisis nunc, nec scelerisque ligula. Aenean quis lacus bibendum, lobortis "
-"dolor sed, facilisis ipsum. Nunc feugiat augue ac ligula blandit, id maximus "
-"purus molestie.<br /><br />\n"
-"                                Proin libero odio, ultrices et tincidunt "
-"vitae, consequat et sapien. Duis luctus nisl vel rhoncus rhoncus. Nam "
-"vehicula maximus sagittis. Proin quis lobortis nisi. Etiam luctus auctor "
-"urna, a luctus metus blandit in. Nam quis facilisis nunc, nec scelerisque "
-"ligula. Aenean quis lacus bibendum, lobortis dolor sed, facilisis ipsum. "
-"Nunc feugiat augue ac ligula blandit, id maximus purus molestie."
-msgstr ""
-
-#: demo.php:229
-msgid "Rusel Misil"
-msgstr ""
-
-#: demo.php:230
-msgid "Technician"
-msgstr ""
-
-#: demo.php:231
-msgid ""
-"Etiam vestibulum pellentesque nisi, ac scelerisque metus aliquam non. Proin "
-"tincidunt tortor auctor, accumsan arcu id, congue felis. Curabitur vitae "
-"lorem at purus imperdiet commodo quis non sem. Donec magna odio, commodo "
-"eget rhoncus quis, facilisis et dolor.<br /><br />\n"
-"                                Proin libero odio, ultrices et tincidunt "
-"vitae, consequat et sapien. Duis luctus nisl vel rhoncus rhoncus. Nam "
-"vehicula maximus sagittis. Proin quis lobortis nisi. Etiam luctus auctor "
-"urna, a luctus metus blandit in. Nam quis facilisis nunc, nec scelerisque "
-"ligula. Aenean quis lacus bibendum, lobortis dolor sed, facilisis ipsum. "
-"Nunc feugiat augue ac ligula blandit, id maximus purus molestie."
-msgstr ""
-
-#: demo.php:240
-msgid "Linda Harley"
-msgstr ""
-
-#: demo.php:241 demo.php:252
-msgid "Staff"
-msgstr ""
-
-#: demo.php:242
-msgid ""
-"Nulla facilisis sapien dui, vel faucibus risus consequat sit amet. Phasellus "
-"vestibulum vestibulum mi quis posuere. Aenean pretium purus ut purus "
-"vehicula dictum. Morbi elementum dignissim aliquet. Nullam et purus et mi "
-"finibus laoreet. Aliquam posuere erat eu lobortis vulputate. Phasellus "
-"pulvinar fringilla turpis in congue. Integer et felis fringilla, elementum "
-"lacus eu, tincidunt purus.<br/><br />\n"
-"                            Nulla facilisis sapien dui, vel faucibus risus "
-"consequat sit amet. Phasellus vestibulum vestibulum mi quis posuere. Aenean "
-"pretium purus ut purus vehicula dictum. Morbi elementum dignissim aliquet. "
-"Nullam et purus et mi finibus laoreet. Aliquam posuere erat eu lobortis "
-"vulputate. Phasellus pulvinar fringilla turpis in congue. Integer et felis "
-"fringilla, elementum lacus eu, tincidunt purus."
-msgstr ""
-
-#: demo.php:251
-msgid "John Doe"
-msgstr ""
-
-#: demo.php:253
-msgid ""
-"Donec ut neque placerat, euismod enim et, sodales magna. Sed sit amet nunc "
-"ullamcorper, semper nunc mattis, scelerisque urna. Donec dictum mattis "
-"malesuada. Suspendisse vestibulum enim eu nisi auctor, a mollis odio posuere."
-" Ut scelerisque luctus arcu id tempus.<br/><br />\n"
-"                            Nulla facilisis sapien dui, vel faucibus risus "
-"consequat sit amet. Phasellus vestibulum vestibulum mi quis posuere. Aenean "
-"pretium purus ut purus vehicula dictum. Morbi elementum dignissim aliquet. "
-"Nullam et purus et mi finibus laoreet. Aliquam posuere erat eu lobortis "
-"vulputate. Phasellus pulvinar fringilla turpis in congue. Integer et felis "
-"fringilla, elementum lacus eu, tincidunt purus."
-msgstr ""
-
-#: demo.php:262
-msgid "Jakson Biber"
-msgstr ""
-
-#: demo.php:263
-msgid "Marketing Executive"
-msgstr ""
-
-#: demo.php:264
-msgid ""
-"Fusce imperdiet enim eget neque auctor, venenatis feugiat neque dapibus. "
-"Nulla consequat, nunc sed vestibulum semper, nibh velit pellentesque lectus, "
-"ac lobortis elit massa hendrerit lacus. Nulla facilisis sapien dui, vel "
-"faucibus risus consequat sit amet. Phasellus vestibulum vestibulum mi quis "
-"posuere.<br/><br />\n"
-"                            Fusce imperdiet enim eget neque auctor, "
-"venenatis feugiat neque dapibus. Nulla consequat, nunc sed vestibulum semper,"
-" nibh velit pellentesque lectus, ac lobortis elit massa hendrerit lacus. "
-"Nulla facilisis sapien dui, vel faucibus risus consequat sit amet. Phasellus "
-"vestibulum vestibulum mi quis posuere."
-msgstr ""
-
-#: demo.php:273
-msgid "Jack Peterson"
-msgstr ""
-
-#: demo.php:274
-msgid "Sales Executive"
-msgstr ""
-
-#: demo.php:275
-msgid ""
-"Donec ut neque placerat, euismod enim et, sodales magna. Sed sit amet nunc "
-"ullamcorper, semper nunc mattis, scelerisque urna. Donec dictum mattis "
-"malesuada. Suspendisse vestibulum enim eu nisi auctor, a mollis odio posuere."
-" Ut scelerisque luctus arcu id tempus.<br/><br />\n"
-"                            Donec ut neque placerat, euismod enim et, "
-"sodales magna. Sed sit amet nunc ullamcorper, semper nunc mattis, "
-"scelerisque urna. Donec dictum mattis malesuada. Suspendisse vestibulum enim "
-"eu nisi auctor, a mollis odio posuere. Ut scelerisque luctus arcu id tempus."
-msgstr ""
-
-#: demo.php:291
-msgid "Testimonials"
-msgstr ""
-
-#: demo.php:297
-msgid ""
-"Thanks for delivering top quality services to your clients. It just takes a "
-"minute to get an answer from you when in difficulties. I use the chat "
-"service and I can say that the AccessPress Themes staff knows how to shorten "
-"the physical distance to its clients.<br />Thanks again for making our "
-"experience with AccessPress Themes the best one online!"
-msgstr ""
-
-#: demo.php:299
-msgid "Yanetxys Torreblanca"
-msgstr ""
-
-#: demo.php:305
-msgid ""
-"Thank you very much the support team accesspress lite for service, are "
-"really wonderful in their care and in the resolution of the problem. "
-"Congratulations to facebook chat and Junu team."
-msgstr ""
-
-#: demo.php:307
-msgid "David Soriano"
-msgstr ""
-
-#: demo.php:313
-msgid ""
-"Great Customer service and technical assistance!!!<br />\n"
-"                                The template is really good and nice, "
-"definitely worth going PRO"
-msgstr ""
-
-#: demo.php:316
-msgid "Stefano Roganti"
-msgstr ""
-
-#: demo.php:331
-msgid "Read our latest blog"
-msgstr ""
-
-#: demo.php:340
-msgid "Nulla pretium leo ac congue"
-msgstr ""
-
-#: demo.php:341
-msgid "December 26, 2014"
-msgstr ""
-
-#: demo.php:342
-msgid ""
-"Nulla pretium leo ac congue molestie. Aliquam ac velit laoreet, consectetur "
-"elit pulvinar, elementum lorem. Duis sed venenatis eros. Vestibulum ante "
-"ipsum primis in faucibus orci luctus et ultrices po... "
-msgstr ""
-
-#: demo.php:343 demo.php:354 demo.php:365 inc/accesspress-functions.php:105
-#: inc/accesspress-functions.php:118 layouts/blog-section.php:37
-msgid "Read More"
-msgstr ""
-
-#: demo.php:351
-msgid "Pellentesque cursus dolor quis"
-msgstr ""
-
-#: demo.php:352 demo.php:363
-msgid "September 9, 2014"
-msgstr ""
-
-#: demo.php:353
-msgid ""
-"Nullam faucibus mi at quam mattis egestas. Ut dapibus lectus at risus "
-"rhoncus finibus. Pellentesque sem risus, suscipit iaculis ex in, rutrum "
-"sodales enim. Vivamus non mauris tortor. Maecenas tellus n... "
-msgstr ""
-
-#: demo.php:362
-msgid "Lorem ipsum dolor"
-msgstr ""
-
-#: demo.php:364
-msgid ""
-"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod "
-"tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
-"quis nostrud exercitation ullamco laboris nisi ut ... "
-msgstr ""
-
-#: demo.php:370 layouts/blog-section.php:49
-msgid "Read All"
-msgstr ""
-
-#: demo.php:378
-msgid "For News and Updates Subscribe us"
-msgstr ""
-
-#: demo.php:381
-msgid "Here can be some text as well"
-msgstr ""
-
-#: demo.php:382
-msgid "Subscribe Us"
-msgstr ""
-
-#: demo.php:416
-msgid "AccessPress Themes"
-msgstr ""
-
-#: demo.php:417
-msgid "5th Floor, Mathuri Sadan"
-msgstr ""
-
-#: demo.php:418
-msgid "Rabi Bhawan, Kathmandu - Nepal"
-msgstr ""
-
-#: demo.php:420
-msgid "General enquiries:"
-msgstr ""
-
-#: demo.php:421
-msgid "Support:"
-msgstr ""
-
-#: demo.php:423
-msgid "Skype: access-keys"
 msgstr ""
 
 #: functions.php:69
@@ -493,7 +159,7 @@ msgstr ""
 msgid "Home Page"
 msgstr ""
 
-#: search.php:16
+#: search.php:18
 #, php-format
 msgid "Search Results for: %s"
 msgstr ""
@@ -508,6 +174,11 @@ msgstr ""
 
 #: inc/accesspress-functions.php:104
 msgid "A full featured parallax theme - and its absolutely free!"
+msgstr ""
+
+#: inc/accesspress-functions.php:105 inc/accesspress-functions.php:118
+#: layouts/blog-section.php:37
+msgid "Read More"
 msgstr ""
 
 #: inc/accesspress-functions.php:115
@@ -946,10 +617,14 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: inc/template-tags.php:31
+#: inc/template-tags.php:30
 #, php-format
 msgctxt "post author"
 msgid "By %s"
+msgstr ""
+
+#: layouts/blog-section.php:49
+msgid "Read All"
 msgstr ""
 
 #: layouts/googlemap-section.php:10
@@ -982,27 +657,27 @@ msgstr ""
 msgid "Free vs Pro"
 msgstr ""
 
-#: welcome/welcome.php:145
+#: welcome/welcome.php:147
 #, php-format
 msgid ""
 "Welcome! Thank you for choosing %1$s! Please make sure you visit our <a "
 "href=\"%2$s\">Welcome page</a> to get started with %1$s."
 msgstr ""
 
-#: welcome/welcome.php:146
+#: welcome/welcome.php:148
 msgid "Lets Get Started"
 msgstr ""
 
-#: welcome/welcome.php:155
+#: welcome/welcome.php:157
 msgid "Welcome"
 msgstr ""
 
-#: welcome/welcome.php:167
+#: welcome/welcome.php:171
 #, php-format
 msgid "Welcome to %1$s - Version %2$s"
 msgstr ""
 
-#: welcome/welcome.php:168
+#: welcome/welcome.php:174
 #, php-format
 msgid ""
 "%s is a beautiful WordPress theme with Parallax design. Parallax design has "
@@ -1011,44 +686,56 @@ msgid ""
 "useful features."
 msgstr ""
 
-#: welcome/welcome.php:214 welcome/sections/recommended_plugins.php:33
+#: welcome/welcome.php:220 welcome/sections/recommended_plugins.php:33
 #: welcome/sections/recommended_plugins.php:90
 msgid "Activate"
 msgstr ""
 
-#: welcome/welcome.php:215
+#: welcome/welcome.php:221
 msgid "Activated"
 msgstr ""
 
-#: welcome/welcome.php:216
+#: welcome/welcome.php:222
 msgid "Installing Demo"
 msgstr ""
 
-#: welcome/welcome.php:217
+#: welcome/welcome.php:223
 msgid "Demo Installed"
 msgstr ""
 
-#: welcome/welcome.php:218
+#: welcome/welcome.php:224
 msgid "Are you sure to import demo content ?"
 msgstr ""
 
-#: welcome/welcome.php:325
+#: welcome/welcome.php:331
 msgid "Sorry, you are not allowed to install plugins on this site."
 msgstr ""
 
-#: welcome/welcome.php:333 welcome/welcome.php:420
+#: welcome/welcome.php:339 welcome/welcome.php:426
 msgid "Error - unable to verify nonce, please try again."
 msgstr ""
 
-#: welcome/welcome.php:413
+#: welcome/welcome.php:408
+msgid "Plugin Doesn't Exists"
+msgstr ""
+
+#: welcome/welcome.php:419
 msgid "Sorry, you are not allowed to activate plugins on this site."
 msgstr ""
 
-#: welcome/welcome.php:442
-msgid "There was an error activating $api->name"
+#. %s: Plugin Name.
+#: welcome/welcome.php:446
+#, php-format
+msgid "%s successfully activated."
 msgstr ""
 
-#: welcome/welcome.php:531
+#. %s: Plugin Name.
+#: welcome/welcome.php:452
+#, php-format
+msgid "There was an error activating %s"
+msgstr ""
+
+#: welcome/welcome.php:541
 msgid "Parallax Demo"
 msgstr ""
 
@@ -1356,33 +1043,33 @@ msgstr ""
 msgid "Documentation"
 msgstr ""
 
-#: welcome/sections/support.php:4
+#: welcome/sections/support.php:6
 #, php-format
 msgid ""
 "Read the detailed documentation of the theme. The documentation contain all "
 "the necessary information required to setup the theme %s."
 msgstr ""
 
-#: welcome/sections/support.php:5
+#: welcome/sections/support.php:7
 msgid "Read Full Documentation"
 msgstr ""
 
-#: welcome/sections/support.php:9 welcome/sections/support.php:11
+#: welcome/sections/support.php:11 welcome/sections/support.php:13
 msgid "Create Support Tickets"
 msgstr ""
 
-#: welcome/sections/support.php:10
+#: welcome/sections/support.php:12
 msgid ""
 "Still having problem after reading all the documentation? No Problem!! "
 "Please create a support ticket. Our dedicated support team will help you to "
 "solve your problem"
 msgstr ""
 
-#: welcome/sections/support.php:17
+#: welcome/sections/support.php:19
 msgid "Visuals Matters for Site Traffic"
 msgstr ""
 
-#: welcome/sections/support.php:18
+#: welcome/sections/support.php:20
 msgid ""
 "Without a good design, a site just looks lame, hence decreasing the site "
 "visitors. That is why you should care a lot about how your WordPress blog "
@@ -1390,15 +1077,15 @@ msgid ""
 "follow the below link"
 msgstr ""
 
-#: welcome/sections/support.php:19 welcome/sections/support.php:25
+#: welcome/sections/support.php:21 welcome/sections/support.php:27
 msgid "Read Full Article"
 msgstr ""
 
-#: welcome/sections/support.php:23
+#: welcome/sections/support.php:25
 msgid "Attract More Customers to Your Site"
 msgstr ""
 
-#: welcome/sections/support.php:24
+#: welcome/sections/support.php:26
 msgid ""
 "No matter how many efforts you have made in making a website, it is of no "
 "use if the users do not find it appealing. If the visitors are leaving you "
@@ -1406,17 +1093,17 @@ msgid ""
 "visitors following this very very article"
 msgstr ""
 
-#: welcome/sections/support.php:29
+#: welcome/sections/support.php:31
 msgid "More WordPress Resources"
 msgstr ""
 
-#: welcome/sections/support.php:30
+#: welcome/sections/support.php:32
 msgid ""
 "Want to learn some more on themes ? Visit the following link for more "
 "information on latest articles on themes and plugins."
 msgstr ""
 
-#: welcome/sections/support.php:31
+#: welcome/sections/support.php:33
 msgid "View More"
 msgstr ""
 
@@ -1450,12 +1137,6 @@ msgstr ""
 
 #: inc/options-framework/includes/class-options-framework-admin.php:203
 msgid "Upgrade to Parallax Pro"
-msgstr ""
-
-#: inc/options-framework/includes/class-options-framework-admin.php:210
-#, php-format
-msgid ""
-"Any question!! Click <a href=\"%s\" target=\"_blank\">here</a> for Live Chat."
 msgstr ""
 
 #: inc/options-framework/includes/class-options-framework-admin.php:212
@@ -1529,6 +1210,9 @@ msgstr ""
 
 #. Theme URI of the theme
 msgid "https://accesspressthemes.com/wordpress-themes/accesspress-parallax/"
+msgstr ""
+
+msgid "AccessPress Themes"
 msgstr ""
 
 #. Author URI of the theme

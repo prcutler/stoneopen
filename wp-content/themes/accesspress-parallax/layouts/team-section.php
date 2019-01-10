@@ -22,13 +22,13 @@
                         $i = $i + 0.25;
                         ?>
 
-			<div class="clearfix team-image wow fadeInLeft" data-wow-delay="<?php echo $i; ?>s">
+			<div class="clearfix team-image wow fadeInLeft" data-wow-delay="<?php echo esc_attr($i); ?>s">
 				<?php if(has_post_thumbnail()) : 
 				$image = wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()),'thumbnail');
 				?>
 				<img src="<?php echo esc_url($image[0]); ?>" alt="<?php the_title(); ?>">
 				<?php else: ?>
-				<img src="<?php echo get_template_directory_uri(); ?>/images/dummy.png" alt="<?php the_title(); ?>">
+				<img src="<?php echo esc_url(get_template_directory_uri().'/images/dummy.png') ?>" alt="<?php the_title(); ?>">
 				<?php endif; ?>
 			</div>
 

@@ -30,23 +30,24 @@
 
 					'instant-demo-importer' => array(
 						'slug' => 'instant-demo-importer',
-						'name' => __('Instant Demo Importer', 'accesspress-parallax'),
+						'name' => esc_html__('Instant Demo Importer', 'accesspress-parallax'),
 						'filename' =>'instant-demo-importer.php',
 						'class' => 'Instant_Demo_Importer',
 						'github_repo' => true,
 						'bundled' => true,
 						'location' => 'https://github.com/WPaccesskeys/instant-demo-importer/archive/master.zip',
-						'info' => __('Instant Demo Importer Plugin adds the feature to Import the Demo Conent with a single click.', 'accesspress-parallax'),
+						'info' => esc_html__('Instant Demo Importer Plugin adds the feature to Import the Demo Conent with a single click.', 'accesspress-parallax'),
 					),
 
 				);
 
 				/** Define Tabs Sections **/
 				$this->tab_sections = array(
-					'getting_started' => __('Getting Started', 'accesspress-parallax'),
-					'recommended_plugins' => __('Recommended Plugins', 'accesspress-parallax'),
-					'support' => __('Support', 'accesspress-parallax'),
-					'free_vs_pro' => __('Free vs Pro', 'accesspress-parallax'),
+					'getting_started' => esc_html__('Getting Started', 'accesspress-parallax'),
+					'recommended_plugins' => esc_html__('Recommended Plugins', 'accesspress-parallax'),
+					'support' => esc_html__('Support', 'accesspress-parallax'),
+					'free_vs_pro' => esc_html__('Free vs Pro', 'accesspress-parallax'),
+					'more_wp_stuff' => esc_html__('More WordPress Stuff', 'accesspress-parallax'),
 				);
 
 				/** List of Recommended Free Plugins **/
@@ -142,8 +143,10 @@
 				if( is_admin() && ('themes.php' == $pagenow) && (isset($_GET['activated'])) ) {
 					?>
 					<div class="notice notice-success is-dismissible">
-						<p><?php printf( __( 'Welcome! Thank you for choosing %1$s! Please make sure you visit our <a href="%2$s">Welcome page</a> to get started with %1$s.', 'accesspress-parallax' ), $this->theme_name, admin_url( 'themes.php?page=accesspressparallax-welcome' )  ); ?></p>
-						<p><a class="button" href="<?php echo admin_url( 'themes.php?page=accesspressparallax-welcome' ) ?>"><?php _e( 'Lets Get Started', 'accesspress-parallax' ); ?></a></p>
+						<p><?php 
+						/* translators: 1 - Welcome Page link 2 - Theme Name */
+						printf( wp_kses_post( 'Welcome! Thank you for choosing %1$s! Please make sure you visit our <a href="%2$s">Welcome page</a> to get started with %1$s.', 'accesspress-parallax' ), esc_html($this->theme_name), esc_url(admin_url( 'themes.php?page=accesspressparallax-welcome' ))  ); ?></p>
+						<p><a class="button" href="<?php echo esc_url(admin_url( 'themes.php?page=accesspressparallax-welcome' )) ?>"><?php esc_html_e( 'Lets Get Started', 'accesspress-parallax' ); ?></a></p>
 					</div>
 					<?php
 				}
@@ -160,30 +163,34 @@
 			public function accesspressparallax_welcome_screen() {
 				$tabs = $this->tab_sections;
 
-				$current_section = isset($_GET['section']) ? $_GET['section'] : 'getting_started';
+				$current_section = isset($_GET['section']) ? sanitize_text_field(wp_unslash($_GET['section'])) : 'getting_started';
 				$section_inline_style = '';
 				?>
 				<div class="wrap about-wrap access-wrap">
-					<h1><?php printf( esc_html__( 'Welcome to %1$s - Version %2$s', 'accesspress-parallax' ), $this->theme_name, $this->theme_version ); ?></h1>
-					<div class="about-text"><?php printf( esc_html__( '%s is a beautiful WordPress theme with Parallax design. Parallax design has become popular and is widely implemented these days. This is probably the most beautiful, feature rich and complete free WordPress parallax theme with useful features.', 'accesspress-parallax' ), $this->theme_name ); ?></div>
+					<h1><?php 
+					/* translators: 1.Theme Name 2. Theme version*/
+					printf( esc_html__( 'Welcome to %1$s - Version %2$s', 'accesspress-parallax' ), esc_html($this->theme_name), esc_html($this->theme_version) ); ?></h1>
+					<div class="about-text"><?php 
+					/* translators: Theme Name */
+					printf( esc_html__( '%s is a beautiful WordPress theme with Parallax design. Parallax design has become popular and is widely implemented these days. This is probably the most beautiful, feature rich and complete free WordPress parallax theme with useful features.', 'accesspress-parallax' ), esc_html($this->theme_name) ); ?></div>
 
 					<a target="_blank" href="http://www.accesspressthemes.com" class="accesspress-badge wp-badge"><span><?php echo esc_html('AccessPressThemes'); ?></span></a>
 
 				<div class="nav-tab-wrapper clearfix">
 					<?php foreach($tabs as $id => $label) : ?>
 						<?php
-							$section = isset($_REQUEST['section']) ? esc_attr($_REQUEST['section']) : 'getting_started';
+							$section = isset($_REQUEST['section']) ? sanitize_text_field(wp_unslash($_REQUEST['section'])) : 'getting_started';
 							$nav_class = 'nav-tab';
 							if($id == $section) {
 								$nav_class .= ' nav-tab-active';
 							}
 						?>
-						<a href="<?php echo admin_url('themes.php?page=accesspressparallax-welcome&section='.$id); ?>" class="<?php echo $nav_class; ?>" >
+						<a href="<?php echo esc_url(admin_url('themes.php?page=accesspressparallax-welcome&section='.$id)); ?>" class="<?php echo esc_attr($nav_class); ?>" >
 							<?php echo esc_html( $label ); ?>
 							<?php if($id == 'actions_required') : $not = $this->get_required_plugin_notification(); ?>
 								<?php if($not) : ?>
 							   		<span class="pending-tasks">
-						   				<?php echo $not; ?>
+						   				<?php echo wp_kses_post($not); ?>
 						   			</span>
 				   				<?php endif; ?>
 						   	<?php endif; ?>
@@ -192,7 +199,7 @@
 			   	</div>
 
 		   		<div class="welcome-section-wrapper">
-	   				<?php $section = isset($_REQUEST['section']) ? $_REQUEST['section'] : 'getting_started'; ?>
+	   				<?php $section = isset($_REQUEST['section']) ? sanitize_text_field(wp_unslash($_REQUEST['section'])) : 'getting_started'; ?>
    					
    					<div class="welcome-section <?php echo esc_attr($section); ?> clearfix">
    						<?php require_once get_template_directory() . '/welcome/sections/'.esc_html($section).'.php'; ?>
@@ -211,11 +218,11 @@
 					'admin_nonce'	=> wp_create_nonce('accesspressparallax_plugin_installer_nonce'),
 					'activate_nonce'	=> wp_create_nonce('accesspressparallax_plugin_activate_nonce'),
 					'ajaxurl'		=> esc_url( admin_url( 'admin-ajax.php' ) ),
-					'activate_btn' => __('Activate', 'accesspress-parallax'),
-					'installed_btn' => __('Activated', 'accesspress-parallax'),
-					'demo_installing' => __('Installing Demo', 'accesspress-parallax'),
-					'demo_installed' => __('Demo Installed', 'accesspress-parallax'),
-					'demo_confirm' => __('Are you sure to import demo content ?', 'accesspress-parallax'),
+					'activate_btn' => esc_html__('Activate', 'accesspress-parallax'),
+					'installed_btn' => esc_html__('Activated', 'accesspress-parallax'),
+					'demo_installing' => esc_html__('Installing Demo', 'accesspress-parallax'),
+					'demo_installed' => esc_html__('Demo Installed', 'accesspress-parallax'),
+					'demo_confirm' => esc_html__('Are you sure to import demo content ?', 'accesspress-parallax'),
 				) );
 			}
 
@@ -322,15 +329,15 @@
 			public function accesspressparallax_plugin_installer_callback(){
 
 				if ( ! current_user_can('install_plugins') )
-					wp_die( __( 'Sorry, you are not allowed to install plugins on this site.', 'accesspress-parallax' ) );
+					wp_die( esc_html__( 'Sorry, you are not allowed to install plugins on this site.', 'accesspress-parallax' ) );
 
-				$nonce = $_POST["nonce"];
-				$plugin = $_POST["plugin"];
-				$plugin_file = $_POST["plugin_file"];
+				$nonce = isset( $_POST["nonce"] ) ? sanitize_text_field( wp_unslash( $_POST["nonce"] ) ) : '';
+				$plugin = isset( $_POST["plugin"] ) ? sanitize_text_field( wp_unslash( $_POST["plugin"] ) ) : '';
+				$plugin_file = isset( $_POST["plugin_file"] ) ? sanitize_text_field( wp_unslash( $_POST["plugin_file"] ) ) : '';
 
 				// Check our nonce, if they don't match then bounce!
 				if (! wp_verify_nonce( $nonce, 'accesspressparallax_plugin_installer_nonce' ))
-					wp_die( __( 'Error - unable to verify nonce, please try again.', 'accesspress-parallax') );
+					wp_die( esc_html__( 'Error - unable to verify nonce, please try again.', 'accesspress-parallax') );
 
 
          		// Include required libs for installation
@@ -364,10 +371,10 @@
 			public function accesspressparallax_plugin_offline_installer_callback() {
 
 				
-				$file_location = $_POST['file_location'];
-				$file = $_POST['file'];
-				$github = $_POST['github'];
-				$slug = $_POST['slug'];
+				$file_location = isset( $_POST['file_location'] ) ? sanitize_text_field( wp_unslash( $_POST['file_location'] ) ) : '';
+				$file = isset( $_POST['file'] ) ? sanitize_text_field( wp_unslash( $_POST['file'] ) ) : '';
+				$github = isset( $_POST['github'] ) ? sanitize_text_field( wp_unslash( $_POST['github'] ) ) : '';
+				$slug = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : '';
 				$plugin_directory = ABSPATH . 'wp-content/plugins/';
 
 				$zip = new ZipArchive;
@@ -393,13 +400,13 @@
 			/** Plugin Offline Activation Ajax **/
 			public function accesspressparallax_plugin_offline_activation_callback() {
 
-				$plugin = $_POST['plugin'];
+				$plugin = isset( $_POST['plugin'] ) ? sanitize_text_field( wp_unslash( $_POST['plugin'] ) ) : '';
 				$plugin_file = ABSPATH . 'wp-content/plugins/'.esc_html($plugin).'/'.esc_html($plugin).'.php';
 
 				if(file_exists($plugin_file)) {
 					activate_plugin($plugin_file);
 				} else {
-					echo "Plugin Doesn't Exists";
+					esc_html_e( 'Plugin Doesn\'t Exists', 'accesspress-parallax' );
 				}
 
 				die();
@@ -410,14 +417,14 @@
 			public function accesspressparallax_plugin_activation_callback(){
 
 				if ( ! current_user_can('install_plugins') )
-					wp_die( __( 'Sorry, you are not allowed to activate plugins on this site.', 'accesspress-parallax' ) );
+					wp_die( esc_html__( 'Sorry, you are not allowed to activate plugins on this site.', 'accesspress-parallax' ) );
 
-				$nonce = $_POST["nonce"];
-				$plugin = $_POST["plugin"];
+				$nonce = isset( $_POST["nonce"] ) ? sanitize_text_field( wp_unslash( $_POST["nonce"] ) ) : '';
+				$plugin = isset( $_POST["plugin"] ) ? sanitize_text_field( wp_unslash( $_POST["plugin"] ) ) : '';
 
 				// Check our nonce, if they don't match then bounce!
 				if (! wp_verify_nonce( $nonce, 'accesspressparallax_plugin_activate_nonce' ))
-					die( __( 'Error - unable to verify nonce, please try again.', 'accesspress-parallax' ) );
+					die( esc_html__( 'Error - unable to verify nonce, please try again.', 'accesspress-parallax' ) );
 
 
 	         	// Include required libs for activation
@@ -435,11 +442,15 @@
 					$status = 'success';
 					if($main_plugin_file){
 						activate_plugin($main_plugin_file);
-						$msg = $api->name .' successfully activated.';
+						$msg = sprintf( 
+							/* translators: %s: Plugin Name. */
+							esc_html__("%s successfully activated.", 'accesspress-parallax'), esc_html($api->name));
 					}
 				} else {
 					$status = 'failed';
-					$msg = esc_html__('There was an error activating $api->name', 'accesspress-parallax');
+					$msg = sprintf(
+						/* translators: %s: Plugin Name. */
+						esc_html__("There was an error activating %s", 'accesspress-parallax'), esc_html($api->name));
 				}
 
 				$json = array(
@@ -528,7 +539,7 @@
 
 		$demoimporter->demos = array(
 			'accesspress-parallax' => array(
-				'title' => __('Parallax Demo', 'accesspress-parallax'),
+				'title' => esc_html__('Parallax Demo', 'accesspress-parallax'),
 				'name' => 'accesspress-parallax',
 				'screenshot' => get_template_directory_uri().'/welcome/demos/accesspress-parallax/screen.png',
 				'home_page' => '',

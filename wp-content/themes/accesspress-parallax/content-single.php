@@ -5,22 +5,24 @@
 
 $post_date = of_get_option('post_date');
 $post_footer = of_get_option('post_footer');
-$post_date_class = ((!empty($post_date) && $post_date == ' ') || has_post_thumbnail()) ? " no-date" : "";
 ?>
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<header class="entry-header">
-		<?php if(has_post_thumbnail()) : ?>
+<article id="post-<?php the_ID(); ?>" <?php post_class('article-wrap'); ?>>
+	<?php if(has_post_thumbnail()) : ?>
 		<div class="entry-thumb">
 			<?php $image = wp_get_attachment_image_src( get_post_thumbnail_id(get_the_ID()), 'blog-header' ); ?>
 			<img src="<?php echo esc_url($image[0]); ?>" alt="<?php echo esc_attr(get_the_title()); ?>"> 
 		</div>
-		<?php endif; ?>
-		
-		<h1 class="entry-title<?php echo esc_attr($post_date_class); ?>"><?php the_title(); ?></h1>
+	<?php endif; ?>
 
-		<div class="entry-meta">
-			<?php accesspress_parallax_posted_on(); ?>
-		</div><!-- .entry-meta -->
+	<header class="entry-header">
+		
+		<?php 
+		if ( 'post' == get_post_type() ) :
+			accesspress_parallax_posted_on(); 
+		endif; ?>
+
+		<h1 class="entry-title"><?php the_title(); ?></h1>
+
 	</header><!-- .entry-header -->
 
 	<div class="entry-content">
@@ -44,14 +46,15 @@ $post_date_class = ((!empty($post_date) && $post_date == ' ') || has_post_thumbn
 
 
 			if( '' != $category_list ){
-			     echo '<i class="fa fa-folder-open" aria-hidden="true"></i>'.$category_list;
+			     echo '<i class="fa fa-folder-open" aria-hidden="true"></i>'.$category_list; // WPCS: XSS OK.
 			}
             
             if( '' != $tag_list ){
-                echo '<i class="fa fa-tags" aria-hidden="true"></i>'.$tag_list;
+                echo '<i class="fa fa-tags" aria-hidden="true"></i>'.$tag_list; // WPCS: XSS OK.
             }
 		?>
 	</footer><!-- .entry-footer -->
-<?php endif; ?>
-<?php edit_post_link( '<i class="fa fa-pencil-square-o"></i>'. __( 'Edit', 'accesspress-parallax' ), '<span class="edit-link">', '</span>' ); ?>
+	<?php endif; ?>
+	
+	<?php edit_post_link( '<i class="fa fa-pencil-square-o"></i>'. __( 'Edit', 'accesspress-parallax' ), '<span class="edit-link">', '</span>' ); ?>
 </article><!-- #post-## -->

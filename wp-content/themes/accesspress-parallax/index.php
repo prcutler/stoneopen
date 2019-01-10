@@ -12,7 +12,7 @@
  */
 
 get_header(); ?>
-<?php if(of_get_option('enable_parallax') == 1 || of_get_option('enable_parallax') == NUll): 
+<?php if(of_get_option('enable_parallax') == 1 || of_get_option('enable_parallax') == NUll) :
 	get_template_part('index','parallax');
 else: 
 ?>

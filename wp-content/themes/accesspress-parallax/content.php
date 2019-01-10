@@ -2,14 +2,12 @@
 /**
  * @package accesspress_parallax
  */
-?>
-<?php 
+
 $post_date = of_get_option('post_date');
 $post_footer = of_get_option('post_footer');
-$post_date_class = ($post_date != 1 || has_post_thumbnail()) ? " no-date" : "";
 ?>
 
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class('article-wrap'); ?>>
 	<?php if(has_post_thumbnail()) : ?>
 	<div class="entry-thumb">
 		<?php $image = wp_get_attachment_image_src( get_post_thumbnail_id(get_the_ID()), 'blog-header' ); ?>
@@ -18,14 +16,12 @@ $post_date_class = ($post_date != 1 || has_post_thumbnail()) ? " no-date" : "";
 	<?php endif; ?>
 
 	<header class="entry-header">
-		<h1 class="entry-title<?php echo esc_attr($post_date_class); ?>"><a href="<?php echo esc_url(get_permalink()); ?>"><?php the_title(); ?></a></h1>
+		<?php 
+		if ( 'post' == get_post_type() ) :
+			accesspress_parallax_posted_on(); 
+		endif; ?>
 
-
-		<?php if ( 'post' == get_post_type() ) : ?>
-		<div class="entry-meta">
-			<?php accesspress_parallax_posted_on(); ?>
-		</div><!-- .entry-meta -->
-		<?php endif; ?>
+		<h2 class="entry-title"><a href="<?php echo esc_url(get_permalink()); ?>"><?php the_title(); ?></a></h2>
 	</header><!-- .entry-header -->
 
 	<div class="entry-content">
@@ -38,25 +34,30 @@ $post_date_class = ($post_date != 1 || has_post_thumbnail()) ? " no-date" : "";
 		?>
 	</div><!-- .entry-content -->
 
+	<?php if( $post_footer == 1 ) : ?>
 	<footer class="entry-footer">
 		<?php if ( 'post' == get_post_type() ) : // Hide category and tag text for pages on Search ?>
 			<?php
 				/* translators: used between list items, there is a space after the comma */
 				$categories_list = get_the_category_list( ', ' );
 				if ( $categories_list && accesspress_parallax_categorized_blog() ) :
-			?>
+				?>
 				<span class="cat-links">
-					<?php printf( __( '<i class="fa fa-folder-open"></i>Posted in %1$s', 'accesspress-parallax' ), $categories_list ); ?>
+					<i class="fa fa-folder-open"></i><?php 
+					/* translators: category list */
+					printf( esc_html__( 'Posted in %1$s', 'accesspress-parallax' ), $categories_list ); // WPCS: XSS OK. ?>
 				</span>
 			<?php endif; // End if categories ?>
 
 			<?php
 				/* translators: used between list items, there is a space after the comma */
-				$tags_list = get_the_tag_list( '', __( ', ', 'accesspress-parallax' ) );
+				$tags_list = get_the_tag_list( '', ', ' );
 				if ( $tags_list ) :
-			?>
+				?>
 				<span class="tags-links">
-					<?php printf( __( '<i class="fa fa-tags"></i>Tagged %1$s', 'accesspress-parallax' ), $tags_list ); ?>
+					<i class="fa fa-tags"></i><?php 
+					/* translators: Tags list */
+					printf( esc_html__( 'Tagged %1$s', 'accesspress-parallax' ), $tags_list ); // WPCS: XSS OK. ?>
 				</span>
 			<?php endif; // End if $tags_list ?>
 		<?php endif; // End if 'post' == get_post_type() ?>
@@ -65,5 +66,7 @@ $post_date_class = ($post_date != 1 || has_post_thumbnail()) ? " no-date" : "";
 			<span class="comments-link"><?php comments_popup_link( __( '<i class="fa fa-comments"></i>Leave a comment', 'accesspress-parallax' ), __( '<i class="fa fa-comments"></i>1 Comment', 'accesspress-parallax' ), __( '<i class="fa fa-comments"></i>% Comments', 'accesspress-parallax' ) ); ?></span>
 		<?php endif; ?>
 	</footer><!-- .entry-footer -->
+	<?php endif; ?>
+	
 	<?php edit_post_link( '<i class="fa fa-pencil-square-o"></i>'. __( 'Edit', 'accesspress-parallax' ), '<span class="edit-link">', '</span>' ); ?>
 </article><!-- #post-## -->

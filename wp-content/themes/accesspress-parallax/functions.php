@@ -228,6 +228,10 @@ require get_template_directory() . '/inc/options-framework/options-framework.php
  * */
 require get_template_directory().'/woocommerce/ap-parallax-woocommerce-function.php';
 
+/**
+ * Load Dynamic Styles
+ * */
+require get_template_directory().'/css/style.php';
 
 /**
  * Load Welcome Page

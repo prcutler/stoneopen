@@ -23,7 +23,7 @@
 		$googlemapclass = $layout == "googlemap_template" ? " google-map" : "";
 	?>
 
-	<?php if(!empty($section['page'])): ?>
+	<?php if(!empty($section['page'])) : ?>
 		<section class="parallax-section clearfix<?php echo esc_attr($googlemapclass)." ".esc_attr($layout);  ?>" id="<?php echo "section-".absint($page->ID); ?>">
 		<?php if(!empty($image) && $overlay != "overlay0") : ?>
 			<div class="overlay"></div>
@@ -105,6 +105,4 @@
 	<?php
 	endif; 
 	endforeach;
-	else:
-        get_template_part('demo');
 	endif;

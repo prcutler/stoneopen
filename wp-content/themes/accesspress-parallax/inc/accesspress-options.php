@@ -96,6 +96,13 @@ function optionsframework_options() {
 		'type' => 'checkbox');
 
 	$options[] = array(
+		'name' => __('Template Color', 'accesspress-parallax'),
+		'desc' => __('Set the template color for the site.', 'accesspress-parallax'),
+		'id' => 'template_color',
+		'std' => '#E66432',
+		'type' => 'color');
+
+	$options[] = array(
 		'name' => __('Enable Single Page Nav(Menu) - if disabled, will show primary menu', 'accesspress-parallax'),
 		'desc' => __('Check To enable', 'accesspress-parallax'),
 		'id' => 'enable_parallax_nav',
